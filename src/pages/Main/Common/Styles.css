@@ -1,0 +1,83 @@
+@font-face {
+	font-family: "NNSQUAREROUNDR";
+	src: url('/src/assets/fonts/NanumSquareRoundR.ttf');
+}
+
+html * {
+	font-family: "NNSQUAREROUNDR" !important;
+}
+
+body {
+	margin: 0px;
+}
+
+.failed {
+	background: #cb4856;
+}
+
+.success {
+	background: #2ba38e;
+}
+
+.information {
+	background: #1e8ad7;
+}
+
+.warning {
+	background: #ff9900;
+}
+
+.toast-container {
+	bottom: 0px;
+
+	display: flex;
+
+	flex-direction: column;
+
+	position: fixed;
+
+	right: 0px;
+
+	min-width: 400px;
+
+	max-height: 750px;
+
+	z-index: 12;
+}
+
+.toast {
+	border-radius: 5px;
+	border: 1px solid lightgray;
+
+	color: white;
+
+	font-size: 16px;
+
+	padding: 15px;
+
+	margin: 10px;
+	margin-top: auto;
+
+	z-index: 12;
+}
+
+.uploadModal {
+	display: block;
+
+	left: 50%;
+
+	position: absolute;
+
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+@keyframes fadeout {
+	from {
+		opacity: 1;
+	}
+
+	to {
+		opacity: 0;
+	}
+}
