@@ -5,13 +5,7 @@
   "background": {
     "service_worker": "background.bundle.js"
   },
-  "permissions": [
-    "downloads",
-    "notifications",
-    "storage",
-    "tabs",
-    "<all_urls>"
-  ],
+  "permissions": ["downloads", "storage", "tabs"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon48.png"
@@ -22,15 +16,9 @@
   "content_scripts": [
     {
       "run_at": "document_start",
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "contentScript.bundle.js"
-      ],
-      "css": [
-        "content.styles.css"
-      ]
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.bundle.js"],
+      "css": ["content.styles.css"]
     }
   ],
   "web_accessible_resources": [
@@ -51,16 +39,17 @@
         "keyword/reference.html",
         "order/new.html",
         "order/delivery.html",
+        "order/tax.html",
         "product/collected.html",
         "product/registered.html",
+        "product/Locked.html",
         "settings.html",
         "sourcing.html",
         "trangers_single.html",
-        "trangers_multiple.html"
+        "trangers_multiple.html",
+        "payments.html"
       ],
-      "matches": [
-        "<all_urls>"
-      ]
+      "matches": ["<all_urls>"]
     }
   ]
 }

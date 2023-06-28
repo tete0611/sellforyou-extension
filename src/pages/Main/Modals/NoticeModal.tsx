@@ -1,38 +1,42 @@
-import React from 'react';
+import React from "react";
 
 import { observer } from "mobx-react";
 import { AppContext } from "../../../containers/AppContext";
-import { Box, Modal, Paper } from '@mui/material';
+import { Box, Modal, Paper } from "@mui/material";
+import { ModalFrame, Title } from "../Common/UI";
 
-const title = {
-    alignItems: "center",
-    background: "#d1e8ff",
-    display: "flex",
-    fontSize: 16,
-    justifyContent: "space-between",
-    px: 1,
-    height: 40
-};
-
+// 공지사항 모달 뷰
 export const NoticeModal = observer(() => {
-    const { dashboard } = React.useContext(AppContext);
+  // MobX 스토리지 로드
+  const { dashboard } = React.useContext(AppContext);
 
-    return <Modal
-        open={dashboard.modalInfo.notice}
-        onClose={() => { dashboard.toggleNoticeModal(false) }}
+  return (
+    <Modal
+      open={dashboard.modalInfo.notice}
+      onClose={() => {
+        dashboard.toggleNoticeModal(false);
+      }}
     >
-        <Paper className='uploadModal' sx={{ width: 800 }}>
-            <Box sx={title}>
-                {dashboard.currentNotice.title}
-            </Box>
+      <ModalFrame
+        sx={{
+          width: 800,
+        }}
+      >
+        <Title>{dashboard.currentNotice.title}</Title>
 
-            <Box sx={{
-                p: 1,
-            }}>
-                <div dangerouslySetInnerHTML={{
-                    __html: dashboard.currentNotice.content
-                }} />
-            </Box>
-        </Paper>
+        <Box
+          sx={{
+            fontSize: "1.2em",
+            p: 1,
+          }}
+        >
+          <div
+            dangerouslySetInnerHTML={{
+              __html: dashboard.currentNotice.content,
+            }}
+          />
+        </Box>
+      </ModalFrame>
     </Modal>
+  );
 });

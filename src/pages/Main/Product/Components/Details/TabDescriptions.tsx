@@ -1,293 +1,363 @@
-import React from 'react';
-import ReactQuill from 'react-quill';
-import ClearIcon from '@mui/icons-material/Clear';
-import ErrorIcon from '@mui/icons-material/Error';
+import React from "react";
+import ReactQuill from "react-quill";
+import ClearIcon from "@mui/icons-material/Clear";
+import ErrorIcon from "@mui/icons-material/Error";
 
 import { observer } from "mobx-react";
 import { ListManager } from "react-beautiful-dnd-grid";
 import { AppContext } from "../../../../../containers/AppContext";
-import { Box, Button, Grid, IconButton, Paper, Typography } from "@mui/material";
-import { Image } from "../../../Common/UI";
-import { makeStyles } from "@material-ui/core/styles"
+import { Box, Button, CircularProgress, Grid, IconButton, Paper, Typography } from "@mui/material";
+import { Image, Title } from "../../../Common/UI";
+import { makeStyles } from "@material-ui/core/styles";
 
+// MUI Box 사용자 지정 스타일
 const useStyles = makeStyles((theme) => ({
-    defaultBox: {
-        background: "#d1e8ff",
-    },
+  defaultBox: {
+    background: "#d1e8ff",
+  },
 
-    defaultPaper: {
-        border: "1px solid #d1e8ff"
-    },
-
-    errorBox: {
-        background: "#ffd1d1",
-    },
-
-    errorPaper: {
-        border: "1px solid #ffd1d1"
-    }
+  errorBox: {
+    background: "#ffd1d1",
+  },
 }));
 
+// 상세페이지 탭 하위 컴포넌트
 export const TabDescriptions = observer((props: any) => {
-    const { product } = React.useContext(AppContext);
+  // MobX 스토리지 로드
+  const { common, product } = React.useContext(AppContext);
 
-    const classes = useStyles();
+  // 상세페이지 에디터 환경설정
+  const modules = React.useMemo(
+    () => ({
+      toolbar: false,
+    }),
+    []
+  );
 
-    const modules = React.useMemo(() => ({
-        toolbar: false
-    }), []);
+  // 상세페이지 수정 및 변경사항 발생 시
+  const loading = (
+    <div className="inform">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <div className="loading" />
+        &nbsp; 상세이미지정보를 저장하는 중입니다...
+      </div>
+    </div>
+  );
 
-    return <>
-        <Box sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            margin: "auto",
-        }}>
-            <Grid container spacing={0.5}>
-                <Grid item xs={6} md={6}>
-                    <Paper className={props.item.descriptionImageError ? classes.errorPaper : classes.defaultPaper} variant="outlined">
-                        <Box className={props.item.descriptionImageError ? classes.errorBox : classes.defaultBox} sx={{
-                            background: "#d1e8ff",
-                            display: "flex",
-                            alignItems: "center",
-                            fontSize: 13,
-                            p: 1
-                        }}>
-                            <Box sx={{
-                                display: "flex",
-                                alignItems: "center",
-                            }}>
-                                이미지목록
+  return (
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          margin: "auto",
+        }}
+      >
+        <Grid container spacing={0.5}>
+          {props.item.edited.descriptions === 2 ? loading : null}
 
-                                {props.item.descriptionImageError ?
-                                    <>
-                                        <ErrorIcon color="error" sx={{
-                                            fontSize: 18,
-                                            mx: 0.5
-                                        }} />
+          <Grid item xs={6} md={6}>
+            <Paper variant="outlined">
+              <Title subTitle dark={common.darkTheme} error={props.item.descriptionImageError}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  이미지목록&nbsp;
+                  {props.item.descriptionImageError ? (
+                    <>
+                      <Paper
+                        sx={{
+                          color: common.darkTheme ? "error.light" : "error.main",
 
-                                        <Box sx={{
-                                            position: "relative"
-                                        }}>
-                                            <Paper sx={{
-                                                top: 0,
-                                                color: "red",
+                          display: "flex",
+                          alignItems: "center",
 
-                                                p: 1,
-                                                position: "absolute",
+                          p: 0.5,
 
-                                                left: 0,
-                                                textAlign: "left",
+                          textAlign: "left",
+                        }}
+                      >
+                        <ErrorIcon
+                          color="error"
+                          sx={{
+                            fontSize: 18,
+                            mx: 0.5,
+                          }}
+                        />
+                        &nbsp; JPG/PNG 형식만 가능합니다.
+                      </Paper>
+                    </>
+                  ) : null}
+                </Box>
 
-                                                width: 200,
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Button
+                    disabled={product.itemInfo.items.find((v) => v.translate)}
+                    disableElevation
+                    variant="contained"
+                    color="secondary"
+                    sx={{
+                      fontSize: 13,
+                      height: 26,
+                    }}
+                    onClick={() => {
+                      if (common.user.purchaseInfo2.level < 3) {
+                        alert("[프로] 등급부터 사용 가능한 기능입니다.");
 
-                                                zIndex: 100
-                                            }}>
-                                                JPG/PNG 형식이 아닌 이미지가 있습니다.
-                                            </Paper>
-                                        </Box>
-                                    </>
-                                    :
-                                    null
-                                }
-                            </Box>
-                        </Box>
+                        return;
+                      }
 
-                        <Box sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            p: 1,
+                      product.autoImageTranslate(props.index, 3);
+                    }}
+                  >
+                    {props.item.translate ? (
+                      <>
+                        <CircularProgress size="1rem" />
+                      </>
+                    ) : (
+                      <>전체 이미지 자동 번역</>
+                    )}
+                  </Button>
 
-                            height: 372,
-                            overflowY: "auto"
-                        }}>
-                            <Box>
-                                <ListManager
-                                    items={props.item.descriptionImages}
-                                    direction="horizontal"
-                                    maxItems={4}
-                                    render={img => <Paper className={props.item.imageCheckList && props.item.imageCheckList[img] ? classes.errorPaper : classes.defaultPaper} ref={(elem: any) => {
-                                        if (!elem || !elem.parentNode) {
-                                            return;
-                                        }
+                  <Button
+                    disableElevation
+                    variant="contained"
+                    color="secondary"
+                    sx={{
+                      ml: 0.5,
+                      fontSize: 13,
+                      height: 26,
+                    }}
+                    onClick={() => {
+                      if (common.user.purchaseInfo2.level < 3) {
+                        alert("[프로] 등급부터 사용 가능한 기능입니다.");
 
-                                        let fixed = elem.parentNode.getAttribute('fixed');
+                        return;
+                      }
 
-                                        if (!fixed) {
-                                            elem.parentNode.setAttribute('fixed', 'false');
+                      window.open(chrome.runtime.getURL(`/trangers_multiple.html?id=${props.item.id}&type=3`));
+                    }}
+                  >
+                    전체 이미지 편집/번역
+                  </Button>
+                </Box>
+              </Title>
 
-                                            return;
-                                        }
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  p: 1,
 
-                                        let left = parseFloat(elem.parentNode.style.left);
-                                        let top = parseFloat(elem.parentNode.style.top);
+                  height: 379,
+                  overflowY: "auto",
+                }}
+              >
+                <Box>
+                  <ListManager
+                    items={props.item.descriptionImages}
+                    direction="horizontal"
+                    maxItems={4}
+                    render={(img) => (
+                      <Paper
+                        ref={(elem: any) => {
+                          if (!elem || !elem.parentNode) {
+                            return;
+                          }
 
-                                        if (fixed === 'true') {
-                                            if (isNaN(left) || isNaN(top)) {
-                                                elem.parentNode.setAttribute('fixed', 'false');
+                          let fixed = elem.parentNode.getAttribute("fixed");
 
-                                                return;
-                                            }
-                                        } else {
-                                            const frame = document.getElementsByClassName('ReactVirtualized__Grid ReactVirtualized__List')[0];
-                                            const framePos = frame.getBoundingClientRect();
+                          if (!fixed) {
+                            elem.parentNode.setAttribute("fixed", "false");
 
-                                            const fixedWidth = (window.innerWidth - framePos.width) / 2;
+                            return;
+                          }
 
-                                            elem.parentNode.style.setProperty('left', `${left - fixedWidth}px`, 'important');
-                                            elem.parentNode.style.setProperty('top', `${frame.scrollTop + top - 152}px`, 'important');
-                                            elem.parentNode.setAttribute('fixed', 'true');
-                                        }
-                                    }} sx={{
-                                        m: "2px",
-                                    }} variant="outlined">
-                                        {props.item.descriptionImages.map((v: any, i: number) => {
-                                            if (v !== img) {
-                                                return null;
-                                            }
+                          let left = parseFloat(elem.parentNode.style.left);
+                          let top = parseFloat(elem.parentNode.style.top);
 
-                                            return <>
-                                                <Box className={props.item.imageCheckList && props.item.imageCheckList[img] ? classes.errorBox : classes.defaultBox} sx={{
-                                                    background: "whitesmoke",
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                    alignItems: "center",
-                                                    p: 0.5,
-                                                }}>
-                                                    <Box sx={{
-                                                        display: "flex",
-                                                        alignItems: "center"
-                                                    }}>
-                                                        <Typography noWrap fontSize={13}>
-                                                            {`상세이미지 ${(i + 1).toString().padStart(2, '0')} `}
-                                                        </Typography>
+                          if (isNaN(left) || isNaN(top)) {
+                            elem.parentNode.setAttribute("fixed", "false");
 
-                                                        {props.item.imageCheckList && props.item.imageCheckList[img] ?
-                                                            <ErrorIcon color="error" sx={{
-                                                                fontSize: 18,
-                                                                mx: 0.5
-                                                            }} />
-                                                            :
-                                                            null
-                                                        }
-                                                    </Box>
+                            return;
+                          }
 
-                                                    <IconButton color="error" sx={{
-                                                        p: 0
-                                                    }}
-                                                        size="small"
-                                                        onClick={() => {
-                                                            product.filterDescription(props.index, i);
-                                                        }}
-                                                    >
-                                                        <ClearIcon />
-                                                    </IconButton>
-                                                </Box>
+                          if (fixed === "false") {
+                            const frame = document.getElementsByClassName("ReactVirtualized__Grid ReactVirtualized__List")[0];
+                            const framePos = frame.getBoundingClientRect();
 
-                                                <Image src={img} width={153} height={153} style={{
-                                                    objectFit: "contain"
-                                                }} onClick={(e) => {
-                                                    product.setImagePopOver({
-                                                        element: e.target,
-                                                        data: { src: img },
-                                                        open: true
-                                                    });
-                                                }} />
+                            const fixedWidth = (common.innerSize.width - framePos.width) / 2;
 
-                                                <Box sx={{
-                                                    background: "whitesmoke",
-                                                    display: "flex",
-                                                    alignItems: "center",
+                            elem.parentNode.style.setProperty("left", `${left - fixedWidth}px`, "important");
+                            elem.parentNode.style.setProperty("top", `${frame.scrollTop + top - 177}px`, "important");
+                            elem.parentNode.setAttribute("fixed", "true");
+                          }
+                        }}
+                        sx={{
+                          m: "2px",
+                        }}
+                        variant="outlined"
+                      >
+                        {props.item.descriptionImages.map((v: any, i: number) => {
+                          if (v !== img) {
+                            return null;
+                          }
 
-                                                    p: 0.5
-                                                }}>
-                                                    <Button disableElevation variant="contained" color="info" sx={{
-                                                        fontSize: 13,
-                                                        width: "100%",
-                                                        height: 26
-                                                    }} onClick={() => {
-                                                        window.open(chrome.runtime.getURL(`/trangers_single.html?id=${props.item.id}&type=3&index=${i}`))
-                                                    }}>
-                                                        이미지 편집/번역
-                                                    </Button>
-                                                </Box>
-                                            </>
-                                        })}
-                                    </Paper>
-                                    }
-                                    onDragEnd={(src, dst) => {
-                                        product.switchDescription(src, dst, props.index)
-                                    }}
-                                />
-                            </Box>
-                        </Box>
-                    </Paper>
-                </Grid>
+                          return (
+                            <>
+                              <Title subTitle dark={common.darkTheme} error={props.item.imageCheckList && props.item.imageCheckList[img]}>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <Typography noWrap fontSize={13}>
+                                    {`상세이미지 ${(i + 1).toString().padStart(2, "0")} `}
+                                  </Typography>
 
-                <Grid item xs={6} md={6}>
-                    <Paper variant="outlined" sx={{
-                        border: "1px solid #d1e8ff",
-                    }}>
-                        <Box sx={{
-                            background: "#d1e8ff",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            fontSize: 13,
-                            px: 1,
-                            py: 0.5
-                        }}>
-                            미리보기
+                                  {props.item.imageCheckList && props.item.imageCheckList[img] ? (
+                                    <ErrorIcon
+                                      color="error"
+                                      sx={{
+                                        fontSize: 18,
+                                        mx: 0.5,
+                                      }}
+                                    />
+                                  ) : null}
+                                </Box>
 
-                            <Box sx={{
-                                display: "flex",
-                                alignItems: "center",
-                            }}>
-                                <Button disableElevation variant="contained" color="info" sx={{
+                                <IconButton
+                                  color="error"
+                                  sx={{
+                                    p: 0,
+                                  }}
+                                  size="small"
+                                  onClick={() => {
+                                    product.filterDescription(props.index, i);
+                                  }}
+                                >
+                                  <ClearIcon />
+                                </IconButton>
+                              </Title>
+
+                              <Image
+                                src={img}
+                                width={140}
+                                height={140}
+                                style={{
+                                  objectFit: "contain",
+                                }}
+                                onClick={(e) => {
+                                  product.setImagePopOver({
+                                    element: e.target,
+                                    data: { src: img },
+                                    open: true,
+                                  });
+                                }}
+                              />
+
+                              <Title subTitle dark={common.darkTheme} error={props.item.imageCheckList && props.item.imageCheckList[img]}>
+                                <Button
+                                  disableElevation
+                                  variant="contained"
+                                  color="info"
+                                  sx={{
                                     fontSize: 13,
-                                    height: 26
-                                }} onClick={() => {
-                                    product.toggleDescriptionModal(true, props.index);
-                                }}>
-                                    상세페이지 에디터열기
+                                    width: "100%",
+                                    height: 26,
+                                  }}
+                                  onClick={() => {
+                                    window.open(chrome.runtime.getURL(`/trangers_single.html?id=${props.item.id}&type=3&index=${i}`));
+                                  }}
+                                >
+                                  이미지 편집/번역
                                 </Button>
+                              </Title>
+                            </>
+                          );
+                        })}
+                      </Paper>
+                    )}
+                    onDragEnd={(src, dst) => {
+                      product.switchDescription(src, dst, props.index);
+                    }}
+                  />
+                </Box>
+              </Box>
+            </Paper>
+          </Grid>
 
-                                <Button disableElevation variant="contained" color="info" sx={{
-                                    ml: 0.5,
-                                    fontSize: 13,
-                                    height: 26
-                                }} onClick={() => {
-                                    window.open(chrome.runtime.getURL(`/trangers_multiple.html?id=${props.item.id}&type=3`))
-                                }}>
-                                    전체 이미지 편집/번역
-                                </Button>
+          <Grid item xs={6} md={6}>
+            <Paper variant="outlined">
+              <Title subTitle dark={common.darkTheme}>
+                미리보기
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Button
+                    disableElevation
+                    variant="contained"
+                    color="info"
+                    sx={{
+                      ml: 0.5,
+                      fontSize: 13,
+                      height: 26,
+                    }}
+                    onClick={() => {
+                      product.toggleDescriptionModal(true, props.index);
+                    }}
+                  >
+                    상세설명 에디터열기
+                  </Button>
 
-                                <Button disableElevation variant="contained" color="error" sx={{
-                                    ml: 0.5,
-                                    fontSize: 13,
-                                    height: 26
-                                }} onClick={() => {
-                                    product.initProductDescription(props.item.id, props.index);
-                                }}>
-                                    상세페이지 복구
-                                </Button>
-                            </Box>
-                        </Box>
+                  <Button
+                    disableElevation
+                    variant="contained"
+                    color="error"
+                    sx={{
+                      ml: 0.5,
+                      fontSize: 13,
+                      height: 26,
+                    }}
+                    onClick={() => {
+                      product.initProductDescription(props.item.id, props.index);
+                    }}
+                  >
+                    상세설명 복구
+                  </Button>
+                </Box>
+              </Title>
 
-                        <Box sx={{
-                            p: 1,
-                            height: 373,
-                            overflowY: "auto"
-                        }}>
-                            <ReactQuill
-                                readOnly
-                                value={product.itemInfo.items[props.index]?.description}
-                                modules={modules}
-                            />
-                        </Box>
-                    </Paper>
-                </Grid>
-            </Grid>
-        </Box>
+              <Box
+                sx={{
+                  p: 1,
+                  height: 380,
+                  overflowY: "auto",
+                }}
+              >
+                <ReactQuill readOnly value={product.itemInfo.items[props.index]?.description} modules={modules} />
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
+      </Box>
     </>
-})
+  );
+});

@@ -1,13 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import { render } from 'react-dom';
-import { Dashboard } from './Dashboard';
+import { render } from "react-dom";
+import { Dashboard } from "./Dashboard";
 
-import './index.css';
+import "./index.css";
 
 render(
   <Dashboard />,
 
-  window.document.querySelector('#app-container')
+  window.document.querySelector("#app-container")
 );
-
