@@ -1,21 +1,14 @@
-import React from 'react';
-import OrderTables from '../Components/OrderTables';
+import React from "react";
+import OrderTables from "../Components/OrderTables";
 
 import { observer } from "mobx-react";
 import { AppContext } from "../../../../containers/AppContext";
 import { Header } from "../../Common/Header";
-import { Box, Chip, Container, Paper } from '@mui/material';
-import { deleteLocalStorage } from '../../../Tools/ChromeAsync';
-
-const title = {
-  alignItems: "center",
-  background: "#d1e8ff",
-  display: "flex",
-  fontSize: 16,
-  justifyContent: "space-between",
-  px: 1,
-  height: 40
-};
+import { Box, Chip, Container, Paper } from "@mui/material";
+import { OrderDetailModal } from "../../Modals/OrderDetailModal";
+import { ImagePopOver } from "../../PopOver/ImagePopOver";
+import { Frame, Title } from "../../Common/UI";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 export const New = observer(() => {
   const { common, order } = React.useContext(AppContext);
@@ -25,36 +18,46 @@ export const New = observer(() => {
       return;
     }
 
-    order.loadOrder(common)
-
-    // deleteLocalStorage("order");
+    order.loadOrder(common);
   }, [common.loaded]);
 
+  const theme = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: common.darkTheme ? "dark" : "light",
+        },
+      }),
+    [common.darkTheme]
+  );
+
   return (
-    <>
-      <Header />
+    <ThemeProvider theme={theme}>
+      <Frame dark={common.darkTheme}>
+        <Header />
 
-      <Container maxWidth={'xl'}>
-        <Paper variant="outlined" sx={{
-          border: "1px solid #d1e8ff",
-        }}>
-          <Box sx={title}>
-            <Box sx={{
-              alignItems: "center",
-              display: "flex"
-            }}>
-              신규주문목록 ({order.count})
+        <Container maxWidth={"xl"}>
+          <Paper variant="outlined">
+            <Title dark={common.darkTheme}>
+              <Box
+                sx={{
+                  alignItems: "center",
+                  display: "flex",
+                }}
+              >
+                신규주문목록 ({order.count}) &nbsp;
+                <Chip size="small" label="인터파크는 현재 주문조회가 지원되지 않습니다. / 위메프는 주문정보 일부가 별표(*)처리됩니다." color="info" />
+              </Box>
+            </Title>
 
-              &nbsp;
+            <OrderTables />
+          </Paper>
+        </Container>
 
-              <Chip size="small" label="인터파크는 현재 주문조회가 불가능하며 위메프는 주문정보 일부가 별표(*)처리됩니다." color="info" />
-            </Box>
-          </Box>
+        <ImagePopOver />
 
-          <OrderTables />
-        </Paper>
-      </Container>
-    </>
-  )
-})
-
+        <OrderDetailModal />
+      </Frame>
+    </ThemeProvider>
+  );
+});

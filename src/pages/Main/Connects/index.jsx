@@ -1,13 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import { render } from 'react-dom';
-import { Connects } from './Connects';
+import { render } from "react-dom";
+import { Connects } from "./Connects";
 
-import './index.css';
+import "./index.css";
 
 render(
   <Connects />,
 
-  window.document.querySelector('#app-container')
+  window.document.querySelector("#app-container")
 );
-

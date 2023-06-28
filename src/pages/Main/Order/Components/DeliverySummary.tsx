@@ -1,331 +1,508 @@
-import React from 'react';
+import React from "react";
+import ErrorIcon from "@mui/icons-material/Error";
+import WarningIcon from "@mui/icons-material/Warning";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import { observer } from "mobx-react";
 import { AppContext } from "../../../../containers/AppContext";
-import { styled, Box, Chip, Divider, Grid, IconButton, TableCell, TableRow, Typography, Checkbox, Paper } from "@mui/material";
-import { Image, Input, MyButton } from "../../Common/UI";
-
-import DoneIcon from '@mui/icons-material/Done';
-import ErrorIcon from '@mui/icons-material/Error';
-import { order } from '../../../../containers/stores/order';
+import { styled, Box, Chip, Grid, IconButton, TableCell, TableRow, Typography, Checkbox } from "@mui/material";
+import { Image, Input, MyButton, Search } from "../../Common/UI";
+import { getStoreUrl } from "../../../Tools/Common";
 
 const StyledTableCell = styled(TableCell)({
-    textAlign: "center",
-    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-    padding: 0,
-    fontSize: 13,
+  textAlign: "center",
+  borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+  padding: 0,
+  fontSize: 13,
 });
 
 export const DeliverySummary = observer((props: any) => {
-    const { common, delivery, product } = React.useContext(AppContext);
+  const { common, delivery, product } = React.useContext(AppContext);
 
-    return <>
-        <TableRow hover>
-            <StyledTableCell width={50}>
-                <Checkbox size="small" checked={props.item.checked} onChange={(e) => { delivery.toggleItemChecked(props.index, e.target.checked) }} />
-            </StyledTableCell>
+  return (
+    <>
+      <TableRow hover>
+        <StyledTableCell width={50}>
+          <Checkbox
+            size="small"
+            checked={props.item.checked}
+            onChange={(e) => {
+              delivery.toggleItemChecked(props.index, e.target.checked);
+            }}
+          />
+        </StyledTableCell>
 
-            <StyledTableCell width={82}>
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        p: 0,
-                        height: "100%",
-                        width: "100%"
-                    }}
+        <StyledTableCell width={41}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              p: 0,
+              height: "100%",
+              width: "100%",
+            }}
+          >
+            <Image
+              src={props.item.imageUrl}
+              width={41}
+              height={41}
+              style={{
+                // border: "1px solid lightgray",
+                background: "black",
+                objectFit: "contain",
+              }}
+              onClick={(e) => {
+                product.setImagePopOver({
+                  element: e.target,
+                  data: { src: props.item.imageUrl },
+                  open: true,
+                });
+              }}
+            />
+          </Box>
+        </StyledTableCell>
+
+        <StyledTableCell>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                width: "100%",
+                height: 40,
+              }}
+            >
+              <Grid container spacing={0.5}>
+                <Grid
+                  item
+                  xs={6}
+                  md={1.8}
+                  sx={{
+                    margin: "auto",
+                  }}
                 >
-                    <Image src={props.item.imageUrl} width={82} height={82} style={{
-                        // border: "1px solid lightgray",
-                        background: "black",
-                        objectFit: "contain"
-                    }} onClick={(e) => {
-                        product.setImagePopOver({
-                            element: e.target,
-                            data: { src: props.item.imageUrl },
-                            open: true
-                        });
-                    }} />
-                </Box>
-            </StyledTableCell>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <IconButton
+                      sx={{
+                        ml: 0.5,
+                      }}
+                      onClick={() => {
+                        window.open(props.item.url);
+                      }}
+                    >
+                      {props.item.shopName === "taobao" ? (
+                        <img src="/resources/icon-taobao.png" />
+                      ) : props.item.shopName === "tmall" ? (
+                        <img src="/resources/icon-tmall.png" />
+                      ) : props.item.shopName === "express" ? (
+                        <img src="/resources/icon-express.png" />
+                      ) : props.item.shopName === "alibaba" ? (
+                        <img src="/resources/icon-1688.png" />
+                      ) : props.item.shopName === "vvic" ? (
+                        <img src="/resources/icon-vvic.png" />
+                      ) : null}
+                    </IconButton>
 
-            <StyledTableCell>
-                <Box sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between"
-                }}>
-                    <Box sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                        height: 40
-                    }}>
-                        <Grid container spacing={0.5}>
-                            <Grid item xs={6} md={4} sx={{
-                                margin: "auto"
-                            }}>
-                                <Box sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                }}>
-                                    <IconButton
-                                        sx={{
-                                            ml: 0.5,
-                                        }}
-                                        onClick={() => {
-                                            window.open(props.item.url);
-                                        }}
-                                    >
-                                        <img src="/resources/icon-taobao.png" />
-                                    </IconButton>
+                    <Typography
+                      noWrap
+                      fontSize={13}
+                      sx={{
+                        color: "#1565c0",
+                      }}
+                    >
+                      {props.item.productName}
+                    </Typography>
+                  </Box>
+                </Grid>
 
-                                    <Chip label={
-                                        <Typography sx={{
-                                            fontSize: 11,
-                                        }}>
-                                            {props.item.id}
-                                        </Typography>
-                                    } size="small" color="info" sx={{
-                                        mx: 0.5,
-                                    }} onClick={() => {
-                                        navigator.clipboard.writeText(props.item.id).then(function () {
-                                            alert("클립보드에 복사되었습니다.");
-                                        }, function () {
-                                            alert("클립보드에 복사할 수 없습니다.");
-                                        });
-                                    }} />
+                <Grid
+                  item
+                  xs={6}
+                  md={1.2}
+                  sx={{
+                    m: "auto",
+                    textAlign: "left",
+                  }}
+                >
+                  <Input readOnly value={props.item.optionInfo} />
+                </Grid>
 
-                                    <Typography noWrap fontSize={13} sx={{
-                                        color: "#1565c0",
-                                    }}>
-                                        {props.item.productName}
-                                    </Typography>
-                                </Box>
-                            </Grid>
+                {props.item.connected ? (
+                  <>
+                    <Grid
+                      item
+                      xs={6}
+                      md={1.8}
+                      sx={{
+                        margin: "auto",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <IconButton
+                          sx={{
+                            ml: 0.5,
+                          }}
+                          onClick={() => {
+                            const url = getStoreUrl(common, props.item.connected.marketCode, props.item.connected.productId);
 
-                            <Grid item xs={6} md={2} sx={{
-                                m: "auto",
-                                textAlign: "left"
-                            }}>
-                                <Input
-                                    readOnly
-                                    value={props.item.optionInfo}
-                                />
-                            </Grid>
+                            window.open(url);
+                          }}
+                        >
+                          {props.item.connected.marketCode === "A077" ? (
+                            <img src="/resources/icon-smartstore.png" />
+                          ) : props.item.connected.marketCode === "B378" ? (
+                            <img src="/resources/icon-coupang.png" />
+                          ) : props.item.connected.marketCode === "A112" ? (
+                            <img src="/resources/icon-street-global.png" />
+                          ) : props.item.connected.marketCode === "A113" ? (
+                            <img src="/resources/icon-street-normal.png" />
+                          ) : props.item.connected.marketCode === "A006" ? (
+                            <img src="/resources/icon-gmarket.png" />
+                          ) : props.item.connected.marketCode === "A001" ? (
+                            <img src="/resources/icon-auction.png" />
+                          ) : props.item.connected.marketCode === "A027" ? (
+                            <img src="/resources/icon-interpark.png" />
+                          ) : props.item.connected.marketCode === "B719" ? (
+                            <img src="/resources/icon-wemakeprice.png" />
+                          ) : props.item.connected.marketCode === "A524" ? (
+                            <img src="/resources/icon-lotteon-global.png" />
+                          ) : props.item.connected.marketCode === "A525" ? (
+                            <img src="/resources/icon-lotteon-normal.png" />
+                          ) : props.item.connected.marketCode === "B956" ? (
+                            <img src="/resources/icon-tmon.png" />
+                          ) : null}
+                        </IconButton>
 
-                            <Grid item xs={6} md={1} sx={{
-                                m: "auto",
-                                textAlign: "left"
-                            }}>
-                                <Input
-                                    readOnly
-                                    value={props.item.trackingNumber}
-                                />
-                            </Grid>
+                        <Typography
+                          noWrap
+                          fontSize={13}
+                          sx={{
+                            color: "#1565c0",
+                          }}
+                        >
+                          {props.item.connected.productName}
+                        </Typography>
+                      </Box>
+                    </Grid>
 
-                            <Grid item xs={6} md={1} sx={{
-                                m: "auto",
-                                textAlign: "left"
-                            }}>
-                                <Input
-                                    readOnly
-                                    value={props.item.deliveryMessage}
-                                />
-                            </Grid>
+                    <Grid
+                      item
+                      xs={6}
+                      md={1.2}
+                      sx={{
+                        m: "auto",
+                        textAlign: "left",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Input readOnly value={props.item.connected.productOptionContents} />
+                      </Box>
+                    </Grid>
+                  </>
+                ) : (
+                  <>
+                    <Grid
+                      item
+                      xs={6}
+                      md={3}
+                      sx={{
+                        margin: "auto",
+                        textAlign: "left",
+                      }}
+                    ></Grid>
+                  </>
+                )}
 
-                            <Grid item xs={6} md={2} sx={{
-                                m: "auto",
-                            }}>
-                                <Box sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "right"
-                                }}>
-                                    <Typography noWrap fontSize={13}>
-                                        {props.item.unitPrice} X {props.item.quantity}개 =
-                                    </Typography>
+                <Grid
+                  item
+                  xs={6}
+                  md={1.6}
+                  sx={{
+                    m: "auto",
+                    textAlign: "left",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {props.item.error ? (
+                      <>
+                        <ErrorIcon
+                          color="error"
+                          sx={{
+                            mx: 1,
+                            fontSize: 19,
+                          }}
+                        />
 
-                                    &nbsp;
+                        <Typography
+                          noWrap
+                          fontSize={13}
+                          sx={{
+                            color: "#d32f2f",
+                          }}
+                        >
+                          {props.item.error}
+                        </Typography>
+                      </>
+                    ) : props.item.icucResult ? (
+                      <>
+                        {props.item.icucResult?.code === 0 ? (
+                          <>
+                            <ErrorIcon
+                              color="error"
+                              sx={{
+                                mx: 1,
+                                fontSize: 19,
+                              }}
+                            />
 
-                                    <Typography noWrap fontSize={13} sx={{
-                                        textDecoration: "line-through"
-                                    }}>
-                                        {props.item.unitPrice * props.item.quantity}
-                                    </Typography>
-
-                                    &nbsp;
-
-                                    <Typography noWrap fontSize={13}>
-                                        → {props.item.actualPrice}
-                                    </Typography>
-                                </Box>
-                            </Grid>
-
-                            <Grid item xs={6} md={2} sx={{
-                                margin: "auto"
-                            }}>
-                                <Box
-                                    sx={{
-                                        alignItems: "center",
-                                        display: "flex",
-                                        justifyContent: "right",
-                                    }}
-                                >
-                                    <MyButton disableElevation variant="contained" color="info" sx={{
-                                        ml: 0.5,
-                                        minWidth: 60,
-                                    }} onClick={() => {
-                                        delivery.connectOrderInfo(props.index, common);
-                                    }}>
-                                        주문연동
-                                    </MyButton>
-
-                                    <MyButton disableElevation variant="contained" color="error" sx={{
-                                        ml: 0.5,
-                                        mr: 1,
-                                        minWidth: 60,
-                                    }} onClick={() => {
-                                        alert("준비 중입니다.");
-                                    }}>
-                                        주문삭제
-                                    </MyButton>
-                                </Box>
-                            </Grid>
-                        </Grid>
-                    </Box>
-
-                    <Divider />
-
-                    <Box sx={{
-
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                        height: 40
-                    }}>
-                        {props.item.connected ?
-                            <Grid container spacing={0.5}>
-                                <Grid item xs={6} md={4} sx={{
-                                    margin: "auto"
-                                }}>
-                                    <Box sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}>
-                                        <IconButton
-                                            sx={{
-                                                ml: 0.5,
-                                            }}
-                                            onClick={() => {
-                                                window.open(props.item.url);
-                                            }}
-                                        >
-                                            <img src="/resources/icon-smartstore.png" />
-                                        </IconButton>
-
-                                        <Chip label={
-                                            <Typography sx={{
-                                                fontSize: 11,
-                                            }}>
-                                                {props.item.connected.orderNo}
-                                            </Typography>
-                                        } size="small" color="warning" sx={{
-                                            mx: 0.5,
-                                        }} onClick={() => {
-                                            navigator.clipboard.writeText(props.item.connected.orderNo).then(function () {
-                                                alert("클립보드에 복사되었습니다.");
-                                            }, function () {
-                                                alert("클립보드에 복사할 수 없습니다.");
-                                            });
-                                        }} />
-
-                                        <Typography noWrap fontSize={13} sx={{
-                                            color: "#ed6c02",
-                                        }}>
-                                            {props.item.connected.productName}
-                                        </Typography>
-                                    </Box>
-                                </Grid>
-
-                                <Grid item xs={6} md={2} sx={{
-                                    m: "auto",
-                                    textAlign: "left"
-                                }}>
-                                    <Box sx={{
-                                        display: "flex",
-                                        alignItems: "center"
-                                    }}>
-                                        <Input
-                                            readOnly
-                                            value={props.item.connected.productOptionContents}
-                                        />
-                                    </Box>
-                                </Grid>
-
-                                <Grid item xs={6} md={1} sx={{
-                                    m: "auto",
-                                    textAlign: "left"
-                                }}>
-
-                                </Grid>
-
-                                <Grid item xs={6} md={1} sx={{
-                                    m: "auto",
-                                    textAlign: "left"
-                                }}>
-
-                                </Grid>
-
-                                <Grid item xs={6} md={2} sx={{
-                                    m: "auto",
-                                    textAlign: "right"
-                                }}>
-
-                                </Grid>
-
-                                <Grid item xs={6} md={2} sx={{
-                                    margin: "auto"
-                                }}>
-                                    <Box
-                                        sx={{
-                                            alignItems: "center",
-                                            display: "flex",
-                                            justifyContent: "right",
-                                        }}
-                                    >
-                                        <MyButton disableElevation variant="contained" color="warning" sx={{
-                                            ml: 0.5,
-                                            minWidth: 60,
-                                        }} onClick={() => {
-                                            alert("준비 중입니다.");
-                                        }}>
-                                            배송신청
-                                        </MyButton>
-
-                                        <MyButton disableElevation variant="contained" color="error" sx={{
-                                            ml: 0.5,
-                                            mr: 1,
-                                            minWidth: 60,
-                                        }} onClick={() => {
-                                            delivery.disconnectOrderInfo(props.index);
-                                        }}>
-                                            연동해제
-                                        </MyButton>
-                                    </Box>
-                                </Grid>
-                            </Grid>
-                            :
-                            <Typography noWrap fontSize={13} sx={{
-                                ml: 1
-                            }}>
-                                주문이 연동되지 않았습니다.
+                            <Typography
+                              noWrap
+                              fontSize={13}
+                              sx={{
+                                color: "#d32f2f",
+                              }}
+                            >
+                              {props.item.icucResult?.message}
                             </Typography>
+                          </>
+                        ) : props.item.icucResult?.code === 1 ? (
+                          <>
+                            <CheckCircleIcon
+                              color="success"
+                              sx={{
+                                mx: 1,
+                                fontSize: 19,
+                              }}
+                            />
+
+                            <Typography
+                              noWrap
+                              fontSize={13}
+                              sx={{
+                                color: "#2e7d32",
+                              }}
+                            >
+                              {props.item.icucResult?.message}
+                            </Typography>
+                          </>
+                        ) : props.item.icucResult?.code === 2 ? (
+                          <>
+                            <WarningIcon
+                              color="warning"
+                              sx={{
+                                mx: 1,
+                                fontSize: 19,
+                              }}
+                            />
+
+                            <Typography
+                              noWrap
+                              fontSize={13}
+                              sx={{
+                                color: "#ed6c02",
+                              }}
+                            >
+                              {props.item.icucResult?.message}
+                            </Typography>
+                          </>
+                        ) : null}
+                      </>
+                    ) : null}
+                  </Box>
+                </Grid>
+
+                <Grid
+                  item
+                  xs={6}
+                  md={0.6}
+                  sx={{
+                    m: "auto",
+                    textAlign: "right",
+                  }}
+                >
+                  <Typography
+                    noWrap
+                    fontSize={13}
+                    sx={{
+                      color: "#d32f2f",
+                    }}
+                  >
+                    {props.item.unitPrice}
+                  </Typography>
+                </Grid>
+
+                <Grid
+                  item
+                  xs={6}
+                  md={0.6}
+                  sx={{
+                    m: "auto",
+                    textAlign: "right",
+                  }}
+                >
+                  <Chip
+                    label={
+                      <Typography
+                        sx={{
+                          fontSize: 11,
+                        }}
+                      >
+                        X{props.item.quantity}
+                      </Typography>
+                    }
+                    size="small"
+                    color={props.item.quantity > 1 ? "error" : "default"}
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  xs={6}
+                  md={0.6}
+                  sx={{
+                    m: "auto",
+                    textAlign: "right",
+                  }}
+                >
+                  <Typography
+                    noWrap
+                    fontSize={13}
+                    sx={{
+                      color: "#1565c0",
+                    }}
+                  >
+                    {props.item.actualPrice}
+                  </Typography>
+                </Grid>
+
+                <Grid
+                  item
+                  xs={6}
+                  md={1.6}
+                  sx={{
+                    m: "auto",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      ml: 1,
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {props.item.deliveryInfo ? (
+                      <Search
+                        disabled={!delivery.deliveryList.find((v) => v.name === common.user.userInfo.orderToDeliveryName && v.hscode)}
+                        value={props.item.deliveryInfo.category}
+                        onChange={(e: any, value: any) => {
+                          delivery.updateDeliveryInfo(
+                            {
+                              ...props.item.deliveryInfo,
+
+                              category: value,
+                            },
+                            props.index
+                          );
+                        }}
+                        onInputChange={(e, value, reason) => {
+                          if (reason !== "input") {
+                            return;
+                          }
+
+                          delivery.updateDeliveryInfo(
+                            {
+                              ...props.item.deliveryInfo,
+
+                              input: value,
+                            },
+                            props.index
+                          );
+                        }}
+                        options={
+                          props.item.deliveryInfo.input
+                            ? delivery.deliveryData.find((v: any) => v.company === common.user.userInfo?.orderToDeliveryName).category
+                            : [props.item.deliveryInfo.category]
                         }
-                    </Box>
-                </Box>
-            </StyledTableCell>
-        </TableRow>
+                        getOptionLabel={(option: any) => option.name ?? ""}
+                        isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
+                        onClose={() => {
+                          delivery.updateDeliveryInfo(
+                            {
+                              ...props.item.deliveryInfo,
+
+                              input: "",
+                            },
+                            props.index
+                          );
+                        }}
+                      />
+                    ) : null}
+                  </Box>
+                </Grid>
+
+                <Grid
+                  item
+                  xs={6}
+                  md={1}
+                  sx={{
+                    m: "auto",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "right",
+                      mr: 1,
+                    }}
+                  >
+                    <MyButton
+                      disableElevation
+                      variant="contained"
+                      color="info"
+                      sx={{
+                        minWidth: 60,
+                      }}
+                      onClick={() => {
+                        delivery.toggleDeliveryDetailModal(true, props.index);
+                      }}
+                    >
+                      상세정보
+                    </MyButton>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+        </StyledTableCell>
+      </TableRow>
     </>
-})
+  );
+});

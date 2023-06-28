@@ -1,13 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import { App } from './App';
-import { render } from 'react-dom';
+import { App } from "./App";
+import { render } from "react-dom";
 
-import './index.css';
+import "./index.css";
 
 render(
   <App />,
 
-  window.document.querySelector('#app-container')
+  window.document.querySelector("#app-container")
 );
-

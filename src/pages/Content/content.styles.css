@@ -1,165 +1,179 @@
 @font-face {
-    font-family: "NNSQUAREROUNDR";
-    src: url('chrome-extension://__MSG_@@extension_id__/resources/NanumSquareRoundR.ttf');
+  font-family: "NNSQUAREROUNDR";
+  src: url("chrome-extension://__MSG_@@extension_id__/resources/NanumSquareRoundR.ttf");
 }
 
 .SELLFORYOU-FLOATING {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    right: 0px;
-    top: 0px;
-    z-index: 2147483641;
+  /* border-spacing: 0px; */
+  border-collapse: collapse;
+  box-shadow: 0px 0px 3px gray;
+  margin: 10px 10px 0px 0px;
+  position: fixed;
+  right: 0px;
+  top: 0px;
+  width: auto;
+  z-index: 2147483648;
+}
+
+.SELLFORYOU-CELL {
+  border: 1px solid black;
+  padding: 0px;
 }
 
 .SELLFORYOU-CHECKBOX {
-    height: 40px;
+  height: 40px !important;
+  position: absolute !important;
+  top: 0px !important;
+  width: 40px !important;
+  z-index: 2147483648 !important;
+}
 
-    left: 0px;
-
-    position: absolute;
-
-    top: 0px;
-
-    width: 40px;
-
-    z-index: 2147483641;
+.SELLFORYOU-LOGO {
+  align-items: center;
+  background: white;
+  border: none;
+  color: black;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font-family: "NNSQUAREROUNDR" !important;
+  font-size: 14px;
+  font-weight: bold;
+  justify-content: center;
 }
 
 .SELLFORYOU-COLLECT {
-    align-items: center;
-    background: white;
-    border: 3px solid white;
-    border-radius: 48%;
-    box-shadow: 0px 0px 3px gray;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    font-family: "NNSQUAREROUNDR" !important;
-    font-size: 14px;
-    font-weight: bold;
-    height: 80px;
-    margin: 10px 10px 0px 0px;
-    justify-content: center;
-    width: 80px;
+  align-items: center;
+  background: white;
+  border: none;
+  color: black;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font-family: "NNSQUAREROUNDR" !important;
+  font-size: 14px;
+  font-weight: bold;
+  height: 80px;
+  justify-content: center;
+  width: 80px;
 }
 
 .SELLFORYOU-COLLECT:hover {
-    border: 3px solid #1976d2;
+  background: #d1e8ff;
 
-    -webkit-transition: all .3s ease;
-    transition: all .3s ease;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .SELLFORYOU-LOADING {
-    box-sizing: unset;
+  box-sizing: unset;
 
-    border: 3px solid white;
-    border-right-color: black;
-    border-top-color: black;
-    border-radius: 100%;
+  border: 3px solid white;
+  border-right-color: black;
+  border-top-color: black;
+  border-radius: 100%;
 
-    height: 32px;
+  height: 32px;
 
-    margin: 5% auto;
+  margin: 5% auto;
 
-    width: 32px;
+  width: 32px;
 
-    -webkit-animation: spin 400ms infinite linear;
-    animation: spin 400ms infinite linear;
+  -webkit-animation: spin 400ms infinite linear;
+  animation: spin 400ms infinite linear;
 }
 
 .SELLFORYOU-INFORM {
-    align-items: center;
+  align-items: center;
 
-    background: rgba(255, 255, 255, 0.8);
-    box-sizing: unset;
+  background: rgba(255, 255, 255, 0.8);
+  box-sizing: unset;
 
-    color: rgb(41, 136, 255);
+  color: rgb(41, 136, 255);
 
-    display: flex;
+  display: flex;
 
-    flex-direction: column;
-    font-size: 48px;
-    font-weight: bolder;
-    font-family: "NNSQUAREROUNDR" !important;
+  flex-direction: column;
+  font-size: 48px;
+  font-weight: bolder;
+  font-family: "NNSQUAREROUNDR" !important;
 
-    height: 100%;
+  height: 100%;
 
-    justify-content: center;
+  justify-content: center;
 
-    left: 50%;
+  left: 50%;
 
-    position: fixed;
+  position: fixed;
 
-    text-align: center;
-    top: 50%;
-    transform: translate(-50%, -50%);
+  text-align: center;
+  top: 50%;
+  transform: translate(-50%, -50%);
 
-    width: 100%;
+  width: 100%;
 
-    z-index: 2147483641;
+  z-index: 2147483648;
 }
 
 @-webkit-keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
 
-    to {
-        transform: rotate(359deg);
-    }
+  to {
+    transform: rotate(359deg);
+  }
 }
 
 @keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
 
-    to {
-        transform: rotate(359deg);
-    }
+  to {
+    transform: rotate(359deg);
+  }
 }
 
 .loader {
-    width: 4.8px;
-    height: 4.8px;
-    display: block;
-    margin: 20px auto;
-    position: relative;
-    border-radius: 4px;
-    color: #000;
-    background: currentColor;
-    box-sizing: border-box;
-    animation: animloader 0.3s 0.3s linear infinite alternate;
+  width: 4.8px;
+  height: 4.8px;
+  display: block;
+  margin: 20px auto;
+  position: relative;
+  border-radius: 4px;
+  color: #000;
+  background: currentColor;
+  box-sizing: border-box;
+  animation: animloader 0.3s 0.3s linear infinite alternate;
 }
 
 .loader::after,
 .loader::before {
-    content: '';
-    box-sizing: border-box;
-    width: 4.8px;
-    height: 4.8px;
-    border-radius: 4px;
-    background: currentColor;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 15px;
-    animation: animloader 0.3s 0.45s linear infinite alternate;
+  content: "";
+  box-sizing: border-box;
+  width: 4.8px;
+  height: 4.8px;
+  border-radius: 4px;
+  background: currentColor;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 15px;
+  animation: animloader 0.3s 0.45s linear infinite alternate;
 }
 
 .loader::after {
-    top: -15px;
-    animation-delay: 0s;
+  top: -15px;
+  animation-delay: 0s;
 }
 
 @keyframes animloader {
-    0% {
-        width: 4.8px
-    }
+  0% {
+    width: 4.8px;
+  }
 
-    100% {
-        width: 36px
-    }
+  100% {
+    width: 36px;
+  }
 }

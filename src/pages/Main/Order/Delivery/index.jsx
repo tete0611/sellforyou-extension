@@ -1,13 +1,12 @@
-import React from 'react';
+import React from "react";
 
-import { render } from 'react-dom';
-import { Delivery } from './Delivery';
+import { render } from "react-dom";
+import { Delivery } from "./Delivery";
 
-import './index.css';
+import "./index.css";
 
 render(
   <Delivery />,
 
-  window.document.querySelector('#app-container')
+  window.document.querySelector("#app-container")
 );
-
