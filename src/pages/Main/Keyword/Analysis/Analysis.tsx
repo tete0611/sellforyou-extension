@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import { AppContext } from "../../../../containers/AppContext";
-import { Header } from "../../Common/Header";
-import { observer } from "mobx-react";
+import { AppContext } from '../../../../containers/AppContext';
+import { Header } from '../../Common/Header';
+import { observer } from 'mobx-react';
 import {
   styled,
   Box,
@@ -21,14 +21,14 @@ import {
   TableRow,
   TableCell,
   Typography,
-} from "@mui/material";
-import { Frame, Input, Title } from "../../Common/UI";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+} from '@mui/material';
+import { Frame, Input, Title } from '../../Common/UI';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // 커스텀 테이블 컬럼 뷰
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
-  padding: "4px",
+  textAlign: 'center',
+  padding: '4px',
   fontSize: 11,
 });
 
@@ -42,7 +42,7 @@ export const Analysis = observer(() => {
     () =>
       createTheme({
         palette: {
-          mode: common.darkTheme ? "dark" : "light",
+          mode: common.darkTheme ? 'dark' : 'light',
         },
       }),
     [common.darkTheme]
@@ -54,9 +54,9 @@ export const Analysis = observer(() => {
         <Header />
 
         <Container
-          maxWidth={"xl"}
+          maxWidth={'xl'}
           sx={{
-            py: "10px",
+            py: '10px',
           }}
         >
           <Paper
@@ -71,9 +71,9 @@ export const Analysis = observer(() => {
               키워드 분석
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "right",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'right',
                 }}
               >
                 {analysis.searchInfo.progress > 0 ? (
@@ -112,7 +112,7 @@ export const Analysis = observer(() => {
               container
               spacing={1}
               sx={{
-                textAlign: "center",
+                textAlign: 'center',
                 p: 1,
               }}
             >
@@ -121,7 +121,7 @@ export const Analysis = observer(() => {
                 xs={6}
                 md={3}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -137,14 +137,14 @@ export const Analysis = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>
@@ -160,14 +160,14 @@ export const Analysis = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Select
                         size="small"
                         sx={{
                           fontSize: 14,
-                          width: "100%",
+                          width: '100%',
                         }}
                         defaultValue={analysis.searchInfo.expose}
                         onChange={(e) => {
@@ -194,7 +194,7 @@ export const Analysis = observer(() => {
                 xs={6}
                 md={3}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -209,14 +209,14 @@ export const Analysis = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>
@@ -232,14 +232,14 @@ export const Analysis = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Select
                         size="small"
                         sx={{
                           fontSize: 14,
-                          width: "100%",
+                          width: '100%',
                         }}
                         value={analysis.searchInfo.saveAuto}
                         onChange={(e) => {
@@ -250,9 +250,9 @@ export const Analysis = observer(() => {
                           });
                         }}
                       >
-                        <MenuItem value={"Y"}>사용</MenuItem>
+                        <MenuItem value={'Y'}>사용</MenuItem>
 
-                        <MenuItem value={"N"}>미사용</MenuItem>
+                        <MenuItem value={'N'}>미사용</MenuItem>
                       </Select>
                     </Grid>
                   </Grid>
@@ -285,9 +285,9 @@ export const Analysis = observer(() => {
               키워드 분석결과
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "right",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'right',
                 }}
               >
                 <Button
@@ -311,7 +311,7 @@ export const Analysis = observer(() => {
             <Box
               sx={{
                 height: common.innerSize.height - 339,
-                overflowY: "auto",
+                overflowY: 'auto',
               }}
             >
               <Table size="small" stickyHeader>
@@ -322,7 +322,7 @@ export const Analysis = observer(() => {
                     <StyledTableCell
                       width={100}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       연관키워드
@@ -330,7 +330,7 @@ export const Analysis = observer(() => {
 
                     <StyledTableCell
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       카테고리
@@ -339,7 +339,7 @@ export const Analysis = observer(() => {
                     <StyledTableCell
                       width={125}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       구매처
@@ -348,7 +348,7 @@ export const Analysis = observer(() => {
                     <StyledTableCell
                       width={75}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       검색상품수
@@ -357,7 +357,7 @@ export const Analysis = observer(() => {
                     <StyledTableCell
                       width={50}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       경쟁률
@@ -366,7 +366,7 @@ export const Analysis = observer(() => {
                     <StyledTableCell
                       width={75}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       월간검색수(PC)
@@ -375,7 +375,7 @@ export const Analysis = observer(() => {
                     <StyledTableCell
                       width={100}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       월간검색수(모바일)
@@ -384,7 +384,7 @@ export const Analysis = observer(() => {
                     <StyledTableCell
                       width={85}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       월평균클릭수(PC)
@@ -393,7 +393,7 @@ export const Analysis = observer(() => {
                     <StyledTableCell
                       width={100}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       월평균클릭수(모바일)
@@ -402,7 +402,7 @@ export const Analysis = observer(() => {
                     <StyledTableCell
                       width={85}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       월평균클릭률(PC)
@@ -411,7 +411,7 @@ export const Analysis = observer(() => {
                     <StyledTableCell
                       width={100}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       월평균클릭률(모바일)
@@ -420,7 +420,7 @@ export const Analysis = observer(() => {
                     <StyledTableCell
                       width={100}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       월평균노출광고수
@@ -429,7 +429,7 @@ export const Analysis = observer(() => {
                     <StyledTableCell
                       width={55}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       광고경쟁도
@@ -441,42 +441,42 @@ export const Analysis = observer(() => {
                   {analysis.searchInfo.results.map((v: any) => (
                     <>
                       <TableRow hover>
-                        <StyledTableCell>{v["순번"]}</StyledTableCell>
+                        <StyledTableCell>{v['순번']}</StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "left",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'left',
                           }}
                         >
-                          {v["연관키워드"]}
+                          {v['연관키워드']}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "left",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'left',
                           }}
                         >
-                          {v["카테고리"]}
+                          {v['카테고리']}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
                             }}
                           >
                             <IconButton
                               size="small"
                               onClick={() => {
-                                window.open(v["URL_TAOBAO"]);
+                                window.open(v['URL_TAOBAO']);
                               }}
                             >
                               <img src="/resources/icon-taobao.png" />
@@ -485,7 +485,7 @@ export const Analysis = observer(() => {
                             <IconButton
                               size="small"
                               onClick={() => {
-                                window.open(v["URL_TMALL"]);
+                                window.open(v['URL_TMALL']);
                               }}
                             >
                               <img src="/resources/icon-tmall.png" />
@@ -494,7 +494,7 @@ export const Analysis = observer(() => {
                             <IconButton
                               size="small"
                               onClick={() => {
-                                window.open(v["URL_ALIEXPRESS"]);
+                                window.open(v['URL_ALIEXPRESS']);
                               }}
                             >
                               <img src="/resources/icon-express.png" />
@@ -503,7 +503,7 @@ export const Analysis = observer(() => {
                             <IconButton
                               size="small"
                               onClick={() => {
-                                window.open(v["URL_1688"]);
+                                window.open(v['URL_1688']);
                               }}
                             >
                               <img src="/resources/icon-1688.png" />
@@ -512,7 +512,7 @@ export const Analysis = observer(() => {
                             <IconButton
                               size="small"
                               onClick={() => {
-                                window.open(v["URL_VVIC"]);
+                                window.open(v['URL_VVIC']);
                               }}
                             >
                               <img src="/resources/icon-vvic.png" />
@@ -522,91 +522,91 @@ export const Analysis = observer(() => {
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {v["검색상품수"].toLocaleString("ko-KR")}
+                          {v['검색상품수'].toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {v["경쟁률"].toLocaleString("ko-KR")}
+                          {v['경쟁률'].toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {v["월간검색수(PC)"].toLocaleString("ko-KR")}
+                          {v['월간검색수(PC)'].toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {v["월간검색수(모바일)"].toLocaleString("ko-KR")}
+                          {v['월간검색수(모바일)'].toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {v["월평균클릭수(PC)"].toLocaleString("ko-KR")}
+                          {v['월평균클릭수(PC)'].toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {v["월평균클릭수(모바일)"].toLocaleString("ko-KR")}
+                          {v['월평균클릭수(모바일)'].toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {v["월평균클릭률(PC)"].toLocaleString("ko-KR")}
+                          {v['월평균클릭률(PC)'].toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {v["월평균클릭률(모바일)"].toLocaleString("ko-KR")}
+                          {v['월평균클릭률(모바일)'].toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {v["월평균노출광고수"].toLocaleString("ko-KR")}
+                          {v['월평균노출광고수'].toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                           }}
                         >
-                          {v["광고경쟁정도"]}
+                          {v['광고경쟁정도']}
                         </StyledTableCell>
                       </TableRow>
                     </>

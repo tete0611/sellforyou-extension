@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import { render } from "react-dom";
-import { Reference } from "./Reference";
+import { render } from 'react-dom';
+import { Reference } from './Reference';
 
-import "./index.css";
+import './index.css';
 
 render(
   <Reference />,
 
-  window.document.querySelector("#app-container")
+  window.document.querySelector('#app-container')
 );

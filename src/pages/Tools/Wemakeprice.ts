@@ -1,30 +1,38 @@
-import MUTATIONS from "../Main/GraphQL/Mutations";
-import QUERIES from "../Main/GraphQL/Queries";
-import gql from "../Main/GraphQL/Requests";
-import { createTabCompletely, sendTabMessage } from "./ChromeAsync";
+import MUTATIONS from '../Main/GraphQL/Mutations';
+import QUERIES from '../Main/GraphQL/Queries';
+import gql from '../Main/GraphQL/Requests';
+import { createTabCompletely, sendTabMessage } from './ChromeAsync';
 
-import { getClock, getClockOffset, getStoreTraceCodeV1, notificationByEveryTime, request, sendCallback, transformContent } from "./Common";
+import {
+  getClock,
+  getClockOffset,
+  getStoreTraceCodeV1,
+  notificationByEveryTime,
+  request,
+  sendCallback,
+  transformContent,
+} from './Common';
 // 위메프 상품삭제 메시지 탭
 async function deleteWemakeprice2(data: any) {
-  const deleteResp: any = await request("https://wpartner.wemakeprice.com/product/setProdStatus.json", {
+  const deleteResp: any = await request('https://wpartner.wemakeprice.com/product/setProdStatus.json', {
     headers: {
-      accept: "application/json, text/javascript, */*; q=0.01",
-      "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-      "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-      "sec-ch-ua": '"Chromium";v="104", " Not A;Brand";v="99", "Google Chrome";v="104"',
-      "sec-ch-ua-mobile": "?0",
-      "sec-ch-ua-platform": '"Windows"',
-      "sec-fetch-dest": "empty",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-site": "same-origin",
-      "x-requested-with": "XMLHttpRequest",
+      accept: 'application/json, text/javascript, */*; q=0.01',
+      'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+      'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'sec-ch-ua': '"Chromium";v="104", " Not A;Brand";v="99", "Google Chrome";v="104"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'same-origin',
+      'x-requested-with': 'XMLHttpRequest',
     },
-    referrer: "https://wpartner.wemakeprice.com/product/prodMain",
-    referrerPolicy: "strict-origin-when-cross-origin",
+    referrer: 'https://wpartner.wemakeprice.com/product/prodMain',
+    referrerPolicy: 'strict-origin-when-cross-origin',
     body: `prodNo=${data}&prodStatusActionPolicy=S`,
-    method: "POST",
-    mode: "cors",
-    credentials: "include",
+    method: 'POST',
+    mode: 'cors',
+    credentials: 'include',
   });
 
   const deleteJson: any = JSON.parse(deleteResp);
@@ -32,26 +40,26 @@ async function deleteWemakeprice2(data: any) {
 }
 // 위메프 상품수정 메시지 탭
 async function editWemakeprice(data: any) {
-  let productResp: any = await request("https://wpartner.wemakeprice.com/product/setProd.json", {
+  let productResp: any = await request('https://wpartner.wemakeprice.com/product/setProd.json', {
     headers: {
-      accept: "application/json, text/javascript, */*; q=0.01",
-      "accept-language": "ko,ko-KR;q=0.9,en-US;q=0.8,en;q=0.7",
-      "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-      "sec-ch-ua": '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
-      "sec-ch-ua-mobile": "?0",
-      "sec-ch-ua-platform": '"Windows"',
-      "sec-fetch-dest": "empty",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-site": "same-origin",
-      "x-requested-with": "XMLHttpRequest",
+      accept: 'application/json, text/javascript, */*; q=0.01',
+      'accept-language': 'ko,ko-KR;q=0.9,en-US;q=0.8,en;q=0.7',
+      'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'same-origin',
+      'x-requested-with': 'XMLHttpRequest',
     },
 
     referrer: `https://wpartner.wemakeprice.com/product/prodSet?setType=update&title=&prodNo=${data.productId}`,
-    referrerPolicy: "strict-origin-when-cross-origin",
+    referrerPolicy: 'strict-origin-when-cross-origin',
     body: data.productContent,
-    method: "POST",
-    mode: "cors",
-    credentials: "include",
+    method: 'POST',
+    mode: 'cors',
+    credentials: 'include',
   });
 
   let productJson: any = JSON.parse(productResp);
@@ -59,25 +67,25 @@ async function editWemakeprice(data: any) {
 }
 // 위메프 상품등록 메시지 탭
 async function uploadWemakeprice2(data: any) {
-  let productResp: any = await request("https://wpartner.wemakeprice.com/product/setProd.json", {
+  let productResp: any = await request('https://wpartner.wemakeprice.com/product/setProd.json', {
     headers: {
-      accept: "application/json, text/javascript, */*; q=0.01",
-      "accept-language": "ko,ko-KR;q=0.9,en-US;q=0.8,en;q=0.7",
-      "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-      "sec-ch-ua": '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
-      "sec-ch-ua-mobile": "?0",
-      "sec-ch-ua-platform": '"Windows"',
-      "sec-fetch-dest": "empty",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-site": "same-origin",
-      "x-requested-with": "XMLHttpRequest",
+      accept: 'application/json, text/javascript, */*; q=0.01',
+      'accept-language': 'ko,ko-KR;q=0.9,en-US;q=0.8,en;q=0.7',
+      'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+      'sec-ch-ua-mobile': '?0',
+      'sec-ch-ua-platform': '"Windows"',
+      'sec-fetch-dest': 'empty',
+      'sec-fetch-mode': 'cors',
+      'sec-fetch-site': 'same-origin',
+      'x-requested-with': 'XMLHttpRequest',
     },
-    referrer: "https://wpartner.wemakeprice.com/product/prodSet?setType=set",
-    referrerPolicy: "strict-origin-when-cross-origin",
+    referrer: 'https://wpartner.wemakeprice.com/product/prodSet?setType=set',
+    referrerPolicy: 'strict-origin-when-cross-origin',
     body: data,
-    method: "POST",
-    mode: "cors",
-    credentials: "include",
+    method: 'POST',
+    mode: 'cors',
+    credentials: 'include',
   });
   let test: any = JSON.parse(productResp);
   return test;
@@ -97,7 +105,7 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
   try {
     let time = getClock();
 
-    let login_resp = await fetch("https://wpartner.wemakeprice.com/getLoginUser.json");
+    let login_resp = await fetch('https://wpartner.wemakeprice.com/getLoginUser.json');
     let login_json = await login_resp.json();
 
     if (!login_json.userId) {
@@ -107,7 +115,7 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
       return false;
     }
 
-    newTab = await createTabCompletely({ active: false, url: "https://wpartner.wemakeprice.com/" }, 10);
+    newTab = await createTabCompletely({ active: false, url: 'https://wpartner.wemakeprice.com/' }, 10);
 
     if (!newTab.id) {
       productStore.addConsoleText(`(${shopName}) 위메프 접속 실패`);
@@ -125,7 +133,8 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
       return false;
     }
 
-    const policy = commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code)?.policyInfo ?? null;
+    const policy =
+      commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code)?.policyInfo ?? null;
 
     if (!policy) {
       productStore.addConsoleText(`(${shopName}) 발송정책 조회 실패`);
@@ -134,7 +143,9 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
       return false;
     }
 
-    let shipping_resp = await fetch(`https://wpartner.wemakeprice.com/partner/sellerShip/getSellerShipDetail.json?shipPolicyNo=${policy}`);
+    let shipping_resp = await fetch(
+      `https://wpartner.wemakeprice.com/partner/sellerShip/getSellerShipDetail.json?shipPolicyNo=${policy}`
+    );
     let shipping_json = await shipping_resp.json();
 
     for (let product in data.DShopInfo.prod_codes) {
@@ -154,7 +165,7 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
           if (!commonStore.uploadInfo.editable) {
             productStore.addRegisteredFailed(
               Object.assign(market_item, {
-                error: "스토어에 이미 등록된 상품입니다.",
+                error: '스토어에 이미 등록된 상품입니다.',
               })
             );
             productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
@@ -165,7 +176,7 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
           if (commonStore.uploadInfo.editable) {
             productStore.addRegisteredFailed(
               Object.assign(market_item, {
-                error: "상품 신규등록을 먼저 진행해주세요.",
+                error: '상품 신규등록을 먼저 진행해주세요.',
               })
             );
             productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
@@ -177,103 +188,103 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
         let name = market_item.name3.slice(0, 70);
 
         let productData: any = {
-          action: "set",
-          prodNo: "",
+          action: 'set',
+          prodNo: '',
           dcateCd: market_item.cate_code,
-          prodStatus: "",
-          removeProdOptionNoStr: "",
-          removeProdImgNoStr: "",
-          removeProdFileNoStr: "",
-          removeProdGnoticeNoStr: "",
-          agreeNo: "",
-          keywordWmp: "",
-          keywordEp: "",
+          prodStatus: '',
+          removeProdOptionNoStr: '',
+          removeProdImgNoStr: '',
+          removeProdFileNoStr: '',
+          removeProdGnoticeNoStr: '',
+          agreeNo: '',
+          keywordWmp: '',
+          keywordEp: '',
           shipPolicyNo: policy,
-          parentProdNo: "",
-          schCateType: "SCH",
-          cateSchNm: "",
+          parentProdNo: '',
+          schCateType: 'SCH',
+          cateSchNm: '',
           prodNm: name,
-          mallType: "NOR",
-          prodType: "N",
-          brandYn: "N",
-          brandNo: "",
-          makerYn: "N",
-          makerNo: "",
-          mdEmpNo: "2014041439",
-          dispYn: "Y",
-          taxYn: "Y",
-          refPriceType: "ONL",
+          mallType: 'NOR',
+          prodType: 'N',
+          brandYn: 'N',
+          brandNo: '',
+          makerYn: 'N',
+          makerNo: '',
+          mdEmpNo: '2014041439',
+          dispYn: 'Y',
+          taxYn: 'Y',
+          refPriceType: 'ONL',
           originPrice: market_item.wprice1,
           salePrice: market_item.sprice,
-          commissionType: "FR",
-          commissionRate: "",
-          commissionPrice: "",
-          salePeriod: "A", //P
+          commissionType: 'FR',
+          commissionRate: '',
+          commissionPrice: '',
+          salePeriod: 'A', //P
           saleStartDt: `${time.YY}-${time.MM}-${time.DD} ${time.hh}:00`,
-          saleEndDt: "2037-12-31 23:00",
+          saleEndDt: '2037-12-31 23:00',
           stockCount: market_item.stock,
-          saleStatus: "A",
-          purchaseMinCount: "1",
-          purchaseLimitYn: "N",
-          basketLimitYn: "N",
-          validPeriod: "PERIOD",
-          validStartDt: "",
-          validEndDt: "",
-          validDay: "",
-          storeZipcode: "",
-          storeAddr1: "",
-          storeAddr2: "",
-          storeRoadAddr1: "",
-          storeRoadAddr2: "",
-          storeLatitude: "",
-          storeLongitude: "",
-          optSelUseYn: "N",
-          optTxtUseYn: "N",
+          saleStatus: 'A',
+          purchaseMinCount: '1',
+          purchaseLimitYn: 'N',
+          basketLimitYn: 'N',
+          validPeriod: 'PERIOD',
+          validStartDt: '',
+          validEndDt: '',
+          validDay: '',
+          storeZipcode: '',
+          storeAddr1: '',
+          storeAddr2: '',
+          storeRoadAddr1: '',
+          storeRoadAddr2: '',
+          storeLatitude: '',
+          storeLongitude: '',
+          optSelUseYn: 'N',
+          optTxtUseYn: 'N',
           sellerProdCd: market_code,
-          contentsMakingType: "P",
-          mainYnRadio: "0",
+          contentsMakingType: 'P',
+          mainYnRadio: '0',
 
-          "imgList[0].mainYn": "Y",
-          "imgList[0].imgUrl": market_item.img1,
-          "imgList[0].imgNo": "",
-          "imgList[0].imgNm": "01.jpg",
-          "imgList[0].imgWidth": "460",
-          "imgList[0].imgHeight": "460",
-          "imgList[0].useYn": "Y",
-          "imgList[0].imgType": "MN",
-          "imgList[0].priority": "0",
+          'imgList[0].mainYn': 'Y',
+          'imgList[0].imgUrl': market_item.img1,
+          'imgList[0].imgNo': '',
+          'imgList[0].imgNm': '01.jpg',
+          'imgList[0].imgWidth': '460',
+          'imgList[0].imgHeight': '460',
+          'imgList[0].useYn': 'Y',
+          'imgList[0].imgType': 'MN',
+          'imgList[0].priority': '0',
 
-          "imgList[1].mainYn": "N",
-          "imgList[1].imgUrl": market_item.img2,
-          "imgList[1].imgNo": "",
-          "imgList[1].imgNm": "02.jpg",
-          "imgList[1].imgWidth": "460",
-          "imgList[1].imgHeight": "460",
-          "imgList[1].useYn": "Y",
-          "imgList[1].imgType": "MN",
-          "imgList[1].priority": "1",
+          'imgList[1].mainYn': 'N',
+          'imgList[1].imgUrl': market_item.img2,
+          'imgList[1].imgNo': '',
+          'imgList[1].imgNm': '02.jpg',
+          'imgList[1].imgWidth': '460',
+          'imgList[1].imgHeight': '460',
+          'imgList[1].useYn': 'Y',
+          'imgList[1].imgType': 'MN',
+          'imgList[1].priority': '1',
 
-          "imgList[2].mainYn": "N",
-          "imgList[2].imgUrl": market_item.img3,
-          "imgList[2].imgNo": "",
-          "imgList[2].imgNm": "03.jpg",
-          "imgList[2].imgWidth": "460",
-          "imgList[2].imgHeight": "460",
-          "imgList[2].useYn": "Y",
-          "imgList[2].imgType": "MN",
-          "imgList[2].priority": "2",
+          'imgList[2].mainYn': 'N',
+          'imgList[2].imgUrl': market_item.img3,
+          'imgList[2].imgNo': '',
+          'imgList[2].imgNm': '03.jpg',
+          'imgList[2].imgWidth': '460',
+          'imgList[2].imgHeight': '460',
+          'imgList[2].useYn': 'Y',
+          'imgList[2].imgType': 'MN',
+          'imgList[2].priority': '2',
 
-          "imgList[3].mainYn": "N",
-          "imgList[3].imgUrl": market_item.img1,
-          "imgList[3].imgNo": "",
-          "imgList[3].imgNm": "04.jpg",
-          "imgList[3].imgWidth": "600",
-          "imgList[3].imgHeight": "400",
-          "imgList[3].useYn": "Y",
-          "imgList[3].imgType": "LST",
-          "imgList[3].priority": "3",
+          'imgList[3].mainYn': 'N',
+          'imgList[3].imgUrl': market_item.img1,
+          'imgList[3].imgNo': '',
+          'imgList[3].imgNm': '04.jpg',
+          'imgList[3].imgWidth': '600',
+          'imgList[3].imgHeight': '400',
+          'imgList[3].useYn': 'Y',
+          'imgList[3].imgType': 'LST',
+          'imgList[3].priority': '3',
 
-          detailType: "HTML",
+          detailType: 'HTML',
           claimShipFee: shipping_json.claimShipFee,
           releaseZipcode: shipping_json.releaseZipcode,
           releaseAddr1: shipping_json.releaseAddr1,
@@ -288,39 +299,39 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
           releaseDay: shipping_json.releaseDay,
           holidayExceptYn: shipping_json.holidayExceptYn,
 
-          checkboxAllNoticeExp: "기본 문구 입력",
+          checkboxAllNoticeExp: '기본 문구 입력',
 
-          isbn13: "",
-          isbn10: "",
-          "certList[0].isCert": "N",
-          "certList[0].certGroup": "KD",
-          "certList[1].isCert": "N",
-          "certList[1].certGroup": "LF",
-          "certList[2].isCert": "N",
-          "certList[2].certGroup": "ER",
-          "certList[3].isCert": "N",
-          "certList[3].certGroup": "RP",
-          "certList[4].isCert": "N",
-          "certList[4].certGroup": "LC",
-          "cert.KD.isCert": "N",
-          "labelList[0].useYn": "Y",
-          "labelList[0].labelGroup": "P",
-          "labelList[0].labelNo": "19",
-          "labelList[1].labelGroup": "P",
-          "labelList[1].labelNo": "20",
-          "labelList[2].labelGroup": "P",
-          "labelList[2].labelNo": "21",
-          "labelList[3].labelGroup": "P",
-          "labelList[3].labelNo": "22",
-          epYn: "Y",
-          reviewDisp: "N",
-          adultLimitYn: "N",
-          localLiquorYn: "N",
-          parallelImportYn: "N",
+          isbn13: '',
+          isbn10: '',
+          'certList[0].isCert': 'N',
+          'certList[0].certGroup': 'KD',
+          'certList[1].isCert': 'N',
+          'certList[1].certGroup': 'LF',
+          'certList[2].isCert': 'N',
+          'certList[2].certGroup': 'ER',
+          'certList[3].isCert': 'N',
+          'certList[3].certGroup': 'RP',
+          'certList[4].isCert': 'N',
+          'certList[4].certGroup': 'LC',
+          'cert.KD.isCert': 'N',
+          'labelList[0].useYn': 'Y',
+          'labelList[0].labelGroup': 'P',
+          'labelList[0].labelNo': '19',
+          'labelList[1].labelGroup': 'P',
+          'labelList[1].labelNo': '20',
+          'labelList[2].labelGroup': 'P',
+          'labelList[2].labelNo': '21',
+          'labelList[3].labelGroup': 'P',
+          'labelList[3].labelNo': '22',
+          epYn: 'Y',
+          reviewDisp: 'N',
+          adultLimitYn: 'N',
+          localLiquorYn: 'N',
+          parallelImportYn: 'N',
           prodDesc: `
         ${getStoreTraceCodeV1(market_item.id, data.DShopInfo.site_code)}
         ${market_item.content2}${
-            commonStore.user.userInfo.descriptionShowTitle === "Y"
+            commonStore.user.userInfo.descriptionShowTitle === 'Y'
               ? `<br /><br /><div style="text-align: center;">${market_item.name3}</div><br /><br />`
               : `<br /><br />`
           }${transformContent(market_item.content1)}${market_item.content3}`,
@@ -328,23 +339,29 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
 
         const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
 
-        const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`] ? itemInfo[`sillCode${data.DShopInfo.site_code}`] : "38";
+        const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
+          ? itemInfo[`sillCode${data.DShopInfo.site_code}`]
+          : '38';
         const sillData = itemInfo[`sillData${data.DShopInfo.site_code}`]
           ? JSON.parse(itemInfo[`sillData${data.DShopInfo.site_code}`])
           : [
-              { code: "195", name: "품명 및 모델명", type: "input" },
-              { code: "197", name: "법에 의한 인증, 허가 등을 받았음을 확인할 수 있는 경우 그에 대한 사항", type: "input" },
-              { code: "198", name: "제조국 또는 원산지", type: "input" },
-              { code: "201", name: "제조자, 수입품의 경우 수입자를 함께 표기", type: "input" },
-              { code: "203", name: "A/S 책임자와 전화번호 또는 소비자상담 관련 전화번호", type: "input" },
+              { code: '195', name: '품명 및 모델명', type: 'input' },
+              {
+                code: '197',
+                name: '법에 의한 인증, 허가 등을 받았음을 확인할 수 있는 경우 그에 대한 사항',
+                type: 'input',
+              },
+              { code: '198', name: '제조국 또는 원산지', type: 'input' },
+              { code: '201', name: '제조자, 수입품의 경우 수입자를 함께 표기', type: 'input' },
+              { code: '203', name: 'A/S 책임자와 전화번호 또는 소비자상담 관련 전화번호', type: 'input' },
             ];
 
-        productData["gnoticeList[0].gnoticeNo"] = sillCode;
-        productData["gnoticeList[0].useYn"] = "Y";
-        productData["gnoticeList[0].prodGnoticeNo"] = "";
+        productData['gnoticeList[0].gnoticeNo'] = sillCode;
+        productData['gnoticeList[0].useYn'] = 'Y';
+        productData['gnoticeList[0].prodGnoticeNo'] = '';
 
         sillData.map((v, i) => {
-          productData[`gnoticeList[0].prodNoticeSetDtoList[${i}].prodDesc`] = v.value ?? "상세설명참조";
+          productData[`gnoticeList[0].prodNoticeSetDtoList[${i}].prodDesc`] = v.value ?? '상세설명참조';
           productData[`gnoticeList[0].prodNoticeSetDtoList[${i}].noticeNo`] = v.code;
         });
 
@@ -360,7 +377,7 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
         for (let i in words_list) {
           if (words_list[i].findWord && !words_list[i].replaceWord) {
             if (market_item.name3.includes(words_list[i].findWord)) {
-              words_restrict["상품명"] = words_list[i].findWord;
+              words_restrict['상품명'] = words_list[i].findWord;
             }
           }
         }
@@ -368,15 +385,15 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
         for (let i in market_optn) {
           if (market_optn[i].code === market_code) {
             for (let j in market_optn[i]) {
-              if (j.includes("misc") && market_optn[i][j] !== "") {
-                group[market_optn[i][j]] = j.replace("misc", "opt");
+              if (j.includes('misc') && market_optn[i][j] !== '') {
+                group[market_optn[i][j]] = j.replace('misc', 'opt');
               }
 
-              if (j.includes("opt") && j !== "optimg" && market_optn[i][j] !== "") {
+              if (j.includes('opt') && j !== 'optimg' && market_optn[i][j] !== '') {
                 for (let k in words_list) {
                   if (words_list[k].findWord && !words_list[k].replaceWord) {
                     if (market_optn[i][j].includes(words_list[k].findWord)) {
-                      words_restrict["옵션명"] = words_list[k].findWord;
+                      words_restrict['옵션명'] = words_list[k].findWord;
                     }
                   }
                 }
@@ -388,10 +405,10 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
         }
 
         if (Object.keys(words_restrict).length > 0) {
-          let message = "";
+          let message = '';
 
           for (let i in words_restrict) {
-            message += i + "에서 금지어(" + words_restrict[i] + ")가 발견되었습니다. ";
+            message += i + '에서 금지어(' + words_restrict[i] + ')가 발견되었습니다. ';
           }
 
           productStore.addRegisteredFailed(Object.assign(market_item, { error: message }));
@@ -405,12 +422,19 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
         if (option_length > 200) {
           productStore.addRegisteredFailed(
             Object.assign(market_item, {
-              error: "옵션 개수가 200개를 초과하는 상품은 등록하실 수 없습니다.",
+              error: '옵션 개수가 200개를 초과하는 상품은 등록하실 수 없습니다.',
             })
           );
           productStore.addConsoleText(`(${shopName}) 상품 등록 실패`);
 
-          await sendCallback(commonStore, data, market_code, parseInt(product), 2, "옵션 개수가 200개를 초과하는 상품은 등록하실 수 없습니다.");
+          await sendCallback(
+            commonStore,
+            data,
+            market_code,
+            parseInt(product),
+            2,
+            '옵션 개수가 200개를 초과하는 상품은 등록하실 수 없습니다.'
+          );
 
           continue;
         }
@@ -418,10 +442,10 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
         let option_count = Object.keys(group).length;
 
         if (option_count > 0) {
-          productData["optSelUseYn"] = "Y";
-          productData["optionDepth"] = option_count;
-          productData["sOptType"] = "S";
-          productData["sDepth"] = option_count;
+          productData['optSelUseYn'] = 'Y';
+          productData['optionDepth'] = option_count;
+          productData['sOptType'] = 'S';
+          productData['sDepth'] = option_count;
 
           let option_list_count = 1;
           let option_data_count = 0;
@@ -432,7 +456,7 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
             for (let j in market_optn) {
               if (market_optn[j].code === market_code) {
                 option_string += market_optn[j][group[i]];
-                option_string += ",";
+                option_string += ',';
               }
             }
 
@@ -459,17 +483,17 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
 
               productData[`optionList[${option_data_count}].optAddPrice`] = market_optn[i].price;
               productData[`optionList[${option_data_count}].stockCount`] = market_optn[i].stock;
-              productData[`optionList[${option_data_count}].sellerOptCd`] = "";
-              productData[`optionList[${option_data_count}].saleStatus`] = "A";
-              productData[`optionList[${option_data_count}].dispYn`] = "Y";
+              productData[`optionList[${option_data_count}].sellerOptCd`] = '';
+              productData[`optionList[${option_data_count}].saleStatus`] = 'A';
+              productData[`optionList[${option_data_count}].dispYn`] = 'Y';
               productData[`optionList[${option_data_count}].priority`] = option_data_count;
-              productData[`optionList[${option_data_count}].useYn`] = "Y";
+              productData[`optionList[${option_data_count}].useYn`] = 'Y';
 
               option_data_count += 1;
             }
           }
         } else {
-          productData["optSelUseYn"] = "N";
+          productData['optSelUseYn'] = 'N';
         }
 
         if (commonStore.uploadInfo.stopped) {
@@ -484,40 +508,43 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
           let productId = market_item.name2;
 
           if (!productId) {
-            productStore.addRegisteredFailed(Object.assign(market_item, { error: "상품 ID를 찾을 수 없습니다." }));
+            productStore.addRegisteredFailed(Object.assign(market_item, { error: '상품 ID를 찾을 수 없습니다.' }));
             productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 실패`);
 
-            await sendCallback(commonStore, data, market_code, parseInt(product), 2, "상품 ID를 찾을 수 없습니다.");
+            await sendCallback(commonStore, data, market_code, parseInt(product), 2, '상품 ID를 찾을 수 없습니다.');
 
             continue;
           }
 
-          const searchResp = await fetch(`https://wpartner.wemakeprice.com/product/getDetail.json?prodNo=${productId}`, {
-            headers: {
-              accept: "application/json, text/javascript, */*; q=0.01",
-              "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-              "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-              "sec-ch-ua": '"Chromium";v="110", "Not A(Brand";v="24", "Google Chrome";v="110"',
-              "sec-ch-ua-mobile": "?0",
-              "sec-ch-ua-platform": '"Windows"',
-              "sec-fetch-dest": "empty",
-              "sec-fetch-mode": "cors",
-              "sec-fetch-site": "same-origin",
-              "x-requested-with": "XMLHttpRequest",
-            },
-            referrer: "https://wpartner.wemakeprice.com/product/prodMain",
-            referrerPolicy: "strict-origin-when-cross-origin",
-            body: null,
-            method: "GET",
-            mode: "cors",
-            credentials: "include",
-          });
+          const searchResp = await fetch(
+            `https://wpartner.wemakeprice.com/product/getDetail.json?prodNo=${productId}`,
+            {
+              headers: {
+                accept: 'application/json, text/javascript, */*; q=0.01',
+                'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+                'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                'sec-ch-ua': '"Chromium";v="110", "Not A(Brand";v="24", "Google Chrome";v="110"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'sec-fetch-dest': 'empty',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-site': 'same-origin',
+                'x-requested-with': 'XMLHttpRequest',
+              },
+              referrer: 'https://wpartner.wemakeprice.com/product/prodMain',
+              referrerPolicy: 'strict-origin-when-cross-origin',
+              body: null,
+              method: 'GET',
+              mode: 'cors',
+              credentials: 'include',
+            }
+          );
 
           const searchJson = await searchResp.json();
 
-          productData["action"] = "update";
-          productData["prodNo"] = productId;
-          productData["saleStartDt"] = searchJson.saleStartDt;
+          productData['action'] = 'update';
+          productData['prodNo'] = productId;
+          productData['saleStartDt'] = searchJson.saleStartDt;
 
           let productContent: any = [];
 
@@ -525,10 +552,10 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
             let encodedKey = encodeURIComponent(property);
             let encodedValue = encodeURIComponent(productData[property]);
 
-            productContent.push(encodedKey + "=" + encodedValue);
+            productContent.push(encodedKey + '=' + encodedValue);
           }
 
-          productContent = productContent.join("&");
+          productContent = productContent.join('&');
 
           productStore.addConsoleText(`(${shopName}) 상품 수정 중...`);
           productStore.addRegisteredQueue(market_item);
@@ -539,7 +566,7 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
           };
 
           let productJson: any = await sendTabMessage(newTab.id, {
-            action: "edited-B719",
+            action: 'edited-B719',
             source: editdata,
           });
 
@@ -585,16 +612,16 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
             let encodedKey = encodeURIComponent(property);
             let encodedValue = encodeURIComponent(productData[property]);
 
-            productContent.push(encodedKey + "=" + encodedValue);
+            productContent.push(encodedKey + '=' + encodedValue);
           }
 
-          productContent = productContent.join("&");
+          productContent = productContent.join('&');
 
           productStore.addConsoleText(`(${shopName}) 상품 등록 중...`);
           productStore.addRegisteredQueue(market_item);
 
           let productJson: any = await sendTabMessage(newTab.id, {
-            action: "upload-B719",
+            action: 'upload-B719',
             source: productContent,
           });
 
@@ -667,7 +694,7 @@ async function deleteWemakeprice(productStore: any, commonStore: any, data: any)
   console.log(`(${shopName}) 등록정보:`, data);
 
   try {
-    let login_resp = await fetch("https://wpartner.wemakeprice.com/getLoginUser.json");
+    let login_resp = await fetch('https://wpartner.wemakeprice.com/getLoginUser.json');
     let login_json = await login_resp.json();
 
     if (!login_json.userId) {
@@ -677,7 +704,7 @@ async function deleteWemakeprice(productStore: any, commonStore: any, data: any)
       return false;
     }
 
-    newTab = await createTabCompletely({ active: false, url: "https://wpartner.wemakeprice.com/" }, 10);
+    newTab = await createTabCompletely({ active: false, url: 'https://wpartner.wemakeprice.com/' }, 10);
 
     if (!newTab.id) {
       productStore.addConsoleText(`(${shopName}) 위메프 접속 실패`);
@@ -709,7 +736,7 @@ async function deleteWemakeprice(productStore: any, commonStore: any, data: any)
         }
 
         let deleteJson: any = await sendTabMessage(newTab.id, {
-          action: "delete-B719",
+          action: 'delete-B719',
           source: productId,
         });
 
@@ -746,7 +773,7 @@ async function deleteWemakeprice(productStore: any, commonStore: any, data: any)
             siteCode: data.DShopInfo.site_code,
           });
         } else {
-          if (deleteJson.errors[0].code === "1027") {
+          if (deleteJson.errors[0].code === '1027') {
             const progressValue = Math.round(((parseInt(product) + 1) * 100) / data.DShopInfo.prod_codes.length);
 
             commonStore.setDisabledProgressValue(data.DShopInfo.site_code, progressValue);
@@ -786,7 +813,7 @@ async function newOrderWemakeprice(commonStore: any, shopInfo: any) {
   }
 
   try {
-    let login_resp = await fetch("https://wpartner.wemakeprice.com/getLoginUser.json");
+    let login_resp = await fetch('https://wpartner.wemakeprice.com/getLoginUser.json');
     let login_json = await login_resp.json();
 
     if (!login_json.userId) {
@@ -808,23 +835,23 @@ async function newOrderWemakeprice(commonStore: any, shopInfo: any) {
       `https://wpartner.wemakeprice.com/ship/getOrderInfoList.json?confirmShipNoStr=&schTotalFlag=&schDateType=orderDt&schStartDate=${startDate.YY}-${startDate.MM}-${startDate.DD}&schEndDate=${endDate.YY}-${endDate.MM}-${endDate.DD}&schShipStatus=D1&schShipMethod=&schDelayShipInfoYn=&schType=&schValue=&schLimitCnt=100&schPageNo=1`,
       {
         headers: {
-          accept: "application/json, text/javascript, */*; q=0.01",
-          "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-          "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-          "sec-ch-ua": '"Chromium";v="106", "Google Chrome";v="106", "Not;A=Brand";v="99"',
-          "sec-ch-ua-mobile": "?0",
-          "sec-ch-ua-platform": '"Windows"',
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "same-origin",
-          "x-requested-with": "XMLHttpRequest",
+          accept: 'application/json, text/javascript, */*; q=0.01',
+          'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+          'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'sec-ch-ua': '"Chromium";v="106", "Google Chrome";v="106", "Not;A=Brand";v="99"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-platform': '"Windows"',
+          'sec-fetch-dest': 'empty',
+          'sec-fetch-mode': 'cors',
+          'sec-fetch-site': 'same-origin',
+          'x-requested-with': 'XMLHttpRequest',
         },
-        referrer: "https://wpartner.wemakeprice.com/ship/orderMain",
-        referrerPolicy: "strict-origin-when-cross-origin",
+        referrer: 'https://wpartner.wemakeprice.com/ship/orderMain',
+        referrerPolicy: 'strict-origin-when-cross-origin',
         body: null,
-        method: "GET",
-        mode: "cors",
-        credentials: "include",
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include',
       }
     );
 
@@ -866,20 +893,20 @@ async function newOrderWemakeprice(commonStore: any, shopInfo: any) {
 // 위메프 발주확인 처리
 async function productPreparedWemakeprice(commonStore: any, shopInfo: any, props: any) {
   let productshipNo: any = [];
-  if (props !== "" && props.item.marketCode === "B719") {
+  if (props !== '' && props.item.marketCode === 'B719') {
     productshipNo.push(props.item.shipNo);
   } else {
     return;
   }
-  console.log("productshipNo", productshipNo);
+  console.log('productshipNo', productshipNo);
   const shopName = shopInfo.name;
   if (!shopInfo.connected || shopInfo.disabled) {
     return [];
   }
   try {
-    let login_resp = await fetch("https://wpartner.wemakeprice.com/getLoginUser.json");
+    let login_resp = await fetch('https://wpartner.wemakeprice.com/getLoginUser.json');
     let login_json = await login_resp.json();
-    console.log("login_json", login_json);
+    console.log('login_json', login_json);
     if (!login_json.userId) {
       notificationByEveryTime(`(${shopName}) 파트너 로그인 후 재시도 바랍니다.`);
       return [];
@@ -892,26 +919,29 @@ async function productPreparedWemakeprice(commonStore: any, shopInfo: any, props
     }
 
     productshipNo.map(async (v: any) => {
-      const orderResp = await fetch(`https://wpartner.wemakeprice.com/ship/setConfirmOrder.json?shipNo=${v}&_=${new Date().getTime()}`, {
-        headers: {
-          accept: "application/json, text/javascript, */*; q=0.01",
-          "accept-language": "ko,en-US;q=0.9,en;q=0.8,ko-KR;q=0.7",
-          "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-          "sec-ch-ua": '"Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"',
-          "sec-ch-ua-mobile": "?0",
-          "sec-ch-ua-platform": '"Windows"',
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "same-origin",
-          "x-requested-with": "XMLHttpRequest",
-        },
-        referrer: "https://wpartner.wemakeprice.com/ship/orderMain",
-        referrerPolicy: "strict-origin-when-cross-origin",
-        body: null,
-        method: "GET",
-        mode: "cors",
-        credentials: "include",
-      });
+      const orderResp = await fetch(
+        `https://wpartner.wemakeprice.com/ship/setConfirmOrder.json?shipNo=${v}&_=${new Date().getTime()}`,
+        {
+          headers: {
+            accept: 'application/json, text/javascript, */*; q=0.01',
+            'accept-language': 'ko,en-US;q=0.9,en;q=0.8,ko-KR;q=0.7',
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'sec-ch-ua': '"Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            'x-requested-with': 'XMLHttpRequest',
+          },
+          referrer: 'https://wpartner.wemakeprice.com/ship/orderMain',
+          referrerPolicy: 'strict-origin-when-cross-origin',
+          body: null,
+          method: 'GET',
+          mode: 'cors',
+          credentials: 'include',
+        }
+      );
 
       const orderJson: any = await orderResp.json();
       console.log(orderJson);
@@ -932,7 +962,7 @@ async function deliveryOrderWemakeprice(commonStore: any, shopInfo: any) {
   }
 
   try {
-    let login_resp = await fetch("https://wpartner.wemakeprice.com/getLoginUser.json");
+    let login_resp = await fetch('https://wpartner.wemakeprice.com/getLoginUser.json');
     let login_json = await login_resp.json();
 
     if (!login_json.userId) {
@@ -954,23 +984,23 @@ async function deliveryOrderWemakeprice(commonStore: any, shopInfo: any) {
       `https://wpartner.wemakeprice.com/ship/getOrderInfoList.json?confirmShipNoStr=&schTotalFlag=&schDateType=orderDt&schStartDate=${startDate.YY}-${startDate.MM}-${startDate.DD}&schEndDate=${endDate.YY}-${endDate.MM}-${endDate.DD}&schShipStatus=D1&schShipMethod=&schDelayShipInfoYn=&schType=&schValue=&schLimitCnt=100&schPageNo=1`,
       {
         headers: {
-          accept: "application/json, text/javascript, */*; q=0.01",
-          "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-          "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-          "sec-ch-ua": '"Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"',
-          "sec-ch-ua-mobile": "?0",
-          "sec-ch-ua-platform": '"Windows"',
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "same-origin",
-          "x-requested-with": "XMLHttpRequest",
+          accept: 'application/json, text/javascript, */*; q=0.01',
+          'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+          'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'sec-ch-ua': '"Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-platform': '"Windows"',
+          'sec-fetch-dest': 'empty',
+          'sec-fetch-mode': 'cors',
+          'sec-fetch-site': 'same-origin',
+          'x-requested-with': 'XMLHttpRequest',
         },
-        referrer: "https://wpartner.wemakeprice.com/ship/orderMain",
-        referrerPolicy: "strict-origin-when-cross-origin",
+        referrer: 'https://wpartner.wemakeprice.com/ship/orderMain',
+        referrerPolicy: 'strict-origin-when-cross-origin',
         body: null,
-        method: "GET",
-        mode: "cors",
-        credentials: "include",
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include',
       }
     );
 

@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Select } from "@mui/material";
+import { Select } from '@mui/material';
 
 // 드롭다운 뷰 설정
 export const ComboBox = (props: any) => {
@@ -10,7 +10,7 @@ export const ComboBox = (props: any) => {
       sx={{
         ...props.sx,
 
-        bgcolor: "background.default",
+        bgcolor: 'background.default',
         fontSize: 13,
         height: 30,
       }}

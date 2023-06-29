@@ -1,28 +1,28 @@
-import { getLocalStorage } from "../../Tools/ChromeAsync";
-import { sleep } from "../../Tools/Common";
-import { refreshToken } from "../../Tools/Auth";
+import { getLocalStorage } from '../../Tools/ChromeAsync';
+import { sleep } from '../../Tools/Common';
+import { refreshToken } from '../../Tools/Auth';
 
 // 다중 요청이 들어올 때 세션 처리
-let STATUS = "CONTINUED";
+let STATUS = 'CONTINUED';
 
 // 백엔드와 GraphQL 통신
 const gql: any = async (query: any, variables: any, customHeaders: boolean) => {
   try {
     // 토큰 정보를 가져옴
-    let auth: any = await getLocalStorage("appInfo");
+    let auth: any = await getLocalStorage('appInfo');
 
     // 쿼리/뮤테이션 수행
     const resp = await fetch(`${process.env.SELLFORYOU_API_SERVER}/graphql`, {
       headers: customHeaders
         ? {
-            Authorization: "Bearer " + auth?.accessToken,
+            Authorization: 'Bearer ' + auth?.accessToken,
           }
         : {
-            Authorization: "Bearer " + auth?.accessToken,
-            "Content-Type": "application/json",
+            Authorization: 'Bearer ' + auth?.accessToken,
+            'Content-Type': 'application/json',
           },
 
-      method: "POST",
+      method: 'POST',
       body: customHeaders ? variables : JSON.stringify({ query, variables }),
     });
 
@@ -63,18 +63,18 @@ const gql: any = async (query: any, variables: any, customHeaders: boolean) => {
     // 파싱 데이터에 오류가 반환된 경우
     if (json.errors) {
       // 토큰이 만료된 경우
-      if (json.errors[0].message === "유효한 accessToken이 아닙니다.") {
+      if (json.errors[0].message === '유효한 accessToken이 아닙니다.') {
         // 다중 요청이 들어왔을 때 로직이 한번만 수행될 수 있도록 STATUS를 통해 컨트롤
         switch (STATUS) {
-          case "CONTINUED": {
-            STATUS = "STOPPED";
+          case 'CONTINUED': {
+            STATUS = 'STOPPED';
 
             // 로그인 정보가 없는 경우 로그인 페이지로 이동
             if (!auth) {
-              STATUS = "TERMINATED";
+              STATUS = 'TERMINATED';
 
               try {
-                window.location.href = chrome.runtime.getURL("/signin.html");
+                window.location.href = chrome.runtime.getURL('/signin.html');
               } catch (e) {
                 //
               }
@@ -86,34 +86,34 @@ const gql: any = async (query: any, variables: any, customHeaders: boolean) => {
             const refreshResponse = await refreshToken();
 
             if (!refreshResponse) {
-              STATUS = "TERMINATED";
+              STATUS = 'TERMINATED';
 
               return {};
             }
 
-            STATUS = "CONTINUED";
+            STATUS = 'CONTINUED';
 
             return await gql(query, variables, customHeaders);
           }
 
-          case "STOPPED": {
+          case 'STOPPED': {
             await sleep(1000 * 1);
 
             return await gql(query, variables, customHeaders);
           }
 
-          case "TERMINATED": {
+          case 'TERMINATED': {
             return {};
           }
         }
-      } else if (json.errors[0].message.includes("timeout")) {
+      } else if (json.errors[0].message.includes('timeout')) {
         // 그 외 요청 대기시간이 초과된 경우
         console.log(json.errors[0].message);
 
         return {
           errors: [
             {
-              message: "서버로부터 응답시간이 초과하였습니다. 잠시 후 다시시도 바랍니다.",
+              message: '서버로부터 응답시간이 초과하였습니다. 잠시 후 다시시도 바랍니다.',
             },
           ],
         };
@@ -126,7 +126,7 @@ const gql: any = async (query: any, variables: any, customHeaders: boolean) => {
 
     let message = ``;
 
-    if (e.toString().includes("Failed to fetch")) {
+    if (e.toString().includes('Failed to fetch')) {
       message = `페이지를 이동하여 로딩이 중단되었습니다.`;
     }
 

@@ -2,21 +2,21 @@
 // 1) 기본적으로 구문이 5분 이상 유휴상태일 경우 비활성화됨
 // 2) while문 또는 5분 이상 소요될 수 있는 지연 응답에 대한 구현 금지 (오류 추적이 어렵고, 메시지 채널이 닫히면 기능이 멈춤)
 
-import QUERIES from "../Main/GraphQL/Queries";
-import MUTATIONS from "../Main/GraphQL/Mutations";
-import gql from "../Main/GraphQL/Requests";
-import papagoTranslation from "../Tools/Translation";
+import QUERIES from '../Main/GraphQL/Queries';
+import MUTATIONS from '../Main/GraphQL/Mutations';
+import gql from '../Main/GraphQL/Requests';
+import papagoTranslation from '../Tools/Translation';
 
-import { coupangApiGateway } from "../Tools/Coupang";
-import { createTabCompletely, getLocalStorage, queryTabs, sendTabMessage, setLocalStorage } from "../Tools/ChromeAsync";
-import { getRandomIntInclusive } from "../Tools/Common";
+import { coupangApiGateway } from '../Tools/Coupang';
+import { createTabCompletely, getLocalStorage, queryTabs, sendTabMessage, setLocalStorage } from '../Tools/ChromeAsync';
+import { getRandomIntInclusive } from '../Tools/Common';
 
 // 티몰 상세페이지 요청 시 CORS 이슈 발생
 // 이를 해결하기 위해 서비스워커에서 처리하지 않고 메시지 채널로 콘텐츠 스크립트에서 처리하도록 구현
 // 티몰에 상품 수집하려고 페이지 들어가면 탭이 생겼다가 사라지는게 이 기능
 async function tmallCORS(url) {
   const tab = await createTabCompletely({ active: false, url }, 5);
-  const res = await sendTabMessage(tab.id, { action: "fetch", source: url });
+  const res = await sendTabMessage(tab.id, { action: 'fetch', source: url });
 
   chrome.tabs.remove(tab.id);
 
@@ -28,7 +28,7 @@ async function tmallCORS(url) {
 async function addBulkInfo(source: any, sender: any, isExcel: boolean) {
   const tabs: any = await queryTabs({});
 
-  let bulkInfo: any = (await getLocalStorage("bulkInfo")) ?? [];
+  let bulkInfo: any = (await getLocalStorage('bulkInfo')) ?? [];
 
   bulkInfo = bulkInfo.filter((v: any) => {
     if (v.sender.tab.id === sender.tab.id) {
@@ -74,14 +74,17 @@ async function addBulkInfo(source: any, sender: any, isExcel: boolean) {
 async function addToInventory(sender: any, origin: any) {
   // 상품 수집 실패 시
   if (origin.error) {
-    return await finishCollect(sender, "failed", origin.error);
+    return await finishCollect(sender, 'failed', origin.error);
   }
   // 대량 수집 시 (대량수집 시) 설정해둔 값들을 불러 옴
-  let collectInfo: any = (await getLocalStorage("collectInfo")) ?? [];
+  let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
   let collect = collectInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
   if (collect && collect.useStandardShipping) {
-    if (origin.item.shop_id === "express" && !origin.item.props.find((v) => v.name === "AliExpress Standard Shipping")) {
-      return await finishCollect(sender, "failed", "스탠다드 쉬핑 불가 상품입니다."); // finish로 그냥 에러내서 끝내버림 . skip 해버림.
+    if (
+      origin.item.shop_id === 'express' &&
+      !origin.item.props.find((v) => v.name === 'AliExpress Standard Shipping')
+    ) {
+      return await finishCollect(sender, 'failed', '스탠다드 쉬핑 불가 상품입니다.'); // finish로 그냥 에러내서 끝내버림 . skip 해버림.
     }
   }
 
@@ -90,12 +93,12 @@ async function addToInventory(sender: any, origin: any) {
     data: [
       {
         attr: {},
-        taobaoNumIid: "",
-        title: "",
+        taobaoNumIid: '',
+        title: '',
         optionName: [],
         optionValue: [],
-        video: "",
-        description: "",
+        video: '',
+        description: '',
         isTranslated: false,
       },
     ],
@@ -106,7 +109,7 @@ async function addToInventory(sender: any, origin: any) {
 
   // 상품 속성정보 중 불필요한 문자열을 제거하고 번역 사전에 넣음
   origin.item.attr = origin.item.attr.map((v: any) => {
-    const filtered = v.replace(/&.+;/, "");
+    const filtered = v.replace(/&.+;/, '');
 
     textdict[filtered] = filtered;
 
@@ -114,16 +117,16 @@ async function addToInventory(sender: any, origin: any) {
   });
 
   // HTML특수문자(&nbsp; &amp;) 제거
-  origin.item.title = origin.item.title.replace(/&.*;/, "");
+  origin.item.title = origin.item.title.replace(/&.*;/, '');
 
   // * => X 처리
-  origin.item.title = origin.item.title.replace(/[*]/gi, "x");
+  origin.item.title = origin.item.title.replace(/[*]/gi, 'x');
 
   // \ ? " < > => 공백 처리
-  origin.item.title = origin.item.title.replace(/[\\\?\"<>,&]/gi, " ");
+  origin.item.title = origin.item.title.replace(/[\\\?\"<>,&]/gi, ' ');
 
   // 아마존 또는 상품명이 중문이 아닌 경우 번역이 필요없음
-  if (origin.item.shop_id.includes("amazon") || origin.item.title.replace(/[^\u4e00-\u9fff]/g, "").length > 0) {
+  if (origin.item.shop_id.includes('amazon') || origin.item.title.replace(/[^\u4e00-\u9fff]/g, '').length > 0) {
     textdict[origin.item.title] = origin.item.title;
   }
 
@@ -134,18 +137,18 @@ async function addToInventory(sender: any, origin: any) {
 
   // 옵션 정보를 순회하면서 데이터 가공 후 새로운 객체에 할당
   for (let i in origin.item.props_list) {
-    let id = i.split(":");
-    let options = origin.item.props_list[i].split(":");
+    let id = i.split(':');
+    let options = origin.item.props_list[i].split(':');
 
     for (let j in options) {
       // * => X 처리
-      options[j] = options[j].replace(/[*]/gi, "x");
+      options[j] = options[j].replace(/[*]/gi, 'x');
 
       // \ / : * ? " < > => 공백 처리
-      options[j] = options[j].replace(/[\\\?\"<>,]/gi, " ");
+      options[j] = options[j].replace(/[\\\?\"<>,]/gi, ' ');
 
       // 아마존 또는 상품명이 중문이 아닌 경우 번역이 필요없음
-      if (origin.item.shop_id.includes("amazon") || options[j].replace(/[^\u4e00-\u9fff]/g, "").length > 0) {
+      if (origin.item.shop_id.includes('amazon') || options[j].replace(/[^\u4e00-\u9fff]/g, '').length > 0) {
         textdict[options[j]] = options[j];
       }
     }
@@ -164,7 +167,7 @@ async function addToInventory(sender: any, origin: any) {
 
   // 옵션값을 순회하면서 기본 데이터 생성
   for (let i in option_value) {
-    let id = i.split(":");
+    let id = i.split(':');
 
     result.data[0].optionValue.push({
       taobaoPid: id[0],
@@ -188,30 +191,30 @@ async function addToInventory(sender: any, origin: any) {
   // 1) 구문 실행 전 textdict에는 [원문]:[원문]으로 초기화 되어 있음
   // 2) 구문 실행 후 textdict에는 [원문]:[번역문] 형식으로 바뀜
   switch (origin.item.shop_id) {
-    case "express": {
+    case 'express': {
       break;
     }
 
-    case "amazon-us": {
-      textdict = await papagoTranslation(textdict, "en", "ko", null);
-
-      break;
-    }
-
-    case "amazon-jp": {
-      textdict = await papagoTranslation(textdict, "ja", "ko", null);
+    case 'amazon-us': {
+      textdict = await papagoTranslation(textdict, 'en', 'ko', null);
 
       break;
     }
 
-    case "amazon-de": {
-      textdict = await papagoTranslation(textdict, "de", "ko", null);
+    case 'amazon-jp': {
+      textdict = await papagoTranslation(textdict, 'ja', 'ko', null);
+
+      break;
+    }
+
+    case 'amazon-de': {
+      textdict = await papagoTranslation(textdict, 'de', 'ko', null);
 
       break;
     }
 
     default: {
-      textdict = await papagoTranslation(textdict, "zh-CN", "ko", null);
+      textdict = await papagoTranslation(textdict, 'zh-CN', 'ko', null);
 
       break;
     }
@@ -263,7 +266,7 @@ async function addToInventory(sender: any, origin: any) {
   }
 
   // 상품 수집을 진행한 탭에서 수집 환경설정을 가져옴
-  let bulkInfo: any = (await getLocalStorage("bulkInfo")) ?? [];
+  let bulkInfo: any = (await getLocalStorage('bulkInfo')) ?? [];
   let bulk = bulkInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
 
   // 엑셀파일 수집이라면 상품명과 검색어태그는 엑셀파일에 입력한 정보로 변경
@@ -288,12 +291,12 @@ async function addToInventory(sender: any, origin: any) {
 
   // 유저정보를 가져오지 못했을 경우 수집 실패로 분류
   if (userJson.errors) {
-    return await finishCollect(sender, "failed", userJson.errors[0].message);
+    return await finishCollect(sender, 'failed', userJson.errors[0].message);
   }
   //개인분류 대량수집 데이터
   if (collect && collect.myKeyward) {
-    origin.item.myKeyward = collect.myKeyward.replace(/\s/g, "");
-    result.data[0].myKeyward = collect.myKeyward.replace(/\s/g, "");
+    origin.item.myKeyward = collect.myKeyward.replace(/\s/g, '');
+    result.data[0].myKeyward = collect.myKeyward.replace(/\s/g, '');
   }
   // 카테고리 사전설정 데이터 가져오기 (카테고리 수동설정)
   if (!collect || !collect.categoryId) {
@@ -302,9 +305,9 @@ async function addToInventory(sender: any, origin: any) {
     let accesskey = userJson.data.selectMyInfoByUser.userInfo.coupangAccessKey;
     let secretkey = userJson.data.selectMyInfoByUser.userInfo.coupangSecretKey;
 
-    if (accesskey === "" && secretkey === "") {
-      accesskey = "d3087930-fdd7-490e-aa06-da32f79cc9c2";
-      secretkey = "5d4e2bce5dd8337285b634100c6a198d1b31327a";
+    if (accesskey === '' && secretkey === '') {
+      accesskey = 'd3087930-fdd7-490e-aa06-da32f79cc9c2';
+      secretkey = '5d4e2bce5dd8337285b634100c6a198d1b31327a';
     }
 
     let categoryJson = await coupangApiGateway({
@@ -312,16 +315,16 @@ async function addToInventory(sender: any, origin: any) {
       secretkey: secretkey,
 
       path: `/v2/providers/openapi/apis/api/v1/categorization/predict`,
-      query: "",
-      method: "POST",
+      query: '',
+      method: 'POST',
 
       data: {
         productName: productName,
       },
     });
 
-    if (categoryJson.code.ERROR || categoryJson.data.autoCategorizationPredictionResultType !== "SUCCESS") {
-      return await finishCollect(sender, "failed", "카테고리 설정 도중 오류가 발생하였습니다.");
+    if (categoryJson.code.ERROR || categoryJson.data.autoCategorizationPredictionResultType !== 'SUCCESS') {
+      return await finishCollect(sender, 'failed', '카테고리 설정 도중 오류가 발생하였습니다.');
     }
 
     origin.item.cid = categoryJson.data.predictedCategoryId;
@@ -332,9 +335,12 @@ async function addToInventory(sender: any, origin: any) {
   }
 
   // 브랜드, 제조사, 모델명 자동할당
-  origin.item.brand = result.data[0].attr.find((v: any) => v.split(":")[0].includes("브랜드"))?.split(":")[1] ?? "";
-  origin.item.manufacturer = result.data[0].attr.find((v: any) => v.split(":")[0].includes("근원") || v.split(":")[0].includes("생산지"))?.split(":")[1] ?? "";
-  origin.item.modelName = result.data[0].attr.find((v: any) => v.split(":")[0].includes("모델"))?.split(":")[1] ?? "";
+  origin.item.brand = result.data[0].attr.find((v: any) => v.split(':')[0].includes('브랜드'))?.split(':')[1] ?? '';
+  origin.item.manufacturer =
+    result.data[0].attr
+      .find((v: any) => v.split(':')[0].includes('근원') || v.split(':')[0].includes('생산지'))
+      ?.split(':')[1] ?? '';
+  origin.item.modelName = result.data[0].attr.find((v: any) => v.split(':')[0].includes('모델'))?.split(':')[1] ?? '';
 
   // 대표이미지 순서바꾸기 기능
   let src = parseInt(origin.user.userInfo.thumbnailRepresentNo) - 1;
@@ -355,7 +361,7 @@ async function addToInventory(sender: any, origin: any) {
   }
 
   result.data[0].attr = JSON.stringify(result.data[0].attr);
-  console.log("origin", origin);
+  console.log('origin', origin);
   console.log(result);
 
   // 최종 가공 데이터를 백엔드에 보내서 DB에 추가하도록 요청
@@ -372,18 +378,18 @@ async function addToInventory(sender: any, origin: any) {
 
   // 처리과정에 문제가 있는 경우 상품 수집 실패
   if (response.errors) {
-    return await finishCollect(sender, "failed", response.errors[0].message);
+    return await finishCollect(sender, 'failed', response.errors[0].message);
   }
 
   const message = response.data.getTaobaoItemUsingExtensionByUser;
 
   // 응답에 따른 상품 수집 성공/실패 여부 처리
-  return await finishCollect(sender, message.includes("상품 수집이 완료되었습니다.") ? "success" : "failed", message);
+  return await finishCollect(sender, message.includes('상품 수집이 완료되었습니다.') ? 'success' : 'failed', message);
 }
 
 // 대량수집 다음 페이지 넘기기
 async function bulkNext(sender) {
-  let bulkInfo: any = (await getLocalStorage("bulkInfo")) ?? [];
+  let bulkInfo: any = (await getLocalStorage('bulkInfo')) ?? [];
   let bulk = bulkInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
 
   if (!bulk) {
@@ -395,22 +401,24 @@ async function bulkNext(sender) {
     bulk.isBulk = false;
 
     const tabs: any = await queryTabs({
-      url: chrome.runtime.getURL("product/collected.html"),
+      url: chrome.runtime.getURL('product/collected.html'),
     });
 
     // 상품목록 리프레쉬
     tabs.map((v: any) => {
-      sendTabMessage(v.id, { action: "refresh" });
+      sendTabMessage(v.id, { action: 'refresh' });
     });
 
     // 상품 수집 완료 알림
     sendTabMessage(bulk.sender.tab.id, {
-      action: "collect-finish",
+      action: 'collect-finish',
       source: bulk,
     });
   } else {
     // 대량수집이 진행 중인 경우
-    const url = /^https?:/.test(bulk.inputs[bulk.current].url) ? bulk.inputs[bulk.current].url : "https:" + bulk.inputs[bulk.current].url;
+    const url = /^https?:/.test(bulk.inputs[bulk.current].url)
+      ? bulk.inputs[bulk.current].url
+      : 'https:' + bulk.inputs[bulk.current].url;
 
     // 다음 페이지로 업데이트
     chrome.tabs.update(bulk.sender.tab.id, { url });
@@ -426,7 +434,7 @@ async function bulkNext(sender) {
 
 // 대량수집 중단 버튼 클릭 시
 async function bulkStop(sender) {
-  let bulkInfo: any = (await getLocalStorage("bulkInfo")) ?? [];
+  let bulkInfo: any = (await getLocalStorage('bulkInfo')) ?? [];
   let bulk = bulkInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
 
   if (!bulk) {
@@ -442,7 +450,7 @@ async function bulkStop(sender) {
 
 // 수집 종료 시(성공/실패)
 async function finishCollect(sender: any, status: string, statusMessage: string) {
-  let bulkInfo: any = (await getLocalStorage("bulkInfo")) ?? [];
+  let bulkInfo: any = (await getLocalStorage('bulkInfo')) ?? [];
   let bulk = bulkInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
 
   if (bulk) {
@@ -471,7 +479,7 @@ async function getUserInfo() {
   }
 
   if (response.errors) {
-    await createTabCompletely({ active: true, url: "/signin.html" }, 10);
+    await createTabCompletely({ active: true, url: '/signin.html' }, 10);
 
     return null;
   }
@@ -481,7 +489,7 @@ async function getUserInfo() {
 
 // 대량 수집 중인지
 async function isBulk(sender) {
-  let bulkInfo: any = (await getLocalStorage("bulkInfo")) ?? [];
+  let bulkInfo: any = (await getLocalStorage('bulkInfo')) ?? [];
   let bulk = bulkInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
 
   if (!bulk) {
@@ -499,70 +507,70 @@ async function isBulk(sender) {
 chrome.runtime.onMessage.addListener((request, sender: any, sendResponse) => {
   switch (request.action) {
     // 상품 수집 액션
-    case "collect": {
+    case 'collect': {
       addToInventory(sender, request.source).then(sendResponse);
 
       return true;
     }
 
     // 대량 수집 액션
-    case "collect-bulk": {
+    case 'collect-bulk': {
       addBulkInfo(request.source, sender, false).then(sendResponse);
 
       return true;
     }
 
     // 엑셀 수집 액션
-    case "collect-product-excel": {
+    case 'collect-product-excel': {
       addBulkInfo(request.source, sender, true).then(sendResponse);
 
       return true;
     }
 
     // 상품 수집 완료
-    case "collect-finish": {
+    case 'collect-finish': {
       bulkNext(sender).then(sendResponse);
 
       return true;
     }
 
     // 상품 수집 중지
-    case "collect-stop": {
+    case 'collect-stop': {
       bulkStop(sender).then(sendResponse);
 
       return true;
     }
 
     // 대량 수집 여부 확인
-    case "is-bulk": {
+    case 'is-bulk': {
       isBulk(sender).then(sendResponse);
 
       return true;
     }
 
     // 메시지를 보낸 탭 정보 확인
-    case "tab-info": {
+    case 'tab-info': {
       sendResponse(sender);
 
       break;
     }
 
     // 열려있는 모든 탭 정보 확인
-    case "tab-info-all": {
+    case 'tab-info-all': {
       queryTabs({}).then(sendResponse);
 
       return true;
     }
 
     // 유저 정보 전달
-    case "user": {
+    case 'user': {
       getUserInfo().then(sendResponse);
 
       return true;
     }
 
     // 타오바오 상세페이지 데이터 요청
-    case "description": {
+    case 'description': {
       fetch(request.source)
         .then((res) => res.text())
         .then(sendResponse);
@@ -571,7 +579,7 @@ chrome.runtime.onMessage.addListener((request, sender: any, sendResponse) => {
     }
 
     // 티몰 상세페이지 데이터 요청
-    case "fetch": {
+    case 'fetch': {
       tmallCORS(request.source).then(sendResponse);
 
       return true;

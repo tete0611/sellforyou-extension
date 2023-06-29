@@ -1,12 +1,12 @@
-import React from "react";
-import MUTATIONS from "../GraphQL/Mutations";
-import gql from "../GraphQL/Requests";
-import LoadingButton from "@mui/lab/LoadingButton";
+import React from 'react';
+import MUTATIONS from '../GraphQL/Mutations';
+import gql from '../GraphQL/Requests';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-import { getLocalStorage, queryWindow, setLocalStorage } from "../../Tools/ChromeAsync";
-import { Box, Button, Checkbox, Container, FormControlLabel, Link, TextField, Typography } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Frame, SignPaper } from "../Common/UI";
+import { getLocalStorage, queryWindow, setLocalStorage } from '../../Tools/ChromeAsync';
+import { Box, Button, Checkbox, Container, FormControlLabel, Link, TextField, Typography } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Frame, SignPaper } from '../Common/UI';
 
 type AppInfo = {
   id: string;
@@ -24,10 +24,10 @@ type AppInfo = {
 // 로그인 뷰
 export const SignIn = () => {
   const initAppInfo: AppInfo = {
-    id: "",
-    password: "",
-    accessToken: "",
-    refreshToken: "",
+    id: '',
+    password: '',
+    accessToken: '',
+    refreshToken: '',
     loading: false,
     autoFill: false,
     autoLogin: false,
@@ -42,7 +42,7 @@ export const SignIn = () => {
   // 컴포넌트 초기화
   React.useEffect(() => {
     // PC에 저장된 회원정보를 가져오고, 자동로그인 또는 자동입력 등의 기능 수행
-    getLocalStorage("appInfo").then((info: any) => {
+    getLocalStorage('appInfo').then((info: any) => {
       if (!info) {
         return;
       }
@@ -50,8 +50,8 @@ export const SignIn = () => {
       setAppInfo({
         ...info,
 
-        id: info.autoFill ? info.id : "",
-        password: info.autoFill ? info.password : "",
+        id: info.autoFill ? info.id : '',
+        password: info.autoFill ? info.password : '',
         darkTheme: info.darkTheme,
       });
 
@@ -63,7 +63,7 @@ export const SignIn = () => {
 
   // 엔터 키를 누르면 로그인 동작 수행
   const keyHandler = (e: any) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       signIn(appInfo);
     }
   };
@@ -74,7 +74,7 @@ export const SignIn = () => {
 
     windows.map((v: any) => {
       v.tabs
-        .filter((w: any) => w.url.includes(chrome.runtime.getURL("/")))
+        .filter((w: any) => w.url.includes(chrome.runtime.getURL('/')))
         .map((w: any) => {
           if (v.focused && w.active) {
             return;
@@ -84,7 +84,7 @@ export const SignIn = () => {
         });
     });
 
-    window.location.href = "/dashboard.html";
+    window.location.href = '/dashboard.html';
   };
 
   // 로그인 버튼을 클릭했을 때
@@ -134,7 +134,7 @@ export const SignIn = () => {
 
   // 회원가입 페이지 이동
   const signUp = () => {
-    window.location.href = "/signup.html";
+    window.location.href = '/signup.html';
   };
 
   // 다크모드 지원 설정
@@ -142,7 +142,7 @@ export const SignIn = () => {
     () =>
       createTheme({
         palette: {
-          mode: appInfo.darkTheme ? "dark" : "light",
+          mode: appInfo.darkTheme ? 'dark' : 'light',
         },
       }),
     [appInfo.darkTheme]
@@ -166,7 +166,7 @@ export const SignIn = () => {
               variant="outlined"
               size="small"
               style={{
-                width: "100%",
+                width: '100%',
                 marginBottom: 10,
               }}
               label="아이디"
@@ -181,7 +181,7 @@ export const SignIn = () => {
               variant="outlined"
               size="small"
               style={{
-                width: "100%",
+                width: '100%',
                 marginBottom: 30,
               }}
               label="비밀번호"
@@ -197,7 +197,7 @@ export const SignIn = () => {
               variant="contained"
               size="large"
               style={{
-                width: "100%",
+                width: '100%',
                 marginBottom: 30,
               }}
               onClick={() => signIn(appInfo)}
@@ -207,10 +207,10 @@ export const SignIn = () => {
 
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                mb: "30px",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mb: '30px',
               }}
             >
               <FormControlLabel

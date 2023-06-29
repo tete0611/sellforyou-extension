@@ -1,20 +1,32 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../../../containers/AppContext";
-import { Box, Chip, Grid, List, ListItem, ListItemButton, ListItemText, Tooltip, Typography, Button, Paper } from "@mui/material";
-import { Input, Search, Title } from "../../../Common/UI";
-import { floatingToast } from "../../../../Tools/Common";
-import { makeStyles } from "@material-ui/core/styles";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../../../containers/AppContext';
+import {
+  Box,
+  Chip,
+  Grid,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Tooltip,
+  Typography,
+  Button,
+  Paper,
+} from '@mui/material';
+import { Input, Search, Title } from '../../../Common/UI';
+import { floatingToast } from '../../../../Tools/Common';
+import { makeStyles } from '@material-ui/core/styles';
 
 // MUI Box 사용자 지정 스타일
 const useStyles = makeStyles((theme) => ({
   defaultBox: {
-    background: "#d1e8ff",
+    background: '#d1e8ff',
   },
 
   errorBox: {
-    background: "#ffd1d1",
+    background: '#ffd1d1',
   },
 }));
 
@@ -47,8 +59,8 @@ export const TabBase = observer((props: any) => {
     <div className="inform">
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         <div className="loading" />
@@ -63,7 +75,7 @@ export const TabBase = observer((props: any) => {
 
       <Box
         sx={{
-          mb: "6px",
+          mb: '6px',
         }}
       >
         <Grid container spacing={0.5}>
@@ -71,7 +83,7 @@ export const TabBase = observer((props: any) => {
             <Paper
               variant="outlined"
               sx={{
-                height: "100%",
+                height: '100%',
               }}
             >
               <Title dark={common.darkTheme} subTitle>
@@ -116,7 +128,7 @@ export const TabBase = observer((props: any) => {
                     <List
                       sx={{
                         height: 100,
-                        overflowY: "auto",
+                        overflowY: 'auto',
                         p: 0,
                       }}
                     >
@@ -148,7 +160,7 @@ export const TabBase = observer((props: any) => {
                     <List
                       sx={{
                         height: 100,
-                        overflowY: "auto",
+                        overflowY: 'auto',
                         p: 0,
                       }}
                     >
@@ -180,7 +192,7 @@ export const TabBase = observer((props: any) => {
                     <List
                       sx={{
                         height: 100,
-                        overflowY: "auto",
+                        overflowY: 'auto',
                         p: 0,
                       }}
                     >
@@ -212,7 +224,7 @@ export const TabBase = observer((props: any) => {
                     <List
                       sx={{
                         height: 100,
-                        overflowY: "auto",
+                        overflowY: 'auto',
                         p: 0,
                       }}
                     >
@@ -243,15 +255,15 @@ export const TabBase = observer((props: any) => {
 
                     <Box
                       sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        alignItems: "center",
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
                         p: 0.5,
                         height: 92,
                       }}
                     >
                       <Input
-                        color={props.item.edited.baseInfo ? "warning" : "info"}
+                        color={props.item.edited.baseInfo ? 'warning' : 'info'}
                         multiline
                         rows={3}
                         value={props.item.immSearchTags}
@@ -269,15 +281,15 @@ export const TabBase = observer((props: any) => {
 
               <Box
                 sx={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  alignItems: "center",
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
                   px: 0.5,
                   height: 27,
                 }}
               >
                 {props.item.immSearchTags ? (
-                  props.item.immSearchTags.split(",").map((v: any) => (
+                  props.item.immSearchTags.split(',').map((v: any) => (
                     <Chip
                       size="small"
                       sx={{
@@ -303,7 +315,7 @@ export const TabBase = observer((props: any) => {
             <Paper
               variant="outlined"
               sx={{
-                height: "100%",
+                height: '100%',
               }}
             >
               <Title dark={common.darkTheme} subTitle>
@@ -316,7 +328,7 @@ export const TabBase = observer((props: any) => {
                 }}
               >
                 <Input
-                  color={props.item.edited.baseInfo ? "warning" : "info"}
+                  color={props.item.edited.baseInfo ? 'warning' : 'info'}
                   multiline
                   rows={6}
                   onChange={(e: any) => {
@@ -341,8 +353,8 @@ export const TabBase = observer((props: any) => {
                 카테고리정보
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
                   <Button
@@ -369,7 +381,7 @@ export const TabBase = observer((props: any) => {
                         categoryInfoB956: props.item.categoryInfoB956,
                       });
 
-                      floatingToast("카테고리가 복사되었습니다.", "information");
+                      floatingToast('카테고리가 복사되었습니다.', 'information');
                     }}
                   >
                     카테고리 복사하기
@@ -404,8 +416,8 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       fontSize: 13,
                       p: 0.5,
                     }}
@@ -422,29 +434,29 @@ export const TabBase = observer((props: any) => {
                     <Search
                       value={props.item.categoryInfoA077}
                       onChange={(e: any, value: any) => {
-                        product.updateCategory("A077", value, props.index);
+                        product.updateCategory('A077', value, props.index);
                       }}
                       onInputChange={(e: any, value: any, reason: any) => {
-                        if (reason !== "input") {
+                        if (reason !== 'input') {
                           return;
                         }
 
-                        product.setCategoryInput("A077", value);
+                        product.setCategoryInput('A077', value);
                       }}
                       onOpen={() => {
-                        product.getCategoryList("A077");
+                        product.getCategoryList('A077');
                       }}
                       onClose={() => {
-                        product.setCategoryInput("A077", "");
+                        product.setCategoryInput('A077', '');
                       }}
                       options={
-                        product.categoryInfo.markets.find((v: any) => v.code === "A077").input
-                          ? product.categoryInfo.markets.find((v: any) => v.code === "A077").data
+                        product.categoryInfo.markets.find((v: any) => v.code === 'A077').input
+                          ? product.categoryInfo.markets.find((v: any) => v.code === 'A077').data
                           : [props.item.categoryInfoA077]
                       }
-                      getOptionLabel={(option: any) => option.name ?? ""}
+                      getOptionLabel={(option: any) => option.name ?? ''}
                       isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-                      loading={product.categoryInfo.markets.find((v: any) => v.code === "A077").loading}
+                      loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077').loading}
                     />
                   </Paper>
                 </Grid>
@@ -453,8 +465,8 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       fontSize: 13,
                       p: 0.5,
                     }}
@@ -471,29 +483,29 @@ export const TabBase = observer((props: any) => {
                     <Search
                       value={props.item.categoryInfoB378}
                       onChange={(e: any, value: any) => {
-                        product.updateCategory("B378", value, props.index);
+                        product.updateCategory('B378', value, props.index);
                       }}
                       onInputChange={(e: any, value: any, reason: any) => {
-                        if (reason !== "input") {
+                        if (reason !== 'input') {
                           return;
                         }
 
-                        product.setCategoryInput("B378", value);
+                        product.setCategoryInput('B378', value);
                       }}
                       options={
-                        product.categoryInfo.markets.find((v: any) => v.code === "B378").input
-                          ? product.categoryInfo.markets.find((v: any) => v.code === "B378").data
+                        product.categoryInfo.markets.find((v: any) => v.code === 'B378').input
+                          ? product.categoryInfo.markets.find((v: any) => v.code === 'B378').data
                           : [props.item.categoryInfoB378]
                       }
-                      getOptionLabel={(option: any) => option.name ?? ""}
+                      getOptionLabel={(option: any) => option.name ?? ''}
                       isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                       onOpen={() => {
-                        product.getCategoryList("B378");
+                        product.getCategoryList('B378');
                       }}
                       onClose={() => {
-                        product.setCategoryInput("B378", "");
+                        product.setCategoryInput('B378', '');
                       }}
-                      loading={product.categoryInfo.markets.find((v: any) => v.code === "B378").loading}
+                      loading={product.categoryInfo.markets.find((v: any) => v.code === 'B378').loading}
                     />
                   </Paper>
                 </Grid>
@@ -502,8 +514,8 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       fontSize: 13,
                       p: 0.5,
                     }}
@@ -520,29 +532,29 @@ export const TabBase = observer((props: any) => {
                     <Search
                       value={props.item.categoryInfoA112}
                       onChange={(e: any, value: any) => {
-                        product.updateCategory("A112", value, props.index);
+                        product.updateCategory('A112', value, props.index);
                       }}
                       onInputChange={(e: any, value: any, reason: any) => {
-                        if (reason !== "input") {
+                        if (reason !== 'input') {
                           return;
                         }
 
-                        product.setCategoryInput("A112", value);
+                        product.setCategoryInput('A112', value);
                       }}
                       options={
-                        product.categoryInfo.markets.find((v: any) => v.code === "A112").input
-                          ? product.categoryInfo.markets.find((v: any) => v.code === "A112").data
+                        product.categoryInfo.markets.find((v: any) => v.code === 'A112').input
+                          ? product.categoryInfo.markets.find((v: any) => v.code === 'A112').data
                           : [props.item.categoryInfoA112]
                       }
-                      getOptionLabel={(option: any) => option.name ?? ""}
+                      getOptionLabel={(option: any) => option.name ?? ''}
                       isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                       onOpen={() => {
-                        product.getCategoryList("A112");
+                        product.getCategoryList('A112');
                       }}
                       onClose={() => {
-                        product.setCategoryInput("A112", "");
+                        product.setCategoryInput('A112', '');
                       }}
-                      loading={product.categoryInfo.markets.find((v: any) => v.code === "A112").loading}
+                      loading={product.categoryInfo.markets.find((v: any) => v.code === 'A112').loading}
                     />
                   </Paper>
                 </Grid>
@@ -551,8 +563,8 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       fontSize: 13,
                       p: 0.5,
                     }}
@@ -569,29 +581,29 @@ export const TabBase = observer((props: any) => {
                     <Search
                       value={props.item.categoryInfoA113}
                       onChange={(e: any, value: any) => {
-                        product.updateCategory("A113", value, props.index);
+                        product.updateCategory('A113', value, props.index);
                       }}
                       onInputChange={(e: any, value: any, reason: any) => {
-                        if (reason !== "input") {
+                        if (reason !== 'input') {
                           return;
                         }
 
-                        product.setCategoryInput("A113", value);
+                        product.setCategoryInput('A113', value);
                       }}
                       options={
-                        product.categoryInfo.markets.find((v: any) => v.code === "A113").input
-                          ? product.categoryInfo.markets.find((v: any) => v.code === "A113").data
+                        product.categoryInfo.markets.find((v: any) => v.code === 'A113').input
+                          ? product.categoryInfo.markets.find((v: any) => v.code === 'A113').data
                           : [props.item.categoryInfoA113]
                       }
-                      getOptionLabel={(option: any) => option.name ?? ""}
+                      getOptionLabel={(option: any) => option.name ?? ''}
                       isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                       onOpen={() => {
-                        product.getCategoryList("A113");
+                        product.getCategoryList('A113');
                       }}
                       onClose={() => {
-                        product.setCategoryInput("A113", "");
+                        product.setCategoryInput('A113', '');
                       }}
-                      loading={product.categoryInfo.markets.find((v: any) => v.code === "A113").loading}
+                      loading={product.categoryInfo.markets.find((v: any) => v.code === 'A113').loading}
                     />
                   </Paper>
                 </Grid>
@@ -600,8 +612,8 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       fontSize: 13,
                       p: 0.5,
                     }}
@@ -618,29 +630,29 @@ export const TabBase = observer((props: any) => {
                     <Search
                       value={props.item.categoryInfoA006}
                       onChange={(e: any, value: any) => {
-                        product.updateCategory("A006", value, props.index);
+                        product.updateCategory('A006', value, props.index);
                       }}
                       onInputChange={(e: any, value: any, reason: any) => {
-                        if (reason !== "input") {
+                        if (reason !== 'input') {
                           return;
                         }
 
-                        product.setCategoryInput("A006", value);
+                        product.setCategoryInput('A006', value);
                       }}
                       options={
-                        product.categoryInfo.markets.find((v: any) => v.code === "A006").input
-                          ? product.categoryInfo.markets.find((v: any) => v.code === "A006").data
+                        product.categoryInfo.markets.find((v: any) => v.code === 'A006').input
+                          ? product.categoryInfo.markets.find((v: any) => v.code === 'A006').data
                           : [props.item.categoryInfoA006]
                       }
-                      getOptionLabel={(option: any) => option.name ?? ""}
+                      getOptionLabel={(option: any) => option.name ?? ''}
                       isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                       onOpen={() => {
-                        product.getCategoryList("A006");
+                        product.getCategoryList('A006');
                       }}
                       onClose={() => {
-                        product.setCategoryInput("A006", "");
+                        product.setCategoryInput('A006', '');
                       }}
-                      loading={product.categoryInfo.markets.find((v: any) => v.code === "A006").loading}
+                      loading={product.categoryInfo.markets.find((v: any) => v.code === 'A006').loading}
                     />
                   </Paper>
                 </Grid>
@@ -649,8 +661,8 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       fontSize: 13,
                       p: 0.5,
                     }}
@@ -667,29 +679,29 @@ export const TabBase = observer((props: any) => {
                     <Search
                       value={props.item.categoryInfoA001}
                       onChange={(e: any, value: any) => {
-                        product.updateCategory("A001", value, props.index);
+                        product.updateCategory('A001', value, props.index);
                       }}
                       onInputChange={(e: any, value: any, reason: any) => {
-                        if (reason !== "input") {
+                        if (reason !== 'input') {
                           return;
                         }
 
-                        product.setCategoryInput("A001", value);
+                        product.setCategoryInput('A001', value);
                       }}
                       options={
-                        product.categoryInfo.markets.find((v: any) => v.code === "A001").input
-                          ? product.categoryInfo.markets.find((v: any) => v.code === "A001").data
+                        product.categoryInfo.markets.find((v: any) => v.code === 'A001').input
+                          ? product.categoryInfo.markets.find((v: any) => v.code === 'A001').data
                           : [props.item.categoryInfoA001]
                       }
-                      getOptionLabel={(option: any) => option.name ?? ""}
+                      getOptionLabel={(option: any) => option.name ?? ''}
                       isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                       onOpen={() => {
-                        product.getCategoryList("A001");
+                        product.getCategoryList('A001');
                       }}
                       onClose={() => {
-                        product.setCategoryInput("A001", "");
+                        product.setCategoryInput('A001', '');
                       }}
-                      loading={product.categoryInfo.markets.find((v: any) => v.code === "A001").loading}
+                      loading={product.categoryInfo.markets.find((v: any) => v.code === 'A001').loading}
                     />
                   </Paper>
                 </Grid>
@@ -698,8 +710,8 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       fontSize: 13,
                       p: 0.5,
                     }}
@@ -716,29 +728,29 @@ export const TabBase = observer((props: any) => {
                     <Search
                       value={props.item.categoryInfoA027}
                       onChange={(e: any, value: any) => {
-                        product.updateCategory("A027", value, props.index);
+                        product.updateCategory('A027', value, props.index);
                       }}
                       onInputChange={(e: any, value: any, reason: any) => {
-                        if (reason !== "input") {
+                        if (reason !== 'input') {
                           return;
                         }
 
-                        product.setCategoryInput("A027", value);
+                        product.setCategoryInput('A027', value);
                       }}
                       options={
-                        product.categoryInfo.markets.find((v: any) => v.code === "A027").input
-                          ? product.categoryInfo.markets.find((v: any) => v.code === "A027").data
+                        product.categoryInfo.markets.find((v: any) => v.code === 'A027').input
+                          ? product.categoryInfo.markets.find((v: any) => v.code === 'A027').data
                           : [props.item.categoryInfoA027]
                       }
-                      getOptionLabel={(option: any) => option.name ?? ""}
+                      getOptionLabel={(option: any) => option.name ?? ''}
                       isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                       onOpen={() => {
-                        product.getCategoryList("A027");
+                        product.getCategoryList('A027');
                       }}
                       onClose={() => {
-                        product.setCategoryInput("A027", "");
+                        product.setCategoryInput('A027', '');
                       }}
-                      loading={product.categoryInfo.markets.find((v: any) => v.code === "A027").loading}
+                      loading={product.categoryInfo.markets.find((v: any) => v.code === 'A027').loading}
                     />
                   </Paper>
                 </Grid>
@@ -747,8 +759,8 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       fontSize: 13,
                       p: 0.5,
                     }}
@@ -765,29 +777,29 @@ export const TabBase = observer((props: any) => {
                     <Search
                       value={props.item.categoryInfoB719}
                       onChange={(e: any, value: any) => {
-                        product.updateCategory("B719", value, props.index);
+                        product.updateCategory('B719', value, props.index);
                       }}
                       onInputChange={(e: any, value: any, reason: any) => {
-                        if (reason !== "input") {
+                        if (reason !== 'input') {
                           return;
                         }
 
-                        product.setCategoryInput("B719", value);
+                        product.setCategoryInput('B719', value);
                       }}
                       options={
-                        product.categoryInfo.markets.find((v: any) => v.code === "B719").input
-                          ? product.categoryInfo.markets.find((v: any) => v.code === "B719").data
+                        product.categoryInfo.markets.find((v: any) => v.code === 'B719').input
+                          ? product.categoryInfo.markets.find((v: any) => v.code === 'B719').data
                           : [props.item.categoryInfoB719]
                       }
-                      getOptionLabel={(option: any) => option.name ?? ""}
+                      getOptionLabel={(option: any) => option.name ?? ''}
                       isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                       onOpen={() => {
-                        product.getCategoryList("B719");
+                        product.getCategoryList('B719');
                       }}
                       onClose={() => {
-                        product.setCategoryInput("B719", "");
+                        product.setCategoryInput('B719', '');
                       }}
-                      loading={product.categoryInfo.markets.find((v: any) => v.code === "B719").loading}
+                      loading={product.categoryInfo.markets.find((v: any) => v.code === 'B719').loading}
                     />
                   </Paper>
                 </Grid>
@@ -796,8 +808,8 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       fontSize: 13,
                       p: 0.5,
                     }}
@@ -814,29 +826,29 @@ export const TabBase = observer((props: any) => {
                     <Search
                       value={props.item.categoryInfoA524}
                       onChange={(e: any, value: any) => {
-                        product.updateCategory("A524", value, props.index);
+                        product.updateCategory('A524', value, props.index);
                       }}
                       onInputChange={(e: any, value: any, reason: any) => {
-                        if (reason !== "input") {
+                        if (reason !== 'input') {
                           return;
                         }
 
-                        product.setCategoryInput("A524", value);
+                        product.setCategoryInput('A524', value);
                       }}
                       options={
-                        product.categoryInfo.markets.find((v: any) => v.code === "A524").input
-                          ? product.categoryInfo.markets.find((v: any) => v.code === "A524").data
+                        product.categoryInfo.markets.find((v: any) => v.code === 'A524').input
+                          ? product.categoryInfo.markets.find((v: any) => v.code === 'A524').data
                           : [props.item.categoryInfoA524]
                       }
-                      getOptionLabel={(option: any) => option.name ?? ""}
+                      getOptionLabel={(option: any) => option.name ?? ''}
                       isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                       onOpen={() => {
-                        product.getCategoryList("A524");
+                        product.getCategoryList('A524');
                       }}
                       onClose={() => {
-                        product.setCategoryInput("A524", "");
+                        product.setCategoryInput('A524', '');
                       }}
-                      loading={product.categoryInfo.markets.find((v: any) => v.code === "A524").loading}
+                      loading={product.categoryInfo.markets.find((v: any) => v.code === 'A524').loading}
                     />
                   </Paper>
                 </Grid>
@@ -845,8 +857,8 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       fontSize: 13,
                       p: 0.5,
                     }}
@@ -863,29 +875,29 @@ export const TabBase = observer((props: any) => {
                     <Search
                       value={props.item.categoryInfoA525}
                       onChange={(e: any, value: any) => {
-                        product.updateCategory("A525", value, props.index);
+                        product.updateCategory('A525', value, props.index);
                       }}
                       onInputChange={(e: any, value: any, reason: any) => {
-                        if (reason !== "input") {
+                        if (reason !== 'input') {
                           return;
                         }
 
-                        product.setCategoryInput("A525", value);
+                        product.setCategoryInput('A525', value);
                       }}
                       options={
-                        product.categoryInfo.markets.find((v: any) => v.code === "A525").input
-                          ? product.categoryInfo.markets.find((v: any) => v.code === "A525").data
+                        product.categoryInfo.markets.find((v: any) => v.code === 'A525').input
+                          ? product.categoryInfo.markets.find((v: any) => v.code === 'A525').data
                           : [props.item.categoryInfoA525]
                       }
-                      getOptionLabel={(option: any) => option.name ?? ""}
+                      getOptionLabel={(option: any) => option.name ?? ''}
                       isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                       onOpen={() => {
-                        product.getCategoryList("A525");
+                        product.getCategoryList('A525');
                       }}
                       onClose={() => {
-                        product.setCategoryInput("A525", "");
+                        product.setCategoryInput('A525', '');
                       }}
-                      loading={product.categoryInfo.markets.find((v: any) => v.code === "A525").loading}
+                      loading={product.categoryInfo.markets.find((v: any) => v.code === 'A525').loading}
                     />
                   </Paper>
                 </Grid>
@@ -894,8 +906,8 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       fontSize: 13,
                       p: 0.5,
                     }}
@@ -912,29 +924,29 @@ export const TabBase = observer((props: any) => {
                     <Search
                       value={props.item.categoryInfoB956}
                       onChange={(e: any, value: any) => {
-                        product.updateCategory("B956", value, props.index);
+                        product.updateCategory('B956', value, props.index);
                       }}
                       onInputChange={(e: any, value: any, reason: any) => {
-                        if (reason !== "input") {
+                        if (reason !== 'input') {
                           return;
                         }
 
-                        product.setCategoryInput("B956", value);
+                        product.setCategoryInput('B956', value);
                       }}
                       options={
-                        product.categoryInfo.markets.find((v: any) => v.code === "B956").input
-                          ? product.categoryInfo.markets.find((v: any) => v.code === "B956").data
+                        product.categoryInfo.markets.find((v: any) => v.code === 'B956').input
+                          ? product.categoryInfo.markets.find((v: any) => v.code === 'B956').data
                           : [props.item.categoryInfoB956]
                       }
-                      getOptionLabel={(option: any) => option.name ?? ""}
+                      getOptionLabel={(option: any) => option.name ?? ''}
                       isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                       onOpen={() => {
-                        product.getCategoryList("B956");
+                        product.getCategoryList('B956');
                       }}
                       onClose={() => {
-                        product.setCategoryInput("B956", "");
+                        product.setCategoryInput('B956', '');
                       }}
-                      loading={product.categoryInfo.markets.find((v: any) => v.code === "B956").loading}
+                      loading={product.categoryInfo.markets.find((v: any) => v.code === 'B956').loading}
                     />
                   </Paper>
                 </Grid>
@@ -961,15 +973,17 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       p: 0.5,
                     }}
                   >
                     <Tooltip
-                      title={`${(Math.round(props.item.price / (1 - (props.item.naverFee ?? common.user.userInfo?.naverFee) / 100) / 100) * 100).toLocaleString(
-                        "ko-KR"
-                      )}원`}
+                      title={`${(
+                        Math.round(
+                          props.item.price / (1 - (props.item.naverFee ?? common.user.userInfo?.naverFee) / 100) / 100
+                        ) * 100
+                      ).toLocaleString('ko-KR')}원`}
                     >
                       <img
                         src="/resources/icon-smartstore.png"
@@ -979,14 +993,14 @@ export const TabBase = observer((props: any) => {
                       />
                     </Tooltip>
                     <Input
-                      color={props.item.edited.baseInfo ? "warning" : "info"}
+                      color={props.item.edited.baseInfo ? 'warning' : 'info'}
                       id={`product_row_naverFee_${props.index}`}
                       options={{
-                        textAlign: "right",
+                        textAlign: 'right',
                       }}
                       value={props.item.naverFee}
                       onChange={(e: any) => {
-                        product.setProductFee("A077", parseFloat(e.target.value), props.index);
+                        product.setProductFee('A077', parseFloat(e.target.value), props.index);
                       }}
                       onBlur={(e: any) => {
                         product.updateProductFee(
@@ -997,7 +1011,7 @@ export const TabBase = observer((props: any) => {
                           props.index
                         );
                       }}
-                    />{" "}
+                    />{' '}
                     %
                   </Paper>
                 </Grid>
@@ -1006,15 +1020,19 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       p: 0.5,
                     }}
                   >
                     <Tooltip
                       title={`${(
-                        Math.round(props.item.price / (1 - (props.item.coupangFee ?? common.user.userInfo?.coupangFee) / 100) / 100) * 100
-                      ).toLocaleString("ko-KR")}원`}
+                        Math.round(
+                          props.item.price /
+                            (1 - (props.item.coupangFee ?? common.user.userInfo?.coupangFee) / 100) /
+                            100
+                        ) * 100
+                      ).toLocaleString('ko-KR')}원`}
                     >
                       <img
                         src="/resources/icon-coupang.png"
@@ -1024,14 +1042,14 @@ export const TabBase = observer((props: any) => {
                       />
                     </Tooltip>
                     <Input
-                      color={props.item.edited.baseInfo ? "warning" : "info"}
+                      color={props.item.edited.baseInfo ? 'warning' : 'info'}
                       id={`product_row_coupangFee_${props.index}`}
                       options={{
-                        textAlign: "right",
+                        textAlign: 'right',
                       }}
                       value={props.item.coupangFee}
                       onChange={(e: any) => {
-                        product.setProductFee("B378", parseFloat(e.target.value), props.index);
+                        product.setProductFee('B378', parseFloat(e.target.value), props.index);
                       }}
                       onBlur={(e: any) => {
                         product.updateProductFee(
@@ -1042,7 +1060,7 @@ export const TabBase = observer((props: any) => {
                           props.index
                         );
                       }}
-                    />{" "}
+                    />{' '}
                     %
                   </Paper>
                 </Grid>
@@ -1051,15 +1069,17 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       p: 0.5,
                     }}
                   >
                     <Tooltip
                       title={`${(
-                        Math.round(props.item.price / (1 - (props.item.streetFee ?? common.user.userInfo?.streetFee) / 100) / 100) * 100
-                      ).toLocaleString("ko-KR")}원`}
+                        Math.round(
+                          props.item.price / (1 - (props.item.streetFee ?? common.user.userInfo?.streetFee) / 100) / 100
+                        ) * 100
+                      ).toLocaleString('ko-KR')}원`}
                     >
                       <img
                         src="/resources/icon-street-global.png"
@@ -1069,14 +1089,14 @@ export const TabBase = observer((props: any) => {
                       />
                     </Tooltip>
                     <Input
-                      color={props.item.edited.baseInfo ? "warning" : "info"}
+                      color={props.item.edited.baseInfo ? 'warning' : 'info'}
                       id={`product_row_streetFee_${props.index}`}
                       options={{
-                        textAlign: "right",
+                        textAlign: 'right',
                       }}
                       value={props.item.streetFee}
                       onChange={(e: any) => {
-                        product.setProductFee("A112", parseFloat(e.target.value), props.index);
+                        product.setProductFee('A112', parseFloat(e.target.value), props.index);
                       }}
                       onBlur={(e: any) => {
                         product.updateProductFee(
@@ -1087,7 +1107,7 @@ export const TabBase = observer((props: any) => {
                           props.index
                         );
                       }}
-                    />{" "}
+                    />{' '}
                     %
                   </Paper>
                 </Grid>
@@ -1096,15 +1116,19 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       p: 0.5,
                     }}
                   >
                     <Tooltip
                       title={`${(
-                        Math.round(props.item.price / (1 - (props.item.streetNormalFee ?? common.user.userInfo?.streetNormalFee) / 100) / 100) * 100
-                      ).toLocaleString("ko-KR")}원`}
+                        Math.round(
+                          props.item.price /
+                            (1 - (props.item.streetNormalFee ?? common.user.userInfo?.streetNormalFee) / 100) /
+                            100
+                        ) * 100
+                      ).toLocaleString('ko-KR')}원`}
                     >
                       <img
                         src="/resources/icon-street-normal.png"
@@ -1114,14 +1138,14 @@ export const TabBase = observer((props: any) => {
                       />
                     </Tooltip>
                     <Input
-                      color={props.item.edited.baseInfo ? "warning" : "info"}
+                      color={props.item.edited.baseInfo ? 'warning' : 'info'}
                       id={`product_row_streetNormalFee_${props.index}`}
                       options={{
-                        textAlign: "right",
+                        textAlign: 'right',
                       }}
                       value={props.item.streetNormalFee}
                       onChange={(e: any) => {
-                        product.setProductFee("A113", parseFloat(e.target.value), props.index);
+                        product.setProductFee('A113', parseFloat(e.target.value), props.index);
                       }}
                       onBlur={(e: any) => {
                         product.updateProductFee(
@@ -1132,7 +1156,7 @@ export const TabBase = observer((props: any) => {
                           props.index
                         );
                       }}
-                    />{" "}
+                    />{' '}
                     %
                   </Paper>
                 </Grid>
@@ -1141,15 +1165,19 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       p: 0.5,
                     }}
                   >
                     <Tooltip
                       title={`${(
-                        Math.round(props.item.price / (1 - (props.item.gmarketFee ?? common.user.userInfo?.gmarketFee) / 100) / 100) * 100
-                      ).toLocaleString("ko-KR")}원`}
+                        Math.round(
+                          props.item.price /
+                            (1 - (props.item.gmarketFee ?? common.user.userInfo?.gmarketFee) / 100) /
+                            100
+                        ) * 100
+                      ).toLocaleString('ko-KR')}원`}
                     >
                       <img
                         src="/resources/icon-gmarket.png"
@@ -1159,14 +1187,14 @@ export const TabBase = observer((props: any) => {
                       />
                     </Tooltip>
                     <Input
-                      color={props.item.edited.baseInfo ? "warning" : "info"}
+                      color={props.item.edited.baseInfo ? 'warning' : 'info'}
                       id={`product_row_gmarketFee_${props.index}`}
                       options={{
-                        textAlign: "right",
+                        textAlign: 'right',
                       }}
                       value={props.item.gmarketFee}
                       onChange={(e: any) => {
-                        product.setProductFee("A006", parseFloat(e.target.value), props.index);
+                        product.setProductFee('A006', parseFloat(e.target.value), props.index);
                       }}
                       onBlur={(e: any) => {
                         product.updateProductFee(
@@ -1177,7 +1205,7 @@ export const TabBase = observer((props: any) => {
                           props.index
                         );
                       }}
-                    />{" "}
+                    />{' '}
                     %
                   </Paper>
                 </Grid>
@@ -1186,15 +1214,19 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       p: 0.5,
                     }}
                   >
                     <Tooltip
                       title={`${(
-                        Math.round(props.item.price / (1 - (props.item.auctionFee ?? common.user.userInfo?.auctionFee) / 100) / 100) * 100
-                      ).toLocaleString("ko-KR")}원`}
+                        Math.round(
+                          props.item.price /
+                            (1 - (props.item.auctionFee ?? common.user.userInfo?.auctionFee) / 100) /
+                            100
+                        ) * 100
+                      ).toLocaleString('ko-KR')}원`}
                     >
                       <img
                         src="/resources/icon-auction.png"
@@ -1204,14 +1236,14 @@ export const TabBase = observer((props: any) => {
                       />
                     </Tooltip>
                     <Input
-                      color={props.item.edited.baseInfo ? "warning" : "info"}
+                      color={props.item.edited.baseInfo ? 'warning' : 'info'}
                       id={`product_row_auctionFee_${props.index}`}
                       options={{
-                        textAlign: "right",
+                        textAlign: 'right',
                       }}
                       value={props.item.auctionFee}
                       onChange={(e: any) => {
-                        product.setProductFee("A001", parseFloat(e.target.value), props.index);
+                        product.setProductFee('A001', parseFloat(e.target.value), props.index);
                       }}
                       onBlur={(e: any) => {
                         product.updateProductFee(
@@ -1222,7 +1254,7 @@ export const TabBase = observer((props: any) => {
                           props.index
                         );
                       }}
-                    />{" "}
+                    />{' '}
                     %
                   </Paper>
                 </Grid>
@@ -1231,15 +1263,19 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       p: 0.5,
                     }}
                   >
                     <Tooltip
                       title={`${(
-                        Math.round(props.item.price / (1 - (props.item.interparkFee ?? common.user.userInfo?.interparkFee) / 100) / 100) * 100
-                      ).toLocaleString("ko-KR")}원`}
+                        Math.round(
+                          props.item.price /
+                            (1 - (props.item.interparkFee ?? common.user.userInfo?.interparkFee) / 100) /
+                            100
+                        ) * 100
+                      ).toLocaleString('ko-KR')}원`}
                     >
                       <img
                         src="/resources/icon-interpark.png"
@@ -1249,14 +1285,14 @@ export const TabBase = observer((props: any) => {
                       />
                     </Tooltip>
                     <Input
-                      color={props.item.edited.baseInfo ? "warning" : "info"}
+                      color={props.item.edited.baseInfo ? 'warning' : 'info'}
                       id={`product_row_interparkFee_${props.index}`}
                       options={{
-                        textAlign: "right",
+                        textAlign: 'right',
                       }}
                       value={props.item.interparkFee}
                       onChange={(e: any) => {
-                        product.setProductFee("A027", parseFloat(e.target.value), props.index);
+                        product.setProductFee('A027', parseFloat(e.target.value), props.index);
                       }}
                       onBlur={(e: any) => {
                         product.updateProductFee(
@@ -1267,7 +1303,7 @@ export const TabBase = observer((props: any) => {
                           props.index
                         );
                       }}
-                    />{" "}
+                    />{' '}
                     %
                   </Paper>
                 </Grid>
@@ -1276,15 +1312,19 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       p: 0.5,
                     }}
                   >
                     <Tooltip
                       title={`${(
-                        Math.round(props.item.price / (1 - (props.item.wemakepriceFee ?? common.user.userInfo?.wemakepriceFee) / 100) / 100) * 100
-                      ).toLocaleString("ko-KR")}원`}
+                        Math.round(
+                          props.item.price /
+                            (1 - (props.item.wemakepriceFee ?? common.user.userInfo?.wemakepriceFee) / 100) /
+                            100
+                        ) * 100
+                      ).toLocaleString('ko-KR')}원`}
                     >
                       <img
                         src="/resources/icon-wemakeprice.png"
@@ -1294,14 +1334,14 @@ export const TabBase = observer((props: any) => {
                       />
                     </Tooltip>
                     <Input
-                      color={props.item.edited.baseInfo ? "warning" : "info"}
+                      color={props.item.edited.baseInfo ? 'warning' : 'info'}
                       id={`product_row_wemakepriceFee_${props.index}`}
                       options={{
-                        textAlign: "right",
+                        textAlign: 'right',
                       }}
                       value={props.item.wemakepriceFee}
                       onChange={(e: any) => {
-                        product.setProductFee("B719", parseFloat(e.target.value), props.index);
+                        product.setProductFee('B719', parseFloat(e.target.value), props.index);
                       }}
                       onBlur={(e: any) => {
                         product.updateProductFee(
@@ -1312,7 +1352,7 @@ export const TabBase = observer((props: any) => {
                           props.index
                         );
                       }}
-                    />{" "}
+                    />{' '}
                     %
                   </Paper>
                 </Grid>
@@ -1321,15 +1361,19 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       p: 0.5,
                     }}
                   >
                     <Tooltip
                       title={`${(
-                        Math.round(props.item.price / (1 - (props.item.lotteonFee ?? common.user.userInfo?.lotteonFee) / 100) / 100) * 100
-                      ).toLocaleString("ko-KR")}원`}
+                        Math.round(
+                          props.item.price /
+                            (1 - (props.item.lotteonFee ?? common.user.userInfo?.lotteonFee) / 100) /
+                            100
+                        ) * 100
+                      ).toLocaleString('ko-KR')}원`}
                     >
                       <img
                         src="/resources/icon-lotteon-global.png"
@@ -1339,14 +1383,14 @@ export const TabBase = observer((props: any) => {
                       />
                     </Tooltip>
                     <Input
-                      color={props.item.edited.baseInfo ? "warning" : "info"}
+                      color={props.item.edited.baseInfo ? 'warning' : 'info'}
                       id={`product_row_lotteonFee_${props.index}`}
                       options={{
-                        textAlign: "right",
+                        textAlign: 'right',
                       }}
                       value={props.item.lotteonFee}
                       onChange={(e: any) => {
-                        product.setProductFee("A524", parseFloat(e.target.value), props.index);
+                        product.setProductFee('A524', parseFloat(e.target.value), props.index);
                       }}
                       onBlur={(e: any) => {
                         product.updateProductFee(
@@ -1357,7 +1401,7 @@ export const TabBase = observer((props: any) => {
                           props.index
                         );
                       }}
-                    />{" "}
+                    />{' '}
                     %
                   </Paper>
                 </Grid>
@@ -1366,15 +1410,19 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       p: 0.5,
                     }}
                   >
                     <Tooltip
                       title={`${(
-                        Math.round(props.item.price / (1 - (props.item.lotteonNormalFee ?? common.user.userInfo?.lotteonNormalFee) / 100) / 100) * 100
-                      ).toLocaleString("ko-KR")}원`}
+                        Math.round(
+                          props.item.price /
+                            (1 - (props.item.lotteonNormalFee ?? common.user.userInfo?.lotteonNormalFee) / 100) /
+                            100
+                        ) * 100
+                      ).toLocaleString('ko-KR')}원`}
                     >
                       <img
                         src="/resources/icon-lotteon-normal.png"
@@ -1384,14 +1432,14 @@ export const TabBase = observer((props: any) => {
                       />
                     </Tooltip>
                     <Input
-                      color={props.item.edited.baseInfo ? "warning" : "info"}
+                      color={props.item.edited.baseInfo ? 'warning' : 'info'}
                       id={`product_row_lotteonNormalFee_${props.index}`}
                       options={{
-                        textAlign: "right",
+                        textAlign: 'right',
                       }}
                       value={props.item.lotteonNormalFee}
                       onChange={(e: any) => {
-                        product.setProductFee("A525", parseFloat(e.target.value), props.index);
+                        product.setProductFee('A525', parseFloat(e.target.value), props.index);
                       }}
                       onBlur={(e: any) => {
                         product.updateProductFee(
@@ -1402,7 +1450,7 @@ export const TabBase = observer((props: any) => {
                           props.index
                         );
                       }}
-                    />{" "}
+                    />{' '}
                     %
                   </Paper>
                 </Grid>
@@ -1411,15 +1459,17 @@ export const TabBase = observer((props: any) => {
                   <Paper
                     variant="outlined"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                       p: 0.5,
                     }}
                   >
                     <Tooltip
-                      title={`${(Math.round(props.item.price / (1 - (props.item.tmonFee ?? common.user.userInfo?.tmonFee) / 100) / 100) * 100).toLocaleString(
-                        "ko-KR"
-                      )}원`}
+                      title={`${(
+                        Math.round(
+                          props.item.price / (1 - (props.item.tmonFee ?? common.user.userInfo?.tmonFee) / 100) / 100
+                        ) * 100
+                      ).toLocaleString('ko-KR')}원`}
                     >
                       <img
                         src="/resources/icon-tmon.png"
@@ -1429,14 +1479,14 @@ export const TabBase = observer((props: any) => {
                       />
                     </Tooltip>
                     <Input
-                      color={props.item.edited.baseInfo ? "warning" : "info"}
+                      color={props.item.edited.baseInfo ? 'warning' : 'info'}
                       id={`product_row_tmonFee_${props.index}`}
                       options={{
-                        textAlign: "right",
+                        textAlign: 'right',
                       }}
                       value={props.item.tmonFee}
                       onChange={(e: any) => {
-                        product.setProductFee("B956", parseFloat(e.target.value), props.index);
+                        product.setProductFee('B956', parseFloat(e.target.value), props.index);
                       }}
                       onBlur={(e: any) => {
                         product.updateProductFee(
@@ -1447,7 +1497,7 @@ export const TabBase = observer((props: any) => {
                           props.index
                         );
                       }}
-                    />{" "}
+                    />{' '}
                     %
                   </Paper>
                 </Grid>

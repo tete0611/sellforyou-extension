@@ -1,17 +1,30 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../../containers/AppContext";
-import { styled, Box, Checkbox, CircularProgress, Divider, Grid, Table, TableHead, TableBody, TableRow, TableCell, Typography } from "@mui/material";
-import { List, AutoSizer } from "react-virtualized";
-import { MyButton } from "../../Common/UI";
-import { DeliverySummary } from "./DeliverySummary";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../../containers/AppContext';
+import {
+  styled,
+  Box,
+  Checkbox,
+  CircularProgress,
+  Divider,
+  Grid,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Typography,
+} from '@mui/material';
+import { List, AutoSizer } from 'react-virtualized';
+import { MyButton } from '../../Common/UI';
+import { DeliverySummary } from './DeliverySummary';
 
-import "../../Common/Styles.css";
+import '../../Common/Styles.css';
 
 const StyledTableCell = styled(TableCell)({
-  borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-  textAlign: "center",
+  borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+  textAlign: 'center',
   padding: 0,
   fontSize: 14,
 });
@@ -41,24 +54,28 @@ export const DeliveryTable = observer(() => {
         <TableHead>
           <TableRow>
             <StyledTableCell width={50}>
-              <Checkbox size="small" checked={delivery.orderInfo.checkedAll} onChange={(e) => delivery.toggleItemCheckedAll(e.target.checked)} />
+              <Checkbox
+                size="small"
+                checked={delivery.orderInfo.checkedAll}
+                onChange={(e) => delivery.toggleItemCheckedAll(e.target.checked)}
+              />
             </StyledTableCell>
 
             <StyledTableCell colSpan={2}>
               <Box
                 sx={{
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "space-between",
+                  alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'space-between',
                   px: 1,
                   minHeight: 50,
                 }}
               >
                 <Box
                   sx={{
-                    alignItems: "center",
-                    display: "flex",
-                    justifyContent: "left",
+                    alignItems: 'center',
+                    display: 'flex',
+                    justifyContent: 'left',
                   }}
                 >
                   <MyButton
@@ -70,7 +87,7 @@ export const DeliveryTable = observer(() => {
                     }}
                     onClick={() => {
                       if (common.user.purchaseInfo2.level < 4) {
-                        alert("[프리미엄] 등급부터 사용 가능한 기능입니다.");
+                        alert('[프리미엄] 등급부터 사용 가능한 기능입니다.');
 
                         return;
                       }
@@ -91,7 +108,7 @@ export const DeliveryTable = observer(() => {
                     }}
                     onClick={() => {
                       if (common.user.purchaseInfo2.level < 4) {
-                        alert("[프리미엄] 등급부터 사용 가능한 기능입니다.");
+                        alert('[프리미엄] 등급부터 사용 가능한 기능입니다.');
 
                         return;
                       }
@@ -112,7 +129,7 @@ export const DeliveryTable = observer(() => {
                     }}
                     onClick={() => {
                       if (common.user.purchaseInfo2.level < 4) {
-                        alert("[프리미엄] 등급부터 사용 가능한 기능입니다.");
+                        alert('[프리미엄] 등급부터 사용 가능한 기능입니다.');
 
                         return;
                       }
@@ -126,16 +143,17 @@ export const DeliveryTable = observer(() => {
 
                 <Box
                   sx={{
-                    alignItems: "center",
-                    display: "flex",
-                    justifyContent: "right",
+                    alignItems: 'center',
+                    display: 'flex',
+                    justifyContent: 'right',
                   }}
                 >
                   <Typography fontSize={13}>일괄설정</Typography>
 
                   <Divider sx={{ height: 28, mr: 1, ml: 1 }} orientation="vertical" />
 
-                  {delivery.orderInfo.searchType === "ORDER_CONNECTED" || delivery.orderInfo.searchType === "ORDER_COMPLETED" ? (
+                  {delivery.orderInfo.searchType === 'ORDER_CONNECTED' ||
+                  delivery.orderInfo.searchType === 'ORDER_COMPLETED' ? (
                     <MyButton
                       disableElevation
                       variant="contained"
@@ -145,7 +163,7 @@ export const DeliveryTable = observer(() => {
                       }}
                       onClick={() => {
                         if (common.user.purchaseInfo2.level < 4) {
-                          alert("[프리미엄] 등급부터 사용 가능한 기능입니다.");
+                          alert('[프리미엄] 등급부터 사용 가능한 기능입니다.');
 
                           return;
                         }
@@ -167,12 +185,12 @@ export const DeliveryTable = observer(() => {
                     }}
                     onClick={() => {
                       if (common.user.purchaseInfo2.level < 4) {
-                        alert("[프리미엄] 등급부터 사용 가능한 기능입니다.");
+                        alert('[프리미엄] 등급부터 사용 가능한 기능입니다.');
 
                         return;
                       }
 
-                      const accept = confirm("목록을 삭제하시겠습니까?");
+                      const accept = confirm('목록을 삭제하시겠습니까?');
 
                       if (!accept) {
                         return;
@@ -208,7 +226,7 @@ export const DeliveryTable = observer(() => {
                   xs={6}
                   md={3}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
@@ -225,7 +243,7 @@ export const DeliveryTable = observer(() => {
                   xs={6}
                   md={3}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
@@ -242,7 +260,7 @@ export const DeliveryTable = observer(() => {
                   xs={6}
                   md={1.6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 ></Grid>
 
@@ -251,7 +269,7 @@ export const DeliveryTable = observer(() => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
@@ -268,7 +286,7 @@ export const DeliveryTable = observer(() => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
@@ -285,7 +303,7 @@ export const DeliveryTable = observer(() => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
@@ -302,7 +320,7 @@ export const DeliveryTable = observer(() => {
                   xs={6}
                   md={1.6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
@@ -319,7 +337,7 @@ export const DeliveryTable = observer(() => {
                   xs={6}
                   md={1}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 ></Grid>
               </Grid>
@@ -339,9 +357,9 @@ export const DeliveryTable = observer(() => {
                   <>
                     <Box
                       sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         p: 3,
                       }}
                     >
@@ -363,9 +381,9 @@ export const DeliveryTable = observer(() => {
                       <>
                         <Box
                           sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
                             p: 3,
                           }}
                         >
@@ -399,9 +417,9 @@ export const DeliveryTable = observer(() => {
                         ) : (
                           <Box
                             sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
                               p: 3,
                             }}
                           >

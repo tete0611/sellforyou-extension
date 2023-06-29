@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Button, Grid, Popover, TextField, Typography } from "@mui/material";
-import { MyButton } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Button, Grid, Popover, TextField, Typography } from '@mui/material';
+import { MyButton } from '../Common/UI';
 
 interface sillInfoType {
   code: string;
@@ -18,8 +18,8 @@ export const SetProductSillDataPopOver = observer(() => {
 
   // 상품고시정보 상태관리
   const [sillInfo, setSillInfo] = React.useState<sillInfoType>({
-    code: "",
-    name: "",
+    code: '',
+    name: '',
     data: [],
   });
 
@@ -54,8 +54,8 @@ export const SetProductSillDataPopOver = observer(() => {
       open: false,
       data: {
         marketCode: null,
-        sillCode: "",
-        sillData: "",
+        sillCode: '',
+        sillData: '',
       },
     });
   };
@@ -66,8 +66,8 @@ export const SetProductSillDataPopOver = observer(() => {
       anchorEl={product.popOverInfo.setProductSillData.element}
       onClose={onClose}
       anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left",
+        vertical: 'bottom',
+        horizontal: 'left',
       }}
     >
       <Box
@@ -89,7 +89,7 @@ export const SetProductSillDataPopOver = observer(() => {
               xs={6}
               md={6}
               sx={{
-                m: "auto",
+                m: 'auto',
               }}
             >
               <Typography fontSize={14}>상품정보제공고시명</Typography>
@@ -100,7 +100,7 @@ export const SetProductSillDataPopOver = observer(() => {
               xs={6}
               md={6}
               sx={{
-                m: "auto",
+                m: 'auto',
               }}
             >
               <Typography fontSize={14}>{sillInfo.name}</Typography>
@@ -115,7 +115,7 @@ export const SetProductSillDataPopOver = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <Typography fontSize={14}>{v.name}</Typography>
@@ -126,16 +126,16 @@ export const SetProductSillDataPopOver = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
-                  {v.type === "input" ? (
+                  {v.type === 'input' ? (
                     <>
                       <TextField
                         id={v.code}
                         variant="outlined"
                         sx={{
-                          width: "100%",
+                          width: '100%',
                         }}
                         inputProps={{
                           style: {
@@ -143,7 +143,7 @@ export const SetProductSillDataPopOver = observer(() => {
                             padding: 5,
                           },
                         }}
-                        defaultValue={v.value ? v.value : "상세설명참조"}
+                        defaultValue={v.value ? v.value : '상세설명참조'}
                         onBlur={(e) => {
                           v.value = e.target.value;
 
@@ -164,9 +164,9 @@ export const SetProductSillDataPopOver = observer(() => {
 
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             mt: 3,
           }}
         >

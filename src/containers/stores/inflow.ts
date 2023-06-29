@@ -1,83 +1,83 @@
 // 유입수 분석 스토리지
 
-import gql from "../../pages/Main/GraphQL/Requests";
-import QUERIES from "../../pages/Main/GraphQL/Queries";
+import gql from '../../pages/Main/GraphQL/Requests';
+import QUERIES from '../../pages/Main/GraphQL/Queries';
 
-import { runInAction, makeAutoObservable } from "mobx";
-import { getClock, getClockOffset } from "../../pages/Tools/Common";
+import { runInAction, makeAutoObservable } from 'mobx';
+import { getClock, getClockOffset } from '../../pages/Tools/Common';
 
 export class inflow {
   chartOption: any = {
     chart: {
-      type: "none",
+      type: 'none',
       toolbar: {
         show: false,
       },
     },
-    colors: ["#77B6EA"],
+    colors: ['#77B6EA'],
     dataLabels: {
       enabled: true,
     },
     plotOptions: {
       bar: {
-        columnWidth: "40%",
+        columnWidth: '40%',
       },
     },
     stroke: {
-      curve: "smooth",
+      curve: 'smooth',
     },
     grid: {
-      borderColor: "#e7e7e7",
+      borderColor: '#e7e7e7',
       row: {
-        colors: ["transparent", "transparent"],
+        colors: ['transparent', 'transparent'],
         opacity: 0.5,
       },
     },
     xaxis: {
-      type: "datetime",
+      type: 'datetime',
       min: undefined,
       max: undefined,
       labels: {
         datetimeFormatter: {
-          year: "yyyy년",
-          month: "MM월",
-          day: "MM월 dd일",
+          year: 'yyyy년',
+          month: 'MM월',
+          day: 'MM월 dd일',
         },
       },
     },
     legend: {
-      position: "top",
-      horizontalAlign: "right",
+      position: 'top',
+      horizontalAlign: 'right',
     },
   };
 
   searchInfo: any = {
-    timeStart: "",
-    timeEnd: "",
-    siteCode: "ALL",
+    timeStart: '',
+    timeEnd: '',
+    siteCode: 'ALL',
   };
 
   filterInfo: any = {
-    type: "PCODE",
-    keyword: "",
+    type: 'PCODE',
+    keyword: '',
   };
 
   dataCounts: any = {
-    total: "-",
+    total: '-',
 
-    a077: "-",
-    b378: "-",
-    a112: "-",
-    a113: "-",
-    a001: "-",
-    a006: "-",
-    a027: "-",
-    b719: "-",
-    a524: "-",
-    a525: "-",
-    b956: "-",
-    a522: "-",
-    a523: "-",
+    a077: '-',
+    b378: '-',
+    a112: '-',
+    a113: '-',
+    a001: '-',
+    a006: '-',
+    a027: '-',
+    b719: '-',
+    a524: '-',
+    a525: '-',
+    b956: '-',
+    a522: '-',
+    a523: '-',
   };
 
   dataInfos: any = [];
@@ -120,8 +120,14 @@ export class inflow {
     const response = await gql(
       QUERIES.SELECT_PRODUCT_VIEW_LOG_BY_USER,
       {
-        timeStart: `${time1.getFullYear()}-${(time1.getMonth() + 1).toString().padStart(2, "0")}-${time1.getDate().toString().padStart(2, "0")} 15:00:00`,
-        timeEnd: `${time2.getFullYear()}-${(time2.getMonth() + 1).toString().padStart(2, "0")}-${time2.getDate().toString().padStart(2, "0")} 14:59:59`,
+        timeStart: `${time1.getFullYear()}-${(time1.getMonth() + 1).toString().padStart(2, '0')}-${time1
+          .getDate()
+          .toString()
+          .padStart(2, '0')} 15:00:00`,
+        timeEnd: `${time2.getFullYear()}-${(time2.getMonth() + 1).toString().padStart(2, '0')}-${time2
+          .getDate()
+          .toString()
+          .padStart(2, '0')} 14:59:59`,
       },
       false
     );
@@ -146,23 +152,29 @@ export class inflow {
 
     let keyword = this.filterInfo.keyword ? this.filterInfo.keyword : undefined;
 
-    if (keyword && this.filterInfo.type === "PCODE") {
-      if (!this.filterInfo.keyword.includes("SFY_")) {
-        alert("상품코드는 SFY_000 형식으로 입력해주세요.");
+    if (keyword && this.filterInfo.type === 'PCODE') {
+      if (!this.filterInfo.keyword.includes('SFY_')) {
+        alert('상품코드는 SFY_000 형식으로 입력해주세요.');
 
         return;
       }
 
-      keyword = parseInt(this.filterInfo.keyword.split("_")[1], 36);
+      keyword = parseInt(this.filterInfo.keyword.split('_')[1], 36);
     }
 
     const response = await gql(
       QUERIES.SELECT_PRODUCT_VIEW_LOG_DATE_FILTER_BY_USER,
       {
-        productId: keyword && this.filterInfo.type === "PCODE" ? keyword : undefined,
-        productName: keyword && this.filterInfo.type === "PNAME" ? keyword : undefined,
-        timeStart: `${time1.getFullYear()}-${(time1.getMonth() + 1).toString().padStart(2, "0")}-${time1.getDate().toString().padStart(2, "0")} 15:00:00`,
-        timeEnd: `${time2.getFullYear()}-${(time2.getMonth() + 1).toString().padStart(2, "0")}-${time2.getDate().toString().padStart(2, "0")} 14:59:59`,
+        productId: keyword && this.filterInfo.type === 'PCODE' ? keyword : undefined,
+        productName: keyword && this.filterInfo.type === 'PNAME' ? keyword : undefined,
+        timeStart: `${time1.getFullYear()}-${(time1.getMonth() + 1).toString().padStart(2, '0')}-${time1
+          .getDate()
+          .toString()
+          .padStart(2, '0')} 15:00:00`,
+        timeEnd: `${time2.getFullYear()}-${(time2.getMonth() + 1).toString().padStart(2, '0')}-${time2
+          .getDate()
+          .toString()
+          .padStart(2, '0')} 14:59:59`,
       },
       false
     );
@@ -200,7 +212,7 @@ export class inflow {
 
         const h = date.getHours();
 
-        const time = new Date(`${Y}-${M}-${D} ${longTerm ? "09" : h}:00:00`).getTime();
+        const time = new Date(`${Y}-${M}-${D} ${longTerm ? '09' : h}:00:00`).getTime();
 
         const itemArray = mapInfos.get(time);
 
@@ -219,7 +231,7 @@ export class inflow {
 
       this.dataInfos = [
         {
-          name: "전체유입수",
+          name: '전체유입수',
           data: logTime.map((v) => {
             return {
               x: v[0],
@@ -229,35 +241,35 @@ export class inflow {
         },
       ];
 
-      if (this.searchInfo.siteCode !== "ALL") {
+      if (this.searchInfo.siteCode !== 'ALL') {
         this.dataInfos.push({
           name:
-            this.searchInfo.siteCode === "A077"
-              ? "스마트스토어"
-              : this.searchInfo.siteCode === "B378"
-              ? "쿠팡"
-              : this.searchInfo.siteCode === "A112"
-              ? "11번가(글로벌)"
-              : this.searchInfo.siteCode === "A113"
-              ? "11번가(일반)"
-              : this.searchInfo.siteCode === "A006"
-              ? "지마켓"
-              : this.searchInfo.siteCode === "A001"
-              ? "옥션"
-              : this.searchInfo.siteCode === "A027"
-              ? "인터파크"
-              : this.searchInfo.siteCode === "B719"
-              ? "위메프"
-              : this.searchInfo.siteCode === "A524"
-              ? "롯데온(글로벌)"
-              : this.searchInfo.siteCode === "A525"
-              ? "롯데온(일반)"
-              : this.searchInfo.siteCode === "B956"
-              ? "티몬"
-              : this.searchInfo.siteCode === "A523"
-              ? "지마켓(2.0)"
-              : this.searchInfo.siteCode === "A522"
-              ? "옥션(1.0)"
+            this.searchInfo.siteCode === 'A077'
+              ? '스마트스토어'
+              : this.searchInfo.siteCode === 'B378'
+              ? '쿠팡'
+              : this.searchInfo.siteCode === 'A112'
+              ? '11번가(글로벌)'
+              : this.searchInfo.siteCode === 'A113'
+              ? '11번가(일반)'
+              : this.searchInfo.siteCode === 'A006'
+              ? '지마켓'
+              : this.searchInfo.siteCode === 'A001'
+              ? '옥션'
+              : this.searchInfo.siteCode === 'A027'
+              ? '인터파크'
+              : this.searchInfo.siteCode === 'B719'
+              ? '위메프'
+              : this.searchInfo.siteCode === 'A524'
+              ? '롯데온(글로벌)'
+              : this.searchInfo.siteCode === 'A525'
+              ? '롯데온(일반)'
+              : this.searchInfo.siteCode === 'B956'
+              ? '티몬'
+              : this.searchInfo.siteCode === 'A523'
+              ? '지마켓(2.0)'
+              : this.searchInfo.siteCode === 'A522'
+              ? '옥션(1.0)'
               : null,
           data: logTime.map((v) => {
             return {
@@ -284,8 +296,8 @@ export class inflow {
         (this.dataGroup = [...mapGroup]);
     });
 
-    console.log("test", this.dataInfos);
-    console.log("test2", this.dataGroup);
+    console.log('test', this.dataInfos);
+    console.log('test2', this.dataGroup);
   };
 
   // 검색 정보

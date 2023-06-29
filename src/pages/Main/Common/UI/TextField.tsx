@@ -1,26 +1,26 @@
-import React from "react";
+import React from 'react';
 
-import { TextField } from "@mui/material";
+import { TextField } from '@mui/material';
 
 // 입력창 스타일
 const inputStyles = (props: any) => {
   return {
-    width: props.width ?? "100%",
+    width: props.width ?? '100%',
 
     input: {
       ...props.options,
 
-      bgcolor: "background.default",
+      bgcolor: 'background.default',
       fontSize: 13,
-      p: "6px",
+      p: '6px',
     },
 
     textarea: {
       ...props.options,
 
-      bgcolor: "background.default",
+      bgcolor: 'background.default',
       fontSize: 13,
-      p: "0.5px",
+      p: '0.5px',
     },
   };
 };

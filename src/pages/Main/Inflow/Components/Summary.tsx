@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../../containers/AppContext";
-import { styled, Box, Chip, TableCell, TableRow, Typography } from "@mui/material";
-import { Image } from "../../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../../containers/AppContext';
+import { styled, Box, Chip, TableCell, TableRow, Typography } from '@mui/material';
+import { Image } from '../../Common/UI';
 
 // 커스텀 테이블 컬럼 스타일 설정
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
+  textAlign: 'center',
   padding: 0,
   fontSize: 14,
 });
@@ -29,10 +29,10 @@ export const Summary = observer((props: any) => {
             onClick={() => {
               navigator.clipboard.writeText(props.item[0].product.productCode).then(
                 function () {
-                  alert("클립보드에 복사되었습니다.");
+                  alert('클립보드에 복사되었습니다.');
                 },
                 function () {
-                  alert("클립보드에 복사할 수 없습니다.");
+                  alert('클립보드에 복사할 수 없습니다.');
                 }
               );
             }}
@@ -42,33 +42,35 @@ export const Summary = observer((props: any) => {
         <StyledTableCell width={50}>
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               p: 0,
-              height: "100%",
-              width: "100%",
+              height: '100%',
+              width: '100%',
             }}
           >
             <Image
               src={
-                JSON.parse(props.item[0].product.imageThumbnailData)[0].includes("http")
+                JSON.parse(props.item[0].product.imageThumbnailData)[0].includes('http')
                   ? JSON.parse(props.item[0].product.imageThumbnailData)[0]
                   : `https://img.sellforyou.co.kr/sellforyou/${JSON.parse(props.item[0].product.imageThumbnailData)[0]}`
               }
               width={40}
               height={40}
               style={{
-                background: "black",
-                objectFit: "contain",
+                background: 'black',
+                objectFit: 'contain',
               }}
               onClick={(e) => {
                 product.setImagePopOver({
                   element: e.target,
                   data: {
-                    src: JSON.parse(props.item[0].product.imageThumbnailData)[0].includes("http")
+                    src: JSON.parse(props.item[0].product.imageThumbnailData)[0].includes('http')
                       ? JSON.parse(props.item[0].product.imageThumbnailData)[0]
-                      : `https://img.sellforyou.co.kr/sellforyou/${JSON.parse(props.item[0].product.imageThumbnailData)[0]}`,
+                      : `https://img.sellforyou.co.kr/sellforyou/${
+                          JSON.parse(props.item[0].product.imageThumbnailData)[0]
+                        }`,
                   },
                   open: true,
                 });
@@ -79,12 +81,12 @@ export const Summary = observer((props: any) => {
 
         <StyledTableCell
           sx={{
-            textAlign: "left",
+            textAlign: 'left',
           }}
         >
           <Box
             sx={{
-              width: "400px",
+              width: '400px',
             }}
           >
             <Typography noWrap fontSize={14}>
@@ -96,8 +98,8 @@ export const Summary = observer((props: any) => {
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
           {props.item.length}
@@ -106,11 +108,11 @@ export const Summary = observer((props: any) => {
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "A077")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'A077')?.length ?? null}
 
           {/* <Typography
             fontSize={14}
@@ -136,121 +138,121 @@ export const Summary = observer((props: any) => {
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "B378")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'B378')?.length ?? null}
         </StyledTableCell>
 
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "A112")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'A112')?.length ?? null}
         </StyledTableCell>
 
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "A113")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'A113')?.length ?? null}
         </StyledTableCell>
 
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "A006")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'A006')?.length ?? null}
         </StyledTableCell>
 
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "A001")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'A001')?.length ?? null}
         </StyledTableCell>
 
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "A027")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'A027')?.length ?? null}
         </StyledTableCell>
 
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "B719")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'B719')?.length ?? null}
         </StyledTableCell>
 
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "A524")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'A524')?.length ?? null}
         </StyledTableCell>
 
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "A525")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'A525')?.length ?? null}
         </StyledTableCell>
 
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "B956")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'B956')?.length ?? null}
         </StyledTableCell>
 
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "A523")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'A523')?.length ?? null}
         </StyledTableCell>
 
         <StyledTableCell
           width={50}
           sx={{
-            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-            textAlign: "center",
+            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+            textAlign: 'center',
           }}
         >
-          {props.item.filter((v) => v.siteCode === "A522")?.length ?? null}
+          {props.item.filter((v) => v.siteCode === 'A522')?.length ?? null}
         </StyledTableCell>
       </TableRow>
     </>

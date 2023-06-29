@@ -3,49 +3,49 @@
 async function injectScript(type: string) {
   sessionStorage.removeItem(`${type}-item`);
 
-  let oldScript = document.getElementById("sellforyou");
+  let oldScript = document.getElementById('sellforyou');
 
   if (oldScript) {
     oldScript.remove();
   }
 
-  let script = document.createElement("script");
+  let script = document.createElement('script');
 
-  script.id = "sellforyou";
+  script.id = 'sellforyou';
 
   switch (type) {
-    case "taobao": {
-      script.src = chrome.runtime.getURL("/resources/taobao.js");
+    case 'taobao': {
+      script.src = chrome.runtime.getURL('/resources/taobao.js');
 
       break;
     }
 
-    case "tmall": {
-      script.src = chrome.runtime.getURL("/resources/tmall.js");
+    case 'tmall': {
+      script.src = chrome.runtime.getURL('/resources/tmall.js');
 
       break;
     }
 
-    case "express": {
-      script.src = chrome.runtime.getURL("/resources/express.js");
+    case 'express': {
+      script.src = chrome.runtime.getURL('/resources/express.js');
 
       break;
     }
 
-    case "alibaba": {
-      script.src = chrome.runtime.getURL("/resources/alibaba.js");
+    case 'alibaba': {
+      script.src = chrome.runtime.getURL('/resources/alibaba.js');
 
       break;
     }
 
-    case "vvic": {
-      script.src = chrome.runtime.getURL("/resources/vvic.js");
+    case 'vvic': {
+      script.src = chrome.runtime.getURL('/resources/vvic.js');
 
       break;
     }
 
-    case "amazon": {
-      script.src = chrome.runtime.getURL("/resources/amazon.js");
+    case 'amazon': {
+      script.src = chrome.runtime.getURL('/resources/amazon.js');
 
       break;
     }

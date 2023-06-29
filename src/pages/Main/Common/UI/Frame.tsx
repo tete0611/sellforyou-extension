@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Box } from "@mui/material";
+import { Box } from '@mui/material';
 
 // 프레임(바탕) 뷰
 export const Frame = (props: any) => {
@@ -10,15 +10,15 @@ export const Frame = (props: any) => {
       sx={{
         ...props.sx,
 
-        bgcolor: props.dark ? "#242424" : "#f5f5f5",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
+        bgcolor: props.dark ? '#242424' : '#f5f5f5',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
         // padding: "10px 0px",
 
         // width: "100vw",
-        minHeight: "100vh",
+        minHeight: '100vh',
       }}
     >
       {props.children}

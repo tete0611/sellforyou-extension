@@ -1,9 +1,17 @@
-import MUTATIONS from "../Main/GraphQL/Mutations";
-import QUERIES from "../Main/GraphQL/Queries";
-import gql from "../Main/GraphQL/Requests";
+import MUTATIONS from '../Main/GraphQL/Mutations';
+import QUERIES from '../Main/GraphQL/Queries';
+import gql from '../Main/GraphQL/Requests';
 
-import { getLocalStorage } from "./ChromeAsync";
-import { byteSlice, getClock, getClockOffset, getStoreTraceCodeV2, notificationByEveryTime, sendCallback, transformContent } from "./Common";
+import { getLocalStorage } from './ChromeAsync';
+import {
+  byteSlice,
+  getClock,
+  getClockOffset,
+  getStoreTraceCodeV2,
+  notificationByEveryTime,
+  sendCallback,
+  transformContent,
+} from './Common';
 
 // 롯데온 상품등록해제
 async function deleteLotteon(productStore: any, commonStore: any, data: any) {
@@ -37,37 +45,37 @@ async function deleteLotteon(productStore: any, commonStore: any, data: any) {
         const deleteBody: any = {
           spdLst: [
             {
-              trGrpCd: "SR",
+              trGrpCd: 'SR',
               trNo: transId,
-              lrtrNo: "",
+              lrtrNo: '',
               spdNo: productId,
-              slStatCd: "END",
+              slStatCd: 'END',
             },
           ],
         };
 
         // 상품 삭제 API
-        const deleteResp: any = await fetch("https://openapi.lotteon.com/v1/openapi/product/v1/product/status/change", {
+        const deleteResp: any = await fetch('https://openapi.lotteon.com/v1/openapi/product/v1/product/status/change', {
           headers: {
             Authorization: `Bearer ${apiKey}`,
-            Accept: "application/json",
-            "Accept-Language": "ko",
-            "X-Timezone": "GMT+09:00",
-            "Content-Type": "application/json",
+            Accept: 'application/json',
+            'Accept-Language': 'ko',
+            'X-Timezone': 'GMT+09:00',
+            'Content-Type': 'application/json',
           },
 
           body: JSON.stringify(deleteBody),
 
-          method: "POST",
+          method: 'POST',
         });
 
         const deleteJson = await deleteResp.json();
 
-        if (deleteJson.returnCode !== "0000") {
+        if (deleteJson.returnCode !== '0000') {
           continue;
         } else {
-          if (deleteJson.data[0].resultCode !== "0000") {
-            if (deleteJson.data[0].resultCode === "8888") {
+          if (deleteJson.data[0].resultCode !== '0000') {
+            if (deleteJson.data[0].resultCode === '8888') {
               const progressValue = Math.round(((parseInt(product) + 1) * 100) / data.DShopInfo.prod_codes.length);
 
               commonStore.setDisabledProgressValue(data.DShopInfo.site_code, progressValue);
@@ -132,13 +140,13 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
       let boundResp = await fetch(`https://openapi.lotteon.com/v1/openapi/contract/v1/dvp/getDvpListSr`, {
         headers: {
           Authorization: `Bearer ${apiKey}`,
-          Accept: "application/json",
-          "Accept-Language": "ko",
-          "X-Timezone": "GMT+09:00",
-          "Content-Type": "application/json",
+          Accept: 'application/json',
+          'Accept-Language': 'ko',
+          'X-Timezone': 'GMT+09:00',
+          'Content-Type': 'application/json',
         },
 
-        method: "POST",
+        method: 'POST',
 
         body: JSON.stringify({
           afflTrCd: transId,
@@ -148,15 +156,15 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
       let boundJson = await boundResp.json();
 
       for (let i in boundJson.data) {
-        if (boundJson.data[i].useYn === "Y") {
+        if (boundJson.data[i].useYn === 'Y') {
           switch (boundJson.data[i].dvpTypCd) {
-            case "01": {
+            case '01': {
               inbound = boundJson.data[i].dvpNo;
 
               break;
             }
 
-            case "02": {
+            case '02': {
               outbound = boundJson.data[i].dvpNo;
 
               break;
@@ -188,7 +196,8 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
       return false;
     }
 
-    const policy = commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code)?.policyInfo ?? null;
+    const policy =
+      commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code)?.policyInfo ?? null;
 
     if (!policy) {
       productStore.addConsoleText(`(${shopName}) 발송정책 조회 실패`);
@@ -203,13 +212,13 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
     let policyResp = await fetch(`https://openapi.lotteon.com/v1/openapi/contract/v1/dvl/getDvCstListSr`, {
       headers: {
         Authorization: `Bearer ${apiKey}`,
-        Accept: "application/json",
-        "Accept-Language": "ko",
-        "X-Timezone": "GMT+09:00",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Accept-Language': 'ko',
+        'X-Timezone': 'GMT+09:00',
+        'Content-Type': 'application/json',
       },
 
-      method: "POST",
+      method: 'POST',
 
       body: JSON.stringify({
         afflTrCd: transId,
@@ -219,11 +228,11 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
     let policyJson = await policyResp.json();
 
     for (let i in policyJson.data) {
-      if (policyJson.data[i].useYn !== "Y") {
+      if (policyJson.data[i].useYn !== 'Y') {
         continue;
       }
 
-      if (policyJson.data[i].dvCstTypCd === "ADTN_DV_CST") {
+      if (policyJson.data[i].dvCstTypCd === 'ADTN_DV_CST') {
         if (additionalPolicy) {
           continue;
         }
@@ -249,7 +258,7 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
           if (!commonStore.uploadInfo.editable) {
             productStore.addRegisteredFailed(
               Object.assign(market_item, {
-                error: "스토어에 이미 등록된 상품입니다.",
+                error: '스토어에 이미 등록된 상품입니다.',
               })
             );
             productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
@@ -260,7 +269,7 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
           if (commonStore.uploadInfo.editable) {
             productStore.addRegisteredFailed(
               Object.assign(market_item, {
-                error: "상품 신규등록을 먼저 진행해주세요.",
+                error: '상품 신규등록을 먼저 진행해주세요.',
               })
             );
             productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
@@ -273,40 +282,43 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
 
         let images_lotteon: any = [];
 
-        let categoryResp = await fetch(`https://onpick-api.lotteon.com/cheetah/econCheetah.ecn?job=cheetahStandardCategory&filter_1=${market_item.cate_code}`, {
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            Accept: "application/json",
-            "Accept-Language": "ko",
-            "X-Timezone": "GMT+09:00",
-            "Content-Type": "application/json",
-          },
+        let categoryResp = await fetch(
+          `https://onpick-api.lotteon.com/cheetah/econCheetah.ecn?job=cheetahStandardCategory&filter_1=${market_item.cate_code}`,
+          {
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+              Accept: 'application/json',
+              'Accept-Language': 'ko',
+              'X-Timezone': 'GMT+09:00',
+              'Content-Type': 'application/json',
+            },
 
-          method: "GET",
-        });
+            method: 'GET',
+          }
+        );
 
         let categoryJson = await categoryResp.json();
 
         for (let i in market_item) {
-          if (i.match(/img[0-9]/) && !i.includes("blob")) {
-            if (market_item[i] !== "") {
+          if (i.match(/img[0-9]/) && !i.includes('blob')) {
+            if (market_item[i] !== '') {
               let output: any = {};
 
-              let img = /^https?:/.test(market_item[i]) ? market_item[i] : "http:" + market_item[i];
+              let img = /^https?:/.test(market_item[i]) ? market_item[i] : 'http:' + market_item[i];
 
-              if (i === "img1") {
+              if (i === 'img1') {
                 output = {
-                  epsrTypCd: "IMG",
-                  epsrTypDtlCd: "IMG_SQRE",
+                  epsrTypCd: 'IMG',
+                  epsrTypDtlCd: 'IMG_SQRE',
                   origImgFileNm: img,
-                  rprtImgYn: "Y",
+                  rprtImgYn: 'Y',
                 };
               } else {
                 output = {
-                  epsrTypCd: "IMG",
-                  epsrTypDtlCd: "IMG_SQRE",
+                  epsrTypCd: 'IMG',
+                  epsrTypDtlCd: 'IMG_SQRE',
                   origImgFileNm: img,
-                  rprtImgYn: "N",
+                  rprtImgYn: 'N',
                 };
               }
 
@@ -331,7 +343,7 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
         for (let i in words_list) {
           if (words_list[i].findWord && !words_list[i].replaceWord) {
             if (market_item.name3.includes(words_list[i].findWord)) {
-              words_restrict["상품명"] = words_list[i].findWord;
+              words_restrict['상품명'] = words_list[i].findWord;
             }
           }
         }
@@ -339,15 +351,15 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
         for (let i in market_optn) {
           if (market_optn[i].code === market_code) {
             for (let j in market_optn[i]) {
-              if (j.includes("misc") && market_optn[i][j] !== "") {
-                group[market_optn[i][j]] = j.replace("misc", "opt");
+              if (j.includes('misc') && market_optn[i][j] !== '') {
+                group[market_optn[i][j]] = j.replace('misc', 'opt');
               }
 
-              if (j.includes("opt") && j !== "optimg" && market_optn[i][j] !== "") {
+              if (j.includes('opt') && j !== 'optimg' && market_optn[i][j] !== '') {
                 for (let k in words_list) {
                   if (words_list[k].findWord && !words_list[k].replaceWord) {
                     if (market_optn[i][j].includes(words_list[k].findWord)) {
-                      words_restrict["옵션명"] = words_list[k].findWord;
+                      words_restrict['옵션명'] = words_list[k].findWord;
                     }
                   }
                 }
@@ -357,10 +369,10 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
         }
 
         if (Object.keys(words_restrict).length > 0) {
-          let message = "";
+          let message = '';
 
           for (let i in words_restrict) {
-            message += i + "에서 금지어(" + words_restrict[i] + ")가 발견되었습니다. ";
+            message += i + '에서 금지어(' + words_restrict[i] + ')가 발견되었습니다. ';
           }
 
           productStore.addRegisteredFailed(Object.assign(market_item, { error: message }));
@@ -401,7 +413,7 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
 
               option_data.push({
                 eitmNo: market_code,
-                dpYn: "Y",
+                dpYn: 'Y',
                 sortSeq: option_data_count,
                 itmOptLst: option_detail,
                 itmImgLst: images_lotteon,
@@ -419,7 +431,7 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
 
             for (let j in market_optn) {
               if (market_optn[j].code === market_code) {
-                option_group[market_optn[j][group[i]]] = "";
+                option_group[market_optn[j][group[i]]] = '';
               }
             }
 
@@ -445,12 +457,12 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
         } else {
           option_data.push({
             eitmNo: market_code,
-            dpYn: "Y",
+            dpYn: 'Y',
             sortSeq: 1,
             itmOptLst: [
               {
-                optNm: "단일상품",
-                optVal: "단일상품",
+                optNm: '단일상품',
+                optVal: '단일상품',
               },
             ],
             itmImgLst: images_lotteon,
@@ -460,7 +472,7 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
 
           option_list.push({
             optSeq: 1,
-            optNm: "단일상품",
+            optNm: '단일상품',
             optValSrtLst: [],
           });
         }
@@ -468,14 +480,14 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
         let video_lotteon: any = [];
 
         if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code).video) {
-          market_item.misc1 = "";
+          market_item.misc1 = '';
         }
 
         if (market_item.misc1) {
           video_lotteon = [
             {
-              fileTypCd: "PD",
-              fileDvsCd: "VDO_URL",
+              fileTypCd: 'PD',
+              fileDvsCd: 'VDO_URL',
               origFileNm: /^https?/.test(market_item.misc1) ? market_item.misc1 : `https:${market_item.misc1}`,
             },
           ];
@@ -483,15 +495,21 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
 
         const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
 
-        const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`] ? itemInfo[`sillCode${data.DShopInfo.site_code}`] : "38";
+        const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
+          ? itemInfo[`sillCode${data.DShopInfo.site_code}`]
+          : '38';
         const sillData = itemInfo[`sillData${data.DShopInfo.site_code}`]
           ? JSON.parse(itemInfo[`sillData${data.DShopInfo.site_code}`])
           : [
-              { code: "0210", name: "1. 품명 및 모델명", type: "input" },
-              { code: "1400", name: "2. 법에 의한 인증ㆍ허가 등을 받았음을 확인할 수 있는 경우 그에 대한 사항", type: "input" },
-              { code: "1420", name: "3. 제조국 또는 원산지", type: "input" },
-              { code: "0070", name: "4. 제조자, 수입품의 경우 수입자를rn함께 표기", type: "input" },
-              { code: "1440", name: "5. A/S 책임자와 전화번호 또는 소비자 상담 관련 전화번호", type: "input" },
+              { code: '0210', name: '1. 품명 및 모델명', type: 'input' },
+              {
+                code: '1400',
+                name: '2. 법에 의한 인증ㆍ허가 등을 받았음을 확인할 수 있는 경우 그에 대한 사항',
+                type: 'input',
+              },
+              { code: '1420', name: '3. 제조국 또는 원산지', type: 'input' },
+              { code: '0070', name: '4. 제조자, 수입품의 경우 수입자를rn함께 표기', type: 'input' },
+              { code: '1440', name: '5. A/S 책임자와 전화번호 또는 소비자 상담 관련 전화번호', type: 'input' },
             ];
 
         const sillResult = {
@@ -499,7 +517,7 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
           pdItmsArtlLst: sillData.map((v) => {
             return {
               pdArtlCd: v.code,
-              pdArtlCnts: v.value ?? "상세설명참조",
+              pdArtlCnts: v.value ?? '상세설명참조',
             };
           }),
         };
@@ -507,60 +525,60 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
         const productBody: any = {
           spdLst: [
             {
-              trGrpCd: "SR",
+              trGrpCd: 'SR',
               trNo: transId,
-              lrtrNo: "",
+              lrtrNo: '',
               scatNo: market_item.cate_code,
 
               dcatLst: [
                 {
-                  mallCd: "LTON",
+                  mallCd: 'LTON',
                   lfDcatNo: categoryJson.itemList[0].data.disp_list[0].disp_cat_id,
                 },
               ],
 
-              epdNo: "",
-              slTypCd: "GNRL",
-              pdTypCd: "GNRL_GNRL",
+              epdNo: '',
+              slTypCd: 'GNRL',
+              pdTypCd: 'GNRL_GNRL',
               spdNm: name,
               mfcrNm: market_item.maker, // 제조사
-              oplcCd: "상품상세 참조",
+              oplcCd: '상품상세 참조',
               mdlNo: market_item.model, // 모델명
-              barCd: "",
-              tdfDvsCd: "01",
+              barCd: '',
+              tdfDvsCd: '01',
               slStrtDttm: `${time.YY}${time.MM}${time.DD}${time.hh}${time.mm}${time.ss}`,
-              slEndDttm: "99991231235959",
+              slEndDttm: '99991231235959',
 
               pdItmsInfo: sillResult,
 
               purPsbQtyInfo: {
-                itmByMinPurYn: "N",
-                itmByMaxPurPsbQtyYn: "N",
+                itmByMinPurYn: 'N',
+                itmByMaxPurPsbQtyYn: 'N',
               },
 
-              ageLmtCd: "0",
-              prstPsbYn: "N",
-              prstPckPsbYn: "N",
-              prstMsgPsbYn: "N",
-              prcCmprEpsrYn: "Y",
-              bookCultCstDdctYn: "N",
-              isbnCd: "",
-              impDvsCd: "NONE",
-              cshbltyPdYn: "N",
-              gftvShpCd: "",
-              dnDvPdYn: "N",
-              toysPdYn: "N",
-              intgSlPdNo: "",
-              nmlPdYn: "N",
-              prmmPdYn: "N",
-              otltPdYn: "N",
-              prmmInstPdYn: "N",
-              brkHmapPkcpPsbYn: "N",
-              mvCmcoCd: "",
-              ctrtTypCd: "A",
-              pdStatCd: "NEW",
-              dpYn: "Y",
-              ltonDpYn: "Y",
+              ageLmtCd: '0',
+              prstPsbYn: 'N',
+              prstPckPsbYn: 'N',
+              prstMsgPsbYn: 'N',
+              prcCmprEpsrYn: 'Y',
+              bookCultCstDdctYn: 'N',
+              isbnCd: '',
+              impDvsCd: 'NONE',
+              cshbltyPdYn: 'N',
+              gftvShpCd: '',
+              dnDvPdYn: 'N',
+              toysPdYn: 'N',
+              intgSlPdNo: '',
+              nmlPdYn: 'N',
+              prmmPdYn: 'N',
+              otltPdYn: 'N',
+              prmmInstPdYn: 'N',
+              brkHmapPkcpPsbYn: 'N',
+              mvCmcoCd: '',
+              ctrtTypCd: 'A',
+              pdStatCd: 'NEW',
+              dpYn: 'Y',
+              ltonDpYn: 'Y',
               // "scKwdLst": [
               // 	"검색키워드1",
               // 	"검색키워드2",
@@ -570,57 +588,57 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
 
               epnLst: [
                 {
-                  pdEpnTypCd: "DSCRP",
+                  pdEpnTypCd: 'DSCRP',
                   cnts: `${getStoreTraceCodeV2(market_item.id, data.DShopInfo.site_code)}${market_item.content2}${
-                    commonStore.user.userInfo.descriptionShowTitle === "Y"
+                    commonStore.user.userInfo.descriptionShowTitle === 'Y'
                       ? `<br /><br /><div style="text-align: center;">${market_item.name3}</div><br /><br />`
                       : `<br /><br />`
                   }${transformContent(market_item.content1)}${market_item.content3}`,
                 },
               ],
 
-              cnclPsbYn: "Y",
-              dmstOvsDvDvsCd: data.DShopInfo.site_code === "A524" ? "OVS" : "DMST",
-              pstkYn: "N",
-              dvProcTypCd: "LO_ENTP",
-              dvPdTypCd: "GNRL",
-              sndBgtNday: data.DShopInfo.site_code === "A524" ? "15" : "3",
+              cnclPsbYn: 'Y',
+              dmstOvsDvDvsCd: data.DShopInfo.site_code === 'A524' ? 'OVS' : 'DMST',
+              pstkYn: 'N',
+              dvProcTypCd: 'LO_ENTP',
+              dvPdTypCd: 'GNRL',
+              sndBgtNday: data.DShopInfo.site_code === 'A524' ? '15' : '3',
 
               sndBgtDdInfo: {
-                nldySndCloseTm: "1300",
-                satSndPsbYn: "Y",
-                satSndCloseTm: "1200",
+                nldySndCloseTm: '1300',
+                satSndPsbYn: 'Y',
+                satSndCloseTm: '1200',
               },
 
-              dvRgsprGrpCd: "GN000",
-              dvMnsCd: "DPCL",
+              dvRgsprGrpCd: 'GN000',
+              dvMnsCd: 'DPCL',
               owhpNo: outbound,
-              hdcCd: "9999",
+              hdcCd: '9999',
               dvCstPolNo: policy,
-              adtnDvCstPolNo: additionalPolicy ?? "",
-              cmbnDvPsbYn: "N",
+              adtnDvCstPolNo: additionalPolicy ?? '',
+              cmbnDvPsbYn: 'N',
               dvCstStdQty: 0,
-              qckDvUseYn: "N",
-              crdayDvPsbYn: "N",
-              hpDdDvPsbYn: "N",
-              saveTypCd: "NONE",
-              shopCnvMsgPsbYn: "N",
-              rgnLmtPdYn: "N",
-              fprdDvPsbYn: "N",
-              spcfSqncPdYn: "N",
-              rtngPsbYn: "Y",
-              xchgPsbYn: "Y",
-              echgPsbYn: "N",
-              cmbnRtngPsbYn: "N",
-              rtngHdcCd: "9999",
-              rtngRtrvPsbYn: "Y",
-              rtrvTypCd: "ENTP_RTRV",
+              qckDvUseYn: 'N',
+              crdayDvPsbYn: 'N',
+              hpDdDvPsbYn: 'N',
+              saveTypCd: 'NONE',
+              shopCnvMsgPsbYn: 'N',
+              rgnLmtPdYn: 'N',
+              fprdDvPsbYn: 'N',
+              spcfSqncPdYn: 'N',
+              rtngPsbYn: 'Y',
+              xchgPsbYn: 'Y',
+              echgPsbYn: 'N',
+              cmbnRtngPsbYn: 'N',
+              rtngHdcCd: '9999',
+              rtngRtrvPsbYn: 'Y',
+              rtrvTypCd: 'ENTP_RTRV',
               rtrpNo: inbound,
-              stkMgtYn: "Y",
-              sitmYn: option_length > 0 ? "Y" : "N",
+              stkMgtYn: 'Y',
+              sitmYn: option_length > 0 ? 'Y' : 'N',
               optSrtLst: option_list,
               itmLst: option_data,
-              adtnPdYn: "N",
+              adtnPdYn: 'N',
             },
           ],
         };
@@ -635,18 +653,18 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
           let productId = market_item.name2;
 
           if (!productId) {
-            productStore.addRegisteredFailed(Object.assign(market_item, { error: "상품 ID를 찾을 수 없습니다." }));
+            productStore.addRegisteredFailed(Object.assign(market_item, { error: '상품 ID를 찾을 수 없습니다.' }));
             productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 실패`);
 
-            await sendCallback(commonStore, data, market_code, parseInt(product), 2, "상품 ID를 찾을 수 없습니다.");
+            await sendCallback(commonStore, data, market_code, parseInt(product), 2, '상품 ID를 찾을 수 없습니다.');
 
             continue;
           }
 
           const selectBody = {
-            trGrpCd: "SR",
+            trGrpCd: 'SR',
             trNo: transId,
-            lrtrNo: "",
+            lrtrNo: '',
             spdNo: productId,
           };
 
@@ -654,15 +672,15 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
           const selectResp = await fetch(`https://openapi.lotteon.com/v1/openapi/product/v1/product/detail`, {
             headers: {
               Authorization: `Bearer ${apiKey}`,
-              Accept: "application/json",
-              "Accept-Language": "ko",
-              "X-Timezone": "GMT+09:00",
-              "Content-Type": "application/json",
+              Accept: 'application/json',
+              'Accept-Language': 'ko',
+              'X-Timezone': 'GMT+09:00',
+              'Content-Type': 'application/json',
             },
 
             body: JSON.stringify(selectBody),
 
-            method: "POST",
+            method: 'POST',
           });
 
           const selectJson = await selectResp.json();
@@ -674,39 +692,39 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
 
           itmPrcLst = selectJson.data.itmLst.map((v, i) => {
             return {
-              trGrpCd: "SR",
+              trGrpCd: 'SR',
               trNo: transId,
-              lrtrNo: "",
+              lrtrNo: '',
               spdNo: productId,
               sitmNo: v.sitmNo,
               slPrc: productBody.spdLst[0].itmLst[i].slPrc,
               hstStrtDttm: `${time.YY}${time.MM}${time.DD}${time.hh}${time.mm}${time.ss}`,
-              hstEndDttm: "99991231235959",
+              hstEndDttm: '99991231235959',
             };
           });
 
           // 판매가 수정 API
-          const priceResp = await fetch("https://openapi.lotteon.com/v1/openapi/product/v1/item/price/change", {
+          const priceResp = await fetch('https://openapi.lotteon.com/v1/openapi/product/v1/item/price/change', {
             headers: {
               Authorization: `Bearer ${apiKey}`,
-              Accept: "application/json",
-              "Accept-Language": "ko",
-              "X-Timezone": "GMT+09:00",
-              "Content-Type": "application/json",
+              Accept: 'application/json',
+              'Accept-Language': 'ko',
+              'X-Timezone': 'GMT+09:00',
+              'Content-Type': 'application/json',
             },
 
             body: JSON.stringify({ itmPrcLst }),
 
-            method: "POST",
+            method: 'POST',
           });
 
           const priceJson = await priceResp.json();
 
           itmStkLst = selectJson.data.itmLst.map((v, i) => {
             return {
-              trGrpCd: "SR",
+              trGrpCd: 'SR',
               trNo: transId,
-              lrtrNo: "",
+              lrtrNo: '',
               spdNo: productId,
               sitmNo: v.sitmNo,
               stkQty: productBody.spdLst[0].itmLst[i].stkQty,
@@ -714,18 +732,18 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
           });
 
           // 재고수량 수정 API
-          const stockResp = await fetch("https://openapi.lotteon.com/v1/openapi/product/v1/item/stock/change", {
+          const stockResp = await fetch('https://openapi.lotteon.com/v1/openapi/product/v1/item/stock/change', {
             headers: {
               Authorization: `Bearer ${apiKey}`,
-              Accept: "application/json",
-              "Accept-Language": "ko",
-              "X-Timezone": "GMT+09:00",
-              "Content-Type": "application/json",
+              Accept: 'application/json',
+              'Accept-Language': 'ko',
+              'X-Timezone': 'GMT+09:00',
+              'Content-Type': 'application/json',
             },
 
             body: JSON.stringify({ itmStkLst }),
 
-            method: "POST",
+            method: 'POST',
           });
 
           const stockJson = await stockResp.json();
@@ -736,29 +754,32 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
           productStore.addRegisteredQueue(market_item);
 
           // 상품 수정 API
-          let productResp = await fetch("https://openapi.lotteon.com/v1/openapi/product/v1/product/modification/request", {
-            headers: {
-              Authorization: `Bearer ${apiKey}`,
-              Accept: "application/json",
-              "Accept-Language": "ko",
-              "X-Timezone": "GMT+09:00",
-              "Content-Type": "application/json",
-            },
+          let productResp = await fetch(
+            'https://openapi.lotteon.com/v1/openapi/product/v1/product/modification/request',
+            {
+              headers: {
+                Authorization: `Bearer ${apiKey}`,
+                Accept: 'application/json',
+                'Accept-Language': 'ko',
+                'X-Timezone': 'GMT+09:00',
+                'Content-Type': 'application/json',
+              },
 
-            body: JSON.stringify(productBody),
+              body: JSON.stringify(productBody),
 
-            method: "POST",
-          });
+              method: 'POST',
+            }
+          );
 
           let productJson = await productResp.json();
 
-          if (productJson.returnCode !== "0000") {
+          if (productJson.returnCode !== '0000') {
             productStore.addRegisteredFailed(Object.assign(market_item, { error: productJson.message }));
             productStore.addConsoleText(`(${shopName}) 상품 수정 실패`);
 
             await sendCallback(commonStore, data, market_code, parseInt(product), 2, productJson.message);
           } else {
-            if (productJson.data[0].resultCode !== "0000") {
+            if (productJson.data[0].resultCode !== '0000') {
               productStore.addRegisteredFailed(
                 Object.assign(market_item, {
                   error: productJson.data[0].resultMessage,
@@ -766,7 +787,14 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
               );
               productStore.addConsoleText(`(${shopName}) 상품 수정 실패`);
 
-              await sendCallback(commonStore, data, market_code, parseInt(product), 2, productJson.data[0].resultMessage);
+              await sendCallback(
+                commonStore,
+                data,
+                market_code,
+                parseInt(product),
+                2,
+                productJson.data[0].resultMessage
+              );
             } else {
               productStore.addRegisteredSuccess(Object.assign(market_item, { error: productJson.data[0].spdNo }));
               productStore.addConsoleText(`(${shopName}) 상품 수정 성공`);
@@ -779,29 +807,32 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
           productStore.addRegisteredQueue(market_item);
 
           // 상품 등록 API
-          let productResp = await fetch("https://openapi.lotteon.com/v1/openapi/product/v1/product/registration/request", {
-            headers: {
-              Authorization: `Bearer ${apiKey}`,
-              Accept: "application/json",
-              "Accept-Language": "ko",
-              "X-Timezone": "GMT+09:00",
-              "Content-Type": "application/json",
-            },
+          let productResp = await fetch(
+            'https://openapi.lotteon.com/v1/openapi/product/v1/product/registration/request',
+            {
+              headers: {
+                Authorization: `Bearer ${apiKey}`,
+                Accept: 'application/json',
+                'Accept-Language': 'ko',
+                'X-Timezone': 'GMT+09:00',
+                'Content-Type': 'application/json',
+              },
 
-            body: JSON.stringify(productBody),
+              body: JSON.stringify(productBody),
 
-            method: "POST",
-          });
+              method: 'POST',
+            }
+          );
 
           let productJson = await productResp.json();
 
-          if (productJson.returnCode !== "0000") {
+          if (productJson.returnCode !== '0000') {
             productStore.addRegisteredFailed(Object.assign(market_item, { error: productJson.message }));
             productStore.addConsoleText(`(${shopName}) 상품 등록 실패`);
 
             await sendCallback(commonStore, data, market_code, parseInt(product), 2, productJson.message);
           } else {
-            if (productJson.data[0].resultCode !== "0000") {
+            if (productJson.data[0].resultCode !== '0000') {
               productStore.addRegisteredFailed(
                 Object.assign(market_item, {
                   error: productJson.data[0].resultMessage,
@@ -809,7 +840,14 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
               );
               productStore.addConsoleText(`(${shopName}) 상품 등록 실패`);
 
-              await sendCallback(commonStore, data, market_code, parseInt(product), 2, productJson.data[0].resultMessage);
+              await sendCallback(
+                commonStore,
+                data,
+                market_code,
+                parseInt(product),
+                2,
+                productJson.data[0].resultMessage
+              );
             } else {
               productStore.addRegisteredSuccess(Object.assign(market_item, { error: productJson.data[0].spdNo }));
               productStore.addConsoleText(`(${shopName}) 상품 등록 성공`);
@@ -858,23 +896,26 @@ async function newOrderLotteon(commonStore: any, shopInfo: any) {
         srchStrtDt: `${dateStart.YY}${dateStart.MM}${dateStart.DD}${dateStart.hh}${dateStart.mm}${dateStart.ss}`,
         srchEndDt: `${dateEnd.YY}${dateEnd.MM}${dateEnd.DD}${dateEnd.hh}${dateEnd.mm}${dateEnd.ss}`,
         // "odNo": "",
-        odPrgsStepCd: "11",
+        odPrgsStepCd: '11',
         // "odTypCd": "",
         // "ifCplYN": "N"
       };
-      const orderResp: any = await fetch("https://openapi.lotteon.com/v1/openapi/delivery/v1/SellerDeliveryOrdersSearch", {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          Accept: "application/json",
-          "Accept-Language": "ko",
-          "X-Timezone": "GMT+09:00",
-          "Content-Type": "application/json",
-        },
+      const orderResp: any = await fetch(
+        'https://openapi.lotteon.com/v1/openapi/delivery/v1/SellerDeliveryOrdersSearch',
+        {
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            Accept: 'application/json',
+            'Accept-Language': 'ko',
+            'X-Timezone': 'GMT+09:00',
+            'Content-Type': 'application/json',
+          },
 
-        body: JSON.stringify(orderBody),
+          body: JSON.stringify(orderBody),
 
-        method: "POST",
-      });
+          method: 'POST',
+        }
+      );
 
       const orderJson = await orderResp.json();
 
@@ -926,9 +967,9 @@ async function productPreparedLotteon(commonStore: any, shopInfo: any) {
     return [];
   }
 
-  const orderList: any = await getLocalStorage("order");
-  const LotteonOrderList = orderList.filter((v: any) => v.marketCode === "A524" || v.marketCode === "A525");
-  console.log("LotteonOrderList", LotteonOrderList);
+  const orderList: any = await getLocalStorage('order');
+  const LotteonOrderList = orderList.filter((v: any) => v.marketCode === 'A524' || v.marketCode === 'A525');
+  console.log('LotteonOrderList', LotteonOrderList);
   try {
     let apiKey = commonStore.user.userInfo.lotteonApiKey;
     //조회기간 1일 초과불가능
@@ -943,22 +984,22 @@ async function productPreparedLotteon(commonStore: any, shopInfo: any) {
           odNo: v.orderNo,
           odSeq: v.odSeq,
           procSeq: v.procSeq,
-          ifCplYN: "Y",
+          ifCplYN: 'Y',
         });
       })
     );
-    const orderJson: any = await fetch("https://openapi.lotteon.com/v1/openapi/delivery/v1/SellerIfCompleteInform", {
+    const orderJson: any = await fetch('https://openapi.lotteon.com/v1/openapi/delivery/v1/SellerIfCompleteInform', {
       headers: {
         Authorization: `Bearer ${apiKey}`,
-        Accept: "application/json",
-        "Accept-Language": "ko",
-        "X-Timezone": "GMT+09:00",
-        "Content-Type": "application/json",
+        Accept: 'application/json',
+        'Accept-Language': 'ko',
+        'X-Timezone': 'GMT+09:00',
+        'Content-Type': 'application/json',
       },
 
       body: JSON.stringify(body),
 
-      method: "POST",
+      method: 'POST',
     });
     console.log(shopName, orderJson);
 
@@ -996,19 +1037,22 @@ async function deliveryOrderLotteon(commonStore: any, shopInfo: any) {
         // "odTypCd": "",
         // "ifCplYN": "N"
       };
-      const orderResp: any = await fetch("https://openapi.lotteon.com/v1/openapi/delivery/v1/SellerDeliveryOrdersSearch", {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          Accept: "application/json",
-          "Accept-Language": "ko",
-          "X-Timezone": "GMT+09:00",
-          "Content-Type": "application/json",
-        },
+      const orderResp: any = await fetch(
+        'https://openapi.lotteon.com/v1/openapi/delivery/v1/SellerDeliveryOrdersSearch',
+        {
+          headers: {
+            Authorization: `Bearer ${apiKey}`,
+            Accept: 'application/json',
+            'Accept-Language': 'ko',
+            'X-Timezone': 'GMT+09:00',
+            'Content-Type': 'application/json',
+          },
 
-        body: JSON.stringify(orderBody),
+          body: JSON.stringify(orderBody),
 
-        method: "POST",
-      });
+          method: 'POST',
+        }
+      );
 
       const orderJson = await orderResp.json();
 

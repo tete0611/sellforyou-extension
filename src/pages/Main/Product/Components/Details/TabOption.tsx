@@ -1,8 +1,8 @@
-import React from "react";
-import EditIcon from "@mui/icons-material/Edit";
+import React from 'react';
+import EditIcon from '@mui/icons-material/Edit';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../../../containers/AppContext";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../../../containers/AppContext';
 import {
   styled,
   Box,
@@ -20,18 +20,18 @@ import {
   Button,
   Checkbox,
   Paper,
-} from "@mui/material";
-import { Image, Input, Title } from "../../../Common/UI";
+} from '@mui/material';
+import { Image, Input, Title } from '../../../Common/UI';
 
-import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
-import RestoreIcon from "@mui/icons-material/Restore";
-import { byteLength } from "../../../../Tools/Common";
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import RestoreIcon from '@mui/icons-material/Restore';
+import { byteLength } from '../../../../Tools/Common';
 
 // 커스텀 테이블 컬럼 스타일
 const CollapsedTableCell = styled(TableCell)({
-  textAlign: "center",
-  background: "ghostwhite",
-  borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+  textAlign: 'center',
+  background: 'ghostwhite',
+  borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
   padding: 0,
   fontSize: 14,
 });
@@ -46,8 +46,8 @@ export const TabOption = observer((props: any) => {
     <div className="inform">
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         <div className="loading" />
@@ -65,8 +65,8 @@ export const TabOption = observer((props: any) => {
           옵션목록
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             <FormControlLabel
@@ -82,9 +82,9 @@ export const TabOption = observer((props: any) => {
               label={
                 <Box
                   sx={{
-                    display: "flex",
+                    display: 'flex',
                     fontSize: 12,
-                    alignItems: "center",
+                    alignItems: 'center',
                   }}
                 >
                   원문 같이보기
@@ -145,20 +145,20 @@ export const TabOption = observer((props: any) => {
           sx={{
             width: 1205,
             height: 388,
-            overflowY: "auto",
-            alignItems: "center",
-            display: "flex",
+            overflowY: 'auto',
+            alignItems: 'center',
+            display: 'flex',
             p: 0.5,
           }}
         >
           {props.item.productOptionName.map((v: any, nameIndex: number) => (
             <Paper
               sx={{
-                m: "2px",
+                m: '2px',
                 width: 391,
                 height: 362,
-                flex: "0 0 auto",
-                overflowY: "auto",
+                flex: '0 0 auto',
+                overflowY: 'auto',
                 mr: 0.5,
               }}
               variant="outlined"
@@ -169,11 +169,11 @@ export const TabOption = observer((props: any) => {
                     <TableCell
                       width={50}
                       style={{
-                        background: common.darkTheme ? "#303030" : "#ebebeb",
-                        borderBottom: "unset",
+                        background: common.darkTheme ? '#303030' : '#ebebeb',
+                        borderBottom: 'unset',
                         fontSize: 13,
                         padding: 0,
-                        textAlign: "center",
+                        textAlign: 'center',
                       }}
                     >
                       <Checkbox
@@ -207,30 +207,30 @@ export const TabOption = observer((props: any) => {
 
                     <TableCell
                       style={{
-                        background: common.darkTheme ? "#303030" : "#ebebeb",
-                        borderBottom: "unset",
+                        background: common.darkTheme ? '#303030' : '#ebebeb',
+                        borderBottom: 'unset',
                         fontSize: 13,
                         padding: 0,
                       }}
                     >
                       <Box
                         sx={{
-                          alignItems: "center",
-                          display: "flex",
-                          justifyContent: "space-between",
+                          alignItems: 'center',
+                          display: 'flex',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Box
                           sx={{
-                            alignItems: "center",
-                            display: "flex",
+                            alignItems: 'center',
+                            display: 'flex',
                           }}
                         >
                           <Tooltip title="옵션유형이름수정">
                             <IconButton
                               size="small"
                               onClick={async () => {
-                                let name = prompt("변경할 옵션유형이름을 입력해주세요.", v.name);
+                                let name = prompt('변경할 옵션유형이름을 입력해주세요.', v.name);
 
                                 if (!name) {
                                   return;
@@ -272,8 +272,8 @@ export const TabOption = observer((props: any) => {
 
                         <Box
                           sx={{
-                            alignItems: "center",
-                            display: "flex",
+                            alignItems: 'center',
+                            display: 'flex',
                           }}
                         >
                           <Tooltip title="알파벳으로표시">
@@ -360,7 +360,7 @@ export const TabOption = observer((props: any) => {
 
                                 await product.setProductOptionValue(
                                   v.productOptionValue.map((v: any) => {
-                                    return { ...v, name: v.name.replace(regExp, " ") };
+                                    return { ...v, name: v.name.replace(regExp, ' ') };
                                   }),
                                   props.index,
                                   nameIndex,
@@ -419,8 +419,8 @@ export const TabOption = observer((props: any) => {
                     <TableCell
                       width={30}
                       style={{
-                        background: common.darkTheme ? "#303030" : "#ebebeb",
-                        borderBottom: "unset",
+                        background: common.darkTheme ? '#303030' : '#ebebeb',
+                        borderBottom: 'unset',
                         fontSize: 13,
                         padding: 0,
                       }}
@@ -429,11 +429,11 @@ export const TabOption = observer((props: any) => {
                     <TableCell
                       width={45}
                       style={{
-                        background: common.darkTheme ? "#303030" : "#ebebeb",
-                        borderBottom: "unset",
+                        background: common.darkTheme ? '#303030' : '#ebebeb',
+                        borderBottom: 'unset',
                         fontSize: 13,
                         padding: 0,
-                        textAlign: "left",
+                        textAlign: 'left',
                       }}
                     >
                       <Switch
@@ -469,15 +469,15 @@ export const TabOption = observer((props: any) => {
                       <Collapse in={props.item.optionCollapse} timeout={0} unmountOnExit>
                         <Box
                           sx={{
-                            display: "flex",
+                            display: 'flex',
                             mx: 2,
                           }}
                         >
                           <Typography noWrap color="#1565c0" fontSize={11}>
                             {
-                              JSON.parse(props.item.activeTaobaoProduct.originalData).propsList[`${v.taobaoPid}:${v.productOptionValue[0].taobaoVid}`].split(
-                                ":"
-                              )[0]
+                              JSON.parse(props.item.activeTaobaoProduct.originalData).propsList[
+                                `${v.taobaoPid}:${v.productOptionValue[0].taobaoVid}`
+                              ].split(':')[0]
                             }
                           </Typography>
                         </Box>
@@ -492,10 +492,10 @@ export const TabOption = observer((props: any) => {
                       <TableRow>
                         <TableCell
                           style={{
-                            borderBottom: "unset",
+                            borderBottom: 'unset',
                             fontSize: 13,
                             padding: 0,
-                            textAlign: "center",
+                            textAlign: 'center',
                           }}
                         >
                           <Checkbox
@@ -523,14 +523,14 @@ export const TabOption = observer((props: any) => {
 
                         <TableCell
                           style={{
-                            borderBottom: "unset",
+                            borderBottom: 'unset',
                             fontSize: 13,
                             padding: 0,
-                            textAlign: "center",
+                            textAlign: 'center',
                           }}
                         >
                           <Input
-                            color={props.item.edited.option ? "warning" : "info"}
+                            color={props.item.edited.option ? 'warning' : 'info'}
                             id={`product_row_optionType_${props.index}_${nameIndex}_${valueIndex}`}
                             value={w.name}
                             onChange={(e: any) => {
@@ -553,10 +553,10 @@ export const TabOption = observer((props: any) => {
 
                         <TableCell
                           style={{
-                            borderBottom: "unset",
+                            borderBottom: 'unset',
                             fontSize: 13,
                             padding: 0,
-                            textAlign: "center",
+                            textAlign: 'center',
                           }}
                         >
                           <Paper
@@ -571,7 +571,7 @@ export const TabOption = observer((props: any) => {
                             <Typography
                               color="info"
                               sx={{
-                                fontSize: "10px",
+                                fontSize: '10px',
                               }}
                             >
                               {w.name.length} 자
@@ -579,8 +579,8 @@ export const TabOption = observer((props: any) => {
 
                             <Typography
                               sx={{
-                                color: common.darkTheme ? "info.light" : "info.dark",
-                                fontSize: "10px",
+                                color: common.darkTheme ? 'info.light' : 'info.dark',
+                                fontSize: '10px',
                               }}
                             >
                               {byteLength(w.name)} B
@@ -590,10 +590,10 @@ export const TabOption = observer((props: any) => {
 
                         <TableCell
                           style={{
-                            borderBottom: "unset",
+                            borderBottom: 'unset',
                             fontSize: 13,
                             padding: 0,
-                            textAlign: "center",
+                            textAlign: 'center',
                           }}
                         >
                           {w.image ? (
@@ -603,7 +603,7 @@ export const TabOption = observer((props: any) => {
                               width={30}
                               height={30}
                               style={{
-                                objectFit: "contain",
+                                objectFit: 'contain',
                               }}
                               onClick={(e) => {
                                 product.setImagePopOver({
@@ -622,12 +622,16 @@ export const TabOption = observer((props: any) => {
                           <Collapse in={props.item.optionCollapse} timeout={0} unmountOnExit>
                             <Box
                               sx={{
-                                display: "flex",
+                                display: 'flex',
                                 mx: 2,
                               }}
                             >
                               <Typography noWrap color="#1565c0" fontSize={11}>
-                                {JSON.parse(props.item.activeTaobaoProduct.originalData).propsList[`${v.taobaoPid}:${w.taobaoVid}`].split(":")[1]}
+                                {
+                                  JSON.parse(props.item.activeTaobaoProduct.originalData).propsList[
+                                    `${v.taobaoPid}:${w.taobaoVid}`
+                                  ].split(':')[1]
+                                }
                               </Typography>
                             </Box>
                           </Collapse>

@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Button, Grid, MenuItem, Popover, Select, TextField, Typography } from "@mui/material";
-import { ComboBox, MyButton } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Button, Grid, MenuItem, Popover, Select, TextField, Typography } from '@mui/material';
+import { ComboBox, MyButton } from '../Common/UI';
 
 // 판매가격 일괄인하 팝업
 export const SubtractOptionPricePopOver = observer(() => {
@@ -22,7 +22,7 @@ export const SubtractOptionPricePopOver = observer(() => {
       data: {
         nameIndex: -1,
         valueIndex: -1,
-        price: "",
+        price: '',
       },
     });
   };
@@ -33,8 +33,8 @@ export const SubtractOptionPricePopOver = observer(() => {
       anchorEl={product.popOverInfo.subtractOptionPrice.element}
       onClose={onClose}
       anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left",
+        vertical: 'bottom',
+        horizontal: 'left',
       }}
     >
       <Box
@@ -50,7 +50,7 @@ export const SubtractOptionPricePopOver = observer(() => {
               xs={6}
               md={6}
               sx={{
-                m: "auto",
+                m: 'auto',
               }}
             >
               <Typography fontSize={14}>적용할 옵션명</Typography>
@@ -61,12 +61,12 @@ export const SubtractOptionPricePopOver = observer(() => {
               xs={6}
               md={6}
               sx={{
-                m: "auto",
+                m: 'auto',
               }}
             >
               <ComboBox
                 sx={{
-                  width: "100%",
+                  width: '100%',
                 }}
                 value={product.popOverInfo.subtractOptionPrice.data.nameIndex}
                 onChange={(e) => {
@@ -81,14 +81,14 @@ export const SubtractOptionPricePopOver = observer(() => {
                   });
                 }}
               >
-                <MenuItem value={-2}>{"<체크된 옵션>"}</MenuItem>
+                <MenuItem value={-2}>{'<체크된 옵션>'}</MenuItem>
 
-                <MenuItem value={-1}>{"<모든 옵션명>"}</MenuItem>
+                <MenuItem value={-1}>{'<모든 옵션명>'}</MenuItem>
 
                 {product.popOverInfo.subtractOptionPrice.index > -1
-                  ? product.itemInfo.items[product.popOverInfo.subtractOptionPrice.index].productOptionName.map((v: any, i: number) => (
-                      <MenuItem value={i}>{v.name}</MenuItem>
-                    ))
+                  ? product.itemInfo.items[product.popOverInfo.subtractOptionPrice.index].productOptionName.map(
+                      (v: any, i: number) => <MenuItem value={i}>{v.name}</MenuItem>
+                    )
                   : null}
               </ComboBox>
             </Grid>
@@ -100,7 +100,7 @@ export const SubtractOptionPricePopOver = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <Typography fontSize={14}>적용할 옵션값</Typography>
@@ -111,12 +111,12 @@ export const SubtractOptionPricePopOver = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <ComboBox
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     value={product.popOverInfo.subtractOptionPrice.data.valueIndex}
                     onChange={(e) => {
@@ -131,7 +131,7 @@ export const SubtractOptionPricePopOver = observer(() => {
                       });
                     }}
                   >
-                    <MenuItem value={-1}>{"<옵션값 선택>"}</MenuItem>
+                    <MenuItem value={-1}>{'<옵션값 선택>'}</MenuItem>
 
                     {product.popOverInfo.subtractOptionPrice.index > -1
                       ? product.itemInfo.items[product.popOverInfo.subtractOptionPrice.index].productOptionName[
@@ -148,7 +148,7 @@ export const SubtractOptionPricePopOver = observer(() => {
               xs={6}
               md={6}
               sx={{
-                m: "auto",
+                m: 'auto',
               }}
             >
               <Typography fontSize={14}>인하할 가격</Typography>
@@ -159,14 +159,14 @@ export const SubtractOptionPricePopOver = observer(() => {
               xs={6}
               md={6}
               sx={{
-                m: "auto",
+                m: 'auto',
               }}
             >
               <TextField
-                id={"subtract_option_price"}
+                id={'subtract_option_price'}
                 variant="outlined"
                 sx={{
-                  width: "100%",
+                  width: '100%',
                 }}
                 inputProps={{
                   style: {
@@ -192,9 +192,9 @@ export const SubtractOptionPricePopOver = observer(() => {
 
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             mt: 3,
           }}
         >
@@ -212,27 +212,28 @@ export const SubtractOptionPricePopOver = observer(() => {
               const valueIndex = parseInt(product.popOverInfo.subtractOptionPrice.data.valueIndex);
 
               if (!price || isNaN(price)) {
-                alert("인하할 가격은 숫자 형식으로만 입력 가능합니다.");
+                alert('인하할 가격은 숫자 형식으로만 입력 가능합니다.');
 
                 return;
               }
 
               if (nameIndex < 0) {
                 if (nameIndex === -1) {
-                  product.calcProductOptionPrice(price, "subPrice", index, null, false);
+                  product.calcProductOptionPrice(price, 'subPrice', index, null, false);
                 } else if (nameIndex === -2) {
-                  product.calcProductOptionPrice(price, "subPrice", index, null, true);
+                  product.calcProductOptionPrice(price, 'subPrice', index, null, true);
                 }
               } else {
                 if (valueIndex === -1) {
-                  alert("적용할 옵션값을 선택해주세요.");
+                  alert('적용할 옵션값을 선택해주세요.');
 
                   return;
                 }
 
-                const valueId = product.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].id;
+                const valueId =
+                  product.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].id;
 
-                product.calcProductOptionPrice(price, "subPrice", index, valueId, null);
+                product.calcProductOptionPrice(price, 'subPrice', index, valueId, null);
               }
 
               onClose();

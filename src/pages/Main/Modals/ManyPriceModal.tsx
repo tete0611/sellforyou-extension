@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Grid, MenuItem, Modal, Paper, Select, TextField, Typography } from "@mui/material";
-import { MyButton } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Grid, MenuItem, Modal, Paper, Select, TextField, Typography } from '@mui/material';
+import { MyButton } from '../Common/UI';
 
 // 판매가격 일괄설정 모달 뷰
 export const ManyPriceModal = observer(() => {
@@ -37,9 +37,9 @@ export const ManyPriceModal = observer(() => {
         >
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
               mb: 3,
             }}
           >
@@ -84,7 +84,7 @@ export const ManyPriceModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <Typography fontSize={14}>환율</Typography>
@@ -95,21 +95,21 @@ export const ManyPriceModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_price_cnyRate`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyPriceInfo.cnyRate}
@@ -128,7 +128,7 @@ export const ManyPriceModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <Typography fontSize={14}>마진율</Typography>
@@ -139,21 +139,21 @@ export const ManyPriceModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_price_marginRate`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyPriceInfo.marginRate}
@@ -172,13 +172,13 @@ export const ManyPriceModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <Select
                     sx={{
-                      width: "100%",
+                      width: '100%',
                       height: 30,
                       fontSize: 14,
                     }}
@@ -191,8 +191,8 @@ export const ManyPriceModal = observer(() => {
                       });
                     }}
                   >
-                    <MenuItem value={"PERCENT"}>%</MenuItem>
-                    <MenuItem value={"WON"}>원</MenuItem>
+                    <MenuItem value={'PERCENT'}>%</MenuItem>
+                    <MenuItem value={'WON'}>원</MenuItem>
                   </Select>
                 </Grid>
 
@@ -201,7 +201,7 @@ export const ManyPriceModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <Typography fontSize={14}>해외배송비</Typography>
@@ -212,21 +212,21 @@ export const ManyPriceModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_price_localShippingFee`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyPriceInfo.localShippingFee}
@@ -245,7 +245,7 @@ export const ManyPriceModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <Typography fontSize={14}>유료배송비</Typography>
@@ -256,21 +256,21 @@ export const ManyPriceModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_price_shippingFee`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyPriceInfo.shippingFee}
@@ -288,9 +288,9 @@ export const ManyPriceModal = observer(() => {
 
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
                 p: 1,
               }}
             >

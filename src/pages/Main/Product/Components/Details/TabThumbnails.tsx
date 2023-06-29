@@ -1,23 +1,23 @@
-import React from "react";
-import ClearIcon from "@mui/icons-material/Clear";
-import ErrorIcon from "@mui/icons-material/Error";
+import React from 'react';
+import ClearIcon from '@mui/icons-material/Clear';
+import ErrorIcon from '@mui/icons-material/Error';
 
-import { observer } from "mobx-react";
-import { ListManager } from "react-beautiful-dnd-grid";
-import { AppContext } from "../../../../../containers/AppContext";
-import { Box, Chip, CircularProgress, IconButton, Button, Paper, Typography } from "@mui/material";
-import { Image, Title } from "../../../Common/UI";
-import { readFileDataURL } from "../../../../Tools/Common";
-import { makeStyles } from "@material-ui/core/styles";
+import { observer } from 'mobx-react';
+import { ListManager } from 'react-beautiful-dnd-grid';
+import { AppContext } from '../../../../../containers/AppContext';
+import { Box, Chip, CircularProgress, IconButton, Button, Paper, Typography } from '@mui/material';
+import { Image, Title } from '../../../Common/UI';
+import { readFileDataURL } from '../../../../Tools/Common';
+import { makeStyles } from '@material-ui/core/styles';
 
 // MUI Box 사용자 지정 스타일
 const useStyles = makeStyles((theme) => ({
   defaultBox: {
-    background: "#d1e8ff",
+    background: '#d1e8ff',
   },
 
   errorBox: {
-    background: "#ffd1d1",
+    background: '#ffd1d1',
   },
 }));
 
@@ -31,8 +31,8 @@ export const TabThumbnails = observer((props: any) => {
     <div className="inform">
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         <div className="loading" />
@@ -49,8 +49,8 @@ export const TabThumbnails = observer((props: any) => {
         <Title subTitle dark={common.darkTheme} error={props.item.thumbnailImageError}>
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             이미지목록 &nbsp;
@@ -58,14 +58,14 @@ export const TabThumbnails = observer((props: any) => {
               <>
                 <Paper
                   sx={{
-                    color: common.darkTheme ? "error.light" : "error.main",
+                    color: common.darkTheme ? 'error.light' : 'error.main',
 
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
 
                     p: 0.5,
 
-                    textAlign: "left",
+                    textAlign: 'left',
                   }}
                 >
                   <ErrorIcon
@@ -83,8 +83,8 @@ export const TabThumbnails = observer((props: any) => {
 
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             <Button
@@ -98,7 +98,7 @@ export const TabThumbnails = observer((props: any) => {
               }}
               onClick={() => {
                 if (common.user.purchaseInfo2.level < 3) {
-                  alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                  alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                   return;
                 }
@@ -126,7 +126,7 @@ export const TabThumbnails = observer((props: any) => {
               }}
               onClick={() => {
                 if (common.user.purchaseInfo2.level < 3) {
-                  alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                  alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                   return;
                 }
@@ -184,9 +184,9 @@ export const TabThumbnails = observer((props: any) => {
         <Box
           sx={{
             height: 396,
-            overflowY: "auto",
-            display: "flex",
-            justifyContent: "center",
+            overflowY: 'auto',
+            display: 'flex',
+            justifyContent: 'center',
           }}
         >
           <Box
@@ -206,10 +206,10 @@ export const TabThumbnails = observer((props: any) => {
                       return;
                     }
 
-                    let fixed = elem.parentNode.getAttribute("fixed");
+                    let fixed = elem.parentNode.getAttribute('fixed');
 
                     if (!fixed) {
-                      elem.parentNode.setAttribute("fixed", "false");
+                      elem.parentNode.setAttribute('fixed', 'false');
 
                       return;
                     }
@@ -218,24 +218,24 @@ export const TabThumbnails = observer((props: any) => {
                     let top = parseFloat(elem.parentNode.style.top);
 
                     if (isNaN(left) || isNaN(top)) {
-                      elem.parentNode.setAttribute("fixed", "false");
+                      elem.parentNode.setAttribute('fixed', 'false');
 
                       return;
                     }
 
-                    if (fixed === "false") {
-                      const frame = document.getElementsByClassName("ReactVirtualized__Grid ReactVirtualized__List")[0];
+                    if (fixed === 'false') {
+                      const frame = document.getElementsByClassName('ReactVirtualized__Grid ReactVirtualized__List')[0];
                       const framePos = frame.getBoundingClientRect();
 
                       const fixedWidth = (common.innerSize.width - framePos.width) / 2;
 
-                      elem.parentNode.style.setProperty("left", `${left - fixedWidth}px`, "important");
-                      elem.parentNode.style.setProperty("top", `${frame.scrollTop + top - 177}px`, "important");
-                      elem.parentNode.setAttribute("fixed", "true");
+                      elem.parentNode.style.setProperty('left', `${left - fixedWidth}px`, 'important');
+                      elem.parentNode.style.setProperty('top', `${frame.scrollTop + top - 177}px`, 'important');
+                      elem.parentNode.setAttribute('fixed', 'true');
                     }
                   }}
                   sx={{
-                    m: "2px",
+                    m: '2px',
                   }}
                   variant="outlined"
                 >
@@ -246,22 +246,26 @@ export const TabThumbnails = observer((props: any) => {
 
                     return (
                       <>
-                        <Title subTitle dark={common.darkTheme} error={props.item.imageCheckList && props.item.imageCheckList[img]}>
+                        <Title
+                          subTitle
+                          dark={common.darkTheme}
+                          error={props.item.imageCheckList && props.item.imageCheckList[img]}
+                        >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
+                              display: 'flex',
+                              alignItems: 'center',
                             }}
                           >
                             <Typography noWrap fontSize={13}>
-                              {i === 0 ? "대표이미지" : `추가이미지 ${i.toString().padStart(2, "0")}`}
+                              {i === 0 ? '대표이미지' : `추가이미지 ${i.toString().padStart(2, '0')}`}
                             </Typography>
                           </Box>
 
                           <Box
                             sx={{
-                              alignItems: "center",
-                              display: "flex",
+                              alignItems: 'center',
+                              display: 'flex',
                             }}
                           >
                             {props.item.imageThumbnailExtensions && props.item.imageThumbnailExtensions[i] ? (
@@ -288,7 +292,7 @@ export const TabThumbnails = observer((props: any) => {
                           width={232}
                           height={232}
                           style={{
-                            objectFit: "contain",
+                            objectFit: 'contain',
                           }}
                           onClick={(e) => {
                             product.setImagePopOver({
@@ -299,18 +303,24 @@ export const TabThumbnails = observer((props: any) => {
                           }}
                         />
 
-                        <Title subTitle dark={common.darkTheme} error={props.item.imageCheckList && props.item.imageCheckList[img]}>
+                        <Title
+                          subTitle
+                          dark={common.darkTheme}
+                          error={props.item.imageCheckList && props.item.imageCheckList[img]}
+                        >
                           <Button
                             disableElevation
                             variant="contained"
                             color="info"
                             sx={{
                               fontSize: 13,
-                              width: "100%",
+                              width: '100%',
                               height: 26,
                             }}
                             onClick={() => {
-                              window.open(chrome.runtime.getURL(`/trangers_single.html?id=${props.item.id}&type=1&index=${i}`));
+                              window.open(
+                                chrome.runtime.getURL(`/trangers_single.html?id=${props.item.id}&type=1&index=${i}`)
+                              );
                             }}
                           >
                             이미지 편집/번역

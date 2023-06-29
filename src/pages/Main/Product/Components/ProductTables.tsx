@@ -1,14 +1,14 @@
-import React from "react";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import ViewModuleIcon from "@mui/icons-material/ViewModule";
-import ReorderIcon from "@mui/icons-material/Reorder";
-import * as XLSX from "xlsx";
-import path from "path-browserify";
-import { byteSlice } from "../../../Tools/Common";
-import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
-import { observer } from "mobx-react";
-import { AppContext } from "../../../../containers/AppContext";
-import LooksTwoOutlinedIcon from "@mui/icons-material/LooksTwoOutlined";
+import React from 'react';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import ReorderIcon from '@mui/icons-material/Reorder';
+import * as XLSX from 'xlsx';
+import path from 'path-browserify';
+import { byteSlice } from '../../../Tools/Common';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../../containers/AppContext';
+import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
 
 import {
   styled,
@@ -29,18 +29,18 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-} from "@mui/material";
-import { List, AutoSizer } from "react-virtualized";
-import { Input, MyButton } from "../../Common/UI";
-import { Summary } from "./Summary";
-import { Details } from "./Details/Details";
+} from '@mui/material';
+import { List, AutoSizer } from 'react-virtualized';
+import { Input, MyButton } from '../../Common/UI';
+import { Summary } from './Summary';
+import { Details } from './Details/Details';
 
-import "../../Common/Styles.css";
-import { ImageSummary } from "./ImageSummary";
+import '../../Common/Styles.css';
+import { ImageSummary } from './ImageSummary';
 
 // 커스텀 테이블 컬럼 스타일
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
+  textAlign: 'center',
   padding: 0,
   fontSize: 14,
 });
@@ -59,7 +59,7 @@ export const ProductTables = observer(() => {
       <div key={props.key} style={props.style}>
         <Box
           sx={{
-            position: "relative",
+            position: 'relative',
           }}
         >
           <Table>
@@ -86,12 +86,16 @@ export const ProductTables = observer(() => {
       <div key={props.key} style={props.style}>
         <Box
           sx={{
-            position: "relative",
+            position: 'relative',
           }}
         >
           <Table>
             <TableRow>
-              {array.map((v, i) => (product.itemInfo.items[v] ? <ImageSummary tableRef={tableRef} item={product.itemInfo.items[v]} index={v} /> : null))}
+              {array.map((v, i) =>
+                product.itemInfo.items[v] ? (
+                  <ImageSummary tableRef={tableRef} item={product.itemInfo.items[v]} index={v} />
+                ) : null
+              )}
 
               {lastRow ? <TableCell></TableCell> : null}
             </TableRow>
@@ -107,7 +111,11 @@ export const ProductTables = observer(() => {
         <TableHead>
           <TableRow>
             <StyledTableCell width={50}>
-              <Checkbox size="small" checked={product.itemInfo.checkedAll} onChange={(e) => product.toggleItemCheckedAll(e.target.checked)} />
+              <Checkbox
+                size="small"
+                checked={product.itemInfo.checkedAll}
+                onChange={(e) => product.toggleItemCheckedAll(e.target.checked)}
+              />
             </StyledTableCell>
 
             <StyledTableCell colSpan={3}>
@@ -123,13 +131,13 @@ export const ProductTables = observer(() => {
                     xs={6}
                     md={5}
                     sx={{
-                      margin: "auto",
+                      margin: 'auto',
                     }}
                   >
                     <Box
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
+                        display: 'flex',
+                        alignItems: 'center',
                       }}
                     >
                       <Tooltip title="검색어필터">
@@ -189,7 +197,7 @@ export const ProductTables = observer(() => {
                           });
                         }}
                         onKeyPress={(e: any) => {
-                          if (e.key !== "Enter") {
+                          if (e.key !== 'Enter') {
                             return;
                           }
 
@@ -231,14 +239,14 @@ export const ProductTables = observer(() => {
                                 if (!v.checked) {
                                   return null;
                                 }
-                                const name1 = v.name.replace(regExp, " ");
+                                const name1 = v.name.replace(regExp, ' ');
                                 const name2 = byteSlice(name1, 100);
 
-                                const nameList = name2.split(" ");
+                                const nameList = name2.split(' ');
                                 const nameListFixed = [...new Set(nameList)];
 
-                                const name3 = nameListFixed.join(" ");
-                                const name4 = name3.replaceAll("  ", " ");
+                                const name3 = nameListFixed.join(' ');
+                                const name4 = name3.replaceAll('  ', ' ');
                                 product.setProductName(name4, i);
                                 product.updateProductName(i);
                               });
@@ -256,24 +264,29 @@ export const ProductTables = observer(() => {
                     xs={6}
                     md={7}
                     sx={{
-                      margin: "auto",
+                      margin: 'auto',
                     }}
                   >
                     <Box
                       sx={{
-                        alignItems: "center",
-                        display: "flex",
-                        justifyContent: "right",
+                        alignItems: 'center',
+                        display: 'flex',
+                        justifyContent: 'right',
                         mr: 1,
                       }}
                     >
-                      <ButtonGroup disableElevation variant="contained" aria-label="Disabled elevation buttons" color="inherit">
+                      <ButtonGroup
+                        disableElevation
+                        variant="contained"
+                        aria-label="Disabled elevation buttons"
+                        color="inherit"
+                      >
                         <Tooltip title="유사이미지 순으로 정렬 후 그리드로 보여줍니다.">
                           <MyButton
-                            color={product.gridView ? "secondary" : "inherit"}
+                            color={product.gridView ? 'secondary' : 'inherit'}
                             onClick={() => {
                               if (common.user.purchaseInfo2.level < 3) {
-                                alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                                alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                                 return;
                               }
@@ -287,10 +300,10 @@ export const ProductTables = observer(() => {
 
                         <Tooltip title="최근 수집 순으로 정렬 후 리스트로 보여줍니다.">
                           <MyButton
-                            color={product.gridView ? "inherit" : "secondary"}
+                            color={product.gridView ? 'inherit' : 'secondary'}
                             onClick={() => {
                               if (common.user.purchaseInfo2.level < 3) {
-                                alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                                alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                                 return;
                               }
@@ -328,7 +341,7 @@ export const ProductTables = observer(() => {
                         }}
                         onClick={(e: any) => {
                           if (common.user.purchaseInfo2.level < 3) {
-                            alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                            alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                             return;
                           }
@@ -338,7 +351,7 @@ export const ProductTables = observer(() => {
                       >
                         일괄번역
                       </MyButton>
-                      <span style={{ marginLeft: "5px" }}>|</span>
+                      <span style={{ marginLeft: '5px' }}>|</span>
 
                       {product.state === 7 ? (
                         <MyButton
@@ -384,7 +397,9 @@ export const ProductTables = observer(() => {
                           일괄해제
                         </MyButton>
                       ) : null}
-                      {product.state === 7 || product.myLock === 2 ? <span style={{ marginLeft: "5px" }}>|</span> : null}
+                      {product.state === 7 || product.myLock === 2 ? (
+                        <span style={{ marginLeft: '5px' }}>|</span>
+                      ) : null}
                       {product.state === 7 ? (
                         <MyButton
                           color="info"
@@ -471,7 +486,7 @@ export const ProductTables = observer(() => {
                       fontSize: 11,
                     }}
                   >
-                    상품코드/{product.state === 6 ? "수집일" : "등록일"}
+                    상품코드/{product.state === 6 ? '수집일' : '등록일'}
                   </Box>
                 </StyledTableCell>
 
@@ -492,7 +507,7 @@ export const ProductTables = observer(() => {
                       xs={6}
                       md={4.5}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
@@ -509,7 +524,7 @@ export const ProductTables = observer(() => {
                       xs={6}
                       md={2.7}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
@@ -517,7 +532,7 @@ export const ProductTables = observer(() => {
                           fontSize: 11,
                         }}
                       >
-                        도매가/판매가{product.state === 6 ? "" : "/등록마켓"}
+                        도매가/판매가{product.state === 6 ? '' : '/등록마켓'}
                       </Box>
                     </Grid>
 
@@ -526,7 +541,7 @@ export const ProductTables = observer(() => {
                       xs={6}
                       md={4.8}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
@@ -549,8 +564,8 @@ export const ProductTables = observer(() => {
             <StyledTableCell
               colSpan={4}
               sx={{
-                borderBottom: "none",
-                borderTop: "none",
+                borderBottom: 'none',
+                borderTop: 'none',
               }}
             >
               <div
@@ -562,9 +577,9 @@ export const ProductTables = observer(() => {
                   <>
                     <Box
                       sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         p: 3,
                       }}
                     >
@@ -605,7 +620,13 @@ export const ProductTables = observer(() => {
                               rowCount={product.itemInfo.items.length}
                               rowRenderer={rowRenderer}
                               rowHeight={({ index }) =>
-                                product.itemInfo.items[index].collapse ? (product.state === 7 ? 577 + 30 : 577) : product.state === 7 ? 83 + 30 : 83
+                                product.itemInfo.items[index].collapse
+                                  ? product.state === 7
+                                    ? 577 + 30
+                                    : 577
+                                  : product.state === 7
+                                  ? 83 + 30
+                                  : 83
                               }
                               ref={tableRef}
                             />
@@ -616,9 +637,9 @@ export const ProductTables = observer(() => {
                     ) : (
                       <Box
                         sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
                           p: 3,
                         }}
                       >

@@ -1,18 +1,18 @@
 // 신규주문 스토리지
 
-import gql from "../../pages/Main/GraphQL/Requests";
-import QUERIES from "../../pages/Main/GraphQL/Queries";
+import gql from '../../pages/Main/GraphQL/Requests';
+import QUERIES from '../../pages/Main/GraphQL/Queries';
 
-import { runInAction, makeAutoObservable } from "mobx";
-import { newOrderSmartStore, productPreparedSmartStore } from "../../pages/Tools/SmartStore";
-import { newOrderCoupang, productPreparedCoupang } from "../../pages/Tools/Coupang";
-import { newOrderStreet, productPreparedStreet } from "../../pages/Tools/Street";
-import { newOrderESMPlus, productPreparedESMPlus } from "../../pages/Tools/ESMPlus";
-import { newOrderLotteon, productPreparedLotteon } from "../../pages/Tools/Lotteon";
-import { newOrderWemakeprice, productPreparedWemakeprice } from "../../pages/Tools/Wemakeprice";
-import { newOrderTmon } from "../../pages/Tools/Tmon";
-import { checkIndividualCustomUniqueCode, downloadExcel, floatingToast } from "../../pages/Tools/Common";
-import { newOrderInterpark } from "../../pages/Tools/Interpark";
+import { runInAction, makeAutoObservable } from 'mobx';
+import { newOrderSmartStore, productPreparedSmartStore } from '../../pages/Tools/SmartStore';
+import { newOrderCoupang, productPreparedCoupang } from '../../pages/Tools/Coupang';
+import { newOrderStreet, productPreparedStreet } from '../../pages/Tools/Street';
+import { newOrderESMPlus, productPreparedESMPlus } from '../../pages/Tools/ESMPlus';
+import { newOrderLotteon, productPreparedLotteon } from '../../pages/Tools/Lotteon';
+import { newOrderWemakeprice, productPreparedWemakeprice } from '../../pages/Tools/Wemakeprice';
+import { newOrderTmon } from '../../pages/Tools/Tmon';
+import { checkIndividualCustomUniqueCode, downloadExcel, floatingToast } from '../../pages/Tools/Common';
+import { newOrderInterpark } from '../../pages/Tools/Interpark';
 
 export class order {
   count: number = 0;
@@ -48,12 +48,14 @@ export class order {
       });
 
       if (orderIds.length < 1) {
-        alert("주문이 선택되지 않았습니다.");
+        alert('주문이 선택되지 않았습니다.');
 
         return;
       }
 
-      const accept = confirm(`선택한 주문정보 ${orderIds.length}개를 삭제하시겠습니까?\n삭제된 주문정보는 다시 복구하실 수 없습니다.`);
+      const accept = confirm(
+        `선택한 주문정보 ${orderIds.length}개를 삭제하시겠습니까?\n삭제된 주문정보는 다시 복구하실 수 없습니다.`
+      );
 
       if (!accept) {
         return;
@@ -82,10 +84,10 @@ export class order {
   // 셀포유 상품매칭, 통관부호 검증
   getOrder = async (download: boolean) => {
     const productCodes = this.orderInfo.orders
-      .filter((v: any) => v.sellerProductManagementCode && v.sellerProductManagementCode.includes("SFY_"))
+      .filter((v: any) => v.sellerProductManagementCode && v.sellerProductManagementCode.includes('SFY_'))
       .map((v: any) => {
         const code = v.sellerProductManagementCode;
-        const codeIndex = parseInt(code.split("_")[1], 36);
+        const codeIndex = parseInt(code.split('_')[1], 36);
 
         return codeIndex;
       });
@@ -94,7 +96,9 @@ export class order {
     const results = await Promise.all(
       this.orderInfo.orders.map(async (v: any) => {
         const icucResult = await checkIndividualCustomUniqueCode(v, true);
-        const product = response.data.selectMyProductByUser.find((w: any) => w.productCode === v.sellerProductManagementCode);
+        const product = response.data.selectMyProductByUser.find(
+          (w: any) => w.productCode === v.sellerProductManagementCode
+        );
 
         if (product) {
           product.imageThumbnail = product.imageThumbnail.map((w: any) => {
@@ -129,47 +133,47 @@ export class order {
     const order = await Promise.all([
       newOrderSmartStore(
         commonStore,
-        commonStore.uploadInfo.markets.find((v: any) => v.code === "A077")
+        commonStore.uploadInfo.markets.find((v: any) => v.code === 'A077')
       ),
       newOrderCoupang(
         commonStore,
-        commonStore.uploadInfo.markets.find((v: any) => v.code === "B378")
+        commonStore.uploadInfo.markets.find((v: any) => v.code === 'B378')
       ),
       newOrderStreet(
         commonStore,
-        commonStore.uploadInfo.markets.find((v: any) => v.code === "A112")
+        commonStore.uploadInfo.markets.find((v: any) => v.code === 'A112')
       ),
       newOrderStreet(
         commonStore,
-        commonStore.uploadInfo.markets.find((v: any) => v.code === "A113")
+        commonStore.uploadInfo.markets.find((v: any) => v.code === 'A113')
       ),
       newOrderESMPlus(
         commonStore,
-        commonStore.uploadInfo.markets.find((v: any) => v.code === "A001")
+        commonStore.uploadInfo.markets.find((v: any) => v.code === 'A001')
       ),
       newOrderESMPlus(
         commonStore,
-        commonStore.uploadInfo.markets.find((v: any) => v.code === "A006")
+        commonStore.uploadInfo.markets.find((v: any) => v.code === 'A006')
       ),
       newOrderInterpark(
         commonStore,
-        commonStore.uploadInfo.markets.find((v: any) => v.code === "A027")
+        commonStore.uploadInfo.markets.find((v: any) => v.code === 'A027')
       ),
       newOrderWemakeprice(
         commonStore,
-        commonStore.uploadInfo.markets.find((v: any) => v.code === "B719")
+        commonStore.uploadInfo.markets.find((v: any) => v.code === 'B719')
       ),
       newOrderLotteon(
         commonStore,
-        commonStore.uploadInfo.markets.find((v: any) => v.code === "A524")
+        commonStore.uploadInfo.markets.find((v: any) => v.code === 'A524')
       ),
       newOrderLotteon(
         commonStore,
-        commonStore.uploadInfo.markets.find((v: any) => v.code === "A525")
+        commonStore.uploadInfo.markets.find((v: any) => v.code === 'A525')
       ),
       newOrderTmon(
         commonStore,
-        commonStore.uploadInfo.markets.find((v: any) => v.code === "B956")
+        commonStore.uploadInfo.markets.find((v: any) => v.code === 'B956')
       ),
     ]);
 
@@ -180,7 +184,7 @@ export class order {
     });
 
     if (newOrders.length === 0) {
-      floatingToast(`신규주문내역이 없습니다.`, "failed");
+      floatingToast(`신규주문내역이 없습니다.`, 'failed');
 
       this.orderInfo.loading = false;
 
@@ -203,54 +207,54 @@ export class order {
       this.orderInfo.loading = false;
     });
 
-    floatingToast(`신규주문조회가 완료되었습니다.`, "success");
+    floatingToast(`신규주문조회가 완료되었습니다.`, 'success');
   };
 
   // 발주
   productPrepared = async (commonStore: any, props: any) => {
-    if (props === "") {
+    if (props === '') {
       await Promise.all([
         productPreparedCoupang(
           commonStore,
-          commonStore.uploadInfo.markets.find((v: any) => v.code === "B378")
+          commonStore.uploadInfo.markets.find((v: any) => v.code === 'B378')
         ),
         productPreparedStreet(
           commonStore,
-          commonStore.uploadInfo.markets.find((v: any) => v.code === "A112")
+          commonStore.uploadInfo.markets.find((v: any) => v.code === 'A112')
         ),
         productPreparedStreet(
           commonStore,
-          commonStore.uploadInfo.markets.find((v: any) => v.code === "A113")
+          commonStore.uploadInfo.markets.find((v: any) => v.code === 'A113')
         ),
         productPreparedLotteon(
           commonStore,
-          commonStore.uploadInfo.markets.find((v: any) => v.code === "A524")
+          commonStore.uploadInfo.markets.find((v: any) => v.code === 'A524')
         ),
         productPreparedLotteon(
           commonStore,
-          commonStore.uploadInfo.markets.find((v: any) => v.code === "A525")
+          commonStore.uploadInfo.markets.find((v: any) => v.code === 'A525')
         ),
       ]);
     } else {
       await Promise.all([
         productPreparedSmartStore(
           commonStore,
-          commonStore.uploadInfo.markets.find((v: any) => v.code === "A077"),
+          commonStore.uploadInfo.markets.find((v: any) => v.code === 'A077'),
           props
         ),
         productPreparedWemakeprice(
           commonStore,
-          commonStore.uploadInfo.markets.find((v: any) => v.code === "B719"),
+          commonStore.uploadInfo.markets.find((v: any) => v.code === 'B719'),
           props
         ),
         productPreparedESMPlus(
           commonStore,
-          commonStore.uploadInfo.markets.find((v: any) => v.code === "A001"),
+          commonStore.uploadInfo.markets.find((v: any) => v.code === 'A001'),
           props
         ),
         productPreparedESMPlus(
           commonStore,
-          commonStore.uploadInfo.markets.find((v: any) => v.code === "A006"),
+          commonStore.uploadInfo.markets.find((v: any) => v.code === 'A006'),
           props
         ),
       ]);
@@ -277,13 +281,13 @@ export class order {
         배송메시지: v.productOrderMemo,
         개인통관고유부호: v.individualCustomUniqueCode,
         통관부호검증결과: v.icucResult?.message,
-        오픈마켓URL: v.product?.activeProductStore.find((w: any) => w.siteCode === v.marketCode)?.storeUrl ?? "",
-        구매처: v.product?.activeTaobaoProduct.shopName ?? "",
-        구매처URL: v.product?.activeTaobaoProduct.url ?? "",
+        오픈마켓URL: v.product?.activeProductStore.find((w: any) => w.siteCode === v.marketCode)?.storeUrl ?? '',
+        구매처: v.product?.activeTaobaoProduct.shopName ?? '',
+        구매처URL: v.product?.activeTaobaoProduct.url ?? '',
       };
     });
 
-    downloadExcel(excelData, `주문리스트`, `주문리스트`, false, "xlsx");
+    downloadExcel(excelData, `주문리스트`, `주문리스트`, false, 'xlsx');
   };
 
   // 주문정보 단일선택

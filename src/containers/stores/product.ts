@@ -1,19 +1,26 @@
-import gql from "../../pages/Main/GraphQL/Requests";
-import QUERIES from "../../pages/Main/GraphQL/Queries";
-import MUTATIONS from "../../pages/Main/GraphQL/Mutations";
+import gql from '../../pages/Main/GraphQL/Requests';
+import QUERIES from '../../pages/Main/GraphQL/Queries';
+import MUTATIONS from '../../pages/Main/GraphQL/Mutations';
 
-import { runInAction, makeAutoObservable, values } from "mobx";
-import { cartesian, downloadExcel, floatingToast, getClock, getImageMeta, readFileDataURL } from "../../pages/Tools/Common";
-import { deleteSmartStore, uploadSmartStore } from "../../pages/Tools/SmartStore";
-import { coupangApiGateway, deleteCoupang, uploadCoupang } from "../../pages/Tools/Coupang";
-import { deleteStreet, uploadStreet } from "../../pages/Tools/Street";
-import { deleteESMPlus, uploadESMPlus } from "../../pages/Tools/ESMPlus";
-import { deleteESMPlus2, uploadESMPlus2 } from "../../pages/Tools/ESMPlus2";
-import { deleteInterpark, uploadInterpark } from "../../pages/Tools/Interpark";
-import { deleteWemakeprice, uploadWemakeprice } from "../../pages/Tools/Wemakeprice";
-import { deleteLotteon, uploadLotteon } from "../../pages/Tools/Lotteon";
-import { deleteTmon, uploadTmon } from "../../pages/Tools/Tmon";
-import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from "../../pages/Tools/ChromeAsync";
+import { runInAction, makeAutoObservable, values } from 'mobx';
+import {
+  cartesian,
+  downloadExcel,
+  floatingToast,
+  getClock,
+  getImageMeta,
+  readFileDataURL,
+} from '../../pages/Tools/Common';
+import { deleteSmartStore, uploadSmartStore } from '../../pages/Tools/SmartStore';
+import { coupangApiGateway, deleteCoupang, uploadCoupang } from '../../pages/Tools/Coupang';
+import { deleteStreet, uploadStreet } from '../../pages/Tools/Street';
+import { deleteESMPlus, uploadESMPlus } from '../../pages/Tools/ESMPlus';
+import { deleteESMPlus2, uploadESMPlus2 } from '../../pages/Tools/ESMPlus2';
+import { deleteInterpark, uploadInterpark } from '../../pages/Tools/Interpark';
+import { deleteWemakeprice, uploadWemakeprice } from '../../pages/Tools/Wemakeprice';
+import { deleteLotteon, uploadLotteon } from '../../pages/Tools/Lotteon';
+import { deleteTmon, uploadTmon } from '../../pages/Tools/Tmon';
+import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from '../../pages/Tools/ChromeAsync';
 
 export class product {
   gridView: boolean = false;
@@ -70,7 +77,7 @@ export class product {
       open: false,
       element: null,
       data: {
-        src: "",
+        src: '',
       },
     },
 
@@ -80,8 +87,8 @@ export class product {
       element: null,
       data: {
         index: -1,
-        head: "",
-        tail: "",
+        head: '',
+        tail: '',
       },
     },
 
@@ -91,8 +98,8 @@ export class product {
       element: null,
       data: {
         index: -1,
-        find: "",
-        replace: "",
+        find: '',
+        replace: '',
       },
     },
 
@@ -103,7 +110,7 @@ export class product {
       data: {
         nameIndex: -1,
         valueIndex: -1,
-        price: "",
+        price: '',
       },
     },
 
@@ -114,7 +121,7 @@ export class product {
       data: {
         nameIndex: -1,
         valueIndex: -1,
-        price: "",
+        price: '',
       },
     },
 
@@ -125,7 +132,7 @@ export class product {
       data: {
         nameIndex: -1,
         valueIndex: -1,
-        price: "",
+        price: '',
       },
     },
 
@@ -136,7 +143,7 @@ export class product {
       data: {
         nameIndex: -1,
         valueIndex: -1,
-        stock: "",
+        stock: '',
       },
     },
 
@@ -146,8 +153,8 @@ export class product {
       element: null,
       data: {
         marketCode: null,
-        sillCode: "",
-        sillData: "",
+        sillCode: '',
+        sillData: '',
       },
     },
 
@@ -210,14 +217,14 @@ export class product {
     feeStart: null,
     feeEnd: null,
 
-    shopName: "ALL",
-    marketName: "ALL",
+    shopName: 'ALL',
+    marketName: 'ALL',
 
-    hasVideo: "ALL",
-    hasRegistered: "ALL",
+    hasVideo: 'ALL',
+    hasRegistered: 'ALL',
 
-    searchKeyword: "",
-    searchType: "PCODE",
+    searchKeyword: '',
+    searchType: 'PCODE',
 
     useFilter: false,
 
@@ -227,96 +234,96 @@ export class product {
   categoryInfo: any = {
     markets: [
       {
-        code: "A077",
+        code: 'A077',
         data: [],
         loading: false,
-        input: "",
+        input: '',
       },
 
       {
-        code: "B378",
+        code: 'B378',
         data: [],
         loading: false,
-        input: "",
+        input: '',
       },
 
       {
-        code: "A112",
+        code: 'A112',
         data: [],
         loading: false,
-        input: "",
+        input: '',
       },
 
       {
-        code: "A113",
+        code: 'A113',
         data: [],
         loading: false,
-        input: "",
+        input: '',
       },
 
       {
-        code: "A006",
+        code: 'A006',
         data: [],
         loading: false,
-        input: "",
+        input: '',
       },
 
       {
-        code: "A001",
+        code: 'A001',
         data: [],
         loading: false,
-        input: "",
+        input: '',
       },
 
       {
-        code: "A027",
+        code: 'A027',
         data: [],
         loading: false,
-        input: "",
+        input: '',
       },
 
       {
-        code: "B719",
+        code: 'B719',
         data: [],
         loading: false,
-        input: "",
+        input: '',
       },
 
       {
-        code: "A524",
+        code: 'A524',
         data: [],
         loading: false,
-        input: "",
+        input: '',
       },
 
       {
-        code: "A525",
+        code: 'A525',
         data: [],
         loading: false,
-        input: "",
+        input: '',
       },
 
       {
-        code: "B956",
+        code: 'B956',
         data: [],
         loading: false,
-        input: "",
+        input: '',
       },
     ],
   };
 
   manyAttributeInfo: any = {
-    manufacturer: "",
-    brandName: "",
-    modelName: "",
+    manufacturer: '',
+    brandName: '',
+    modelName: '',
   };
   ManymyKeyward: any = {
-    myKeyward: "",
+    myKeyward: '',
   };
   manyPriceInfo: any = {
     cnyRate: 185,
     marginRate: 25,
-    marginUnitType: "PERCENT",
+    marginUnitType: 'PERCENT',
     localShippingFee: 6000,
     shippingFee: 0,
   };
@@ -336,84 +343,84 @@ export class product {
   };
 
   manyNameInfo: any = {
-    type: "1",
+    type: '1',
 
-    body: "",
+    body: '',
 
-    head: "",
-    tail: "",
+    head: '',
+    tail: '',
 
-    find: "",
-    replace: "",
+    find: '',
+    replace: '',
 
-    findMany: "",
-    replaceMany: "",
+    findMany: '',
+    replaceMany: '',
 
-    keward: "",
+    keward: '',
   };
 
   manyTagInfo: any = {
-    searchTags: "",
+    searchTags: '',
     searchTagsDisabled: false,
 
-    immSearchTags: "",
+    immSearchTags: '',
     immSearchTagsDisabled: false,
   };
 
   manyCategoryInfo: any = {
     categoryInfoA077: {
       code: null,
-      name: "",
+      name: '',
     },
 
     categoryInfoB378: {
       code: null,
-      name: "",
+      name: '',
     },
 
     categoryInfoA112: {
       code: null,
-      name: "",
+      name: '',
     },
 
     categoryInfoA113: {
       code: null,
-      name: "",
+      name: '',
     },
 
     categoryInfoA006: {
       code: null,
-      name: "",
+      name: '',
     },
 
     categoryInfoA001: {
       code: null,
-      name: "",
+      name: '',
     },
 
     categoryInfoA027: {
       code: null,
-      name: "",
+      name: '',
     },
 
     categoryInfoB719: {
       code: null,
-      name: "",
+      name: '',
     },
 
     categoryInfoA524: {
       code: null,
-      name: "",
+      name: '',
     },
 
     categoryInfoA525: {
       code: null,
-      name: "",
+      name: '',
     },
 
     categoryInfoB956: {
       code: null,
-      name: "",
+      name: '',
     },
   };
 
@@ -429,13 +436,19 @@ export class product {
 
   // PC 기본값 설정
   loadAppInfo = async () => {
-    let auth: any = await getLocalStorage("appInfo");
+    let auth: any = await getLocalStorage('appInfo');
 
     runInAction(() => {
       this.pageSize = auth.pageSize ?? 10;
       this.gridView = auth.gridView ?? false;
 
-      if (this.pageSize !== 10 && this.pageSize !== 20 && this.pageSize !== 50 && this.pageSize !== 100 && this.pageSize !== 200) {
+      if (
+        this.pageSize !== 10 &&
+        this.pageSize !== 20 &&
+        this.pageSize !== 50 &&
+        this.pageSize !== 100 &&
+        this.pageSize !== 200
+      ) {
         this.etcPageSize = true;
       }
     });
@@ -499,37 +512,37 @@ export class product {
     let categories: any = null;
 
     switch (marketCode) {
-      case "A077":
+      case 'A077':
         categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A077_BY_SOMEONE, {}, false);
         break;
-      case "B378":
+      case 'B378':
         categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_B378_BY_SOMEONE, {}, false);
         break;
-      case "A112":
+      case 'A112':
         categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A112_BY_SOMEONE, {}, false);
         break;
-      case "A113":
+      case 'A113':
         categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A113_BY_SOMEONE, {}, false);
         break;
-      case "A006":
+      case 'A006':
         categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A006_BY_SOMEONE, {}, false);
         break;
-      case "A001":
+      case 'A001':
         categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A001_BY_SOMEONE, {}, false);
         break;
-      case "A027":
+      case 'A027':
         categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A027_BY_SOMEONE, {}, false);
         break;
-      case "B719":
+      case 'B719':
         categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_B719_BY_SOMEONE, {}, false);
         break;
-      case "A524":
+      case 'A524':
         categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A524_BY_SOMEONE, {}, false);
         break;
-      case "A525":
+      case 'A525':
         categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A525_BY_SOMEONE, {}, false);
         break;
-      case "B956":
+      case 'B956':
         categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_B956_BY_SOMEONE, {}, false);
         break;
     }
@@ -540,37 +553,37 @@ export class product {
 
     runInAction(() => {
       switch (marketCode) {
-        case "A077":
+        case 'A077':
           result.data = categories.data.searchCategoryInfoA077BySomeone;
           break;
-        case "B378":
+        case 'B378':
           result.data = categories.data.searchCategoryInfoB378BySomeone;
           break;
-        case "A112":
+        case 'A112':
           result.data = categories.data.searchCategoryInfoA112BySomeone;
           break;
-        case "A113":
+        case 'A113':
           result.data = categories.data.searchCategoryInfoA113BySomeone;
           break;
-        case "A006":
+        case 'A006':
           result.data = categories.data.searchCategoryInfoA006BySomeone;
           break;
-        case "A001":
+        case 'A001':
           result.data = categories.data.searchCategoryInfoA001BySomeone;
           break;
-        case "A027":
+        case 'A027':
           result.data = categories.data.searchCategoryInfoA027BySomeone;
           break;
-        case "B719":
+        case 'B719':
           result.data = categories.data.searchCategoryInfoB719BySomeone;
           break;
-        case "A524":
+        case 'A524':
           result.data = categories.data.searchCategoryInfoA524BySomeone;
           break;
-        case "A525":
+        case 'A525':
           result.data = categories.data.searchCategoryInfoA525BySomeone;
           break;
-        case "B956":
+        case 'B956':
           result.data = categories.data.searchCategoryInfoB956BySomeone;
           break;
       }
@@ -587,37 +600,37 @@ export class product {
   // 카테고리 일괄설정
   setManyCategory = (marketCode: string, value: any) => {
     switch (marketCode) {
-      case "A077":
+      case 'A077':
         this.manyCategoryInfo.categoryInfoA077 = value;
         break;
-      case "B378":
+      case 'B378':
         this.manyCategoryInfo.categoryInfoB378 = value;
         break;
-      case "A112":
+      case 'A112':
         this.manyCategoryInfo.categoryInfoA112 = value;
         break;
-      case "A113":
+      case 'A113':
         this.manyCategoryInfo.categoryInfoA113 = value;
         break;
-      case "A006":
+      case 'A006':
         this.manyCategoryInfo.categoryInfoA006 = value;
         break;
-      case "A001":
+      case 'A001':
         this.manyCategoryInfo.categoryInfoA001 = value;
         break;
-      case "A027":
+      case 'A027':
         this.manyCategoryInfo.categoryInfoA027 = value;
         break;
-      case "B719":
+      case 'B719':
         this.manyCategoryInfo.categoryInfoB719 = value;
         break;
-      case "A524":
+      case 'A524':
         this.manyCategoryInfo.categoryInfoA524 = value;
         break;
-      case "A525":
+      case 'A525':
         this.manyCategoryInfo.categoryInfoA525 = value;
         break;
-      case "B956":
+      case 'B956':
         this.manyCategoryInfo.categoryInfoB956 = value;
         break;
     }
@@ -668,14 +681,14 @@ export class product {
 
     let sillInfo: any = null;
 
-    if (marketCode === "A077") {
+    if (marketCode === 'A077') {
       sillInfo = parsedSillInfo[0][`sillInfo${marketCode}`];
     } else {
       sillInfo = parsedSillInfo;
     }
 
     runInAction(() => {
-      if (marketCode === "A077") {
+      if (marketCode === 'A077') {
         this.itemInfo.items[index].tagInfo = this.tagDict.find((w: any) => w.code === value.code).tagJson;
       }
 
@@ -701,7 +714,7 @@ export class product {
       index
     );
 
-    floatingToast("카테고리가 저장되었습니다.", "success");
+    floatingToast('카테고리가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -854,9 +867,9 @@ export class product {
       };
     });
 
-    floatingToast("카테고리가 저장되었습니다.", "success");
+    floatingToast('카테고리가 저장되었습니다.', 'success');
 
-    await this.updateProdutSillsAuto("AUTO", index);
+    await this.updateProdutSillsAuto('AUTO', index);
 
     runInAction(() => {
       exit();
@@ -910,7 +923,7 @@ export class product {
 
   // 한 페이지에 표시하는 상품 수
   setPageSize = async (value: number) => {
-    let auth: any = await getLocalStorage("appInfo");
+    let auth: any = await getLocalStorage('appInfo');
 
     auth.pageSize = value;
 
@@ -923,7 +936,7 @@ export class product {
 
   // 태그사전 정보
   getTagDict = async () => {
-    const tagResp = await fetch("/resources/dictionary.json");
+    const tagResp = await fetch('/resources/dictionary.json');
     const tagJson = await tagResp.json();
 
     runInAction(() => {
@@ -974,7 +987,7 @@ export class product {
         QUERIES.SELECT_MY_SIMPLE_PRODUCT_BY_USER,
         {
           where: this.searchInfo.whereInput,
-          orderBy: { createdAt: "desc" },
+          orderBy: { createdAt: 'desc' },
           skip: skipOffset,
           take: s,
         },
@@ -1024,7 +1037,7 @@ export class product {
         QUERIES.SELECT_MY_PRODUCT_BY_USER,
         {
           where: this.searchInfo.whereInput,
-          orderBy: { createdAt: "desc" },
+          orderBy: { createdAt: 'desc' },
           skip: skipOffset,
           take: s,
         },
@@ -1048,7 +1061,7 @@ export class product {
           if (v.activeTaobaoProduct.videoUrl) {
             v.activeTaobaoProduct.videoUrl = /^https?/.test(v.activeTaobaoProduct.videoUrl)
               ? v.activeTaobaoProduct.videoUrl
-              : "https:" + v.activeTaobaoProduct.videoUrl;
+              : 'https:' + v.activeTaobaoProduct.videoUrl;
           }
 
           v.productOptionName.map((w: any) => {
@@ -1065,25 +1078,27 @@ export class product {
 
           let descHtml: any = null;
 
-          if (v.description.includes("description.html")) {
-            let descResp = await fetch(`${process.env.SELLFORYOU_MINIO_HTTPS}/${v.description}?${new Date().getTime()}`);
+          if (v.description.includes('description.html')) {
+            let descResp = await fetch(
+              `${process.env.SELLFORYOU_MINIO_HTTPS}/${v.description}?${new Date().getTime()}`
+            );
             let descText = await descResp.text();
 
-            descHtml = new DOMParser().parseFromString(descText, "text/html");
+            descHtml = new DOMParser().parseFromString(descText, 'text/html');
 
             v.description = descText ?? v.description;
           } else {
-            descHtml = new DOMParser().parseFromString(v.description, "text/html");
+            descHtml = new DOMParser().parseFromString(v.description, 'text/html');
           }
 
           if (descHtml) {
             v.descriptionImages = [];
 
-            const imageList: any = descHtml.querySelectorAll("img");
+            const imageList: any = descHtml.querySelectorAll('img');
 
             for (let i in imageList) {
               if (imageList[i].src) {
-                if (imageList[i].src.includes(".gif")) {
+                if (imageList[i].src.includes('.gif')) {
                   imageList[i].parentNode.removeChild(imageList[i]);
                 } else {
                   imageList[i].src = imageList[i].src;
@@ -1096,231 +1111,231 @@ export class product {
           if (!v.categoryInfoA077) {
             v.categoryInfoA077 = {
               code: null,
-              name: "카테고리를 선택해주세요.",
+              name: '카테고리를 선택해주세요.',
             };
           } else {
             if (!v.sillCodeA077) {
               v.sillCodeA077 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA077.sillInfoA077.code
-                  : v.categoryInfoA077.activeSillDataA077.find((w) => w.code === "ETC").code;
+                  : v.categoryInfoA077.activeSillDataA077.find((w) => w.code === 'ETC').code;
             }
 
             if (!v.sillDataA077) {
               v.sillDataA077 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA077.sillInfoA077.data
-                  : v.categoryInfoA077.activeSillDataA077.find((w) => w.code === "ETC").data;
+                  : v.categoryInfoA077.activeSillDataA077.find((w) => w.code === 'ETC').data;
             }
           }
 
           if (!v.categoryInfoB378) {
             v.categoryInfoB378 = {
               code: null,
-              name: "카테고리를 선택해주세요.",
+              name: '카테고리를 선택해주세요.',
             };
           } else {
             if (!v.sillCodeB378) {
               v.sillCodeB378 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoB378.sillInfoB378.code
-                  : v.categoryInfoB378.activeSillDataB378.find((w) => w.code === "기타 재화").code;
+                  : v.categoryInfoB378.activeSillDataB378.find((w) => w.code === '기타 재화').code;
             }
 
             if (!v.sillDataB378) {
               v.sillDataB378 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoB378.sillInfoB378.data
-                  : v.categoryInfoB378.activeSillDataB378.find((w) => w.code === "기타 재화").data;
+                  : v.categoryInfoB378.activeSillDataB378.find((w) => w.code === '기타 재화').data;
             }
           }
 
           if (!v.categoryInfoA112) {
             v.categoryInfoA112 = {
               code: null,
-              name: "카테고리를 선택해주세요.",
+              name: '카테고리를 선택해주세요.',
             };
           } else {
             if (!v.sillCodeA112) {
               v.sillCodeA112 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA112.sillInfoA112.code
-                  : v.categoryInfoA112.activeSillDataA112.find((w) => w.code === "891045").code;
+                  : v.categoryInfoA112.activeSillDataA112.find((w) => w.code === '891045').code;
             }
 
             if (!v.sillDataA112) {
               v.sillDataA112 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA112.sillInfoA112.data
-                  : v.categoryInfoA112.activeSillDataA112.find((w) => w.code === "891045").data;
+                  : v.categoryInfoA112.activeSillDataA112.find((w) => w.code === '891045').data;
             }
           }
 
           if (!v.categoryInfoA113) {
             v.categoryInfoA113 = {
               code: null,
-              name: "카테고리를 선택해주세요.",
+              name: '카테고리를 선택해주세요.',
             };
           } else {
             if (!v.sillCodeA113) {
               v.sillCodeA113 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA113.sillInfoA113.code
-                  : v.categoryInfoA113.activeSillDataA113.find((w) => w.code === "891045").code;
+                  : v.categoryInfoA113.activeSillDataA113.find((w) => w.code === '891045').code;
             }
 
             if (!v.sillDataA113) {
               v.sillDataA113 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA113.sillInfoA113.data
-                  : v.categoryInfoA113.activeSillDataA113.find((w) => w.code === "891045").data;
+                  : v.categoryInfoA113.activeSillDataA113.find((w) => w.code === '891045').data;
             }
           }
 
           if (!v.categoryInfoA006) {
             v.categoryInfoA006 = {
               code: null,
-              name: "카테고리를 선택해주세요.",
+              name: '카테고리를 선택해주세요.',
             };
           } else {
             if (!v.sillCodeA006) {
               v.sillCodeA006 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA006.sillInfoA006.code
-                  : v.categoryInfoA006.activeSillDataA006.find((w) => w.code === "35").code;
+                  : v.categoryInfoA006.activeSillDataA006.find((w) => w.code === '35').code;
             }
 
             if (!v.sillDataA006) {
               v.sillDataA006 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA006.sillInfoA006.data
-                  : v.categoryInfoA006.activeSillDataA006.find((w) => w.code === "35").data;
+                  : v.categoryInfoA006.activeSillDataA006.find((w) => w.code === '35').data;
             }
           }
 
           if (!v.categoryInfoA001) {
             v.categoryInfoA001 = {
               code: null,
-              name: "카테고리를 선택해주세요.",
+              name: '카테고리를 선택해주세요.',
             };
           } else {
             if (!v.sillCodeA001) {
               v.sillCodeA001 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA001.sillInfoA001.code
-                  : v.categoryInfoA001.activeSillDataA001.find((w) => w.code === "35").code;
+                  : v.categoryInfoA001.activeSillDataA001.find((w) => w.code === '35').code;
             }
 
             if (!v.sillDataA001) {
               v.sillDataA001 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA001.sillInfoA001.data
-                  : v.categoryInfoA001.activeSillDataA001.find((w) => w.code === "35").data;
+                  : v.categoryInfoA001.activeSillDataA001.find((w) => w.code === '35').data;
             }
           }
 
           if (!v.categoryInfoA027) {
             v.categoryInfoA027 = {
               code: null,
-              name: "카테고리를 선택해주세요.",
+              name: '카테고리를 선택해주세요.',
             };
           } else {
             if (!v.sillCodeA027) {
               v.sillCodeA027 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA027.sillInfoA027.code
-                  : v.categoryInfoA027.activeSillDataA027.find((w) => w.code === "38").code;
+                  : v.categoryInfoA027.activeSillDataA027.find((w) => w.code === '38').code;
             }
 
             if (!v.sillDataA027) {
               v.sillDataA027 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA027.sillInfoA027.data
-                  : v.categoryInfoA027.activeSillDataA027.find((w) => w.code === "38").data;
+                  : v.categoryInfoA027.activeSillDataA027.find((w) => w.code === '38').data;
             }
           }
 
           if (!v.categoryInfoB719) {
             v.categoryInfoB719 = {
               code: null,
-              name: "카테고리를 선택해주세요.",
+              name: '카테고리를 선택해주세요.',
             };
           } else {
             if (!v.sillCodeB719) {
               v.sillCodeB719 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoB719.sillInfoB719.code
-                  : v.categoryInfoB719.activeSillDataB719.find((w) => w.code === "38").code;
+                  : v.categoryInfoB719.activeSillDataB719.find((w) => w.code === '38').code;
             }
 
             if (!v.sillDataB719) {
               v.sillDataB719 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoB719.sillInfoB719.data
-                  : v.categoryInfoB719.activeSillDataB719.find((w) => w.code === "38").data;
+                  : v.categoryInfoB719.activeSillDataB719.find((w) => w.code === '38').data;
             }
           }
 
           if (!v.categoryInfoA524) {
             v.categoryInfoA524 = {
               code: null,
-              name: "카테고리를 선택해주세요.",
+              name: '카테고리를 선택해주세요.',
             };
           } else {
             if (!v.sillCodeA524) {
               v.sillCodeA524 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA524.sillInfoA524.code
-                  : v.categoryInfoA524.activeSillDataA524.find((w) => w.code === "38").code;
+                  : v.categoryInfoA524.activeSillDataA524.find((w) => w.code === '38').code;
             }
 
             if (!v.sillDataA524) {
               v.sillDataA524 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA524.sillInfoA524.data
-                  : v.categoryInfoA524.activeSillDataA524.find((w) => w.code === "38").data;
+                  : v.categoryInfoA524.activeSillDataA524.find((w) => w.code === '38').data;
             }
           }
 
           if (!v.categoryInfoA525) {
             v.categoryInfoA525 = {
               code: null,
-              name: "카테고리를 선택해주세요.",
+              name: '카테고리를 선택해주세요.',
             };
           } else {
             if (!v.sillCodeA525) {
               v.sillCodeA525 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA525.sillInfoA525.code
-                  : v.categoryInfoA525.activeSillDataA525.find((w) => w.code === "38").code;
+                  : v.categoryInfoA525.activeSillDataA525.find((w) => w.code === '38').code;
             }
 
             if (!v.sillDataA525) {
               v.sillDataA525 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoA525.sillInfoA525.data
-                  : v.categoryInfoA525.activeSillDataA525.find((w) => w.code === "38").data;
+                  : v.categoryInfoA525.activeSillDataA525.find((w) => w.code === '38').data;
             }
           }
 
           if (!v.categoryInfoB956) {
             v.categoryInfoB956 = {
               code: null,
-              name: "카테고리를 선택해주세요.",
+              name: '카테고리를 선택해주세요.',
             };
           } else {
             if (!v.sillCodeB956) {
               v.sillCodeB956 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoB956.sillInfoB956.code
-                  : v.categoryInfoB956.activeSillDataB956.find((w) => w.code === "기타 재화").code;
+                  : v.categoryInfoB956.activeSillDataB956.find((w) => w.code === '기타 재화').code;
             }
 
             if (!v.sillDataB956) {
               v.sillDataB956 =
-                commonStore.user.userInfo.sillFromCategory === "Y"
+                commonStore.user.userInfo.sillFromCategory === 'Y'
                   ? v.categoryInfoB956.sillInfoB956.data
-                  : v.categoryInfoB956.activeSillDataB956.find((w) => w.code === "기타 재화").data;
+                  : v.categoryInfoB956.activeSillDataB956.find((w) => w.code === '기타 재화').data;
             }
           }
 
@@ -1384,12 +1399,14 @@ export class product {
         });
 
       if (productIds.length < 1) {
-        alert("상품이 선택되지 않았습니다.");
+        alert('상품이 선택되지 않았습니다.');
 
         return;
       }
 
-      const accept = confirm(`선택한 상품 ${productIds.length}개를 삭제하시겠습니까?\n삭제된 상품은 다시 복구하실 수 없습니다.`);
+      const accept = confirm(
+        `선택한 상품 ${productIds.length}개를 삭제하시겠습니까?\n삭제된 상품은 다시 복구하실 수 없습니다.`
+      );
 
       if (!accept) {
         return;
@@ -1452,7 +1469,7 @@ export class product {
       return;
     }
 
-    floatingToast("상품명이 저장되었습니다.", "success");
+    floatingToast('상품명이 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -1490,7 +1507,7 @@ export class product {
       return;
     }
 
-    floatingToast("검색어태그(쿠팡)가 저장되었습니다.", "success");
+    floatingToast('검색어태그(쿠팡)가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -1505,7 +1522,7 @@ export class product {
 
     this.itemInfo.items[index].edited.baseInfo = 2;
 
-    let tagList = this.itemInfo.items[index].immSearchTags?.split(",") ?? [];
+    let tagList = this.itemInfo.items[index].immSearchTags?.split(',') ?? [];
 
     tagList = tagList.filter((v: any) => v);
 
@@ -1516,7 +1533,7 @@ export class product {
     }
 
     if (tagList.length > 9) {
-      floatingToast("검색어는 최대 10개까지만 입력하실 수 있습니다.", "information");
+      floatingToast('검색어는 최대 10개까지만 입력하실 수 있습니다.', 'information');
 
       exit();
 
@@ -1525,7 +1542,7 @@ export class product {
 
     tagList.push(data);
 
-    let output = "";
+    let output = '';
 
     tagList.map((v: any) => {
       output += `${v},`;
@@ -1548,7 +1565,7 @@ export class product {
       return;
     }
 
-    floatingToast("검색어태그(스마트스토어)가 저장되었습니다.", "success");
+    floatingToast('검색어태그(스마트스토어)가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -1573,32 +1590,36 @@ export class product {
 
     this.itemInfo.items[index].edited.baseInfo = 2;
 
-    let tagList = this.itemInfo.items[index].immSearchTags?.split(",") ?? [];
+    let tagList = this.itemInfo.items[index].immSearchTags?.split(',') ?? [];
 
     tagList = tagList.filter((v: any, i: number) => v && i < 10);
 
-    let output = "";
+    let output = '';
 
-    let addList = data.replaceAll(" ", "").split(",") ?? [];
+    let addList = data.replaceAll(' ', '').split(',') ?? [];
 
-    let userResp = await fetch("https://sell.smartstore.naver.com/api/products?_action=create");
+    let userResp = await fetch('https://sell.smartstore.naver.com/api/products?_action=create');
     let userJson = await userResp.json();
 
     if (userJson.error) {
       this.itemInfo.items[index].immSearchTags = this.itemInfo.items[index].immSearchTagsTemp;
 
-      floatingToast("스마트스토어 로그인 후 이용해주세요.", "warning");
+      floatingToast('스마트스토어 로그인 후 이용해주세요.', 'warning');
 
       exit();
 
       return;
     }
-    console.log("testtest");
+    console.log('testtest');
     let tagDataSet = await Promise.all(
       addList
         .filter((v: any) => v)
         .map(async (v: any) => {
-          const tagResp = await fetch(`https://sell.smartstore.naver.com/api/product/shared/is-restrict-tag?_action=isRestrictTag&tag=${encodeURI(v)}`);
+          const tagResp = await fetch(
+            `https://sell.smartstore.naver.com/api/product/shared/is-restrict-tag?_action=isRestrictTag&tag=${encodeURI(
+              v
+            )}`
+          );
           const tagJson = await tagResp.json();
 
           return {
@@ -1610,10 +1631,10 @@ export class product {
 
     await Promise.all(
       tagDataSet.map((v: any) => {
-        console.log("test", v.restricted);
+        console.log('test', v.restricted);
 
         if (tagList.length > 9) {
-          floatingToast("검색어는 최대 10개까지만 입력하실 수 있습니다.", "information");
+          floatingToast('검색어는 최대 10개까지만 입력하실 수 있습니다.', 'information');
 
           return;
         }
@@ -1624,17 +1645,17 @@ export class product {
         }
 
         if (v.restricted) {
-          floatingToast(`사용할 수 없는 검색어입니다. [${v.tag}]`, "failed");
+          floatingToast(`사용할 수 없는 검색어입니다. [${v.tag}]`, 'failed');
 
           return;
         }
 
-        console.log("너왜 여기까지옴?");
+        console.log('너왜 여기까지옴?');
         tagList.push(v.tag);
       })
     );
 
-    output = tagList.join(",");
+    output = tagList.join(',');
 
     const response = await gql(MUTATIONS.UPDATE_PRODUCT_TAG_BY_USER, {
       productId: this.itemInfo.items[index].id,
@@ -1654,7 +1675,7 @@ export class product {
     this.itemInfo.items[index].immSearchTags = output;
     this.itemInfo.items[index].immSearchTagsTemp = this.itemInfo.items[index].immSearchTags;
 
-    floatingToast("검색어태그(스마트스토어)가 저장되었습니다.", "success");
+    floatingToast('검색어태그(스마트스토어)가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -1669,9 +1690,9 @@ export class product {
 
     this.itemInfo.items[index].edited.baseInfo = 2;
 
-    let tagList = this.itemInfo.items[index].immSearchTags?.split(",") ?? [];
+    let tagList = this.itemInfo.items[index].immSearchTags?.split(',') ?? [];
 
-    let output = "";
+    let output = '';
 
     tagList = tagList.filter((v: any) => v && v !== data);
     tagList.map((v: any) => {
@@ -1695,7 +1716,7 @@ export class product {
       return;
     }
 
-    floatingToast("검색어태그(스마트스토어)가 저장되었습니다.", "success");
+    floatingToast('검색어태그(스마트스토어)가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -1725,7 +1746,7 @@ export class product {
     });
 
     temp.thumbnails.push({
-      defaultImage: "",
+      defaultImage: '',
       uploadImage: null,
     });
 
@@ -1738,12 +1759,12 @@ export class product {
     };
 
     let map = {
-      "1": [`variables.thumbnails.${temp.thumbnails.length - 1}.uploadImage`],
+      '1': [`variables.thumbnails.${temp.thumbnails.length - 1}.uploadImage`],
     };
 
-    formData.append("operations", JSON.stringify(operations));
-    formData.append("map", JSON.stringify(map));
-    formData.append("1", blob, blob.name);
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('1', blob, blob.name);
 
     const response = await gql(null, formData, true);
 
@@ -1760,7 +1781,7 @@ export class product {
 
       this.itemInfo.items[index].imageThumbnail = thumbnails;
 
-      floatingToast("썸네일이미지 정보가 추가되었습니다.", "success");
+      floatingToast('썸네일이미지 정보가 추가되었습니다.', 'success');
 
       exit();
     });
@@ -1807,7 +1828,7 @@ export class product {
     runInAction(() => {
       this.itemInfo.items[index].imageThumbnail = temp;
 
-      floatingToast("썸네일이미지 정보가 저장되었습니다.", "success");
+      floatingToast('썸네일이미지 정보가 저장되었습니다.', 'success');
 
       exit();
     });
@@ -1848,7 +1869,7 @@ export class product {
       return;
     }
 
-    floatingToast("가격정보가 저장되었습니다.", "success");
+    floatingToast('가격정보가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -1866,7 +1887,7 @@ export class product {
         marginUnitType: this.itemInfo.items[index].marginUnitType,
       };
 
-      if (priceInfo.marginUnitType === "PERCENT") {
+      if (priceInfo.marginUnitType === 'PERCENT') {
         price = (data.priceCny * priceInfo.cnyRate + data.defaultShippingFee) * (1 + priceInfo.marginRate / 100);
       } else {
         price = data.priceCny * priceInfo.cnyRate + data.defaultShippingFee + priceInfo.marginRate;
@@ -1950,7 +1971,7 @@ export class product {
       }
     }
 
-    floatingToast("옵션세부정보가 저장되었습니다.", "success");
+    floatingToast('옵션세부정보가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -1995,7 +2016,7 @@ export class product {
       combination.map((w: any, nameIndex: number) => {
         let option: any = {
           productId: this.itemInfo.items[index].id,
-          optionValue1Id: "",
+          optionValue1Id: '',
           optionValue2Id: null,
           optionValue3Id: null,
           optionValue4Id: null,
@@ -2005,8 +2026,8 @@ export class product {
           priceCny: 0,
           price: 0,
           stock: 0,
-          optionString: "",
-          name: "",
+          optionString: '',
+          name: '',
           defaultShippingFee: this.itemInfo.items[index].localShippingFee,
         };
 
@@ -2014,7 +2035,7 @@ export class product {
 
         w.map((x: any, valueIndex: number) => {
           optionInfo = optionInfo.filter((y: any) => {
-            const skus = y.properties.split(";");
+            const skus = y.properties.split(';');
             const matched = skus.find((z: any) => z === `${x.name.taobaoPid}:${x.value.taobaoVid}`);
 
             if (!matched) {
@@ -2024,10 +2045,10 @@ export class product {
             return true;
           });
 
-          option["name"] += `${x.name.name}:${x.value.name}, `;
+          option['name'] += `${x.name.name}:${x.value.name}, `;
 
           option[`optionValue${valueIndex + 1}Id`] = x.value.id;
-          option["optionString"] += `${x.value.number.toString().padStart(2, "0")}_`;
+          option['optionString'] += `${x.value.number.toString().padStart(2, '0')}_`;
         });
 
         if (optionInfo.length > 0) {
@@ -2040,19 +2061,20 @@ export class product {
             localShippingFee: this.itemInfo.items[index].localShippingFee,
           };
 
-          if (priceInfo.marginUnitType === "PERCENT") {
-            price = (priceInfo.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee) * (1 + priceInfo.marginRate / 100);
+          if (priceInfo.marginUnitType === 'PERCENT') {
+            price =
+              (priceInfo.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee) * (1 + priceInfo.marginRate / 100);
           } else {
             price = priceInfo.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee + priceInfo.marginRate;
           }
 
           price = Math.round(price / wonType) * wonType;
 
-          option["priceCny"] = priceInfo.priceCny;
-          option["price"] = price;
-          option["stock"] = parseInt(optionInfo[0].quantity);
-          option["optionString"] = option["optionString"].slice(0, option["optionString"].length - 1);
-          option["name"] = option["name"].slice(0, option["name"].length - 2);
+          option['priceCny'] = priceInfo.priceCny;
+          option['price'] = price;
+          option['stock'] = parseInt(optionInfo[0].quantity);
+          option['optionString'] = option['optionString'].slice(0, option['optionString'].length - 1);
+          option['name'] = option['name'].slice(0, option['name'].length - 2);
 
           options.push(option);
         }
@@ -2131,7 +2153,7 @@ export class product {
 
         if (matched) {
           switch (type) {
-            case "addPrice": {
+            case 'addPrice': {
               if (activeOnly && !v.isActive) {
                 break;
               }
@@ -2141,7 +2163,7 @@ export class product {
               break;
             }
 
-            case "subPrice": {
+            case 'subPrice': {
               if (activeOnly && !v.isActive) {
                 break;
               }
@@ -2151,7 +2173,7 @@ export class product {
               break;
             }
 
-            case "setPrice": {
+            case 'setPrice': {
               if (activeOnly && !v.isActive) {
                 break;
               }
@@ -2161,7 +2183,7 @@ export class product {
               break;
             }
 
-            case "setStock": {
+            case 'setStock': {
               if (activeOnly && !v.isActive) {
                 break;
               }
@@ -2171,7 +2193,7 @@ export class product {
               break;
             }
 
-            case "setActive": {
+            case 'setActive': {
               let active = Math.floor((v.price / this.itemInfo.items[index].price - 1) * 100);
 
               if (active > offset) {
@@ -2210,7 +2232,9 @@ export class product {
         return;
       }
 
-      const priceList = this.itemInfo.items[index].productOption.filter((v: any) => v.isActive).map((v: any) => v.price);
+      const priceList = this.itemInfo.items[index].productOption
+        .filter((v: any) => v.isActive)
+        .map((v: any) => v.price);
       const priceLowest = Math.min(...priceList);
 
       this.itemInfo.items[index].price = priceLowest;
@@ -2244,7 +2268,7 @@ export class product {
       });
     });
 
-    floatingToast("옵션세부정보가 저장되었습니다.", "success");
+    floatingToast('옵션세부정보가 저장되었습니다.', 'success');
   };
 
   // 옵션가 설정
@@ -2297,8 +2321,9 @@ export class product {
 
     const originalPrice = this.itemInfo.items[index].activeTaobaoProduct.price;
 
-    if (priceInfo.marginUnitType === "PERCENT") {
-      priceInfo.price = (originalPrice * priceInfo.cnyRate + priceInfo.localShippingFee) * (1 + priceInfo.marginRate / 100);
+    if (priceInfo.marginUnitType === 'PERCENT') {
+      priceInfo.price =
+        (originalPrice * priceInfo.cnyRate + priceInfo.localShippingFee) * (1 + priceInfo.marginRate / 100);
     } else {
       priceInfo.price = originalPrice * priceInfo.cnyRate + priceInfo.localShippingFee + priceInfo.marginRate;
     }
@@ -2313,8 +2338,9 @@ export class product {
       options = this.itemInfo.items[index].productOption.map((v: any) => {
         let optionPrice: any = null;
 
-        if (priceInfo.marginUnitType === "PERCENT") {
-          optionPrice = (v.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee) * (1 + priceInfo.marginRate / 100);
+        if (priceInfo.marginUnitType === 'PERCENT') {
+          optionPrice =
+            (v.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee) * (1 + priceInfo.marginRate / 100);
         } else {
           optionPrice = v.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee + priceInfo.marginRate;
         }
@@ -2384,7 +2410,7 @@ export class product {
       });
     });
 
-    floatingToast("가격정보가 저장되었습니다.", "success");
+    floatingToast('가격정보가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -2413,11 +2439,11 @@ export class product {
         query: MUTATIONS.SET_PRODUCT_OPTION_VALUE_BY_SOMEONE,
       };
 
-      let map = { "1": ["variables.newImage"] };
+      let map = { '1': ['variables.newImage'] };
 
-      formData.append("operations", JSON.stringify(operations));
-      formData.append("map", JSON.stringify(map));
-      formData.append("1", data.newImage, `${data.newImage.name.split(".")[0]}.${data.newImage.name.split(".")[1]}`);
+      formData.append('operations', JSON.stringify(operations));
+      formData.append('map', JSON.stringify(map));
+      formData.append('1', data.newImage, `${data.newImage.name.split('.')[0]}.${data.newImage.name.split('.')[1]}`);
 
       const response = await gql(null, formData, true);
 
@@ -2429,7 +2455,8 @@ export class product {
         return;
       }
 
-      this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].image = response.data.setProductOptionValueBySomeOne;
+      this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].image =
+        response.data.setProductOptionValueBySomeOne;
     } else {
       if (!this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].image) {
         exit();
@@ -2455,10 +2482,10 @@ export class product {
         return;
       }
 
-      this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].image = "";
+      this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].image = '';
     }
 
-    floatingToast("옵션이미지 정보가 저장되었습니다.", "success");
+    floatingToast('옵션이미지 정보가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -2541,7 +2568,7 @@ export class product {
 
     await this.replaceProductOption(commonStore, index);
 
-    floatingToast("옵션정보가 저장되었습니다.", "success");
+    floatingToast('옵션정보가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -2588,7 +2615,7 @@ export class product {
 
     await this.replaceProductOption(commonStore, index);
 
-    floatingToast("옵션정보가 저장되었습니다.", "success");
+    floatingToast('옵션정보가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -2633,7 +2660,7 @@ export class product {
 
     await this.replaceProductOption(commonStore, index);
 
-    floatingToast("옵션정보가 저장되었습니다.", "success");
+    floatingToast('옵션정보가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -2647,8 +2674,8 @@ export class product {
         return true;
       }
 
-      const descHtml = new DOMParser().parseFromString(this.itemInfo.items[itemIndex].description, "text/html");
-      const descImages = descHtml.querySelectorAll("img");
+      const descHtml = new DOMParser().parseFromString(this.itemInfo.items[itemIndex].description, 'text/html');
+      const descImages = descHtml.querySelectorAll('img');
 
       for (let j in descImages) {
         if (!descImages[j].src) {
@@ -2692,8 +2719,8 @@ export class product {
       temp.splice(dst, 0, this.itemInfo.items[index].descriptionImages[src]);
     }
 
-    const descHtml = new DOMParser().parseFromString(this.itemInfo.items[index].description, "text/html");
-    const descImages = descHtml.querySelectorAll("img");
+    const descHtml = new DOMParser().parseFromString(this.itemInfo.items[index].description, 'text/html');
+    const descImages = descHtml.querySelectorAll('img');
 
     temp.map((v: any, i: number) => {
       descImages[i].src = v;
@@ -2736,7 +2763,7 @@ export class product {
       return;
     }
 
-    floatingToast("상세페이지가 저장되었습니다.", "success");
+    floatingToast('상세페이지가 저장되었습니다.', 'success');
 
     exit();
   };
@@ -2770,8 +2797,10 @@ export class product {
       return;
     }
 
-    if (response.data.updateDescription.includes("description.html")) {
-      let descResp = await fetch(`${process.env.SELLFORYOU_MINIO_HTTPS}/${response.data.updateDescription}?${new Date().getTime()}`);
+    if (response.data.updateDescription.includes('description.html')) {
+      let descResp = await fetch(
+        `${process.env.SELLFORYOU_MINIO_HTTPS}/${response.data.updateDescription}?${new Date().getTime()}`
+      );
       let descText = await descResp.text();
 
       runInAction(() => {
@@ -2781,8 +2810,8 @@ export class product {
 
     const imageList: any = [];
 
-    const descHtml = new DOMParser().parseFromString(this.itemInfo.items[index].description, "text/html");
-    const descImages = descHtml.querySelectorAll("img");
+    const descHtml = new DOMParser().parseFromString(this.itemInfo.items[index].description, 'text/html');
+    const descImages = descHtml.querySelectorAll('img');
 
     for (let j in descImages) {
       if (!descImages[j].outerHTML) {
@@ -2792,7 +2821,7 @@ export class product {
       }
     }
 
-    floatingToast("상세이미지 목록이 수정되었습니다.", "success");
+    floatingToast('상세이미지 목록이 수정되었습니다.', 'success');
 
     runInAction(() => {
       this.itemInfo.items[index].descriptionImages = imageList;
@@ -2804,67 +2833,67 @@ export class product {
   // 오픈마켓수수료 설정
   setProductFee = (marketCode: string, data: any, index: number) => {
     switch (marketCode) {
-      case "A077": {
+      case 'A077': {
         this.itemInfo.items[index].naverFee = data;
 
         break;
       }
 
-      case "B378": {
+      case 'B378': {
         this.itemInfo.items[index].coupangFee = data;
 
         break;
       }
 
-      case "A112": {
+      case 'A112': {
         this.itemInfo.items[index].streetFee = data;
 
         break;
       }
 
-      case "A113": {
+      case 'A113': {
         this.itemInfo.items[index].streetNormalFee = data;
 
         break;
       }
 
-      case "A001": {
+      case 'A001': {
         this.itemInfo.items[index].auctionFee = data;
 
         break;
       }
 
-      case "A006": {
+      case 'A006': {
         this.itemInfo.items[index].gmarketFee = data;
 
         break;
       }
 
-      case "A027": {
+      case 'A027': {
         this.itemInfo.items[index].interparkFee = data;
 
         break;
       }
 
-      case "B719": {
+      case 'B719': {
         this.itemInfo.items[index].wemakepriceFee = data;
 
         break;
       }
 
-      case "A524": {
+      case 'A524': {
         this.itemInfo.items[index].lotteonFee = data;
 
         break;
       }
 
-      case "A525": {
+      case 'A525': {
         this.itemInfo.items[index].lotteonNormalFee = data;
 
         break;
       }
 
-      case "B956": {
+      case 'B956': {
         this.itemInfo.items[index].tmonFee = data;
 
         break;
@@ -2896,7 +2925,7 @@ export class product {
       return;
     }
 
-    floatingToast("오픈마켓수수료적용가가 저장되었습니다.", "success");
+    floatingToast('오픈마켓수수료적용가가 저장되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -2944,42 +2973,46 @@ export class product {
     });
 
     if (productIds.length < 1) {
-      alert("상품이 선택되지 않았습니다.");
+      alert('상품이 선택되지 않았습니다.');
 
       return null;
     }
 
     if (this.manyPriceInfo.cnyRate <= 0) {
-      alert("환율은 0 보다 큰 값으로 입력해주세요.");
+      alert('환율은 0 보다 큰 값으로 입력해주세요.');
 
       return;
     }
 
     if (this.manyPriceInfo.marginRate < 0) {
-      alert("마진율은 0% 이상으로 입력해주세요.");
+      alert('마진율은 0% 이상으로 입력해주세요.');
 
       return;
     }
 
     if (!this.manyPriceInfo.marginUnitType) {
-      alert("마진단위를 선택해주세요.");
+      alert('마진단위를 선택해주세요.');
 
       return;
     }
 
     if (this.manyPriceInfo.localShippingFee < 0) {
-      alert("해외배송비는 0원 이상으로 입력해주세요.");
+      alert('해외배송비는 0원 이상으로 입력해주세요.');
 
       return;
     }
 
     if (this.manyPriceInfo.shippingFee < 0) {
-      alert("유료배송비는 0원 이상으로 입력해주세요.");
+      alert('유료배송비는 0원 이상으로 입력해주세요.');
 
       return;
     }
 
-    const response = await gql(MUTATIONS.UPDATE_MANY_PRODUCT_PRICE_BY_USER, { ...this.manyPriceInfo, productIds }, false);
+    const response = await gql(
+      MUTATIONS.UPDATE_MANY_PRODUCT_PRICE_BY_USER,
+      { ...this.manyPriceInfo, productIds },
+      false
+    );
 
     if (response.errors) {
       alert(response.errors[0].message);
@@ -2987,7 +3020,7 @@ export class product {
       return;
     }
 
-    floatingToast(`상품 ${productIds.length}개의 가격을 일괄설정하였습니다.`, "success");
+    floatingToast(`상품 ${productIds.length}개의 가격을 일괄설정하였습니다.`, 'success');
 
     this.toggleManyPriceModal(false);
     this.refreshProduct(commonStore);
@@ -3007,7 +3040,7 @@ export class product {
       });
 
       if (productIds.length < 1) {
-        alert("상품이 선택되지 않았습니다.");
+        alert('상품이 선택되지 않았습니다.');
 
         return null;
       }
@@ -3038,7 +3071,7 @@ export class product {
       return;
     }
 
-    floatingToast(`상품 ${productIds.length}개의 수수료를 일괄설정하였습니다.`, "success");
+    floatingToast(`상품 ${productIds.length}개의 수수료를 일괄설정하였습니다.`, 'success');
 
     this.toggleManyFeeModal(false);
     this.refreshProduct(commonStore);
@@ -3058,7 +3091,7 @@ export class product {
       });
 
       if (productIds.length < 1) {
-        alert("상품이 선택되지 않았습니다.");
+        alert('상품이 선택되지 않았습니다.');
 
         return null;
       }
@@ -3094,17 +3127,17 @@ export class product {
       {
         productIds,
 
-        code_a077: this.manyCategoryInfo.categoryInfoA077.code ? "" : undefined,
-        code_b378: this.manyCategoryInfo.categoryInfoB378.code ? "" : undefined,
-        code_a112: this.manyCategoryInfo.categoryInfoA112.code ? "" : undefined,
-        code_a113: this.manyCategoryInfo.categoryInfoA113.code ? "" : undefined,
-        code_a001: this.manyCategoryInfo.categoryInfoA006.code ? "" : undefined,
-        code_a006: this.manyCategoryInfo.categoryInfoA001.code ? "" : undefined,
-        code_a027: this.manyCategoryInfo.categoryInfoA027.code ? "" : undefined,
-        code_b719: this.manyCategoryInfo.categoryInfoB719.code ? "" : undefined,
-        code_a524: this.manyCategoryInfo.categoryInfoA524.code ? "" : undefined,
-        code_a525: this.manyCategoryInfo.categoryInfoA525.code ? "" : undefined,
-        code_b956: this.manyCategoryInfo.categoryInfoB956.code ? "" : undefined,
+        code_a077: this.manyCategoryInfo.categoryInfoA077.code ? '' : undefined,
+        code_b378: this.manyCategoryInfo.categoryInfoB378.code ? '' : undefined,
+        code_a112: this.manyCategoryInfo.categoryInfoA112.code ? '' : undefined,
+        code_a113: this.manyCategoryInfo.categoryInfoA113.code ? '' : undefined,
+        code_a001: this.manyCategoryInfo.categoryInfoA006.code ? '' : undefined,
+        code_a006: this.manyCategoryInfo.categoryInfoA001.code ? '' : undefined,
+        code_a027: this.manyCategoryInfo.categoryInfoA027.code ? '' : undefined,
+        code_b719: this.manyCategoryInfo.categoryInfoB719.code ? '' : undefined,
+        code_a524: this.manyCategoryInfo.categoryInfoA524.code ? '' : undefined,
+        code_a525: this.manyCategoryInfo.categoryInfoA525.code ? '' : undefined,
+        code_b956: this.manyCategoryInfo.categoryInfoB956.code ? '' : undefined,
       },
       false
     );
@@ -3120,17 +3153,17 @@ export class product {
       {
         productIds,
 
-        data_a077: this.manyCategoryInfo.categoryInfoA077.code ? "" : undefined,
-        data_b378: this.manyCategoryInfo.categoryInfoB378.code ? "" : undefined,
-        data_a112: this.manyCategoryInfo.categoryInfoA112.code ? "" : undefined,
-        data_a113: this.manyCategoryInfo.categoryInfoA113.code ? "" : undefined,
-        data_a001: this.manyCategoryInfo.categoryInfoA006.code ? "" : undefined,
-        data_a006: this.manyCategoryInfo.categoryInfoA001.code ? "" : undefined,
-        data_a027: this.manyCategoryInfo.categoryInfoA027.code ? "" : undefined,
-        data_b719: this.manyCategoryInfo.categoryInfoB719.code ? "" : undefined,
-        data_a524: this.manyCategoryInfo.categoryInfoA524.code ? "" : undefined,
-        data_a525: this.manyCategoryInfo.categoryInfoA525.code ? "" : undefined,
-        data_b956: this.manyCategoryInfo.categoryInfoB956.code ? "" : undefined,
+        data_a077: this.manyCategoryInfo.categoryInfoA077.code ? '' : undefined,
+        data_b378: this.manyCategoryInfo.categoryInfoB378.code ? '' : undefined,
+        data_a112: this.manyCategoryInfo.categoryInfoA112.code ? '' : undefined,
+        data_a113: this.manyCategoryInfo.categoryInfoA113.code ? '' : undefined,
+        data_a001: this.manyCategoryInfo.categoryInfoA006.code ? '' : undefined,
+        data_a006: this.manyCategoryInfo.categoryInfoA001.code ? '' : undefined,
+        data_a027: this.manyCategoryInfo.categoryInfoA027.code ? '' : undefined,
+        data_b719: this.manyCategoryInfo.categoryInfoB719.code ? '' : undefined,
+        data_a524: this.manyCategoryInfo.categoryInfoA524.code ? '' : undefined,
+        data_a525: this.manyCategoryInfo.categoryInfoA525.code ? '' : undefined,
+        data_b956: this.manyCategoryInfo.categoryInfoB956.code ? '' : undefined,
       },
       false
     );
@@ -3141,7 +3174,7 @@ export class product {
       return;
     }
 
-    floatingToast(`상품 ${productIds.length}개의 카테고리를 일괄설정하였습니다.`, "success");
+    floatingToast(`상품 ${productIds.length}개의 카테고리를 일괄설정하였습니다.`, 'success');
 
     this.toggleManyCategoryModal(false);
     this.refreshProduct(commonStore);
@@ -3158,7 +3191,7 @@ export class product {
     });
 
     if (productIds.length < 1) {
-      alert("상품이 선택되지 않았습니다.");
+      alert('상품이 선택되지 않았습니다.');
 
       return null;
     }
@@ -3171,7 +3204,7 @@ export class product {
       return;
     }
 
-    floatingToast(`상품 ${productIds.length}개의 상품명을 일괄설정하였습니다.`, "success");
+    floatingToast(`상품 ${productIds.length}개의 상품명을 일괄설정하였습니다.`, 'success');
 
     this.toggleManyNameModal(false);
     this.refreshProduct(commonStore);
@@ -3188,22 +3221,22 @@ export class product {
     });
 
     if (productIds.length < 1) {
-      alert("상품이 선택되지 않았습니다.");
+      alert('상품이 선택되지 않았습니다.');
 
       return null;
     }
 
     if (!this.manyTagInfo.immSearchTagsDisabled) {
-      let output = "";
+      let output = '';
 
       let tagList: any = [];
-      let addList = this.manyTagInfo.immSearchTags.replaceAll(" ", "").split(",") ?? [];
+      let addList = this.manyTagInfo.immSearchTags.replaceAll(' ', '').split(',') ?? [];
 
-      let userResp = await fetch("https://sell.smartstore.naver.com/api/products?_action=create");
+      let userResp = await fetch('https://sell.smartstore.naver.com/api/products?_action=create');
       let userJson = await userResp.json();
 
       if (userJson.error) {
-        floatingToast("스마트스토어 로그인 후 이용해주세요.", "warning");
+        floatingToast('스마트스토어 로그인 후 이용해주세요.', 'warning');
 
         return;
       }
@@ -3212,7 +3245,11 @@ export class product {
         addList
           .filter((v: any) => v)
           .map(async (v: any) => {
-            const tagResp = await fetch(`https://sell.smartstore.naver.com/api/product/shared/is-restrict-tag?_action=isRestrictTag&tag=${encodeURI(v)}`);
+            const tagResp = await fetch(
+              `https://sell.smartstore.naver.com/api/product/shared/is-restrict-tag?_action=isRestrictTag&tag=${encodeURI(
+                v
+              )}`
+            );
             const tagJson = await tagResp.json();
 
             return {
@@ -3224,7 +3261,7 @@ export class product {
 
       tagDataSet.map((v: any) => {
         if (tagList.length > 9) {
-          floatingToast("검색어는 최대 10개까지만 입력하실 수 있습니다.", "information");
+          floatingToast('검색어는 최대 10개까지만 입력하실 수 있습니다.', 'information');
 
           return;
         }
@@ -3234,7 +3271,7 @@ export class product {
         }
 
         if (v.restricted) {
-          floatingToast(`사용할 수 없는 검색어입니다. [${v.tag}]`, "failed");
+          floatingToast(`사용할 수 없는 검색어입니다. [${v.tag}]`, 'failed');
 
           return;
         }
@@ -3268,7 +3305,7 @@ export class product {
       return;
     }
 
-    floatingToast(`상품 ${productIds.length}개의 검색어태그를 일괄설정하였습니다.`, "success");
+    floatingToast(`상품 ${productIds.length}개의 검색어태그를 일괄설정하였습니다.`, 'success');
 
     this.toggleManyTagModal(false);
     this.refreshProduct(commonStore);
@@ -3281,12 +3318,12 @@ export class product {
       .map((v: any) => {
         return {
           productId: v.id,
-          description: (this.manyDescriptionInfo.html ?? "") + v.description,
+          description: (this.manyDescriptionInfo.html ?? '') + v.description,
         };
       });
 
     if (inputs.length < 1) {
-      alert("상품이 선택되지 않았습니다.");
+      alert('상품이 선택되지 않았습니다.');
 
       return null;
     }
@@ -3305,7 +3342,7 @@ export class product {
       return;
     }
 
-    floatingToast(`상품 ${inputs.length}개의 상세설명 내용이 일괄추가되었습니다.`, "success");
+    floatingToast(`상품 ${inputs.length}개의 상세설명 내용이 일괄추가되었습니다.`, 'success');
 
     this.refreshProduct(commonStore);
     this.toggleDescriptionModal(false, 0);
@@ -3331,7 +3368,7 @@ export class product {
       return;
     }
 
-    floatingToast(`상품 ${data.length}개의 상품명이 일괄변경되었습니다.`, "success");
+    floatingToast(`상품 ${data.length}개의 상품명이 일괄변경되었습니다.`, 'success');
 
     this.toggleManyNameModal(false);
     this.refreshProduct(commonStore);
@@ -3505,7 +3542,9 @@ export class product {
       { state: { equals: this.state } },
       { myLock: this.state === 7 && this.myLock === 1 ? {} : { equals: this.myLock } },
       {
-        categoryInfoA077: this.searchInfo.categoryInfo.code ? { code: { equals: this.searchInfo.categoryInfo.code } } : {},
+        categoryInfoA077: this.searchInfo.categoryInfo.code
+          ? { code: { equals: this.searchInfo.categoryInfo.code } }
+          : {},
       },
 
       {
@@ -3565,11 +3604,15 @@ export class product {
       },
 
       {
-        taobaoProduct: this.searchInfo.shopName === "ALL" ? {} : { shopName: { equals: this.searchInfo.shopName } },
+        taobaoProduct: this.searchInfo.shopName === 'ALL' ? {} : { shopName: { equals: this.searchInfo.shopName } },
       },
       {
         taobaoProduct:
-          this.searchInfo.hasVideo === "ALL" ? {} : this.searchInfo.hasVideo === "Y" ? { videoUrl: { not: { equals: null } } } : { videoUrl: { equals: null } },
+          this.searchInfo.hasVideo === 'ALL'
+            ? {}
+            : this.searchInfo.hasVideo === 'Y'
+            ? { videoUrl: { not: { equals: null } } }
+            : { videoUrl: { equals: null } },
       },
       {
         productStore:
@@ -3579,10 +3622,15 @@ export class product {
                 some: {
                   AND: [
                     {
-                      siteCode: this.searchInfo.marketName === "ALL" ? {} : { equals: this.searchInfo.marketName },
+                      siteCode: this.searchInfo.marketName === 'ALL' ? {} : { equals: this.searchInfo.marketName },
                     },
                     {
-                      state: this.searchInfo.hasRegistered === "ALL" ? {} : this.searchInfo.hasRegistered === "Y" ? { equals: 2 } : { not: { equals: 2 } },
+                      state:
+                        this.searchInfo.hasRegistered === 'ALL'
+                          ? {}
+                          : this.searchInfo.hasRegistered === 'Y'
+                          ? { equals: 2 }
+                          : { not: { equals: 2 } },
                     },
                   ],
                 },
@@ -3591,7 +3639,7 @@ export class product {
     ]);
 
     switch (this.searchInfo.searchType) {
-      case "ALL": {
+      case 'ALL': {
         this.setSearchWhereOrInput([
           { productCode: { contains: this.searchInfo.searchKeyword } },
           {
@@ -3672,22 +3720,22 @@ export class product {
         break;
       }
 
-      case "PCODE": {
-        if (!this.searchInfo.searchKeyword.includes("SFY_")) {
-          alert("상품코드는 SFY_000 형식으로 입력해주세요.");
+      case 'PCODE': {
+        if (!this.searchInfo.searchKeyword.includes('SFY_')) {
+          alert('상품코드는 SFY_000 형식으로 입력해주세요.');
 
           return;
         }
         let list: any = [];
         let parseList: any = [];
 
-        list = this.searchInfo.searchKeyword.split(",");
+        list = this.searchInfo.searchKeyword.split(',');
         list.map((v: any) => {
-          if (!v.includes("SFY_")) {
-            alert("모든 상품코드는 SFY_000 형식으로 입력해주세요.");
+          if (!v.includes('SFY_')) {
+            alert('모든 상품코드는 SFY_000 형식으로 입력해주세요.');
             return;
           }
-          parseList.push(parseInt(v.split("_")[1], 36));
+          parseList.push(parseInt(v.split('_')[1], 36));
         });
 
         this.setSearchWhereOrInput([{ id: { in: parseList } }]);
@@ -3695,7 +3743,7 @@ export class product {
         break;
       }
 
-      case "ONAME": {
+      case 'ONAME': {
         this.setSearchWhereOrInput([
           {
             taobaoProduct: {
@@ -3707,13 +3755,13 @@ export class product {
         break;
       }
 
-      case "NAME": {
+      case 'NAME': {
         this.setSearchWhereOrInput([{ name: { contains: this.searchInfo.searchKeyword } }]);
 
         break;
       }
 
-      case "CNAME": {
+      case 'CNAME': {
         this.setSearchWhereOrInput([
           {
             categoryInfoA077: {
@@ -3775,7 +3823,7 @@ export class product {
         break;
       }
 
-      case "OID": {
+      case 'OID': {
         this.setSearchWhereOrInput([
           {
             taobaoProduct: {
@@ -3787,7 +3835,7 @@ export class product {
         break;
       }
 
-      case "MID": {
+      case 'MID': {
         this.setSearchWhereOrInput([
           {
             productStore: {
@@ -3808,7 +3856,7 @@ export class product {
         break;
       }
 
-      case "KEYWARD": {
+      case 'KEYWARD': {
         this.setSearchWhereOrInput([{ myKeyward: { equals: this.searchInfo.searchKeyword } }]);
 
         break;
@@ -3887,14 +3935,14 @@ export class product {
       });
     }
     if (lockProducts.length !== 0) {
-      alert(`[잠금상품목록] \n${lockProducts.join(",")} \n\n잠금 상품을 제외하고 등록해제 합니다`);
+      alert(`[잠금상품목록] \n${lockProducts.join(',')} \n\n잠금 상품을 제외하고 등록해제 합니다`);
     }
 
     if (productIds.length < 1) {
       if (lockProducts.length !== 0) {
-        alert("잠금 상품을 제외한 상품이 선택되지 않았습니다.");
+        alert('잠금 상품을 제외한 상품이 선택되지 않았습니다.');
       } else {
-        alert("상품이 선택되지 않았습니다.");
+        alert('상품이 선택되지 않았습니다.');
       }
 
       await commonStore.setUploadable(true);
@@ -3904,7 +3952,7 @@ export class product {
     const markets = commonStore.uploadDisabledInfo.markets.filter((v: any) => v.upload).map((v: any) => v.code);
 
     if (markets.length < 1) {
-      alert("오픈마켓이 선택되지 않았습니다.");
+      alert('오픈마켓이 선택되지 않았습니다.');
 
       return;
     }
@@ -3926,57 +3974,57 @@ export class product {
       deleteSmartStore(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A077")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A077')
       ),
       deleteCoupang(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "B378")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'B378')
       ),
       deleteStreet(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A112")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A112')
       ),
       deleteStreet(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A113")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A113')
       ),
       deleteESMPlus(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A006")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A006')
       ),
       deleteESMPlus(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A001")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A001')
       ),
       deleteInterpark(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A027")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A027')
       ),
       deleteWemakeprice(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "B719")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'B719')
       ),
       deleteLotteon(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A524")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A524')
       ),
       deleteLotteon(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A525")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A525')
       ),
       deleteTmon(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "B956")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'B956')
       ),
     ]);
 
@@ -4012,14 +4060,14 @@ export class product {
       });
     }
     if (lockProducts.length !== 0) {
-      alert(`[잠금상품목록] \n${lockProducts.join(",")} \n\n잠금 상품을 제외하고 등록해제 합니다`);
+      alert(`[잠금상품목록] \n${lockProducts.join(',')} \n\n잠금 상품을 제외하고 등록해제 합니다`);
     }
 
     if (productIds.length < 1) {
       if (lockProducts.length !== 0) {
-        alert("잠금 상품을 제외한 상품이 선택되지 않았습니다.");
+        alert('잠금 상품을 제외한 상품이 선택되지 않았습니다.');
       } else {
-        alert("상품이 선택되지 않았습니다.");
+        alert('상품이 선택되지 않았습니다.');
       }
 
       await commonStore.setUploadable(true);
@@ -4029,7 +4077,7 @@ export class product {
     const markets = commonStore.uploadDisabledInfo.markets.filter((v: any) => v.upload).map((v: any) => v.code);
 
     if (markets.length < 1) {
-      alert("오픈마켓이 선택되지 않았습니다.");
+      alert('오픈마켓이 선택되지 않았습니다.');
 
       return;
     }
@@ -4050,12 +4098,12 @@ export class product {
       deleteESMPlus2(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A522")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A522')
       ),
       deleteESMPlus2(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A523")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A523')
       ),
     ]);
 
@@ -4085,7 +4133,7 @@ export class product {
     }
 
     if (productIds.length < 1) {
-      alert("상품이 선택되지 않았습니다.");
+      alert('상품이 선택되지 않았습니다.');
 
       return;
     }
@@ -4093,7 +4141,7 @@ export class product {
     const markets = commonStore.uploadInfo.markets.filter((v: any) => v.upload).map((v: any) => v.code);
 
     if (markets.length < 1) {
-      alert("오픈마켓이 선택되지 않았습니다.");
+      alert('오픈마켓이 선택되지 않았습니다.');
 
       return;
     }
@@ -4114,11 +4162,11 @@ export class product {
     if (edit) {
       commonStore.setEditedUpload(true);
 
-      this.addConsoleText("상품 수정을 시작합니다.");
+      this.addConsoleText('상품 수정을 시작합니다.');
     } else {
       commonStore.setEditedUpload(false);
 
-      this.addConsoleText("상품 등록을 시작합니다.");
+      this.addConsoleText('상품 등록을 시작합니다.');
     }
 
     this.clearUploadResults();
@@ -4129,62 +4177,62 @@ export class product {
       uploadSmartStore(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A077")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A077')
       ),
       uploadCoupang(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "B378")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'B378')
       ),
       uploadStreet(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A112")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A112')
       ),
       uploadStreet(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A113")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A113')
       ),
       uploadESMPlus(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A006")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A006')
       ),
       uploadESMPlus(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A001")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A001')
       ),
       uploadInterpark(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A027")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A027')
       ),
       uploadWemakeprice(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "B719")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'B719')
       ),
       uploadLotteon(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A524")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A524')
       ),
       uploadLotteon(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A525")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A525')
       ),
       uploadTmon(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "B956")
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'B956')
       ),
     ]);
 
     if (commonStore.uploadInfo.stopped) {
-      alert("업로드가 중단되었습니다.");
+      alert('업로드가 중단되었습니다.');
     }
 
     this.refreshProduct(commonStore);
@@ -4209,7 +4257,7 @@ export class product {
     }
 
     if (productIds.length < 1) {
-      alert("상품이 선택되지 않았습니다.");
+      alert('상품이 선택되지 않았습니다.');
 
       return;
     }
@@ -4217,7 +4265,7 @@ export class product {
     const markets = commonStore.uploadInfo.markets.filter((v: any) => v.upload).map((v: any) => v.code);
 
     if (markets.length < 1) {
-      alert("오픈마켓이 선택되지 않았습니다.");
+      alert('오픈마켓이 선택되지 않았습니다.');
 
       return;
     }
@@ -4238,11 +4286,11 @@ export class product {
     if (edit) {
       commonStore.setEditedUpload(true);
 
-      this.Esm2AddConsoleText("상품 수정을 시작합니다.");
+      this.Esm2AddConsoleText('상품 수정을 시작합니다.');
     } else {
       commonStore.setEditedUpload(false);
 
-      this.Esm2AddConsoleText("상품 등록을 시작합니다.");
+      this.Esm2AddConsoleText('상품 등록을 시작합니다.');
     }
 
     this.Esm2clearUploadResults();
@@ -4253,17 +4301,17 @@ export class product {
       uploadESMPlus2(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A522") //옥션2.0
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A522') //옥션2.0
       ),
       uploadESMPlus2(
         this,
         commonStore,
-        data.job_json_array.find((v: any) => v.DShopInfo.site_code === "A523") //지마켓2.0
+        data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A523') //지마켓2.0
       ),
     ]);
 
     if (commonStore.uploadInfo.stopped) {
-      alert("업로드가 중단되었습니다.");
+      alert('업로드가 중단되었습니다.');
     }
 
     this.refreshProduct(commonStore);
@@ -4313,8 +4361,8 @@ export class product {
   // 쿠팡에서는 상품 승인완료 전에 상품 URL을 알 수 없기 때문에 승인완료 시점에서 상품 URL을 넣어주는 작업 필요
   updateCoupangUrl = (index: number, user: any) => {
     this.itemInfo.items[index].productStore.map(async (v: any) => {
-      if (v.siteCode === "B378" && v.state === 2) {
-        if (v.storeProductId !== "0") {
+      if (v.siteCode === 'B378' && v.state === 2) {
+        if (v.storeProductId !== '0') {
           window.open(v.storeUrl);
 
           return;
@@ -4325,8 +4373,8 @@ export class product {
           secretkey: user.userInfo.coupangSecretKey,
 
           path: `/v2/providers/seller_api/apis/api/v1/marketplace/seller-products/${v.etcVendorItemId}`,
-          query: "",
-          method: "GET",
+          query: '',
+          method: 'GET',
 
           data: {},
         };
@@ -4339,14 +4387,18 @@ export class product {
           return;
         }
 
-        if (response.data.statusName !== "승인완료") {
-          if (response.data.statusName === "승인반려") {
+        if (response.data.statusName !== '승인완료') {
+          if (response.data.statusName === '승인반려') {
             let test = confirm(
               `상품이 현재 쿠팡윙에서 [승인반려] 상태입니다.\n쿠팡 업로드 연동해제를 하시겠습니까?\n업로드 연동해제 하신 후 이미지 사이즈를 확인 후 재등록해주세요.\n"확인"을 누르시면 업로드 연동이 해제됩니다.`
             );
             if (test) {
               //각 각 로그에 있는거 제거 후 상품제거하는 mutation 삽입예정
-              const response = await gql(MUTATIONS.COUPANG_PRODUCTSTORE_DELETE, { productId: this.itemInfo.items[index].id }, false);
+              const response = await gql(
+                MUTATIONS.COUPANG_PRODUCTSTORE_DELETE,
+                { productId: this.itemInfo.items[index].id },
+                false
+              );
 
               if (response.errors) {
                 alert(response.errors[0].message);
@@ -4386,7 +4438,7 @@ export class product {
         상품명: v.name,
         대표이미지: image,
         구매처URL: v.activeTaobaoProduct.url,
-        상태: v.state === 6 ? "수집됨" : "등록됨",
+        상태: v.state === 6 ? '수집됨' : '등록됨',
         도매가: v.activeTaobaoProduct.price,
         판매가: v.price,
         해외배송비: v.localShippingFee,
@@ -4398,30 +4450,30 @@ export class product {
         쿠팡검색태그: v.searchTags,
         스마트스토어카테고리: v.categoryInfoA077.name,
         쿠팡카테고리: v.categoryInfoB378.name,
-        "11번가(글로벌)카테고리": v.categoryInfoA112.name,
-        "11번가(일반)카테고리": v.categoryInfoA113.name,
+        '11번가(글로벌)카테고리': v.categoryInfoA112.name,
+        '11번가(일반)카테고리': v.categoryInfoA113.name,
         지마켓카테고리: v.categoryInfoA006.name,
         옥션카테고리: v.categoryInfoA001.name,
         인터파크카테고리: v.categoryInfoA027.name,
         위메프카테고리: v.categoryInfoB719.name,
-        "롯데온(글로벌)카테고리": v.categoryInfoA524.name,
-        "롯데온(일반)카테고리": v.categoryInfoA524.name,
+        '롯데온(글로벌)카테고리': v.categoryInfoA524.name,
+        '롯데온(일반)카테고리': v.categoryInfoA524.name,
         티몬카테고리: v.categoryInfoB956.name,
-        스마트스토어등록여부: v.activeProductStore.find((v: any) => v.siteCode === "A077") ? "Y" : "N",
-        쿠팡등록여부: v.activeProductStore.find((v: any) => v.siteCode === "B378") ? "Y" : "N",
-        "11번가(글로벌)등록여부": v.activeProductStore.find((v: any) => v.siteCode === "A112") ? "Y" : "N",
-        "11번가(일반)등록여부": v.activeProductStore.find((v: any) => v.siteCode === "A113") ? "Y" : "N",
-        지마켓등록여부: v.activeProductStore.find((v: any) => v.siteCode === "A006") ? "Y" : "N",
-        옥션등록여부: v.activeProductStore.find((v: any) => v.siteCode === "A001") ? "Y" : "N",
-        인터파크등록여부: v.activeProductStore.find((v: any) => v.siteCode === "A027") ? "Y" : "N",
-        위메프등록여부: v.activeProductStore.find((v: any) => v.siteCode === "B719") ? "Y" : "N",
-        "옷데온(글로벌)등록여부": v.activeProductStore.find((v: any) => v.siteCode === "A524") ? "Y" : "N",
-        "옷데온(일반)등록여부": v.activeProductStore.find((v: any) => v.siteCode === "A525") ? "Y" : "N",
-        티몬등록여부: v.activeProductStore.find((v: any) => v.siteCode === "B956") ? "Y" : "N",
+        스마트스토어등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'A077') ? 'Y' : 'N',
+        쿠팡등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'B378') ? 'Y' : 'N',
+        '11번가(글로벌)등록여부': v.activeProductStore.find((v: any) => v.siteCode === 'A112') ? 'Y' : 'N',
+        '11번가(일반)등록여부': v.activeProductStore.find((v: any) => v.siteCode === 'A113') ? 'Y' : 'N',
+        지마켓등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'A006') ? 'Y' : 'N',
+        옥션등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'A001') ? 'Y' : 'N',
+        인터파크등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'A027') ? 'Y' : 'N',
+        위메프등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'B719') ? 'Y' : 'N',
+        '옷데온(글로벌)등록여부': v.activeProductStore.find((v: any) => v.siteCode === 'A524') ? 'Y' : 'N',
+        '옷데온(일반)등록여부': v.activeProductStore.find((v: any) => v.siteCode === 'A525') ? 'Y' : 'N',
+        티몬등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'B956') ? 'Y' : 'N',
       };
     });
 
-    downloadExcel(excelData, `상품리스트`, `상품리스트`, false, "xlsx");
+    downloadExcel(excelData, `상품리스트`, `상품리스트`, false, 'xlsx');
   };
 
   // 상품목록 새로고침
@@ -4435,7 +4487,7 @@ export class product {
       this.itemInfo.items[index].edited.thumbnailImages = 0;
     };
 
-    let accept = confirm("원본 이미지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.");
+    let accept = confirm('원본 이미지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.');
 
     if (!accept) {
       return;
@@ -4457,7 +4509,7 @@ export class product {
 
     this.itemInfo.items[index].imageThumbnail = thumbnailList;
 
-    floatingToast("원본 이미지로 복구되었습니다.", "success");
+    floatingToast('원본 이미지로 복구되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -4470,7 +4522,7 @@ export class product {
       this.itemInfo.items[index].edited.optionImages = 0;
     };
 
-    let accept = confirm("원본 이미지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.");
+    let accept = confirm('원본 이미지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.');
 
     if (!accept) {
       return;
@@ -4508,7 +4560,7 @@ export class product {
       });
     });
 
-    floatingToast("원본 이미지로 복구되었습니다.", "success");
+    floatingToast('원본 이미지로 복구되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -4521,7 +4573,7 @@ export class product {
       this.itemInfo.items[index].edited.descriptions = 0;
     };
 
-    let accept = confirm("원본 상세페이지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.");
+    let accept = confirm('원본 상세페이지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.');
 
     if (!accept) {
       return;
@@ -4543,24 +4595,26 @@ export class product {
 
     let descHtml: any = null;
 
-    if (this.itemInfo.items[index].description.includes("description.html")) {
-      let descResp = await fetch(`${process.env.SELLFORYOU_MINIO_HTTPS}/${this.itemInfo.items[index].description}?${new Date().getTime()}`);
+    if (this.itemInfo.items[index].description.includes('description.html')) {
+      let descResp = await fetch(
+        `${process.env.SELLFORYOU_MINIO_HTTPS}/${this.itemInfo.items[index].description}?${new Date().getTime()}`
+      );
       let descText = await descResp.text();
 
-      descHtml = new DOMParser().parseFromString(descText, "text/html");
+      descHtml = new DOMParser().parseFromString(descText, 'text/html');
 
       runInAction(() => {
         this.itemInfo.items[index].description = descText ?? this.itemInfo.items[index].description;
       });
     } else {
-      descHtml = new DOMParser().parseFromString(this.itemInfo.items[index].description, "text/html");
+      descHtml = new DOMParser().parseFromString(this.itemInfo.items[index].description, 'text/html');
     }
 
     runInAction(() => {
       if (descHtml) {
         this.itemInfo.items[index].descriptionImages = [];
 
-        const imageList: any = descHtml.querySelectorAll("img");
+        const imageList: any = descHtml.querySelectorAll('img');
 
         for (let i in imageList) {
           if (!imageList[i].src) {
@@ -4571,7 +4625,7 @@ export class product {
         }
       }
 
-      floatingToast("원본 상세페이지로 복구되었습니다.", "success");
+      floatingToast('원본 상세페이지로 복구되었습니다.', 'success');
 
       exit();
     });
@@ -4592,7 +4646,7 @@ export class product {
         return matched.newImage;
       });
 
-      floatingToast("썸네일이미지 번역이 적용되었습니다.", "success");
+      floatingToast('썸네일이미지 번역이 적용되었습니다.', 'success');
     }
 
     if (data.optionValues.length > 0) {
@@ -4608,13 +4662,13 @@ export class product {
           v.image = matched.newImage;
         });
 
-      floatingToast("옵션이미지 번역이 적용되었습니다.", "success");
+      floatingToast('옵션이미지 번역이 적용되었습니다.', 'success');
     }
 
-    if (data.description && data.description.includes("description.html")) {
+    if (data.description && data.description.includes('description.html')) {
       let descResp = await fetch(`${data.description}?${new Date().getTime()}`);
       let descText = await descResp.text();
-      let descHtml = new DOMParser().parseFromString(descText, "text/html");
+      let descHtml = new DOMParser().parseFromString(descText, 'text/html');
 
       runInAction(() => {
         product.description = descText;
@@ -4622,7 +4676,7 @@ export class product {
         if (descHtml) {
           product.descriptionImages = [];
 
-          const imageList: any = descHtml.querySelectorAll("img");
+          const imageList: any = descHtml.querySelectorAll('img');
 
           for (let i in imageList) {
             if (!imageList[i].src) {
@@ -4634,7 +4688,7 @@ export class product {
         }
       });
 
-      floatingToast("상세이미지 번역이 적용되었습니다.", "success");
+      floatingToast('상세이미지 번역이 적용되었습니다.', 'success');
     }
 
     runInAction(() => {
@@ -4710,12 +4764,12 @@ export class product {
           }
 
           switch (imageBlob.type) {
-            case "image/webp": {
+            case 'image/webp': {
               break;
             }
 
-            case "image/jpeg": {
-              if (!v.includes("jpg")) {
+            case 'image/jpeg': {
+              if (!v.includes('jpg')) {
                 this.itemInfo.items[index].imageCheckList[v] = true;
                 this.itemInfo.items[index].thumbnailImageError = true;
 
@@ -4725,8 +4779,8 @@ export class product {
               break;
             }
 
-            case "image/png": {
-              if (!v.includes("png")) {
+            case 'image/png': {
+              if (!v.includes('png')) {
                 this.itemInfo.items[index].imageCheckList[v] = true;
                 this.itemInfo.items[index].thumbnailImageError = true;
 
@@ -4766,12 +4820,12 @@ export class product {
 
           runInAction(() => {
             switch (imageBlob.type) {
-              case "image/webp": {
+              case 'image/webp': {
                 break;
               }
 
-              case "image/jpeg": {
-                if (!v.image.includes("jpg")) {
+              case 'image/jpeg': {
+                if (!v.image.includes('jpg')) {
                   this.itemInfo.items[index].imageCheckList[v.image] = true;
                   this.itemInfo.items[index].optionImageError = true;
 
@@ -4781,8 +4835,8 @@ export class product {
                 break;
               }
 
-              case "image/png": {
-                if (!v.image.includes("png")) {
+              case 'image/png': {
+                if (!v.image.includes('png')) {
                   this.itemInfo.items[index].imageCheckList[v.image] = true;
                   this.itemInfo.items[index].optionImageError = true;
 
@@ -4816,12 +4870,12 @@ export class product {
 
         runInAction(() => {
           switch (imageBlob.type) {
-            case "image/webp": {
+            case 'image/webp': {
               break;
             }
 
-            case "image/jpeg": {
-              if (!v.includes("jpg")) {
+            case 'image/jpeg': {
+              if (!v.includes('jpg')) {
                 this.itemInfo.items[index].imageCheckList[v] = true;
                 this.itemInfo.items[index].descriptionImageError = true;
 
@@ -4831,8 +4885,8 @@ export class product {
               break;
             }
 
-            case "image/png": {
-              if (!v.includes("png")) {
+            case 'image/png': {
+              if (!v.includes('png')) {
                 this.itemInfo.items[index].imageCheckList[v] = true;
                 this.itemInfo.items[index].descriptionImageError = true;
 
@@ -4859,11 +4913,11 @@ export class product {
       this.itemInfo.items[index].error = false;
 
       if (errorFound) {
-        floatingToast("에러가 발견되었습니다.", "failed");
+        floatingToast('에러가 발견되었습니다.', 'failed');
 
         this.itemInfo.items[index].collapse = true;
       } else {
-        floatingToast("에러가 발견되지 않았습니다.", "success");
+        floatingToast('에러가 발견되지 않았습니다.', 'success');
       }
     });
   };
@@ -4903,9 +4957,9 @@ export class product {
       return;
     }
     if (data.mylock === 1) {
-      floatingToast("상품 잠금 해제되었습니다.", "success");
+      floatingToast('상품 잠금 해제되었습니다.', 'success');
     } else {
-      floatingToast("상품 잠금 되었습니다.", "success");
+      floatingToast('상품 잠금 되었습니다.', 'success');
     }
   };
   // 키워드 업데이트
@@ -4931,7 +4985,7 @@ export class product {
       return;
     }
 
-    floatingToast("상품속성정보가 변경되었습니다.", "success");
+    floatingToast('상품속성정보가 변경되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -4960,7 +5014,7 @@ export class product {
       return;
     }
 
-    floatingToast("상품속성정보가 변경되었습니다.", "success");
+    floatingToast('상품속성정보가 변경되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -4994,12 +5048,16 @@ export class product {
     });
 
     if (productIds.length < 1) {
-      alert("상품이 선택되지 않았습니다.");
+      alert('상품이 선택되지 않았습니다.');
 
       return null;
     }
 
-    const response = await gql(MUTATIONS.UPDATE_MANY_KEYWARD_LIST, { ...this.ManymyKeyward, productIds: productIds }, false);
+    const response = await gql(
+      MUTATIONS.UPDATE_MANY_KEYWARD_LIST,
+      { ...this.ManymyKeyward, productIds: productIds },
+      false
+    );
 
     if (response.errors) {
       alert(response.errors[0].message);
@@ -5007,7 +5065,7 @@ export class product {
       return;
     }
 
-    floatingToast(`상품 ${productIds.length}개의 속성을 일괄설정하였습니다.`, "success");
+    floatingToast(`상품 ${productIds.length}개의 속성을 일괄설정하였습니다.`, 'success');
 
     this.toggleManyAttributeModal(false);
     this.refreshProduct(commonStore);
@@ -5023,12 +5081,16 @@ export class product {
     });
 
     if (productIds.length < 1) {
-      alert("상품이 선택되지 않았습니다.");
+      alert('상품이 선택되지 않았습니다.');
 
       return null;
     }
 
-    const response = await gql(MUTATIONS.UPDATE_MANY_PRODUCT_ATTRIBUTE_BY_USER, { ...this.manyAttributeInfo, productId: productIds }, false);
+    const response = await gql(
+      MUTATIONS.UPDATE_MANY_PRODUCT_ATTRIBUTE_BY_USER,
+      { ...this.manyAttributeInfo, productId: productIds },
+      false
+    );
 
     if (response.errors) {
       alert(response.errors[0].message);
@@ -5036,7 +5098,7 @@ export class product {
       return;
     }
 
-    floatingToast(`상품 ${productIds.length}개의 개인분류를 일괄설정하였습니다.`, "success");
+    floatingToast(`상품 ${productIds.length}개의 개인분류를 일괄설정하였습니다.`, 'success');
 
     this.toggleManyMyKeywardModal(false);
     this.refreshProduct(commonStore);
@@ -5070,7 +5132,9 @@ export class product {
       return;
     }
 
-    const sillData = this.itemInfo.items[index][`categoryInfo${marketCode}`][`activeSillData${marketCode}`].find((v) => v.code === data.value).data;
+    const sillData = this.itemInfo.items[index][`categoryInfo${marketCode}`][`activeSillData${marketCode}`].find(
+      (v) => v.code === data.value
+    ).data;
 
     const response2 = await gql(
       MUTATIONS.UPDATE_PRODUCT_SILL_DATAS_BY_USER,
@@ -5095,7 +5159,7 @@ export class product {
       this.itemInfo.items[index][`sillData${marketCode}`] = sillData;
     });
 
-    floatingToast("상품정보제공고시가 변경되었습니다.", "success");
+    floatingToast('상품정보제공고시가 변경되었습니다.', 'success');
 
     runInAction(() => {
       exit();
@@ -5133,7 +5197,7 @@ export class product {
     runInAction(() => {
       this.itemInfo.items[index][`sillData${marketCode}`] = data.value;
 
-      floatingToast("상품정보제공고시 상세정보가 변경되었습니다.", "success");
+      floatingToast('상품정보제공고시 상세정보가 변경되었습니다.', 'success');
 
       exit();
     });
@@ -5145,7 +5209,7 @@ export class product {
     let sillData: any = {};
 
     switch (value) {
-      case "AUTO": {
+      case 'AUTO': {
         sillCode = {
           productIds: [this.itemInfo.items[index].id],
 
@@ -5165,43 +5229,54 @@ export class product {
         break;
       }
 
-      case "ETC": {
+      case 'ETC': {
         sillCode = {
           productIds: [this.itemInfo.items[index].id],
 
           code_a077:
-            this.itemInfo.items[index].categoryInfoA077.activeSillDataA077.find((v) => v.code !== this.itemInfo.items[index].categoryInfoA077.sillInfoA077.code)
-              ?.code ?? this.itemInfo.items[index].categoryInfoA077.sillInfoA077.code,
+            this.itemInfo.items[index].categoryInfoA077.activeSillDataA077.find(
+              (v) => v.code !== this.itemInfo.items[index].categoryInfoA077.sillInfoA077.code
+            )?.code ?? this.itemInfo.items[index].categoryInfoA077.sillInfoA077.code,
           code_b378:
-            this.itemInfo.items[index].categoryInfoB378.activeSillDataB378.find((v) => v.code !== this.itemInfo.items[index].categoryInfoB378.sillInfoB378.code)
-              ?.code ?? this.itemInfo.items[index].categoryInfoB378.sillInfoB378.code,
+            this.itemInfo.items[index].categoryInfoB378.activeSillDataB378.find(
+              (v) => v.code !== this.itemInfo.items[index].categoryInfoB378.sillInfoB378.code
+            )?.code ?? this.itemInfo.items[index].categoryInfoB378.sillInfoB378.code,
           code_a112:
-            this.itemInfo.items[index].categoryInfoA112.activeSillDataA112.find((v) => v.code !== this.itemInfo.items[index].categoryInfoA112.sillInfoA112.code)
-              ?.code ?? this.itemInfo.items[index].categoryInfoA112.sillInfoA112.code,
+            this.itemInfo.items[index].categoryInfoA112.activeSillDataA112.find(
+              (v) => v.code !== this.itemInfo.items[index].categoryInfoA112.sillInfoA112.code
+            )?.code ?? this.itemInfo.items[index].categoryInfoA112.sillInfoA112.code,
           code_a113:
-            this.itemInfo.items[index].categoryInfoA113.activeSillDataA113.find((v) => v.code !== this.itemInfo.items[index].categoryInfoA113.sillInfoA113.code)
-              ?.code ?? this.itemInfo.items[index].categoryInfoA113.sillInfoA113.code,
+            this.itemInfo.items[index].categoryInfoA113.activeSillDataA113.find(
+              (v) => v.code !== this.itemInfo.items[index].categoryInfoA113.sillInfoA113.code
+            )?.code ?? this.itemInfo.items[index].categoryInfoA113.sillInfoA113.code,
           code_a001:
-            this.itemInfo.items[index].categoryInfoA001.activeSillDataA001.find((v) => v.code !== this.itemInfo.items[index].categoryInfoA001.sillInfoA001.code)
-              ?.code ?? this.itemInfo.items[index].categoryInfoA001.sillInfoA001.code,
+            this.itemInfo.items[index].categoryInfoA001.activeSillDataA001.find(
+              (v) => v.code !== this.itemInfo.items[index].categoryInfoA001.sillInfoA001.code
+            )?.code ?? this.itemInfo.items[index].categoryInfoA001.sillInfoA001.code,
           code_a006:
-            this.itemInfo.items[index].categoryInfoA006.activeSillDataA006.find((v) => v.code !== this.itemInfo.items[index].categoryInfoA006.sillInfoA006.code)
-              ?.code ?? this.itemInfo.items[index].categoryInfoA006.sillInfoA006.code,
+            this.itemInfo.items[index].categoryInfoA006.activeSillDataA006.find(
+              (v) => v.code !== this.itemInfo.items[index].categoryInfoA006.sillInfoA006.code
+            )?.code ?? this.itemInfo.items[index].categoryInfoA006.sillInfoA006.code,
           code_a027:
-            this.itemInfo.items[index].categoryInfoA027.activeSillDataA027.find((v) => v.code !== this.itemInfo.items[index].categoryInfoA027.sillInfoA027.code)
-              ?.code ?? this.itemInfo.items[index].categoryInfoA027.sillInfoA027.code,
+            this.itemInfo.items[index].categoryInfoA027.activeSillDataA027.find(
+              (v) => v.code !== this.itemInfo.items[index].categoryInfoA027.sillInfoA027.code
+            )?.code ?? this.itemInfo.items[index].categoryInfoA027.sillInfoA027.code,
           code_b719:
-            this.itemInfo.items[index].categoryInfoB719.activeSillDataB719.find((v) => v.code !== this.itemInfo.items[index].categoryInfoB719.sillInfoB719.code)
-              ?.code ?? this.itemInfo.items[index].categoryInfoB719.sillInfoB719.code,
+            this.itemInfo.items[index].categoryInfoB719.activeSillDataB719.find(
+              (v) => v.code !== this.itemInfo.items[index].categoryInfoB719.sillInfoB719.code
+            )?.code ?? this.itemInfo.items[index].categoryInfoB719.sillInfoB719.code,
           code_a524:
-            this.itemInfo.items[index].categoryInfoA524.activeSillDataA524.find((v) => v.code !== this.itemInfo.items[index].categoryInfoA524.sillInfoA524.code)
-              ?.code ?? this.itemInfo.items[index].categoryInfoA524.sillInfoA524.code,
+            this.itemInfo.items[index].categoryInfoA524.activeSillDataA524.find(
+              (v) => v.code !== this.itemInfo.items[index].categoryInfoA524.sillInfoA524.code
+            )?.code ?? this.itemInfo.items[index].categoryInfoA524.sillInfoA524.code,
           code_a525:
-            this.itemInfo.items[index].categoryInfoA525.activeSillDataA525.find((v) => v.code !== this.itemInfo.items[index].categoryInfoA525.sillInfoA525.code)
-              ?.code ?? this.itemInfo.items[index].categoryInfoA525.sillInfoA525.code,
+            this.itemInfo.items[index].categoryInfoA525.activeSillDataA525.find(
+              (v) => v.code !== this.itemInfo.items[index].categoryInfoA525.sillInfoA525.code
+            )?.code ?? this.itemInfo.items[index].categoryInfoA525.sillInfoA525.code,
           code_b956:
-            this.itemInfo.items[index].categoryInfoB956.activeSillDataB956.find((v) => v.code !== this.itemInfo.items[index].categoryInfoB956.sillInfoB956.code)
-              ?.code ?? this.itemInfo.items[index].categoryInfoB956.sillInfoB956.code,
+            this.itemInfo.items[index].categoryInfoB956.activeSillDataB956.find(
+              (v) => v.code !== this.itemInfo.items[index].categoryInfoB956.sillInfoB956.code
+            )?.code ?? this.itemInfo.items[index].categoryInfoB956.sillInfoB956.code,
         };
 
         break;
@@ -5219,17 +5294,39 @@ export class product {
     sillData = {
       productIds: [this.itemInfo.items[index].id],
 
-      data_a077: this.itemInfo.items[index].categoryInfoA077.activeSillDataA077.find((v) => v.code === sillCode.code_a077).data,
-      data_b378: this.itemInfo.items[index].categoryInfoB378.activeSillDataB378.find((v) => v.code === sillCode.code_b378).data,
-      data_a112: this.itemInfo.items[index].categoryInfoA112.activeSillDataA112.find((v) => v.code === sillCode.code_a112).data,
-      data_a113: this.itemInfo.items[index].categoryInfoA113.activeSillDataA113.find((v) => v.code === sillCode.code_a113).data,
-      data_a001: this.itemInfo.items[index].categoryInfoA001.activeSillDataA001.find((v) => v.code === sillCode.code_a001).data,
-      data_a006: this.itemInfo.items[index].categoryInfoA006.activeSillDataA006.find((v) => v.code === sillCode.code_a006).data,
-      data_a027: this.itemInfo.items[index].categoryInfoA027.activeSillDataA027.find((v) => v.code === sillCode.code_a027).data,
-      data_b719: this.itemInfo.items[index].categoryInfoB719.activeSillDataB719.find((v) => v.code === sillCode.code_b719).data,
-      data_a524: this.itemInfo.items[index].categoryInfoA524.activeSillDataA524.find((v) => v.code === sillCode.code_a524).data,
-      data_a525: this.itemInfo.items[index].categoryInfoA525.activeSillDataA525.find((v) => v.code === sillCode.code_a525).data,
-      data_b956: this.itemInfo.items[index].categoryInfoB956.activeSillDataB956.find((v) => v.code === sillCode.code_b956).data,
+      data_a077: this.itemInfo.items[index].categoryInfoA077.activeSillDataA077.find(
+        (v) => v.code === sillCode.code_a077
+      ).data,
+      data_b378: this.itemInfo.items[index].categoryInfoB378.activeSillDataB378.find(
+        (v) => v.code === sillCode.code_b378
+      ).data,
+      data_a112: this.itemInfo.items[index].categoryInfoA112.activeSillDataA112.find(
+        (v) => v.code === sillCode.code_a112
+      ).data,
+      data_a113: this.itemInfo.items[index].categoryInfoA113.activeSillDataA113.find(
+        (v) => v.code === sillCode.code_a113
+      ).data,
+      data_a001: this.itemInfo.items[index].categoryInfoA001.activeSillDataA001.find(
+        (v) => v.code === sillCode.code_a001
+      ).data,
+      data_a006: this.itemInfo.items[index].categoryInfoA006.activeSillDataA006.find(
+        (v) => v.code === sillCode.code_a006
+      ).data,
+      data_a027: this.itemInfo.items[index].categoryInfoA027.activeSillDataA027.find(
+        (v) => v.code === sillCode.code_a027
+      ).data,
+      data_b719: this.itemInfo.items[index].categoryInfoB719.activeSillDataB719.find(
+        (v) => v.code === sillCode.code_b719
+      ).data,
+      data_a524: this.itemInfo.items[index].categoryInfoA524.activeSillDataA524.find(
+        (v) => v.code === sillCode.code_a524
+      ).data,
+      data_a525: this.itemInfo.items[index].categoryInfoA525.activeSillDataA525.find(
+        (v) => v.code === sillCode.code_a525
+      ).data,
+      data_b956: this.itemInfo.items[index].categoryInfoB956.activeSillDataB956.find(
+        (v) => v.code === sillCode.code_b956
+      ).data,
     };
 
     const response2 = await gql(MUTATIONS.UPDATE_PRODUCT_SILL_DATAS_BY_USER, sillData, false);
@@ -5266,7 +5363,7 @@ export class product {
       this.itemInfo.items[index].sillDataB956 = sillData.data_b956;
     });
 
-    floatingToast("상품고시정보를 일괄설정하었습니다.", "success");
+    floatingToast('상품고시정보를 일괄설정하었습니다.', 'success');
   };
 
   // 이미지 자동번역
@@ -5280,13 +5377,13 @@ export class product {
     }
 
     if (productIds.length < 1) {
-      alert("상품이 선택되지 않았습니다.");
+      alert('상품이 선택되지 않았습니다.');
 
       return;
     }
 
     if (productIds.length > 10) {
-      alert("일괄번역은 한번에 10개씩 가능합니다.");
+      alert('일괄번역은 한번에 10개씩 가능합니다.');
 
       return;
     }
@@ -5310,11 +5407,11 @@ export class product {
         );
 
         const resThumbnails = await sendTabMessage(tabThumbnails.id, {
-          action: "auto-translate",
+          action: 'auto-translate',
         });
 
         if (!resThumbnails) {
-          floatingToast("썸네일이미지 번역이 중단되었습니다.", "failed");
+          floatingToast('썸네일이미지 번역이 중단되었습니다.', 'failed');
 
           runInAction(() => {
             item.translate = false;
@@ -5334,11 +5431,11 @@ export class product {
         );
 
         const resOptions = await sendTabMessage(tabOptions.id, {
-          action: "auto-translate",
+          action: 'auto-translate',
         });
 
         if (!resOptions) {
-          floatingToast("옵션이미지 번역이 중단되었습니다.", "failed");
+          floatingToast('옵션이미지 번역이 중단되었습니다.', 'failed');
 
           runInAction(() => {
             item.translate = false;
@@ -5358,11 +5455,11 @@ export class product {
         );
 
         const resDescriptions = await sendTabMessage(tabDescriptions.id, {
-          action: "auto-translate",
+          action: 'auto-translate',
         });
 
         if (!resDescriptions) {
-          floatingToast("상세이미지 번역이 중단되었습니다.", "failed");
+          floatingToast('상세이미지 번역이 중단되었습니다.', 'failed');
 
           runInAction(() => {
             item.translate = false;
@@ -5384,7 +5481,7 @@ export class product {
       return;
     }
 
-    let auth: any = await getLocalStorage("appInfo");
+    let auth: any = await getLocalStorage('appInfo');
 
     auth.gridView = value;
 

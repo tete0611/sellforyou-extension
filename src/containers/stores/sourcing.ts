@@ -1,17 +1,17 @@
 // 소싱기 스토리지
 
-import QUERIES from "../../pages/Main/GraphQL/Queries";
-import gql from "../../pages/Main/GraphQL/Requests";
+import QUERIES from '../../pages/Main/GraphQL/Queries';
+import gql from '../../pages/Main/GraphQL/Requests';
 
-import { runInAction, makeAutoObservable } from "mobx";
-import { getClock, getClockOffset, readFileBinary, sortBy, stringToArrayBuffer } from "../../pages/Tools/Common";
+import { runInAction, makeAutoObservable } from 'mobx';
+import { getClock, getClockOffset, readFileBinary, sortBy, stringToArrayBuffer } from '../../pages/Tools/Common';
 
-var XLSX = require("xlsx");
+var XLSX = require('xlsx');
 
 export class sourcing {
   searchInfo: any = {
-    catId: "",
-    query: "",
+    catId: '',
+    query: '',
 
     dateStart: null,
     dateEnd: null,
@@ -22,8 +22,8 @@ export class sourcing {
 
     maxLimits: 10,
 
-    productSet: "overseas",
-    sort: "review",
+    productSet: 'overseas',
+    sort: 'review',
 
     includePlatinum: true,
     includePremium: true,
@@ -44,10 +44,10 @@ export class sourcing {
   categoryInfo: any = {
     data: [],
 
-    input: "",
+    input: '',
     info: {
       code: null,
-      name: "",
+      name: '',
     },
 
     loading: false,
@@ -97,28 +97,28 @@ export class sourcing {
     let url: any;
     let urlParams: any = {
       catId: this.searchInfo.catId,
-      frm: "NVSHOVS",
+      frm: 'NVSHOVS',
       pagingIndex: 0,
       pagingSize: 80,
       productSet: this.searchInfo.productSet,
       query: this.searchInfo.query,
       sort: this.searchInfo.sort,
-      viewType: "list",
+      viewType: 'list',
     };
 
     if (!urlParams.catId) {
       if (!urlParams.query) {
-        alert("카테고리 또는 상품명을 입력해주세요.");
+        alert('카테고리 또는 상품명을 입력해주세요.');
 
         return 0;
       }
 
-      url = new URL("https://search.shopping.naver.com/search/all?");
+      url = new URL('https://search.shopping.naver.com/search/all?');
     } else {
       if (!urlParams.query) {
-        url = new URL("https://search.shopping.naver.com/search/category?");
+        url = new URL('https://search.shopping.naver.com/search/category?');
       } else {
-        url = new URL("https://search.shopping.naver.com/search/all?");
+        url = new URL('https://search.shopping.naver.com/search/all?');
       }
     }
 
@@ -146,9 +146,9 @@ export class sourcing {
 
       let sourceResp = await fetch(url);
       let sourceText = await sourceResp.text();
-      let sourceHtml = new DOMParser().parseFromString(sourceText, "text/html");
-      let sourceElem: HTMLElement | null = sourceHtml.querySelector("#__NEXT_DATA__");
-      let sourceJson = JSON.parse(sourceElem?.innerText ?? "{}");
+      let sourceHtml = new DOMParser().parseFromString(sourceText, 'text/html');
+      let sourceElem: HTMLElement | null = sourceHtml.querySelector('#__NEXT_DATA__');
+      let sourceJson = JSON.parse(sourceElem?.innerText ?? '{}');
 
       let products = sourceJson.props.pageProps.initialState.products.list;
 
@@ -160,9 +160,9 @@ export class sourcing {
             parseInt(v.item.keepCnt ?? 0) < this.searchInfo.keepCnt ||
             parseInt(v.item.openDate) < parseInt(`${this.searchInfo.dateStart}000000`) ||
             parseInt(v.item.openDate) > parseInt(`${this.searchInfo.dateEnd}235959`) ||
-            (v.item.mallName === "aliexpress" && this.searchInfo.exceptAliExpress) ||
-            (v.item.mallName === "쿠팡" && this.searchInfo.exceptCoupang) ||
-            (v.item.mallName === "Qoo10" && this.searchInfo.exceptQooten)
+            (v.item.mallName === 'aliexpress' && this.searchInfo.exceptAliExpress) ||
+            (v.item.mallName === '쿠팡' && this.searchInfo.exceptCoupang) ||
+            (v.item.mallName === 'Qoo10' && this.searchInfo.exceptQooten)
           ) {
             return;
           }
@@ -177,12 +177,12 @@ export class sourcing {
             }
           }
 
-          let mall_name = "";
+          let mall_name = '';
 
           if (v.item.mallInfoCache) {
             switch (v.item.mallInfoCache.mallGrade) {
-              case "M44001": {
-                mall_name = "플래티넘";
+              case 'M44001': {
+                mall_name = '플래티넘';
 
                 if (!this.searchInfo.includePlatinum) {
                   return;
@@ -191,8 +191,8 @@ export class sourcing {
                 break;
               }
 
-              case "M44002": {
-                mall_name = "프리미엉";
+              case 'M44002': {
+                mall_name = '프리미엉';
 
                 if (!this.searchInfo.includePremium) {
                   return;
@@ -201,8 +201,8 @@ export class sourcing {
                 break;
               }
 
-              case "M44003": {
-                mall_name = "빅파워";
+              case 'M44003': {
+                mall_name = '빅파워';
 
                 if (!this.searchInfo.includeBigPower) {
                   return;
@@ -211,8 +211,8 @@ export class sourcing {
                 break;
               }
 
-              case "M44004": {
-                mall_name = "파워";
+              case 'M44004': {
+                mall_name = '파워';
 
                 if (!this.searchInfo.includePower) {
                   return;
@@ -221,8 +221,8 @@ export class sourcing {
                 break;
               }
 
-              case "M44005": {
-                mall_name = "새싹";
+              case 'M44005': {
+                mall_name = '새싹';
 
                 if (!this.searchInfo.includePlant) {
                   return;
@@ -231,8 +231,8 @@ export class sourcing {
                 break;
               }
 
-              case "M44006": {
-                mall_name = "씨앗";
+              case 'M44006': {
+                mall_name = '씨앗';
 
                 if (!this.searchInfo.includeSeed) {
                   return;
@@ -247,13 +247,13 @@ export class sourcing {
             }
           }
 
-          let category_name = "";
+          let category_name = '';
 
           if (v.item.category1Name) {
             category_name += v.item.category1Name;
 
             if (v.item.category2Name) {
-              category_name += " > ";
+              category_name += ' > ';
             }
           }
 
@@ -261,7 +261,7 @@ export class sourcing {
             category_name += v.item.category2Name;
 
             if (v.item.category3Name) {
-              category_name += " > ";
+              category_name += ' > ';
             }
           }
 
@@ -269,7 +269,7 @@ export class sourcing {
             category_name += v.item.category3Name;
 
             if (v.item.category4Name) {
-              category_name += " > ";
+              category_name += ' > ';
             }
           }
 
@@ -277,7 +277,10 @@ export class sourcing {
             category_name += v.item.category4Name;
           }
 
-          let time = `${v.item.openDate.substring(0, 4)}-${v.item.openDate.substring(4, 6)}-${v.item.openDate.substring(6, 8)}`;
+          let time = `${v.item.openDate.substring(0, 4)}-${v.item.openDate.substring(4, 6)}-${v.item.openDate.substring(
+            6,
+            8
+          )}`;
 
           result.push({
             rank: v.item.rank,
@@ -305,7 +308,7 @@ export class sourcing {
       );
 
       if (result.length === 0) {
-        alert("조건에 맞는 검색결과가 존재하지 않습니다.");
+        alert('조건에 맞는 검색결과가 존재하지 않습니다.');
 
         return;
       }
@@ -322,7 +325,8 @@ export class sourcing {
     }
 
     result = result.slice(0, this.searchInfo.maxLimits);
-    result = this.searchInfo.sort === "review" ? sortBy(result, "reviewCount", false) : sortBy(result, "purchaseCnt", false);
+    result =
+      this.searchInfo.sort === 'review' ? sortBy(result, 'reviewCount', false) : sortBy(result, 'purchaseCnt', false);
     result.map((v: any, i: number) => {
       v.rank = i + 1;
 
@@ -343,7 +347,7 @@ export class sourcing {
   // 엑셀 다운로드
   download = async () => {
     if (this.result.length <= 0) {
-      alert("소싱 결과를 찾을 수 없습니다.");
+      alert('소싱 결과를 찾을 수 없습니다.');
 
       return 0;
     }
@@ -358,7 +362,7 @@ export class sourcing {
           let image_resp = await fetch(v.imageUrl);
           let image_blob = await image_resp.blob();
           let image_url = URL.createObjectURL(image_blob);
-          let image_type = image_blob.type.split("/")[1];
+          let image_type = image_blob.type.split('/')[1];
 
           chrome.downloads.download({
             url: image_url,
@@ -377,14 +381,14 @@ export class sourcing {
             판매처: v.mallName,
             판매처등급: v.mallGrade,
             대표이미지: v.imageUrl,
-            "카테고리(대분류)": v.categoryLarge,
-            "카테고리(중분류)": v.categoryMedium,
-            "카테고리(소분류)": v.categorySmall,
-            "카테고리(세분류)": v.categoryDetail,
+            '카테고리(대분류)': v.categoryLarge,
+            '카테고리(중분류)': v.categoryMedium,
+            '카테고리(소분류)': v.categorySmall,
+            '카테고리(세분류)': v.categoryDetail,
           };
         })
       ),
-      "순번",
+      '순번',
       true
     );
 
@@ -393,12 +397,12 @@ export class sourcing {
 
     XLSX.utils.book_append_sheet(workbook, worksheet);
 
-    let workdata = XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
+    let workdata = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
 
     // 임의의 가상 URL을 만들어 크롬 DOWNLOAD API를 사용할 수 있도록 적용
     let workurl = URL.createObjectURL(
       new Blob([stringToArrayBuffer(workdata)], {
-        type: "application/octet-stream",
+        type: 'application/octet-stream',
       })
     );
 

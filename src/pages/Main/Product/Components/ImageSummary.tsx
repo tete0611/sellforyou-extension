@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../../containers/AppContext";
-import { styled, Box, Chip, TableCell, Checkbox } from "@mui/material";
-import { Image } from "../../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../../containers/AppContext';
+import { styled, Box, Chip, TableCell, Checkbox } from '@mui/material';
+import { Image } from '../../Common/UI';
 
 // 커스텀 테이블 컬럼 스타일
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
+  textAlign: 'center',
   padding: 0,
-  border: "none",
+  border: 'none',
   fontSize: 14,
 });
 
@@ -20,10 +20,10 @@ export const ImageSummary = observer((props: any) => {
 
   return (
     <>
-      <StyledTableCell width={"10%"}>
+      <StyledTableCell width={'10%'}>
         <Box
           sx={{
-            border: "1px solid lightgray",
+            border: '1px solid lightgray',
             m: 0.5,
             p: 0.5,
           }}
@@ -33,8 +33,8 @@ export const ImageSummary = observer((props: any) => {
             width={100}
             height={100}
             style={{
-              background: "black",
-              objectFit: "contain",
+              background: 'black',
+              objectFit: 'contain',
             }}
             onClick={(e) => {
               product.setImagePopOver({
@@ -47,9 +47,9 @@ export const ImageSummary = observer((props: any) => {
 
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               mt: 1,
             }}
           >
@@ -72,10 +72,10 @@ export const ImageSummary = observer((props: any) => {
               onClick={() => {
                 navigator.clipboard.writeText(props.item.productCode).then(
                   function () {
-                    alert("클립보드에 복사되었습니다.");
+                    alert('클립보드에 복사되었습니다.');
                   },
                   function () {
-                    alert("클립보드에 복사할 수 없습니다.");
+                    alert('클립보드에 복사할 수 없습니다.');
                   }
                 );
               }}

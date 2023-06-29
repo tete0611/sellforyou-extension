@@ -1,7 +1,7 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { useRef, useState, useEffect } from "react";
-import { Box, Skeleton } from "@mui/material";
+import { useRef, useState, useEffect } from 'react';
+import { Box, Skeleton } from '@mui/material';
 
 // 이미지 뷰(LazyLoad 기법 적용)
 export default function Image(props: any) {
@@ -35,10 +35,10 @@ export default function Image(props: any) {
   return (
     <Box
       sx={{
-        cursor: "pointer",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        cursor: 'pointer',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
       ref={imgRef}
     >

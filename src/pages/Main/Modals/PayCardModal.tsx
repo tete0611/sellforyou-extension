@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Modal, Paper, Typography } from "@mui/material";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Modal, Paper, Typography } from '@mui/material';
 
 // 카드 결제 모달 뷰
 export const PayCardModal = observer(() => {
@@ -22,7 +22,7 @@ export const PayCardModal = observer(() => {
         className="uploadModal"
         sx={{
           width: 500,
-          textAlign: "center",
+          textAlign: 'center',
         }}
       >
         <Typography fontSize={24} fontWeight="bold">

@@ -1,17 +1,17 @@
-import React from "react";
-import ErrorIcon from "@mui/icons-material/Error";
-import WarningIcon from "@mui/icons-material/Warning";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import React from 'react';
+import ErrorIcon from '@mui/icons-material/Error';
+import WarningIcon from '@mui/icons-material/Warning';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../../containers/AppContext";
-import { styled, Box, Chip, Grid, IconButton, TableCell, TableRow, Typography, Checkbox } from "@mui/material";
-import { Image, Input, MyButton, Search } from "../../Common/UI";
-import { getStoreUrl } from "../../../Tools/Common";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../../containers/AppContext';
+import { styled, Box, Chip, Grid, IconButton, TableCell, TableRow, Typography, Checkbox } from '@mui/material';
+import { Image, Input, MyButton, Search } from '../../Common/UI';
+import { getStoreUrl } from '../../../Tools/Common';
 
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
-  borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+  textAlign: 'center',
+  borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
   padding: 0,
   fontSize: 13,
 });
@@ -35,12 +35,12 @@ export const DeliverySummary = observer((props: any) => {
         <StyledTableCell width={41}>
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               p: 0,
-              height: "100%",
-              width: "100%",
+              height: '100%',
+              width: '100%',
             }}
           >
             <Image
@@ -49,8 +49,8 @@ export const DeliverySummary = observer((props: any) => {
               height={41}
               style={{
                 // border: "1px solid lightgray",
-                background: "black",
-                objectFit: "contain",
+                background: 'black',
+                objectFit: 'contain',
               }}
               onClick={(e) => {
                 product.setImagePopOver({
@@ -66,16 +66,16 @@ export const DeliverySummary = observer((props: any) => {
         <StyledTableCell>
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
             }}
           >
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
-                width: "100%",
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
                 height: 40,
               }}
             >
@@ -85,13 +85,13 @@ export const DeliverySummary = observer((props: any) => {
                   xs={6}
                   md={1.8}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                     }}
                   >
                     <IconButton
@@ -102,15 +102,15 @@ export const DeliverySummary = observer((props: any) => {
                         window.open(props.item.url);
                       }}
                     >
-                      {props.item.shopName === "taobao" ? (
+                      {props.item.shopName === 'taobao' ? (
                         <img src="/resources/icon-taobao.png" />
-                      ) : props.item.shopName === "tmall" ? (
+                      ) : props.item.shopName === 'tmall' ? (
                         <img src="/resources/icon-tmall.png" />
-                      ) : props.item.shopName === "express" ? (
+                      ) : props.item.shopName === 'express' ? (
                         <img src="/resources/icon-express.png" />
-                      ) : props.item.shopName === "alibaba" ? (
+                      ) : props.item.shopName === 'alibaba' ? (
                         <img src="/resources/icon-1688.png" />
-                      ) : props.item.shopName === "vvic" ? (
+                      ) : props.item.shopName === 'vvic' ? (
                         <img src="/resources/icon-vvic.png" />
                       ) : null}
                     </IconButton>
@@ -119,7 +119,7 @@ export const DeliverySummary = observer((props: any) => {
                       noWrap
                       fontSize={13}
                       sx={{
-                        color: "#1565c0",
+                        color: '#1565c0',
                       }}
                     >
                       {props.item.productName}
@@ -132,8 +132,8 @@ export const DeliverySummary = observer((props: any) => {
                   xs={6}
                   md={1.2}
                   sx={{
-                    m: "auto",
-                    textAlign: "left",
+                    m: 'auto',
+                    textAlign: 'left',
                   }}
                 >
                   <Input readOnly value={props.item.optionInfo} />
@@ -146,13 +146,13 @@ export const DeliverySummary = observer((props: any) => {
                       xs={6}
                       md={1.8}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center',
                         }}
                       >
                         <IconButton
@@ -160,32 +160,36 @@ export const DeliverySummary = observer((props: any) => {
                             ml: 0.5,
                           }}
                           onClick={() => {
-                            const url = getStoreUrl(common, props.item.connected.marketCode, props.item.connected.productId);
+                            const url = getStoreUrl(
+                              common,
+                              props.item.connected.marketCode,
+                              props.item.connected.productId
+                            );
 
                             window.open(url);
                           }}
                         >
-                          {props.item.connected.marketCode === "A077" ? (
+                          {props.item.connected.marketCode === 'A077' ? (
                             <img src="/resources/icon-smartstore.png" />
-                          ) : props.item.connected.marketCode === "B378" ? (
+                          ) : props.item.connected.marketCode === 'B378' ? (
                             <img src="/resources/icon-coupang.png" />
-                          ) : props.item.connected.marketCode === "A112" ? (
+                          ) : props.item.connected.marketCode === 'A112' ? (
                             <img src="/resources/icon-street-global.png" />
-                          ) : props.item.connected.marketCode === "A113" ? (
+                          ) : props.item.connected.marketCode === 'A113' ? (
                             <img src="/resources/icon-street-normal.png" />
-                          ) : props.item.connected.marketCode === "A006" ? (
+                          ) : props.item.connected.marketCode === 'A006' ? (
                             <img src="/resources/icon-gmarket.png" />
-                          ) : props.item.connected.marketCode === "A001" ? (
+                          ) : props.item.connected.marketCode === 'A001' ? (
                             <img src="/resources/icon-auction.png" />
-                          ) : props.item.connected.marketCode === "A027" ? (
+                          ) : props.item.connected.marketCode === 'A027' ? (
                             <img src="/resources/icon-interpark.png" />
-                          ) : props.item.connected.marketCode === "B719" ? (
+                          ) : props.item.connected.marketCode === 'B719' ? (
                             <img src="/resources/icon-wemakeprice.png" />
-                          ) : props.item.connected.marketCode === "A524" ? (
+                          ) : props.item.connected.marketCode === 'A524' ? (
                             <img src="/resources/icon-lotteon-global.png" />
-                          ) : props.item.connected.marketCode === "A525" ? (
+                          ) : props.item.connected.marketCode === 'A525' ? (
                             <img src="/resources/icon-lotteon-normal.png" />
-                          ) : props.item.connected.marketCode === "B956" ? (
+                          ) : props.item.connected.marketCode === 'B956' ? (
                             <img src="/resources/icon-tmon.png" />
                           ) : null}
                         </IconButton>
@@ -194,7 +198,7 @@ export const DeliverySummary = observer((props: any) => {
                           noWrap
                           fontSize={13}
                           sx={{
-                            color: "#1565c0",
+                            color: '#1565c0',
                           }}
                         >
                           {props.item.connected.productName}
@@ -207,14 +211,14 @@ export const DeliverySummary = observer((props: any) => {
                       xs={6}
                       md={1.2}
                       sx={{
-                        m: "auto",
-                        textAlign: "left",
+                        m: 'auto',
+                        textAlign: 'left',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center',
                         }}
                       >
                         <Input readOnly value={props.item.connected.productOptionContents} />
@@ -228,8 +232,8 @@ export const DeliverySummary = observer((props: any) => {
                       xs={6}
                       md={3}
                       sx={{
-                        margin: "auto",
-                        textAlign: "left",
+                        margin: 'auto',
+                        textAlign: 'left',
                       }}
                     ></Grid>
                   </>
@@ -240,14 +244,14 @@ export const DeliverySummary = observer((props: any) => {
                   xs={6}
                   md={1.6}
                   sx={{
-                    m: "auto",
-                    textAlign: "left",
+                    m: 'auto',
+                    textAlign: 'left',
                   }}
                 >
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                     }}
                   >
                     {props.item.error ? (
@@ -264,7 +268,7 @@ export const DeliverySummary = observer((props: any) => {
                           noWrap
                           fontSize={13}
                           sx={{
-                            color: "#d32f2f",
+                            color: '#d32f2f',
                           }}
                         >
                           {props.item.error}
@@ -286,7 +290,7 @@ export const DeliverySummary = observer((props: any) => {
                               noWrap
                               fontSize={13}
                               sx={{
-                                color: "#d32f2f",
+                                color: '#d32f2f',
                               }}
                             >
                               {props.item.icucResult?.message}
@@ -306,7 +310,7 @@ export const DeliverySummary = observer((props: any) => {
                               noWrap
                               fontSize={13}
                               sx={{
-                                color: "#2e7d32",
+                                color: '#2e7d32',
                               }}
                             >
                               {props.item.icucResult?.message}
@@ -326,7 +330,7 @@ export const DeliverySummary = observer((props: any) => {
                               noWrap
                               fontSize={13}
                               sx={{
-                                color: "#ed6c02",
+                                color: '#ed6c02',
                               }}
                             >
                               {props.item.icucResult?.message}
@@ -343,15 +347,15 @@ export const DeliverySummary = observer((props: any) => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <Typography
                     noWrap
                     fontSize={13}
                     sx={{
-                      color: "#d32f2f",
+                      color: '#d32f2f',
                     }}
                   >
                     {props.item.unitPrice}
@@ -363,8 +367,8 @@ export const DeliverySummary = observer((props: any) => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <Chip
@@ -378,7 +382,7 @@ export const DeliverySummary = observer((props: any) => {
                       </Typography>
                     }
                     size="small"
-                    color={props.item.quantity > 1 ? "error" : "default"}
+                    color={props.item.quantity > 1 ? 'error' : 'default'}
                   />
                 </Grid>
 
@@ -387,15 +391,15 @@ export const DeliverySummary = observer((props: any) => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <Typography
                     noWrap
                     fontSize={13}
                     sx={{
-                      color: "#1565c0",
+                      color: '#1565c0',
                     }}
                   >
                     {props.item.actualPrice}
@@ -407,19 +411,23 @@ export const DeliverySummary = observer((props: any) => {
                   xs={6}
                   md={1.6}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <Box
                     sx={{
                       ml: 1,
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                     }}
                   >
                     {props.item.deliveryInfo ? (
                       <Search
-                        disabled={!delivery.deliveryList.find((v) => v.name === common.user.userInfo.orderToDeliveryName && v.hscode)}
+                        disabled={
+                          !delivery.deliveryList.find(
+                            (v) => v.name === common.user.userInfo.orderToDeliveryName && v.hscode
+                          )
+                        }
                         value={props.item.deliveryInfo.category}
                         onChange={(e: any, value: any) => {
                           delivery.updateDeliveryInfo(
@@ -432,7 +440,7 @@ export const DeliverySummary = observer((props: any) => {
                           );
                         }}
                         onInputChange={(e, value, reason) => {
-                          if (reason !== "input") {
+                          if (reason !== 'input') {
                             return;
                           }
 
@@ -447,17 +455,19 @@ export const DeliverySummary = observer((props: any) => {
                         }}
                         options={
                           props.item.deliveryInfo.input
-                            ? delivery.deliveryData.find((v: any) => v.company === common.user.userInfo?.orderToDeliveryName).category
+                            ? delivery.deliveryData.find(
+                                (v: any) => v.company === common.user.userInfo?.orderToDeliveryName
+                              ).category
                             : [props.item.deliveryInfo.category]
                         }
-                        getOptionLabel={(option: any) => option.name ?? ""}
+                        getOptionLabel={(option: any) => option.name ?? ''}
                         isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                         onClose={() => {
                           delivery.updateDeliveryInfo(
                             {
                               ...props.item.deliveryInfo,
 
-                              input: "",
+                              input: '',
                             },
                             props.index
                           );
@@ -472,14 +482,14 @@ export const DeliverySummary = observer((props: any) => {
                   xs={6}
                   md={1}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "right",
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'right',
                       mr: 1,
                     }}
                   >

@@ -8,7 +8,7 @@ async function getImageMeta(src) {
     };
 
     image.onerror = function () {
-      console.log("error");
+      console.log('error');
     };
     // image.onerror = reject;
     image.src = src;
@@ -62,7 +62,7 @@ async function main() {
             pageType: 2,
           };
 
-          sessionStorage.setItem("sfy-tmall-item", JSON.stringify(json));
+          sessionStorage.setItem('sfy-tmall-item', JSON.stringify(json));
           break;
         } catch (e) {
           console.log(e);
@@ -74,14 +74,14 @@ async function main() {
         let descUrl = null;
 
         // 상세페이지 정보를 가져오는 티몰 API 링크를 동적으로 찾음
-        const scripts = document.getElementsByTagName("script");
+        const scripts = document.getElementsByTagName('script');
 
         for (let i in scripts) {
-          if (scripts[i].innerHTML && scripts[i].innerHTML.includes("TShop.Setup")) {
+          if (scripts[i].innerHTML && scripts[i].innerHTML.includes('TShop.Setup')) {
             const matched = scripts[i].innerHTML.match(/TShop\.Setup\(([\S\s]+)\);[\S\s]+\);/);
             const info = JSON.parse(matched[1]);
 
-            descUrl = /^https?/.test(info.api.descUrl) ? info.api.descUrl : "https:" + info.api.descUrl;
+            descUrl = /^https?/.test(info.api.descUrl) ? info.api.descUrl : 'https:' + info.api.descUrl;
 
             break;
           }
@@ -105,11 +105,17 @@ async function main() {
         });
 
         // 필수 데이터 체크
-        if (json["itemDO"] && json["buyPrice"] && (json["desc"] || json["descUrl"]) && json["priceInfo"] && json["inventory"]) {
+        if (
+          json['itemDO'] &&
+          json['buyPrice'] &&
+          (json['desc'] || json['descUrl']) &&
+          json['priceInfo'] &&
+          json['inventory']
+        ) {
           // 세션 스토리지로 데이터 공유할 때 주의사항
           // 1) sendMessage 사용 불가(삽입 스크립트와 크롬 확장프로그램 간 통신 방법은 스토리지가 유일함)
           // 2) 세션 스토리지 키 값이 충돌하지 않도록 고려해야 함
-          sessionStorage.setItem("sfy-tmall-item", JSON.stringify(json));
+          sessionStorage.setItem('sfy-tmall-item', JSON.stringify(json));
 
           break;
         }

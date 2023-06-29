@@ -1,13 +1,13 @@
-import React from "react";
-import MUTATIONS from "../GraphQL/Mutations";
-import gql from "../GraphQL/Requests";
-import LoadingButton from "@mui/lab/LoadingButton";
+import React from 'react';
+import MUTATIONS from '../GraphQL/Mutations';
+import gql from '../GraphQL/Requests';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Button, Container, Paper, TextField } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Frame } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Button, Container, Paper, TextField } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Frame } from '../Common/UI';
 
 type SignInfo = {
   password: string;
@@ -25,10 +25,10 @@ export const ChangePassword = observer(() => {
 
   // 상태 초기화
   const initSignInfo: SignInfo = {
-    password: "",
+    password: '',
 
-    newPassword: "",
-    newPasswordConfirm: "",
+    newPassword: '',
+    newPasswordConfirm: '',
 
     loading: false,
   };
@@ -37,7 +37,7 @@ export const ChangePassword = observer(() => {
 
   // 엔터 누를경우 비밀번호 변경 기능이 수행됨
   const keyHandler = (e: any) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       changePassword();
     }
   };
@@ -45,19 +45,19 @@ export const ChangePassword = observer(() => {
   // 비밀번호 변경 로직
   const changePassword = async () => {
     if (!signInfo.password) {
-      alert("기존 비밀번호를 입력해주세요.");
+      alert('기존 비밀번호를 입력해주세요.');
 
       return;
     }
 
     if (!signInfo.newPassword) {
-      alert("새 비밀번호를 입력해주세요.");
+      alert('새 비밀번호를 입력해주세요.');
 
       return;
     }
 
     if (signInfo.newPassword !== signInfo.newPasswordConfirm) {
-      alert("새 비밀번호가 일치하지 않습니다.");
+      alert('새 비밀번호가 일치하지 않습니다.');
 
       return;
     }
@@ -83,14 +83,14 @@ export const ChangePassword = observer(() => {
 
     setSignInfo(initSignInfo);
 
-    alert("비밀번호 변경이 완료되었습니다.\n변경하신 비밀번호로 다시 로그인해주시기 바랍니다.");
+    alert('비밀번호 변경이 완료되었습니다.\n변경하신 비밀번호로 다시 로그인해주시기 바랍니다.');
 
-    window.location.href = "/signin.html";
+    window.location.href = '/signin.html';
   };
 
   // 로그인 페이지로 이동
   const signIn = () => {
-    window.location.href = "/signin.html";
+    window.location.href = '/signin.html';
   };
 
   // 다크모드 지원 설정
@@ -98,7 +98,7 @@ export const ChangePassword = observer(() => {
     () =>
       createTheme({
         palette: {
-          mode: common.darkTheme ? "dark" : "light",
+          mode: common.darkTheme ? 'dark' : 'light',
         },
       }),
     [common.darkTheme]
@@ -120,7 +120,7 @@ export const ChangePassword = observer(() => {
               variant="outlined"
               sx={{
                 p: 4,
-                textAlign: "center",
+                textAlign: 'center',
               }}
             >
               <h1
@@ -137,7 +137,7 @@ export const ChangePassword = observer(() => {
                 variant="outlined"
                 size="small"
                 style={{
-                  width: "100%",
+                  width: '100%',
                   marginBottom: 10,
                 }}
                 label="기존 비밀번호"
@@ -152,7 +152,7 @@ export const ChangePassword = observer(() => {
                 variant="outlined"
                 size="small"
                 style={{
-                  width: "100%",
+                  width: '100%',
                   marginBottom: 10,
                 }}
                 label="새 비밀번호"
@@ -167,7 +167,7 @@ export const ChangePassword = observer(() => {
                 variant="outlined"
                 size="small"
                 style={{
-                  width: "100%",
+                  width: '100%',
                   marginBottom: 30,
                 }}
                 label="새 비밀번호 확인"
@@ -183,7 +183,7 @@ export const ChangePassword = observer(() => {
                 variant="contained"
                 size="large"
                 style={{
-                  width: "100%",
+                  width: '100%',
                   marginBottom: 10,
                 }}
                 onClick={changePassword}
@@ -195,7 +195,7 @@ export const ChangePassword = observer(() => {
                 variant="outlined"
                 size="large"
                 style={{
-                  width: "100%",
+                  width: '100%',
                 }}
                 onClick={signIn}
               >

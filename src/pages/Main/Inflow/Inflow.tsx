@@ -1,10 +1,10 @@
-import React from "react";
-import Chart from "react-apexcharts";
+import React from 'react';
+import Chart from 'react-apexcharts';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Header } from "../Common/Header";
-import { NoticeModal } from "../Modals/NoticeModal";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Header } from '../Common/Header';
+import { NoticeModal } from '../Modals/NoticeModal';
 import {
   styled,
   Box,
@@ -21,18 +21,18 @@ import {
   Toolbar,
   Typography,
   Tooltip,
-} from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Frame, Input, MyButton } from "../Common/UI";
-import { List, AutoSizer } from "react-virtualized";
+} from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Frame, Input, MyButton } from '../Common/UI';
+import { List, AutoSizer } from 'react-virtualized';
 
-import { ComboBox } from "../Common/UI";
-import { Summary } from "./Components/Summary";
-import { ImagePopOver } from "../PopOver/ImagePopOver";
+import { ComboBox } from '../Common/UI';
+import { Summary } from './Components/Summary';
+import { ImagePopOver } from '../PopOver/ImagePopOver';
 
 // 커스텀 테이블 컬럼 스타일 설정
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
+  textAlign: 'center',
   padding: 0,
   fontSize: 14,
 });
@@ -50,9 +50,9 @@ export const Inflow = observer(() => {
 
     // 프리미엄 등급 외 사용 불가
     if (common.user.purchaseInfo2.level < 3) {
-      alert("[프로] 등급부터 사용 가능한 기능입니다.");
+      alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
-      window.location.href = "/dashboard.html";
+      window.location.href = '/dashboard.html';
 
       return;
     }
@@ -72,7 +72,7 @@ export const Inflow = observer(() => {
       <div key={props.key} style={props.style}>
         <Box
           sx={{
-            position: "relative",
+            position: 'relative',
           }}
         >
           <Table>
@@ -88,7 +88,7 @@ export const Inflow = observer(() => {
     () =>
       createTheme({
         palette: {
-          mode: common.darkTheme ? "dark" : "light",
+          mode: common.darkTheme ? 'dark' : 'light',
         },
       }),
     [common.darkTheme]
@@ -100,9 +100,9 @@ export const Inflow = observer(() => {
         <Header />
 
         <Container
-          maxWidth={"xl"}
+          maxWidth={'xl'}
           sx={{
-            py: "10px",
+            py: '10px',
           }}
         >
           <Grid container spacing={1}>
@@ -115,11 +115,11 @@ export const Inflow = observer(() => {
               >
                 <Box
                   sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "space-between",
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
                   }}
                 >
                   <Grid
@@ -215,14 +215,14 @@ export const Inflow = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        m: "auto",
+                        m: 'auto',
                       }}
                     >
                       <Typography
                         noWrap
                         sx={{
                           fontSize: 18,
-                          fontWeight: "bold",
+                          fontWeight: 'bold',
                         }}
                       >
                         오픈마켓
@@ -232,14 +232,14 @@ export const Inflow = observer(() => {
                     <Grid item xs={6} md={6}>
                       <ComboBox
                         sx={{
-                          width: "100%",
+                          width: '100%',
                         }}
                         value={inflow.searchInfo.siteCode}
                         onChange={(e) => {
                           inflow.setChartOption({
                             ...inflow.chartOption,
 
-                            colors: e.target.value === "ALL" ? ["#77B6EA"] : ["#77B6EA", "#545454"],
+                            colors: e.target.value === 'ALL' ? ['#77B6EA'] : ['#77B6EA', '#545454'],
                           });
 
                           inflow.setSearchInfo({
@@ -278,7 +278,7 @@ export const Inflow = observer(() => {
                       <Paper
                         variant="outlined"
                         sx={{
-                          textAlign: "center",
+                          textAlign: 'center',
                           p: 1,
                         }}
                       >
@@ -286,7 +286,7 @@ export const Inflow = observer(() => {
                           noWrap
                           sx={{
                             fontSize: 18,
-                            fontWeight: "bold",
+                            fontWeight: 'bold',
                             mb: 4,
                           }}
                         >
@@ -297,7 +297,7 @@ export const Inflow = observer(() => {
                           noWrap
                           sx={{
                             fontSize: 64,
-                            fontWeight: "bold",
+                            fontWeight: 'bold',
                           }}
                         >
                           {inflow.dataCounts.total}
@@ -309,7 +309,7 @@ export const Inflow = observer(() => {
                       <Paper
                         variant="outlined"
                         sx={{
-                          textAlign: "center",
+                          textAlign: 'center',
                           p: 1,
                         }}
                       >
@@ -317,7 +317,7 @@ export const Inflow = observer(() => {
                           noWrap
                           sx={{
                             fontSize: 18,
-                            fontWeight: "bold",
+                            fontWeight: 'bold',
                             mb: 4,
                           }}
                         >
@@ -328,36 +328,36 @@ export const Inflow = observer(() => {
                           noWrap
                           sx={{
                             fontSize: 64,
-                            fontWeight: "bold",
+                            fontWeight: 'bold',
                           }}
                         >
-                          {inflow.searchInfo.siteCode === "ALL"
-                            ? "-"
-                            : inflow.searchInfo.siteCode === "A077"
+                          {inflow.searchInfo.siteCode === 'ALL'
+                            ? '-'
+                            : inflow.searchInfo.siteCode === 'A077'
                             ? inflow.dataCounts.a077
-                            : inflow.searchInfo.siteCode === "B378"
+                            : inflow.searchInfo.siteCode === 'B378'
                             ? inflow.dataCounts.b378
-                            : inflow.searchInfo.siteCode === "A112"
+                            : inflow.searchInfo.siteCode === 'A112'
                             ? inflow.dataCounts.a112
-                            : inflow.searchInfo.siteCode === "A113"
+                            : inflow.searchInfo.siteCode === 'A113'
                             ? inflow.dataCounts.a113
-                            : inflow.searchInfo.siteCode === "A006"
+                            : inflow.searchInfo.siteCode === 'A006'
                             ? inflow.dataCounts.a006
-                            : inflow.searchInfo.siteCode === "A001"
+                            : inflow.searchInfo.siteCode === 'A001'
                             ? inflow.dataCounts.a001
-                            : inflow.searchInfo.siteCode === "A523"
+                            : inflow.searchInfo.siteCode === 'A523'
                             ? inflow.dataCounts.a523
-                            : inflow.searchInfo.siteCode === "A522"
+                            : inflow.searchInfo.siteCode === 'A522'
                             ? inflow.dataCounts.a522
-                            : inflow.searchInfo.siteCode === "A027"
+                            : inflow.searchInfo.siteCode === 'A027'
                             ? inflow.dataCounts.a027
-                            : inflow.searchInfo.siteCode === "B719"
+                            : inflow.searchInfo.siteCode === 'B719'
                             ? inflow.dataCounts.b719
-                            : inflow.searchInfo.siteCode === "A524"
+                            : inflow.searchInfo.siteCode === 'A524'
                             ? inflow.dataCounts.a524
-                            : inflow.searchInfo.siteCode === "A525"
+                            : inflow.searchInfo.siteCode === 'A525'
                             ? inflow.dataCounts.a525
-                            : inflow.searchInfo.siteCode === "B956"
+                            : inflow.searchInfo.siteCode === 'B956'
                             ? inflow.dataCounts.b956
                             : null}
                         </Typography>
@@ -376,7 +376,13 @@ export const Inflow = observer(() => {
                   p: 2,
                 }}
               >
-                <Chart options={inflow.chartOption} series={inflow.dataInfos.slice()} type={"line"} width="100%" height="100%" />
+                <Chart
+                  options={inflow.chartOption}
+                  series={inflow.dataInfos.slice()}
+                  type={'line'}
+                  width="100%"
+                  height="100%"
+                />
               </Paper>
             </Grid>
 
@@ -398,13 +404,13 @@ export const Inflow = observer(() => {
                               xs={6}
                               md={4}
                               sx={{
-                                margin: "auto",
+                                margin: 'auto',
                               }}
                             >
                               <Box
                                 sx={{
-                                  display: "flex",
-                                  alignItems: "center",
+                                  display: 'flex',
+                                  alignItems: 'center',
                                   p: 0.5,
                                 }}
                               >
@@ -438,7 +444,7 @@ export const Inflow = observer(() => {
                                     });
                                   }}
                                   onKeyPress={(e: any) => {
-                                    if (e.key !== "Enter") {
+                                    if (e.key !== 'Enter') {
                                       return;
                                     }
 
@@ -468,7 +474,7 @@ export const Inflow = observer(() => {
                               xs={6}
                               md={8}
                               sx={{
-                                margin: "auto",
+                                margin: 'auto',
                               }}
                             ></Grid>
                           </Grid>
@@ -509,13 +515,13 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
                             fontSize: 11,
-                            textAlign: "center",
+                            textAlign: 'center',
                           }}
                         >
                           TOTAL
@@ -525,14 +531,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <img src="/resources/icon-smartstore.png" />
@@ -542,14 +548,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <img src="/resources/icon-coupang.png" />
@@ -559,14 +565,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <img src="/resources/icon-street-global.png" />
@@ -576,14 +582,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <img src="/resources/icon-street-normal.png" />
@@ -593,14 +599,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <Tooltip title="ESM1.0">
@@ -612,14 +618,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <Tooltip title="ESM1.0">
@@ -631,14 +637,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <img src="/resources/icon-interpark.png" />
@@ -648,14 +654,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <img src="/resources/icon-wemakeprice.png" />
@@ -665,14 +671,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <img src="/resources/icon-lotteon-global.png" />
@@ -682,14 +688,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <img src="/resources/icon-lotteon-normal.png" />
@@ -699,14 +705,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <img src="/resources/icon-tmon.png" />
@@ -716,14 +722,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <Tooltip title="ESM2.0">
@@ -735,14 +741,14 @@ export const Inflow = observer(() => {
                       <StyledTableCell
                         width={50}
                         sx={{
-                          borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                          borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}
                         >
                           <Tooltip title="ESM2.0">
@@ -764,7 +770,13 @@ export const Inflow = observer(() => {
                           {inflow.dataGroup.length > 0 ? (
                             <AutoSizer>
                               {({ height, width }) => (
-                                <List width={width} height={height} rowCount={inflow.dataGroup.length} rowRenderer={rowRenderer} rowHeight={41} />
+                                <List
+                                  width={width}
+                                  height={height}
+                                  rowCount={inflow.dataGroup.length}
+                                  rowRenderer={rowRenderer}
+                                  rowHeight={41}
+                                />
                               )}
                             </AutoSizer>
                           ) : null}

@@ -1,17 +1,30 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../../containers/AppContext";
-import { styled, Box, Checkbox, CircularProgress, Divider, Grid, Table, TableHead, TableBody, TableRow, TableCell, Typography } from "@mui/material";
-import { List, AutoSizer } from "react-virtualized";
-import { MyButton } from "../../Common/UI";
-import { OrderSummary } from "./OrderSummary";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../../containers/AppContext';
+import {
+  styled,
+  Box,
+  Checkbox,
+  CircularProgress,
+  Divider,
+  Grid,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Typography,
+} from '@mui/material';
+import { List, AutoSizer } from 'react-virtualized';
+import { MyButton } from '../../Common/UI';
+import { OrderSummary } from './OrderSummary';
 
-import "../../Common/Styles.css";
+import '../../Common/Styles.css';
 
 const StyledTableCell = styled(TableCell)({
-  borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-  textAlign: "center",
+  borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+  textAlign: 'center',
   padding: 0,
   fontSize: 14,
 });
@@ -41,24 +54,28 @@ export const OrderTables = observer(() => {
         <TableHead>
           <TableRow>
             <StyledTableCell width={50}>
-              <Checkbox size="small" checked={order.orderInfo.checkedAll} onChange={(e) => order.toggleItemCheckedAll(e.target.checked)} />
+              <Checkbox
+                size="small"
+                checked={order.orderInfo.checkedAll}
+                onChange={(e) => order.toggleItemCheckedAll(e.target.checked)}
+              />
             </StyledTableCell>
 
             <StyledTableCell colSpan={2}>
               <Box
                 sx={{
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "space-between",
+                  alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'space-between',
                   px: 1,
                   minHeight: 50,
                 }}
               >
                 <Box
                   sx={{
-                    alignItems: "center",
-                    display: "flex",
-                    justifyContent: "left",
+                    alignItems: 'center',
+                    display: 'flex',
+                    justifyContent: 'left',
                   }}
                 >
                   <MyButton
@@ -78,9 +95,9 @@ export const OrderTables = observer(() => {
 
                 <Box
                   sx={{
-                    alignItems: "center",
-                    display: "flex",
-                    justifyContent: "right",
+                    alignItems: 'center',
+                    display: 'flex',
+                    justifyContent: 'right',
                   }}
                 >
                   <Typography fontSize={13}>일괄설정</Typography>
@@ -96,7 +113,7 @@ export const OrderTables = observer(() => {
                       minWidth: 60,
                     }}
                     onClick={() => {
-                      alert("준비 중입니다.");
+                      alert('준비 중입니다.');
 
                       // order.productPrepared(common, "");
                     }}
@@ -113,7 +130,7 @@ export const OrderTables = observer(() => {
                       minWidth: 60,
                     }}
                     onClick={() => {
-                      alert("준비 중입니다.");
+                      alert('준비 중입니다.');
 
                       // order.deleteOrder(common, -1);
                     }}
@@ -135,7 +152,7 @@ export const OrderTables = observer(() => {
                   xs={6}
                   md={3}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
@@ -152,7 +169,7 @@ export const OrderTables = observer(() => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
@@ -169,7 +186,7 @@ export const OrderTables = observer(() => {
                   xs={6}
                   md={1.8}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Grid container spacing={0.5}>
@@ -178,7 +195,7 @@ export const OrderTables = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
@@ -195,7 +212,7 @@ export const OrderTables = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
@@ -214,7 +231,7 @@ export const OrderTables = observer(() => {
                   xs={6}
                   md={2.4}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
@@ -231,7 +248,7 @@ export const OrderTables = observer(() => {
                   xs={6}
                   md={1.4}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 ></Grid>
 
@@ -240,7 +257,7 @@ export const OrderTables = observer(() => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
@@ -257,7 +274,7 @@ export const OrderTables = observer(() => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
@@ -274,7 +291,7 @@ export const OrderTables = observer(() => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
@@ -291,7 +308,7 @@ export const OrderTables = observer(() => {
                   xs={6}
                   md={1}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 ></Grid>
               </Grid>
@@ -311,9 +328,9 @@ export const OrderTables = observer(() => {
                   <>
                     <Box
                       sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         p: 3,
                       }}
                     >
@@ -347,9 +364,9 @@ export const OrderTables = observer(() => {
                     ) : (
                       <Box
                         sx={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
                           p: 3,
                         }}
                       >

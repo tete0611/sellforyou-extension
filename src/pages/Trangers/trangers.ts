@@ -1,133 +1,133 @@
-const ENDPOINT_IMAGE = "https://img.sellforyou.co.kr";
-const FLASK_URL = "http://www.sellforyou.co.kr:5003/trangers/";
+const ENDPOINT_IMAGE = 'https://img.sellforyou.co.kr';
+const FLASK_URL = 'http://www.sellforyou.co.kr:5003/trangers/';
 
-import CryptoJS from "crypto-js";
-import { fabric } from "fabric";
+import CryptoJS from 'crypto-js';
+import { fabric } from 'fabric';
 
-import gql from "../Main/GraphQL/Requests";
-import { createTabCompletely, sendTabMessage } from "../Tools/ChromeAsync";
-import { floatingToast, getClock, readFileDataURL, sleep } from "../Tools/Common";
+import gql from '../Main/GraphQL/Requests';
+import { createTabCompletely, sendTabMessage } from '../Tools/ChromeAsync';
+import { floatingToast, getClock, readFileDataURL, sleep } from '../Tools/Common';
 
-let applyWaterMarkText: any = document.getElementById("applyWaterMarkText");
-let applyWaterMarkOpacity: any = document.getElementById("applyWaterMarkOpacity");
-let applyOriginWidthPC: any = document.getElementById("applyOriginWidthPC");
-let originWidthPC: any = document.getElementById("originWidthPC");
-let applyOriginWidthThumbnail: any = document.getElementById("applyOriginWidthThumbnail");
-let originWidthThumbnail: any = document.getElementById("originWidthThumbnail");
-let applyOriginWidthOption: any = document.getElementById("applyOriginWidthOption");
-let originWidthOption: any = document.getElementById("originWidthOption");
-let applyOriginWidthDescription: any = document.getElementById("applyOriginWidthDescription");
-let originWidthDescription: any = document.getElementById("originWidthDescription");
-let applySensitive: any = document.getElementById("applySensitive");
-let previewSize: any = document.getElementById("previewSize");
-let startRegion: any = document.getElementById("startRegion");
-let endRegion: any = document.getElementById("endRegion");
-let toolTextBold: any = document.getElementById("toolTextBold");
-let toolTextFont: any = document.getElementById("toolTextFont");
-let toolTextSize: any = document.getElementById("toolTextSize");
-let toolTextItalic: any = document.getElementById("toolTextItalic");
-let toolTextLineThrough: any = document.getElementById("toolTextLineThrough");
-let toolTextUnderLine: any = document.getElementById("toolTextUnderLine");
-let imageList: any = document.getElementById("imageList");
-let headerSub: any = document.getElementById("headerSub");
-let floatingTextTool: any = document.getElementById("floatingTextTool");
-let floatingShapeTool: any = document.getElementById("floatingShapeTool");
-let textOriginal: any = document.getElementById("textOriginal");
-let textTranslated: any = document.getElementById("textTranslated");
-let toolTextColor: any = document.getElementById("toolTextColor");
-let toolTextBackground: any = document.getElementById("toolTextBackground");
-let toolShapeOutlineColor: any = document.getElementById("toolShapeOutlineColor");
-let toolShapeBackground: any = document.getElementById("toolShapeBackground");
-let toolShapeStrokeWidth: any = document.getElementById("toolShapeStrokeWidth");
-let loading: any = document.getElementById("loading");
-let areaRemove: any = document.getElementById("areaRemove");
-let areaRecovery: any = document.getElementById("areaRecovery");
-let areaRemoveSelect: any = document.getElementById("areaRemoveSelect");
-let areaRecoverySelect: any = document.getElementById("areaRecoverySelect");
-let mainCrop: any = document.getElementById("mainCrop");
-let mainTextEditor: any = document.getElementById("mainTextEditor");
-let mainWaterMark: any = document.getElementById("mainWaterMark");
-let mainDownload: any = document.getElementById("mainDownload");
-let originWidthPCLayout: any = document.getElementById("originWidthPCLayout");
-let originWidthURLLayout: any = document.getElementById("originWidthURLLayout");
-let multipleTranslation: any = document.getElementById("multipleTranslation");
-let singleTranslation: any = document.getElementById("singleTranslation");
-let areaTranslation: any = document.getElementById("areaTranslation");
-let areaRemoveDrag: any = document.getElementById("areaRemoveDrag");
-let areaRemoveBrush: any = document.getElementById("areaRemoveBrush");
-let areaRemoveType: any = document.getElementById("areaRemoveType");
-let shapeSelect: any = document.getElementById("shapeSelect");
-let areaRecoveryDrag: any = document.getElementById("areaRecoveryDrag");
-let areaRecoveryBrush: any = document.getElementById("areaRecoveryBrush");
-let areaRecoveryType: any = document.getElementById("areaRecoveryType");
-let cropStart: any = document.getElementById("cropStart");
-let cropCancel: any = document.getElementById("cropCancel");
-let cropAccept: any = document.getElementById("cropAccept");
-let shapeStart: any = document.getElementById("shapeStart");
-let shapeType: any = document.getElementById("shapeType");
-let textStart: any = document.getElementById("textStart");
-let textSelect: any = document.getElementById("textSelect");
-let textType: any = document.getElementById("textType");
-let horizontal: any = document.getElementById("horizontal");
-let vertical: any = document.getElementById("vertical");
-let alignLeft: any = document.getElementById("alignLeft");
-let alignCenter: any = document.getElementById("alignCenter");
-let alignRight: any = document.getElementById("alignRight");
-let alignTop: any = document.getElementById("alignTop");
-let alignMiddle: any = document.getElementById("alignMiddle");
-let alignBottom: any = document.getElementById("alignBottom");
-let playOriginal: any = document.getElementById("playOriginal");
-let previewZoomOut: any = document.getElementById("previewZoomOut");
-let previewZoomIn: any = document.getElementById("previewZoomIn");
-let playUndo: any = document.getElementById("playUndo");
-let playRedo: any = document.getElementById("playRedo");
-let displayDouble: any = document.getElementById("displayDouble");
-let doubleFrame: any = document.getElementById("doubleFrame");
-let doubleBorder: any = document.getElementById("doubleBorder");
-let shapeFill: any = document.getElementById("shapeFill");
-let toolTextAlignLeft: any = document.getElementById("toolTextAlignLeft");
-let toolTextAlignCenter: any = document.getElementById("toolTextAlignCenter");
-let toolTextAlignRight: any = document.getElementById("toolTextAlignRight");
-let floatingTextToolDragger: any = document.getElementById("floatingTextToolDragger");
-let imageRecovery: any = document.getElementById("imageRecovery");
-let imageSave: any = document.getElementById("imageSave");
-let saveCancel: any = document.getElementById("saveCancel");
-let saveAccept: any = document.getElementById("saveAccept");
-let uploadAccept: any = document.getElementById("uploadAccept");
-let imageExit: any = document.getElementById("imageExit");
-let btnSetting: any = document.getElementById("btnSetting");
-let setting: any = document.getElementById("setting");
-let settingAccept: any = document.getElementById("settingAccept");
-let thisImageRecovery: any = document.getElementById("thisImageRecovery");
-let thisImageSave: any = document.getElementById("thisImageSave");
+let applyWaterMarkText: any = document.getElementById('applyWaterMarkText');
+let applyWaterMarkOpacity: any = document.getElementById('applyWaterMarkOpacity');
+let applyOriginWidthPC: any = document.getElementById('applyOriginWidthPC');
+let originWidthPC: any = document.getElementById('originWidthPC');
+let applyOriginWidthThumbnail: any = document.getElementById('applyOriginWidthThumbnail');
+let originWidthThumbnail: any = document.getElementById('originWidthThumbnail');
+let applyOriginWidthOption: any = document.getElementById('applyOriginWidthOption');
+let originWidthOption: any = document.getElementById('originWidthOption');
+let applyOriginWidthDescription: any = document.getElementById('applyOriginWidthDescription');
+let originWidthDescription: any = document.getElementById('originWidthDescription');
+let applySensitive: any = document.getElementById('applySensitive');
+let previewSize: any = document.getElementById('previewSize');
+let startRegion: any = document.getElementById('startRegion');
+let endRegion: any = document.getElementById('endRegion');
+let toolTextBold: any = document.getElementById('toolTextBold');
+let toolTextFont: any = document.getElementById('toolTextFont');
+let toolTextSize: any = document.getElementById('toolTextSize');
+let toolTextItalic: any = document.getElementById('toolTextItalic');
+let toolTextLineThrough: any = document.getElementById('toolTextLineThrough');
+let toolTextUnderLine: any = document.getElementById('toolTextUnderLine');
+let imageList: any = document.getElementById('imageList');
+let headerSub: any = document.getElementById('headerSub');
+let floatingTextTool: any = document.getElementById('floatingTextTool');
+let floatingShapeTool: any = document.getElementById('floatingShapeTool');
+let textOriginal: any = document.getElementById('textOriginal');
+let textTranslated: any = document.getElementById('textTranslated');
+let toolTextColor: any = document.getElementById('toolTextColor');
+let toolTextBackground: any = document.getElementById('toolTextBackground');
+let toolShapeOutlineColor: any = document.getElementById('toolShapeOutlineColor');
+let toolShapeBackground: any = document.getElementById('toolShapeBackground');
+let toolShapeStrokeWidth: any = document.getElementById('toolShapeStrokeWidth');
+let loading: any = document.getElementById('loading');
+let areaRemove: any = document.getElementById('areaRemove');
+let areaRecovery: any = document.getElementById('areaRecovery');
+let areaRemoveSelect: any = document.getElementById('areaRemoveSelect');
+let areaRecoverySelect: any = document.getElementById('areaRecoverySelect');
+let mainCrop: any = document.getElementById('mainCrop');
+let mainTextEditor: any = document.getElementById('mainTextEditor');
+let mainWaterMark: any = document.getElementById('mainWaterMark');
+let mainDownload: any = document.getElementById('mainDownload');
+let originWidthPCLayout: any = document.getElementById('originWidthPCLayout');
+let originWidthURLLayout: any = document.getElementById('originWidthURLLayout');
+let multipleTranslation: any = document.getElementById('multipleTranslation');
+let singleTranslation: any = document.getElementById('singleTranslation');
+let areaTranslation: any = document.getElementById('areaTranslation');
+let areaRemoveDrag: any = document.getElementById('areaRemoveDrag');
+let areaRemoveBrush: any = document.getElementById('areaRemoveBrush');
+let areaRemoveType: any = document.getElementById('areaRemoveType');
+let shapeSelect: any = document.getElementById('shapeSelect');
+let areaRecoveryDrag: any = document.getElementById('areaRecoveryDrag');
+let areaRecoveryBrush: any = document.getElementById('areaRecoveryBrush');
+let areaRecoveryType: any = document.getElementById('areaRecoveryType');
+let cropStart: any = document.getElementById('cropStart');
+let cropCancel: any = document.getElementById('cropCancel');
+let cropAccept: any = document.getElementById('cropAccept');
+let shapeStart: any = document.getElementById('shapeStart');
+let shapeType: any = document.getElementById('shapeType');
+let textStart: any = document.getElementById('textStart');
+let textSelect: any = document.getElementById('textSelect');
+let textType: any = document.getElementById('textType');
+let horizontal: any = document.getElementById('horizontal');
+let vertical: any = document.getElementById('vertical');
+let alignLeft: any = document.getElementById('alignLeft');
+let alignCenter: any = document.getElementById('alignCenter');
+let alignRight: any = document.getElementById('alignRight');
+let alignTop: any = document.getElementById('alignTop');
+let alignMiddle: any = document.getElementById('alignMiddle');
+let alignBottom: any = document.getElementById('alignBottom');
+let playOriginal: any = document.getElementById('playOriginal');
+let previewZoomOut: any = document.getElementById('previewZoomOut');
+let previewZoomIn: any = document.getElementById('previewZoomIn');
+let playUndo: any = document.getElementById('playUndo');
+let playRedo: any = document.getElementById('playRedo');
+let displayDouble: any = document.getElementById('displayDouble');
+let doubleFrame: any = document.getElementById('doubleFrame');
+let doubleBorder: any = document.getElementById('doubleBorder');
+let shapeFill: any = document.getElementById('shapeFill');
+let toolTextAlignLeft: any = document.getElementById('toolTextAlignLeft');
+let toolTextAlignCenter: any = document.getElementById('toolTextAlignCenter');
+let toolTextAlignRight: any = document.getElementById('toolTextAlignRight');
+let floatingTextToolDragger: any = document.getElementById('floatingTextToolDragger');
+let imageRecovery: any = document.getElementById('imageRecovery');
+let imageSave: any = document.getElementById('imageSave');
+let saveCancel: any = document.getElementById('saveCancel');
+let saveAccept: any = document.getElementById('saveAccept');
+let uploadAccept: any = document.getElementById('uploadAccept');
+let imageExit: any = document.getElementById('imageExit');
+let btnSetting: any = document.getElementById('btnSetting');
+let setting: any = document.getElementById('setting');
+let settingAccept: any = document.getElementById('settingAccept');
+let thisImageRecovery: any = document.getElementById('thisImageRecovery');
+let thisImageSave: any = document.getElementById('thisImageSave');
 // let thisDownload: any = document.getElementById('thisDownload');
 // let thisSaveCancel: any = document.getElementById('thisSaveCancel');
 // let thisUploadAccept: any = document.getElementById('thisUploadAccept');
-let headerSider: any = document.getElementById("header-sider");
-let menuToolbar: any = document.getElementById("menuToolbar");
-let floatingShapeToolDragger: any = document.getElementById("floatingShapeToolDragger");
-let checkAll: any = document.getElementById("checkAll");
-let checkDel: any = document.getElementById("checkDel");
-let fixedTextTool: any = document.getElementById("fixedTextTool");
-let fixedShapeTool: any = document.getElementById("fixedShapeTool");
-let textTab: any = document.getElementById("textTab");
-let shapeTab: any = document.getElementById("shapeTab");
-let fixedTextColor: any = document.getElementById("fixedTextColor");
-let fixedTextBackground: any = document.getElementById("fixedTextBackground");
-let fixedTextFont: any = document.getElementById("fixedTextFont");
-let fixedTextSize: any = document.getElementById("fixedTextSize");
-let fixedTextBold: any = document.getElementById("fixedTextBold");
-let fixedTextItalic: any = document.getElementById("fixedTextItalic");
-let fixedTextLineThrough: any = document.getElementById("fixedTextLineThrough");
-let fixedTextUnderLine: any = document.getElementById("fixedTextUnderLine");
-let toolShapeStrokeShape: any = document.getElementById("toolShapeStrokeShape");
-let fixedShapeOutlineColor: any = document.getElementById("fixedShapeOutlineColor");
-let fixedShapeBackground: any = document.getElementById("fixedShapeBackground");
-let fixedShapeStrokeWidth: any = document.getElementById("fixedShapeStrokeWidth");
-let fixedShapeStrokeShape: any = document.getElementById("fixedShapeStrokeShape");
-let fixedTextAlignLeft: any = document.getElementById("fixedTextAlignLeft");
-let fixedTextAlignCenter: any = document.getElementById("fixedTextAlignCenter");
-let fixedTextAlignRight: any = document.getElementById("fixedTextAlignRight");
+let headerSider: any = document.getElementById('header-sider');
+let menuToolbar: any = document.getElementById('menuToolbar');
+let floatingShapeToolDragger: any = document.getElementById('floatingShapeToolDragger');
+let checkAll: any = document.getElementById('checkAll');
+let checkDel: any = document.getElementById('checkDel');
+let fixedTextTool: any = document.getElementById('fixedTextTool');
+let fixedShapeTool: any = document.getElementById('fixedShapeTool');
+let textTab: any = document.getElementById('textTab');
+let shapeTab: any = document.getElementById('shapeTab');
+let fixedTextColor: any = document.getElementById('fixedTextColor');
+let fixedTextBackground: any = document.getElementById('fixedTextBackground');
+let fixedTextFont: any = document.getElementById('fixedTextFont');
+let fixedTextSize: any = document.getElementById('fixedTextSize');
+let fixedTextBold: any = document.getElementById('fixedTextBold');
+let fixedTextItalic: any = document.getElementById('fixedTextItalic');
+let fixedTextLineThrough: any = document.getElementById('fixedTextLineThrough');
+let fixedTextUnderLine: any = document.getElementById('fixedTextUnderLine');
+let toolShapeStrokeShape: any = document.getElementById('toolShapeStrokeShape');
+let fixedShapeOutlineColor: any = document.getElementById('fixedShapeOutlineColor');
+let fixedShapeBackground: any = document.getElementById('fixedShapeBackground');
+let fixedShapeStrokeWidth: any = document.getElementById('fixedShapeStrokeWidth');
+let fixedShapeStrokeShape: any = document.getElementById('fixedShapeStrokeShape');
+let fixedTextAlignLeft: any = document.getElementById('fixedTextAlignLeft');
+let fixedTextAlignCenter: any = document.getElementById('fixedTextAlignCenter');
+let fixedTextAlignRight: any = document.getElementById('fixedTextAlignRight');
 
 let product: any = null;
 let appData: any = null;
@@ -137,14 +137,14 @@ let cancel = false;
 let copyBox: any = [];
 
 let cropRectangle: any = null;
-let cropRatioType: any = "3";
+let cropRatioType: any = '3';
 
 let currentImageIndex: any = null;
 let currentType: any = null;
 
 let dragImage: any = null;
 
-let editorMode = "idle";
+let editorMode = 'idle';
 
 let isShapeFill = true;
 let isDrag = false;
@@ -152,15 +152,15 @@ let isOriginal = false;
 
 let layers: any = [];
 
-let maskCanvas: any = new fabric.Canvas("mask");
-let myCanvas: any = new fabric.Canvas("main");
+let maskCanvas: any = new fabric.Canvas('mask');
+let myCanvas: any = new fabric.Canvas('main');
 
-let orgCanvas: any = new fabric.Canvas("original");
+let orgCanvas: any = new fabric.Canvas('original');
 
 let visionKey: any = null;
 
-let removeType = "area-remove-drag";
-let recoveryType = "area-recovery-drag";
+let removeType = 'area-remove-drag';
+let recoveryType = 'area-recovery-drag';
 
 const params = new Proxy(new URLSearchParams(window.location.search), {
   get: (searchParams: any, prop) => searchParams.get(prop),
@@ -168,70 +168,70 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 
 function loadLocalSettings() {
   applyWaterMarkText.value = appData.settings.waterMarkText ?? appData.user.id;
-  applyWaterMarkOpacity.value = appData.settings.waterMarkOpacity ?? "20";
-  applyOriginWidthPC.value = appData.settings.originWidthPC ?? "Y";
-  originWidthPC.value = appData.settings.originWidthPCSize ?? "";
-  applyOriginWidthThumbnail.value = appData.settings.originWidthThumbnail ?? "Y";
-  originWidthThumbnail.value = appData.settings.originWidthThumbnailSize ?? "";
-  applyOriginWidthOption.value = appData.settings.originWidthOption ?? "Y";
-  originWidthOption.value = appData.settings.originWidthOptionSize ?? "";
-  applyOriginWidthDescription.value = appData.settings.originWidthDescription ?? "Y";
-  originWidthDescription.value = appData.settings.originWidthDescriptionSize ?? "";
-  applySensitive.value = appData.settings.originSensitive ?? "0.03";
+  applyWaterMarkOpacity.value = appData.settings.waterMarkOpacity ?? '20';
+  applyOriginWidthPC.value = appData.settings.originWidthPC ?? 'Y';
+  originWidthPC.value = appData.settings.originWidthPCSize ?? '';
+  applyOriginWidthThumbnail.value = appData.settings.originWidthThumbnail ?? 'Y';
+  originWidthThumbnail.value = appData.settings.originWidthThumbnailSize ?? '';
+  applyOriginWidthOption.value = appData.settings.originWidthOption ?? 'Y';
+  originWidthOption.value = appData.settings.originWidthOptionSize ?? '';
+  applyOriginWidthDescription.value = appData.settings.originWidthDescription ?? 'Y';
+  originWidthDescription.value = appData.settings.originWidthDescriptionSize ?? '';
+  applySensitive.value = appData.settings.originSensitive ?? '0.03';
 
-  if (applyOriginWidthPC.value === "N") {
+  if (applyOriginWidthPC.value === 'N') {
     originWidthPC.disabled = false;
   }
 
-  if (applyOriginWidthThumbnail.value === "N") {
+  if (applyOriginWidthThumbnail.value === 'N') {
     originWidthThumbnail.disabled = false;
   }
 
-  if (applyOriginWidthOption.value === "N") {
+  if (applyOriginWidthOption.value === 'N') {
     originWidthOption.disabled = false;
   }
 
-  if (applyOriginWidthDescription.value === "N") {
+  if (applyOriginWidthDescription.value === 'N') {
     originWidthDescription.disabled = false;
   }
 
-  let radioExtensionType: any = document.getElementsByName("extensionType");
+  let radioExtensionType: any = document.getElementsByName('extensionType');
 
   for (let i = 0; i < radioExtensionType.length; i++) {
     if (radioExtensionType[i].value === appData.settings.extensionType) {
-      radioExtensionType[i].parentNode.className = "radio activated";
+      radioExtensionType[i].parentNode.className = 'radio activated';
     }
 
-    radioExtensionType[i].addEventListener("change", (e: any) => {
+    radioExtensionType[i].addEventListener('change', (e: any) => {
       for (let j = 0; j < radioExtensionType.length; j++) {
         if (e.target.value === radioExtensionType[j].value) {
-          radioExtensionType[j].parentNode.className = "radio activated";
+          radioExtensionType[j].parentNode.className = 'radio activated';
 
-          saveLocalSettings("extensionType", e.target.value);
+          saveLocalSettings('extensionType', e.target.value);
         } else {
-          radioExtensionType[j].parentNode.className = "radio default";
+          radioExtensionType[j].parentNode.className = 'radio default';
         }
       }
     });
   }
 
-  let waterMarkType: any = document.getElementsByName("waterMarkType");
+  let waterMarkType: any = document.getElementsByName('waterMarkType');
 
   for (let i = 0; i < waterMarkType.length; i++) {
     if (waterMarkType[i].value === appData.settings.waterMarkType) {
-      waterMarkType[i].parentNode.className = "radio activated";
+      waterMarkType[i].parentNode.className = 'radio activated';
     }
 
-    waterMarkType[i].addEventListener("change", (e: any) => {
+    waterMarkType[i].addEventListener('change', (e: any) => {
       for (let j = 0; j < waterMarkType.length; j++) {
         if (e.target.value === waterMarkType[j].value) {
-          waterMarkType[j].parentNode.className = "radio activated";
+          waterMarkType[j].parentNode.className = 'radio activated';
 
-          saveLocalSettings("waterMarkType", e.target.value);
+          saveLocalSettings('waterMarkType', e.target.value);
 
           displayImage(currentImageIndex, 0);
         } else {
-          waterMarkType[j].parentNode.className = "radio default";
+          waterMarkType[j].parentNode.className = 'radio default';
         }
       }
     });
@@ -279,7 +279,7 @@ function saveLocalSettings(key: string, value: string) {
     },
   };
 
-  localStorage.setItem("appInfo", JSON.stringify(appData));
+  localStorage.setItem('appInfo', JSON.stringify(appData));
 }
 
 function getCurrentLayer() {
@@ -327,7 +327,7 @@ function saveCanvas() {
     return;
   }
 
-  let canvas = JSON.stringify(myCanvas.toObject(["id", "selectable"]));
+  let canvas = JSON.stringify(myCanvas.toObject(['id', 'selectable']));
   let object = JSON.stringify(layer.object);
 
   if (layer.state.current.canvas) {
@@ -357,14 +357,14 @@ function replayCanvas(type: string) {
   let saveStack: any = null;
 
   switch (type) {
-    case "undo": {
+    case 'undo': {
       playStack = layer.state.undo;
       saveStack = layer.state.redo;
 
       break;
     }
 
-    case "redo": {
+    case 'redo': {
       playStack = layer.state.redo;
       saveStack = layer.state.undo;
 
@@ -397,14 +397,14 @@ function replayCanvas(type: string) {
 
     myCanvas.getObjects().map((v: any) => {
       switch (v.type) {
-        case "i-text": {
+        case 'i-text': {
           layer.object.push({
             ...object[v.id],
             text: v,
           });
           break;
         }
-        case "rect": {
+        case 'rect': {
           layer.object.push({
             ...object[v.id],
             rect: v,
@@ -422,37 +422,37 @@ function replayCanvas(type: string) {
 }
 
 async function translationPapago(input_string: string, source: string, target: string) {
-  let deviceid = "364961ac-efa2-49ca-a998-ad55f7f9d32d";
-  let url = "https://papago.naver.com/apis/n2mt/translate";
+  let deviceid = '364961ac-efa2-49ca-a998-ad55f7f9d32d';
+  let url = 'https://papago.naver.com/apis/n2mt/translate';
   let time = new Date().getTime();
 
-  let hash = CryptoJS.HmacMD5(`${deviceid}\n${url}\n${time}`, "v1.7.5_9b3c4db4fc").toString(CryptoJS.enc.Base64);
+  let hash = CryptoJS.HmacMD5(`${deviceid}\n${url}\n${time}`, 'v1.7.5_9b3c4db4fc').toString(CryptoJS.enc.Base64);
   let encoded = encodeURI(input_string);
-  encoded = encoded.replaceAll(";", "%2B");
-  encoded = encoded.replaceAll("/", "%2F");
-  encoded = encoded.replaceAll("?", "%3F");
-  encoded = encoded.replaceAll(":", "%3A");
-  encoded = encoded.replaceAll("@", "%40");
-  encoded = encoded.replaceAll("=", "%3D");
-  encoded = encoded.replaceAll("+", "%2B");
-  encoded = encoded.replaceAll(",", "%2C");
-  encoded = encoded.replaceAll("$", "%24");
-  let output = await fetch("https://papago.naver.com/apis/n2mt/translate", {
+  encoded = encoded.replaceAll(';', '%2B');
+  encoded = encoded.replaceAll('/', '%2F');
+  encoded = encoded.replaceAll('?', '%3F');
+  encoded = encoded.replaceAll(':', '%3A');
+  encoded = encoded.replaceAll('@', '%40');
+  encoded = encoded.replaceAll('=', '%3D');
+  encoded = encoded.replaceAll('+', '%2B');
+  encoded = encoded.replaceAll(',', '%2C');
+  encoded = encoded.replaceAll('$', '%24');
+  let output = await fetch('https://papago.naver.com/apis/n2mt/translate', {
     headers: {
       authorization: `PPG ${deviceid}:${hash}`,
-      "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+      'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
       timestamp: `${time}`,
-      "x-apigw-partnerid": "papago",
+      'x-apigw-partnerid': 'papago',
     },
 
     body: `deviceId=${deviceid}&locale=ko&dict=true&dictDisplay=30&honorific=false&instant=false&paging=false&source=${source}&target=${target}&text=${encoded}`,
-    method: "POST",
+    method: 'POST',
   });
 
   try {
     let result = await output.json();
     // console.log(result.translatedText);
-    let result_array = result.translatedText.split("\n");
+    let result_array = result.translatedText.split('\n');
     return result_array;
   } catch (e) {
     return null;
@@ -462,13 +462,13 @@ async function translationPapago(input_string: string, source: string, target: s
 async function displayImage(index: number, customWidth: number) {
   currentImageIndex = index;
 
-  let imageList = document.getElementsByClassName("image-thumbnail");
+  let imageList = document.getElementsByClassName('image-thumbnail');
 
   for (let i = 0; i < imageList.length; i++) {
-    if (imageList[i].getAttribute("key") === currentImageIndex.toString()) {
-      imageList[i].className = "image-thumbnail activated";
+    if (imageList[i].getAttribute('key') === currentImageIndex.toString()) {
+      imageList[i].className = 'image-thumbnail activated';
     } else {
-      imageList[i].className = "image-thumbnail deactivated";
+      imageList[i].className = 'image-thumbnail deactivated';
     }
   }
 
@@ -530,7 +530,7 @@ async function displayImage(index: number, customWidth: number) {
 
   layer.object.map((v: any, i: number) => {
     switch (v.object) {
-      case "rect": {
+      case 'rect': {
         if (!v.rect) {
           const rectOption = {
             id: i,
@@ -538,8 +538,8 @@ async function displayImage(index: number, customWidth: number) {
             top: v.copyY ? v.copyY + v.pos[0].y : currentImage.top + v.pos[0].y,
             width: v.pos[3].x == 0 ? 150 : v.pos[3].x,
             height: v.pos[3].y == 0 ? 150 : v.pos[3].y,
-            fill: v.background ? `rgb(${v.background.R},${v.background.G},${v.background.B})` : "transparent",
-            stroke: v.foreground ? `rgb(${v.foreground.R},${v.foreground.G},${v.foreground.B})` : "black",
+            fill: v.background ? `rgb(${v.background.R},${v.background.G},${v.background.B})` : 'transparent',
+            stroke: v.foreground ? `rgb(${v.foreground.R},${v.foreground.G},${v.foreground.B})` : 'black',
             strokeWidth: v.shapeOption.strokeWidth ?? null,
             rx: v.shapeOption.rx ?? null,
             ry: v.shapeOption.ry ?? null,
@@ -555,12 +555,12 @@ async function displayImage(index: number, customWidth: number) {
 
         v.rect.set({
           selectable:
-            editorMode === "area-translation" ||
-            editorMode === "area-remove-drag" ||
-            editorMode === "area-remove-brush" ||
-            editorMode === "area-recovery-drag" ||
-            editorMode === "area-recovery-brush" ||
-            editorMode === "crop"
+            editorMode === 'area-translation' ||
+            editorMode === 'area-remove-drag' ||
+            editorMode === 'area-remove-brush' ||
+            editorMode === 'area-recovery-drag' ||
+            editorMode === 'area-recovery-brush' ||
+            editorMode === 'crop'
               ? false
               : true,
         });
@@ -571,7 +571,7 @@ async function displayImage(index: number, customWidth: number) {
         break;
       }
 
-      case "i-text": {
+      case 'i-text': {
         let pos = v.pos;
 
         let xList: any = [];
@@ -610,8 +610,10 @@ async function displayImage(index: number, customWidth: number) {
             top: v.copyY ? v.copyY + v.pos[0].y : currentImage.top + v.pos[0].y,
             width: v.pos[3].x == 0 ? 300 : v.pos[3].x,
             height: v.pos[3].y == 0 ? 300 : v.pos[3].y,
-            fill: v.foreground ? `rgb(${v.foreground.R},${v.foreground.G},${v.foreground.B})` : "black",
-            backgroundColor: v.background ? `rgb(${v.background.R},${v.background.G},${v.background.B})` : "transparent",
+            fill: v.foreground ? `rgb(${v.foreground.R},${v.foreground.G},${v.foreground.B})` : 'black',
+            backgroundColor: v.background
+              ? `rgb(${v.background.R},${v.background.G},${v.background.B})`
+              : 'transparent',
             fontFamily: v.textOption.font,
             fontStyle: v.textOption.italic,
             fontSize: v.textOption.size ?? 1,
@@ -650,12 +652,12 @@ async function displayImage(index: number, customWidth: number) {
 
         v.text.set({
           selectable:
-            editorMode === "area-translation" ||
-            editorMode === "area-remove-drag" ||
-            editorMode === "area-remove-brush" ||
-            editorMode === "area-recovery-drag" ||
-            editorMode === "area-recovery-brush" ||
-            editorMode === "crop"
+            editorMode === 'area-translation' ||
+            editorMode === 'area-remove-drag' ||
+            editorMode === 'area-remove-brush' ||
+            editorMode === 'area-recovery-drag' ||
+            editorMode === 'area-recovery-brush' ||
+            editorMode === 'crop'
               ? false
               : true,
         });
@@ -670,9 +672,9 @@ async function displayImage(index: number, customWidth: number) {
     }
   });
 
-  if (appData.settings.waterMarkType === "Y" && applyWaterMarkText.value) {
+  if (appData.settings.waterMarkType === 'Y' && applyWaterMarkText.value) {
     let text: any = new fabric.IText(applyWaterMarkText.value, {
-      fontFamily: "NNSQUAREROUNDR",
+      fontFamily: 'NNSQUAREROUNDR',
       fontSize: 2,
 
       opacity: applyWaterMarkOpacity.value / 100,
@@ -701,8 +703,8 @@ async function displayImage(index: number, customWidth: number) {
   myCanvas.setBackgroundImage(currentImage);
 
   switch (editorMode) {
-    case "crop": {
-      myCanvas.uniformScaling = cropRatioType === "3" ? false : true;
+    case 'crop': {
+      myCanvas.uniformScaling = cropRatioType === '3' ? false : true;
 
       myCanvas.setOverlayImage(
         currentImage,
@@ -710,7 +712,7 @@ async function displayImage(index: number, customWidth: number) {
           myCanvas.renderAll();
         },
         {
-          globalCompositeOperation: "destination-atop",
+          globalCompositeOperation: 'destination-atop',
         }
       );
 
@@ -720,12 +722,12 @@ async function displayImage(index: number, customWidth: number) {
         width: currentImage.width + 2,
         height: currentImage.height,
 
-        fill: "black",
+        fill: 'black',
         opacity: 0.5,
 
         selectable: false,
 
-        globalCompositeOperation: "source-over",
+        globalCompositeOperation: 'source-over',
       });
 
       myCanvas.add(overlay);
@@ -735,24 +737,34 @@ async function displayImage(index: number, customWidth: number) {
 
         active: true,
 
-        width: cropRatioType === "2" ? (currentImage.width < currentImage.height ? currentImage.width : currentImage.height) : currentImage.width,
-        height: cropRatioType === "2" ? (currentImage.width < currentImage.height ? currentImage.width : currentImage.height) : currentImage.height,
+        width:
+          cropRatioType === '2'
+            ? currentImage.width < currentImage.height
+              ? currentImage.width
+              : currentImage.height
+            : currentImage.width,
+        height:
+          cropRatioType === '2'
+            ? currentImage.width < currentImage.height
+              ? currentImage.width
+              : currentImage.height
+            : currentImage.height,
 
         selectable: true,
 
         lockScalingFlip: true,
 
-        globalCompositeOperation: "destination-out",
+        globalCompositeOperation: 'destination-out',
       };
 
       cropRectangle = new fabric.Rect(cropRectangleOption);
       cropRectangle.setControlsVisibility({
         mtr: false,
 
-        mb: cropRatioType === "3" ? true : false,
-        ml: cropRatioType === "3" ? true : false,
-        mr: cropRatioType === "3" ? true : false,
-        mt: cropRatioType === "3" ? true : false,
+        mb: cropRatioType === '3' ? true : false,
+        ml: cropRatioType === '3' ? true : false,
+        mr: cropRatioType === '3' ? true : false,
+        mt: cropRatioType === '3' ? true : false,
       });
 
       myCanvas.add(cropRectangle);
@@ -810,12 +822,12 @@ async function processVisionData(info: any) {
           features: [
             {
               maxResults: 3,
-              type: "TEXT_DETECTION",
+              type: 'TEXT_DETECTION',
             },
           ],
 
           image: {
-            content: info?.image.split(",")[1] ?? layer.image.current.split(",")[1],
+            content: info?.image.split(',')[1] ?? layer.image.current.split(',')[1],
           },
 
           image_context: {
@@ -827,16 +839,16 @@ async function processVisionData(info: any) {
 
     let visionResp = await fetch(`https://vision.googleapis.com/v1/images:annotate?key=${visionKey}`, {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
 
       body: JSON.stringify(visionData),
-      method: "POST",
+      method: 'POST',
     });
     let visionJson = await visionResp.json();
     console.log(testLayer);
     // console.log("visionJson", visionJson.responses[0].fullTextAnnotation.text);
-    if (visionJson.responses[0]?.error?.message === "Bad image data.") {
+    if (visionJson.responses[0]?.error?.message === 'Bad image data.') {
       await saveBadImage();
 
       // 1. 데이터 변경된거 products 변수에 적용해줘야함
@@ -872,17 +884,17 @@ async function processVisionData(info: any) {
       });
     }
 
-    let colorResp = await fetch(FLASK_URL + "getcolor", {
+    let colorResp = await fetch(FLASK_URL + 'getcolor', {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
 
       body: JSON.stringify({
-        image: layer.image.current.split(",")[1],
+        image: layer.image.current.split(',')[1],
         data: visionArray,
       }),
 
-      method: "POST",
+      method: 'POST',
     });
 
     let colorJson = await colorResp.json();
@@ -919,20 +931,20 @@ async function processVisionData(info: any) {
       objectList.push(rect);
 
       let translated = visionArray[i].translated;
-      if (visionArray[i].direction == "vertical") {
-        translated = visionArray[i].translated.match(/.{1}/g).join("\n");
+      if (visionArray[i].direction == 'vertical') {
+        translated = visionArray[i].translated.match(/.{1}/g).join('\n');
       }
 
       layer.object.push({
         foreground: colorJson.data[i].foreground,
-        object: "i-text",
+        object: 'i-text',
         original: visionArray[i].original,
         pos: visionArray[i].pos,
         translated: translated,
         textOption: {
-          bold: toolTextBold.checked ? "bold" : "normal",
+          bold: toolTextBold.checked ? 'bold' : 'normal',
           font: toolTextFont.value,
-          italic: toolTextItalic.checked ? "italic" : "normal",
+          italic: toolTextItalic.checked ? 'italic' : 'normal',
           lineThrough: toolTextLineThrough.checked,
           underLine: toolTextUnderLine.checked,
           direction: visionArray[i].direction,
@@ -942,15 +954,15 @@ async function processVisionData(info: any) {
 
     await getMaskImage(objectList);
   } catch (e) {
-    alert("번역 도중 오류가 발생하였습니다.");
+    alert('번역 도중 오류가 발생하였습니다.');
 
-    console.log("번역 에러:", e);
+    console.log('번역 에러:', e);
   }
 }
 
 function dataURItoBlob(dataURI: string) {
-  const mime = dataURI.split(",")[0].split(":")[1].split(";")[0];
-  const binary: any = atob(dataURI.split(",")[1]);
+  const mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
+  const binary: any = atob(dataURI.split(',')[1]);
   const array: any = [];
 
   for (let i = 0; i < binary.length; i += 1) {
@@ -979,7 +991,7 @@ async function getMaskImage(itemList: any) {
   let image = maskCanvas.toDataURL();
 
   maskCanvas.clear();
-  maskCanvas.backgroundColor = "black";
+  maskCanvas.backgroundColor = 'black';
 
   itemList.map((v: any) => {
     maskCanvas.add(v);
@@ -987,17 +999,17 @@ async function getMaskImage(itemList: any) {
 
   let maskImage = maskCanvas.toDataURL();
   let formData = new FormData();
-  formData.append("image", dataURItoBlob(image));
-  formData.append("mask", dataURItoBlob(maskImage));
-  formData.append("ldmSteps", "50");
-  formData.append("hdStrategy", "Original");
-  formData.append("hdStrategyCropMargin", "128");
-  formData.append("hdStrategyCropTrigerSize", "2048");
-  formData.append("hdStrategyResizeLimit", "2048");
-  formData.append("sizeLimit", "Original");
+  formData.append('image', dataURItoBlob(image));
+  formData.append('mask', dataURItoBlob(maskImage));
+  formData.append('ldmSteps', '50');
+  formData.append('hdStrategy', 'Original');
+  formData.append('hdStrategyCropMargin', '128');
+  formData.append('hdStrategyCropTrigerSize', '2048');
+  formData.append('hdStrategyResizeLimit', '2048');
+  formData.append('sizeLimit', 'Original');
 
-  let dataResp = await fetch("http://101.79.8.236:9999/inpaint", {
-    method: "POST",
+  let dataResp = await fetch('http://101.79.8.236:9999/inpaint', {
+    method: 'POST',
     body: formData,
   });
 
@@ -1022,15 +1034,15 @@ async function visionAnalyzer(data: any) {
   }
   let vision_count = 0;
   let test = 0;
-  let vision_input = data.fullTextAnnotation.text.replaceAll("&", "");
-  let vision_text = "";
-  let visionInputArray = vision_input.split("\n");
+  let vision_input = data.fullTextAnnotation.text.replaceAll('&', '');
+  let vision_text = '';
+  let visionInputArray = vision_input.split('\n');
   let vision_text_list = await translationPapago(vision_input, startRegion.value, endRegion.value);
   let visionTransLateCount = vision_text_list.length;
   // 번역이 가끔 젤 첫줄에 이상한 영어들어가면 이상하게 되는경우가있다. 해당 경우는 젤 첫번째줄 제거하고 다시 번역하는 방안으로 (대표님이 요구한 해결책 )
   if (visionInputArray.length !== visionTransLateCount) {
     visionInputArray.shift();
-    vision_input = visionInputArray.join("\n");
+    vision_input = visionInputArray.join('\n');
     vision_text_list = await translationPapago(vision_input, startRegion.value, endRegion.value);
     test = 1;
   }
@@ -1038,7 +1050,7 @@ async function visionAnalyzer(data: any) {
   let vision_pos: any = [];
   let vision_info: any = [];
 
-  let direction = "horizontal";
+  let direction = 'horizontal';
   let vision_blocks = data.fullTextAnnotation.pages[0].blocks;
   if (test === 1) {
     vision_blocks[0].paragraphs.shift();
@@ -1061,23 +1073,23 @@ async function visionAnalyzer(data: any) {
             vision_pos[1] = vision_symbols[d].boundingBox.vertices[1];
             vision_pos[2] = vision_symbols[d].boundingBox.vertices[2];
 
-            let width: any = "";
-            let height: any = "";
+            let width: any = '';
+            let height: any = '';
 
             width = vision_symbols[d].boundingBox.vertices[1].x - vision_paragraphs[b].boundingBox.vertices[0].x;
             height = vision_symbols[d].boundingBox.vertices[3].y - vision_paragraphs[b].boundingBox.vertices[0].y;
 
             if (height > width) {
-              direction = "vertical";
+              direction = 'vertical';
             } else {
-              direction = "horizontal";
+              direction = 'horizontal';
             }
           }
 
           if (vision_symbols[d].property && vision_symbols[d].property.detectedBreak) {
             let breakType = vision_symbols[d].property.detectedBreak.type;
 
-            if (breakType === "LINE_BREAK" || breakType === "EOL_SURE_SPACE") {
+            if (breakType === 'LINE_BREAK' || breakType === 'EOL_SURE_SPACE') {
               vision_pos.map((v: any) => {
                 if (!v.x) {
                   v.x = 0;
@@ -1094,10 +1106,10 @@ async function visionAnalyzer(data: any) {
               };
 
               let matched = /[\u4e00-\u9fff]/.test(vision_text);
-              if (startRegion.value === "zh-CN") {
+              if (startRegion.value === 'zh-CN') {
                 if (!matched) {
                   vision_pos = [];
-                  vision_text = "";
+                  vision_text = '';
                   vision_count += 1;
 
                   continue;
@@ -1114,10 +1126,10 @@ async function visionAnalyzer(data: any) {
               });
 
               vision_pos = [];
-              vision_text = "";
+              vision_text = '';
               vision_count += 1;
-            } else if (breakType === "SPACE") {
-              vision_text += " ";
+            } else if (breakType === 'SPACE') {
+              vision_text += ' ';
             }
           }
         }
@@ -1149,7 +1161,7 @@ async function addToLayers() {
     layers = [];
   }
   switch (params.type) {
-    case "1": {
+    case '1': {
       await Promise.all(
         product.imageThumbnail.map(async (v: any, i: number) => {
           currentImageIndex = i;
@@ -1187,7 +1199,7 @@ async function addToLayers() {
 
                 current: {},
 
-                check: "checked",
+                check: 'checked',
               },
             });
           }
@@ -1197,7 +1209,7 @@ async function addToLayers() {
       break;
     }
 
-    case "2": {
+    case '2': {
       let productOption: any = [];
 
       product.productOptionName.map((v: any) => {
@@ -1250,7 +1262,7 @@ async function addToLayers() {
 
                 current: {},
 
-                check: "checked",
+                check: 'checked',
               },
             });
           }
@@ -1262,7 +1274,7 @@ async function addToLayers() {
       break;
     }
 
-    case "3": {
+    case '3': {
       let description: any = null;
 
       let matched = /product\/[0-9]+\/description.html/.test(product.description);
@@ -1276,8 +1288,8 @@ async function addToLayers() {
       }
 
       let elem = new DOMParser();
-      let elemImage = elem.parseFromString(description, "text/html");
-      let elemImageList = elemImage.querySelectorAll("img");
+      let elemImage = elem.parseFromString(description, 'text/html');
+      let elemImageList = elemImage.querySelectorAll('img');
 
       let productDescription: any = [];
 
@@ -1325,7 +1337,7 @@ async function addToLayers() {
 
                 current: {},
 
-                check: "checked",
+                check: 'checked',
               },
             });
           }
@@ -1339,8 +1351,8 @@ async function addToLayers() {
       break;
   }
 
-  layers = sortBy(layers, "index", true);
-  layers = sortBy(layers, "type", true);
+  layers = sortBy(layers, 'index', true);
+  layers = sortBy(layers, 'type', true);
 }
 
 async function loadImageList() {
@@ -1354,7 +1366,7 @@ async function loadImageList() {
 
   let newLayer = layers.filter((v: any) => v.type === currentType);
   switch (currentType) {
-    case "1": {
+    case '1': {
       await Promise.all(
         product.imageThumbnail.map((v: any, i: number) => {
           let imageUrl: any = /^https?:/.test(v) ? v : `${ENDPOINT_IMAGE}/sellforyou/${v}`;
@@ -1368,7 +1380,7 @@ async function loadImageList() {
       break;
     }
 
-    case "2": {
+    case '2': {
       await Promise.all(
         product.productOptionName.map((v: any) => {
           v.productOptionValue.map((w: any) => {
@@ -1388,7 +1400,7 @@ async function loadImageList() {
       break;
     }
 
-    case "3": {
+    case '3': {
       let description: any = null;
 
       let matched = /product\/[0-9]+\/description.html/.test(product.description);
@@ -1402,8 +1414,8 @@ async function loadImageList() {
       }
 
       let elem = new DOMParser();
-      let elemImage = elem.parseFromString(description, "text/html");
-      let elemImageList = elemImage.querySelectorAll("img");
+      let elemImage = elem.parseFromString(description, 'text/html');
+      let elemImageList = elemImage.querySelectorAll('img');
 
       for (let i in elemImageList) {
         if (elemImageList[i].src) {
@@ -1429,7 +1441,7 @@ async function loadImageList() {
                 `;
     }
     if (filterdImages.length > 21) {
-      headerSider.style.overflowX = "auto";
+      headerSider.style.overflowX = 'auto';
     }
   } else {
     imageList.innerHTML += `<div class="imageListDiv"> </div>`;
@@ -1438,20 +1450,20 @@ async function loadImageList() {
   let checked: any = document.getElementsByClassName(`checkBox`);
 
   for (let i = 0; i < checked.length; i++) {
-    checked[i].addEventListener("click", () => {
-      if (newLayer[i].state.check == "checked") {
-        newLayer[i].state.check = "";
+    checked[i].addEventListener('click', () => {
+      if (newLayer[i].state.check == 'checked') {
+        newLayer[i].state.check = '';
         checked[i].checked = false;
-      } else if (newLayer[i].state.check == "") {
-        newLayer[i].state.check = "checked";
+      } else if (newLayer[i].state.check == '') {
+        newLayer[i].state.check = 'checked';
         checked[i].checked = true;
       }
     });
   }
 
-  checkAll.addEventListener("click", () => {
+  checkAll.addEventListener('click', () => {
     for (let i = 0; i < newLayer.length; i++) {
-      newLayer[i].state.check = "checked";
+      newLayer[i].state.check = 'checked';
       try {
         checked[i].checked = true;
       } catch (e) {
@@ -1460,9 +1472,9 @@ async function loadImageList() {
     }
   });
 
-  checkDel.addEventListener("click", () => {
+  checkDel.addEventListener('click', () => {
     for (let i = 0; i < newLayer.length; i++) {
-      newLayer[i].state.check = "";
+      newLayer[i].state.check = '';
       try {
         checked[i].checked = false;
       } catch (e) {
@@ -1478,7 +1490,7 @@ async function loadImageList() {
   }
 
   for (let i = 0; i < imageElement.length; i++) {
-    imageElement[i].addEventListener("click", async () => {
+    imageElement[i].addEventListener('click', async () => {
       await displayImage(i, 0);
 
       saveCanvas();
@@ -1493,17 +1505,17 @@ async function loadImageList() {
 
   saveCanvas();
 
-  headerSub.style.display = "";
+  headerSub.style.display = '';
 }
 
 function ColorToHex(color: any) {
   let hexadecimal = color.toString(16);
 
-  return hexadecimal.length == 1 ? "0" + hexadecimal : hexadecimal;
+  return hexadecimal.length == 1 ? '0' + hexadecimal : hexadecimal;
 }
 
 function ConvertRGBtoHex(red: any, green: any, blue: any) {
-  return "#" + ColorToHex(red) + ColorToHex(green) + ColorToHex(blue);
+  return '#' + ColorToHex(red) + ColorToHex(green) + ColorToHex(blue);
 }
 
 function hexToRgb(hex: any) {
@@ -1526,28 +1538,28 @@ function hexToRgb(hex: any) {
 
 function canvasSetting() {
   fabric.Object.prototype.set({
-    borderColor: "rgb(41, 136, 255)",
-    cornerColor: "rgb(41, 136, 255)",
-    cornerStyle: "circle",
+    borderColor: 'rgb(41, 136, 255)',
+    cornerColor: 'rgb(41, 136, 255)',
+    cornerStyle: 'circle',
     cornerSize: 10,
     transparentCorners: false,
   });
 
   myCanvas.on({
-    "text:changed": (e: any) => {
+    'text:changed': (e: any) => {
       let object = e.target;
       let layer = getCurrentLayer();
       let objectDirection = layer.object[object.id].textOption.direction;
 
       switch (objectDirection) {
-        case "vertical": {
-          textTranslated.value = object.textLines.join("");
-          layer.object[object.id].translated = object.text.match(/.{1}/g).join("\n");
-          object.text = textTranslated.value.match(/.{1}/g).join("\n");
+        case 'vertical': {
+          textTranslated.value = object.textLines.join('');
+          layer.object[object.id].translated = object.text.match(/.{1}/g).join('\n');
+          object.text = textTranslated.value.match(/.{1}/g).join('\n');
           break;
         }
 
-        case "horizontal": {
+        case 'horizontal': {
           textTranslated.value = object.text;
           layer.object[object.id].translated = object.text;
 
@@ -1556,51 +1568,51 @@ function canvasSetting() {
       }
     },
 
-    "selection:created": (e: any) => {
+    'selection:created': (e: any) => {
       textTranslated.disabled = false;
 
       if (e.selected) {
         for (let i = 0; i < e.selected.length; i++) {
           if (e.selected.length > 1) {
             if (e.selected[0].stroke && e.selected[i].text) {
-              textTab.style.cursor = "pointer";
-              shapeTab.style.cursor = "pointer";
+              textTab.style.cursor = 'pointer';
+              shapeTab.style.cursor = 'pointer';
 
               floatingTextTool.style.left = `${e.e.x}px`;
               floatingTextTool.style.top = `${e.e.y}px`;
-              floatingTextTool.style.display = "";
+              floatingTextTool.style.display = '';
 
               floatingShapeTool.style.left = `${e.e.x}px`;
               floatingShapeTool.style.top = `${e.e.y - 50}px`;
-              floatingShapeTool.style.display = "";
+              floatingShapeTool.style.display = '';
 
               return;
             } else if (e.selected[i].text) {
-              fixedTextTool.style.display = "";
-              fixedShapeTool.style.display = "none";
+              fixedTextTool.style.display = '';
+              fixedShapeTool.style.display = 'none';
 
-              textTab.style.backgroundColor = "rgb(80, 80, 80)";
-              shapeTab.style.backgroundColor = "rgb(65, 65, 65)";
+              textTab.style.backgroundColor = 'rgb(80, 80, 80)';
+              shapeTab.style.backgroundColor = 'rgb(65, 65, 65)';
 
-              textTab.style.cursor = "pointer";
-              shapeTab.style.cursor = "";
+              textTab.style.cursor = 'pointer';
+              shapeTab.style.cursor = '';
 
-              floatingTextTool.style.display = "";
+              floatingTextTool.style.display = '';
               floatingTextTool.style.left = `${e.e.x}px`;
               floatingTextTool.style.top = `${e.e.y}px`;
             }
             try {
               if (e.selected[e.selected.length - 1].stroke) {
-                fixedTextTool.style.display = "none";
-                fixedShapeTool.style.display = "";
+                fixedTextTool.style.display = 'none';
+                fixedShapeTool.style.display = '';
 
-                textTab.style.backgroundColor = "rgb(65, 65, 65)";
-                shapeTab.style.backgroundColor = "rgb(80, 80, 80)";
+                textTab.style.backgroundColor = 'rgb(65, 65, 65)';
+                shapeTab.style.backgroundColor = 'rgb(80, 80, 80)';
 
-                textTab.style.cursor = "";
-                shapeTab.style.cursor = "pointer";
+                textTab.style.cursor = '';
+                shapeTab.style.cursor = 'pointer';
 
-                floatingShapeTool.style.display = "";
+                floatingShapeTool.style.display = '';
                 floatingShapeTool.style.left = `${e.e.x}px`;
                 floatingShapeTool.style.top = `${e.e.y - 50}px`;
               }
@@ -1612,7 +1624,7 @@ function canvasSetting() {
       }
 
       let object = e.selected[0];
-      let objectType = object.get("type");
+      let objectType = object.get('type');
 
       if (object.id === -1) {
         return;
@@ -1622,7 +1634,7 @@ function canvasSetting() {
       let v = layer.object[object.id];
 
       switch (objectType) {
-        case "i-text": {
+        case 'i-text': {
           let size = Math.round(object.fontSize * object.scaleX);
 
           object.set({
@@ -1633,103 +1645,115 @@ function canvasSetting() {
 
           floatingTextTool.style.left = `${e.e.x}px`;
           floatingTextTool.style.top = `${e.e.y}px`;
-          floatingTextTool.style.display = "";
+          floatingTextTool.style.display = '';
 
-          fixedTextTool.style.display = "";
-          fixedShapeTool.style.display = "none";
+          fixedTextTool.style.display = '';
+          fixedShapeTool.style.display = 'none';
 
-          textTab.style.backgroundColor = "rgb(80, 80, 80)";
-          shapeTab.style.backgroundColor = "rgb(65, 65, 65)";
+          textTab.style.backgroundColor = 'rgb(80, 80, 80)';
+          shapeTab.style.backgroundColor = 'rgb(65, 65, 65)';
 
           textOriginal.value = v.original;
-          textTranslated.value = v.text.textLines.join("");
-          toolTextColor.value = v.foreground ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B) : "";
-          toolTextBackground.value = v.background ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B) : "";
+          textTranslated.value = v.text.textLines.join('');
+          toolTextColor.value = v.foreground ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B) : '';
+          toolTextBackground.value = v.background
+            ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B)
+            : '';
           toolTextFont.value = v.textOption.font;
           toolTextSize.value = size;
-          toolTextBold.checked = v.textOption.bold === "bold" ? true : false;
-          toolTextItalic.checked = v.textOption.italic === "italic" ? true : false;
-          toolTextLineThrough.checked = v.textOption.lineThrough === "lineThrough" ? true : false;
-          toolTextUnderLine.checked = v.textOption.underLine === "underLine" ? true : false;
+          toolTextBold.checked = v.textOption.bold === 'bold' ? true : false;
+          toolTextItalic.checked = v.textOption.italic === 'italic' ? true : false;
+          toolTextLineThrough.checked = v.textOption.lineThrough === 'lineThrough' ? true : false;
+          toolTextUnderLine.checked = v.textOption.underLine === 'underLine' ? true : false;
 
-          fixedTextColor.value = v.foreground ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B) : "";
-          fixedTextBackground.value = v.background ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B) : "";
+          fixedTextColor.value = v.foreground ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B) : '';
+          fixedTextBackground.value = v.background
+            ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B)
+            : '';
           fixedTextFont.value = v.textOption.font;
           fixedTextSize.value = size;
-          fixedTextBold.checked = v.textOption.bold === "bold" ? true : false;
-          fixedTextItalic.checked = v.textOption.italic === "italic" ? true : false;
-          fixedTextLineThrough.checked = v.textOption.lineThrough === "lineThrough" ? true : false;
-          fixedTextUnderLine.checked = v.textOption.underLine === "underLine" ? true : false;
+          fixedTextBold.checked = v.textOption.bold === 'bold' ? true : false;
+          fixedTextItalic.checked = v.textOption.italic === 'italic' ? true : false;
+          fixedTextLineThrough.checked = v.textOption.lineThrough === 'lineThrough' ? true : false;
+          fixedTextUnderLine.checked = v.textOption.underLine === 'underLine' ? true : false;
 
           if (toolTextBold.checked) {
-            toolTextBold.parentNode.style.color = "rgb(41, 136, 255)";
+            toolTextBold.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            toolTextBold.parentNode.style.color = "white";
+            toolTextBold.parentNode.style.color = 'white';
           }
 
           if (toolTextItalic.checked) {
-            toolTextItalic.parentNode.style.color = "rgb(41, 136, 255)";
+            toolTextItalic.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            toolTextItalic.parentNode.style.color = "white";
+            toolTextItalic.parentNode.style.color = 'white';
           }
 
           if (toolTextLineThrough.checked) {
-            toolTextLineThrough.parentNode.style.color = "rgb(41, 136, 255)";
+            toolTextLineThrough.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            toolTextLineThrough.parentNode.style.color = "white";
+            toolTextLineThrough.parentNode.style.color = 'white';
           }
 
           if (toolTextUnderLine.checked) {
-            toolTextUnderLine.parentNode.style.color = "rgb(41, 136, 255)";
+            toolTextUnderLine.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            toolTextUnderLine.parentNode.style.color = "white";
+            toolTextUnderLine.parentNode.style.color = 'white';
           }
 
           if (fixedTextBold.checked) {
-            fixedTextBold.parentNode.style.color = "rgb(41, 136, 255)";
+            fixedTextBold.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            fixedTextBold.parentNode.style.color = "white";
+            fixedTextBold.parentNode.style.color = 'white';
           }
 
           if (fixedTextItalic.checked) {
-            fixedTextItalic.parentNode.style.color = "rgb(41, 136, 255)";
+            fixedTextItalic.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            fixedTextItalic.parentNode.style.color = "white";
+            fixedTextItalic.parentNode.style.color = 'white';
           }
 
           if (fixedTextLineThrough.checked) {
-            fixedTextLineThrough.parentNode.style.color = "rgb(41, 136, 255)";
+            fixedTextLineThrough.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            fixedTextLineThrough.parentNode.style.color = "white";
+            fixedTextLineThrough.parentNode.style.color = 'white';
           }
 
           if (fixedTextUnderLine.checked) {
-            fixedTextUnderLine.parentNode.style.color = "rgb(41, 136, 255)";
+            fixedTextUnderLine.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            fixedTextUnderLine.parentNode.style.color = "white";
+            fixedTextUnderLine.parentNode.style.color = 'white';
           }
 
           break;
         }
 
-        case "rect": {
+        case 'rect': {
           floatingShapeTool.style.left = `${e.e.x}px`;
           floatingShapeTool.style.top = `${e.e.y}px`;
-          floatingShapeTool.style.display = "";
+          floatingShapeTool.style.display = '';
 
-          fixedShapeTool.style.display = "";
-          fixedTextTool.style.display = "none";
+          fixedShapeTool.style.display = '';
+          fixedTextTool.style.display = 'none';
 
-          textTab.style.backgroundColor = "rgb(65, 65, 65)";
-          shapeTab.style.backgroundColor = "rgb(80, 80, 80)";
+          textTab.style.backgroundColor = 'rgb(65, 65, 65)';
+          shapeTab.style.backgroundColor = 'rgb(80, 80, 80)';
 
-          toolShapeOutlineColor.value = v.foreground ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B) : undefined;
-          toolShapeBackground.value = v.background ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B) : undefined;
+          toolShapeOutlineColor.value = v.foreground
+            ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B)
+            : undefined;
+          toolShapeBackground.value = v.background
+            ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B)
+            : undefined;
           toolShapeStrokeWidth.value = v.shapeOption.strokeWidth;
           toolShapeStrokeShape.value = v.shapeOption.rx;
 
-          fixedShapeOutlineColor.value = v.foreground ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B) : undefined;
-          fixedShapeBackground.value = v.background ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B) : undefined;
+          fixedShapeOutlineColor.value = v.foreground
+            ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B)
+            : undefined;
+          fixedShapeBackground.value = v.background
+            ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B)
+            : undefined;
           fixedShapeStrokeWidth.value = v.shapeOption.strokeWidth;
           fixedShapeStrokeShape.value = v.shapeOption.rx;
 
@@ -1741,54 +1765,54 @@ function canvasSetting() {
       }
     },
 
-    "selection:updated": (e: any) => {
+    'selection:updated': (e: any) => {
       textTranslated.disabled = false;
 
       if (e.selected) {
         for (let i = 0; i < e.selected.length; i++) {
           if (e.selected.length > 1) {
             if (e.selected[0].stroke && e.selected[i].text) {
-              fixedTextTool.style.display = "";
-              fixedShapeTool.style.display = "none";
+              fixedTextTool.style.display = '';
+              fixedShapeTool.style.display = 'none';
 
-              textTab.style.cursor = "pointer";
-              shapeTab.style.cursor = "pointer";
+              textTab.style.cursor = 'pointer';
+              shapeTab.style.cursor = 'pointer';
 
               floatingTextTool.style.left = `${e.e.x}px`;
               floatingTextTool.style.top = `${e.e.y}px`;
-              floatingTextTool.style.display = "";
+              floatingTextTool.style.display = '';
 
               floatingShapeTool.style.left = `${e.e.x}px`;
               floatingShapeTool.style.top = `${e.e.y - 50}px`;
-              floatingShapeTool.style.display = "";
+              floatingShapeTool.style.display = '';
 
               return;
             } else if (e.selected[i].text) {
-              fixedTextTool.style.display = "";
-              fixedShapeTool.style.display = "none";
+              fixedTextTool.style.display = '';
+              fixedShapeTool.style.display = 'none';
 
-              textTab.style.backgroundColor = "rgb(80, 80, 80)";
-              shapeTab.style.backgroundColor = "rgb(65, 65, 65)";
+              textTab.style.backgroundColor = 'rgb(80, 80, 80)';
+              shapeTab.style.backgroundColor = 'rgb(65, 65, 65)';
 
-              textTab.style.cursor = "pointer";
-              shapeTab.style.cursor = "";
+              textTab.style.cursor = 'pointer';
+              shapeTab.style.cursor = '';
 
-              floatingTextTool.style.display = "";
+              floatingTextTool.style.display = '';
               floatingTextTool.style.left = `${e.e.x}px`;
               floatingTextTool.style.top = `${e.e.y}px`;
             }
             try {
               if (e.selected[e.selected.length - 1].stroke) {
-                fixedTextTool.style.display = "none";
-                fixedShapeTool.style.display = "";
+                fixedTextTool.style.display = 'none';
+                fixedShapeTool.style.display = '';
 
-                textTab.style.backgroundColor = "rgb(65, 65, 65)";
-                shapeTab.style.backgroundColor = "rgb(80, 80, 80)";
+                textTab.style.backgroundColor = 'rgb(65, 65, 65)';
+                shapeTab.style.backgroundColor = 'rgb(80, 80, 80)';
 
-                textTab.style.cursor = "";
-                shapeTab.style.cursor = "pointer";
+                textTab.style.cursor = '';
+                shapeTab.style.cursor = 'pointer';
 
-                floatingShapeTool.style.display = "";
+                floatingShapeTool.style.display = '';
                 floatingShapeTool.style.left = `${e.e.x}px`;
                 floatingShapeTool.style.top = `${e.e.y - 50}px`;
               }
@@ -1800,7 +1824,7 @@ function canvasSetting() {
       }
 
       let object = e.selected[0];
-      let objectType = object.get("type");
+      let objectType = object.get('type');
 
       if (object.id === -1) {
         return;
@@ -1810,108 +1834,124 @@ function canvasSetting() {
       let v = layer.object[object.id];
 
       switch (objectType) {
-        case "i-text": {
+        case 'i-text': {
           floatingTextTool.style.left = `${e.e.x}px`;
           floatingTextTool.style.top = `${e.e.y}px`;
-          floatingTextTool.style.display = "";
-          floatingShapeTool.style.display = "none";
+          floatingTextTool.style.display = '';
+          floatingShapeTool.style.display = 'none';
 
-          fixedTextTool.style.display = "";
-          fixedShapeTool.style.display = "none";
+          fixedTextTool.style.display = '';
+          fixedShapeTool.style.display = 'none';
 
-          textTab.style.backgroundColor = "rgb(80, 80, 80)";
-          shapeTab.style.backgroundColor = "rgb(65, 65, 65)";
+          textTab.style.backgroundColor = 'rgb(80, 80, 80)';
+          shapeTab.style.backgroundColor = 'rgb(65, 65, 65)';
 
           textOriginal.value = v.original;
-          textTranslated.value = v.text.textLines.join("");
-          toolTextColor.value = v.foreground ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B) : undefined;
-          toolTextBackground.value = v.background ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B) : undefined;
+          textTranslated.value = v.text.textLines.join('');
+          toolTextColor.value = v.foreground
+            ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B)
+            : undefined;
+          toolTextBackground.value = v.background
+            ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B)
+            : undefined;
           toolTextFont.value = v.textOption.font;
           toolTextSize.value = v.text.fontSize;
-          toolTextBold.checked = v.textOption.bold === "bold" ? true : false;
-          toolTextItalic.checked = v.textOption.italic === "italic" ? true : false;
-          toolTextLineThrough.checked = v.textOption.lineThrough === "lineThrough" ? true : false;
-          toolTextUnderLine.checked = v.textOption.underLine === "underLine" ? true : false;
+          toolTextBold.checked = v.textOption.bold === 'bold' ? true : false;
+          toolTextItalic.checked = v.textOption.italic === 'italic' ? true : false;
+          toolTextLineThrough.checked = v.textOption.lineThrough === 'lineThrough' ? true : false;
+          toolTextUnderLine.checked = v.textOption.underLine === 'underLine' ? true : false;
 
-          fixedTextColor.value = v.foreground ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B) : undefined;
-          fixedTextBackground.value = v.background ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B) : undefined;
+          fixedTextColor.value = v.foreground
+            ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B)
+            : undefined;
+          fixedTextBackground.value = v.background
+            ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B)
+            : undefined;
           fixedTextFont.value = v.textOption.font;
           fixedTextSize.value = v.text.fontSize;
-          fixedTextBold.checked = v.textOption.bold === "bold" ? true : false;
-          fixedTextItalic.checked = v.textOption.italic === "italic" ? true : false;
-          fixedTextLineThrough.checked = v.textOption.lineThrough === "lineThrough" ? true : false;
-          fixedTextUnderLine.checked = v.textOption.underLine === "underLine" ? true : false;
+          fixedTextBold.checked = v.textOption.bold === 'bold' ? true : false;
+          fixedTextItalic.checked = v.textOption.italic === 'italic' ? true : false;
+          fixedTextLineThrough.checked = v.textOption.lineThrough === 'lineThrough' ? true : false;
+          fixedTextUnderLine.checked = v.textOption.underLine === 'underLine' ? true : false;
 
           if (toolTextBold.checked) {
-            toolTextBold.parentNode.style.color = "rgb(41, 136, 255)";
+            toolTextBold.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            toolTextBold.parentNode.style.color = "white";
+            toolTextBold.parentNode.style.color = 'white';
           }
 
           if (toolTextItalic.checked) {
-            toolTextItalic.parentNode.style.color = "rgb(41, 136, 255)";
+            toolTextItalic.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            toolTextItalic.parentNode.style.color = "white";
+            toolTextItalic.parentNode.style.color = 'white';
           }
 
           if (toolTextLineThrough.checked) {
-            toolTextLineThrough.parentNode.style.color = "rgb(41, 136, 255)";
+            toolTextLineThrough.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            toolTextLineThrough.parentNode.style.color = "white";
+            toolTextLineThrough.parentNode.style.color = 'white';
           }
 
           if (toolTextUnderLine.checked) {
-            toolTextUnderLine.parentNode.style.color = "rgb(41, 136, 255)";
+            toolTextUnderLine.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            toolTextUnderLine.parentNode.style.color = "white";
+            toolTextUnderLine.parentNode.style.color = 'white';
           }
 
           if (fixedTextBold.checked) {
-            fixedTextBold.parentNode.style.color = "rgb(41, 136, 255)";
+            fixedTextBold.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            fixedTextBold.parentNode.style.color = "white";
+            fixedTextBold.parentNode.style.color = 'white';
           }
 
           if (fixedTextItalic.checked) {
-            fixedTextItalic.parentNode.style.color = "rgb(41, 136, 255)";
+            fixedTextItalic.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            fixedTextItalic.parentNode.style.color = "white";
+            fixedTextItalic.parentNode.style.color = 'white';
           }
 
           if (fixedTextLineThrough.checked) {
-            fixedTextLineThrough.parentNode.style.color = "rgb(41, 136, 255)";
+            fixedTextLineThrough.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            fixedTextLineThrough.parentNode.style.color = "white";
+            fixedTextLineThrough.parentNode.style.color = 'white';
           }
 
           if (fixedTextUnderLine.checked) {
-            fixedTextUnderLine.parentNode.style.color = "rgb(41, 136, 255)";
+            fixedTextUnderLine.parentNode.style.color = 'rgb(41, 136, 255)';
           } else {
-            fixedTextUnderLine.parentNode.style.color = "white";
+            fixedTextUnderLine.parentNode.style.color = 'white';
           }
 
           break;
         }
 
-        case "rect": {
+        case 'rect': {
           floatingShapeTool.style.left = `${e.e.x}px`;
           floatingShapeTool.style.top = `${e.e.y}px`;
-          floatingTextTool.style.display = "none";
-          floatingShapeTool.style.display = "";
+          floatingTextTool.style.display = 'none';
+          floatingShapeTool.style.display = '';
 
-          fixedShapeTool.style.display = "";
-          fixedTextTool.style.display = "none";
+          fixedShapeTool.style.display = '';
+          fixedTextTool.style.display = 'none';
 
-          textTab.style.backgroundColor = "rgb(65, 65, 65)";
-          shapeTab.style.backgroundColor = "rgb(80, 80, 80)";
+          textTab.style.backgroundColor = 'rgb(65, 65, 65)';
+          shapeTab.style.backgroundColor = 'rgb(80, 80, 80)';
 
-          toolShapeOutlineColor.value = v.foreground ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B) : undefined;
-          toolShapeBackground.value = v.background ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B) : undefined;
+          toolShapeOutlineColor.value = v.foreground
+            ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B)
+            : undefined;
+          toolShapeBackground.value = v.background
+            ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B)
+            : undefined;
           toolShapeStrokeWidth.value = v.shapeOption.strokeWidth;
           toolShapeStrokeShape.value = v.shapeOption.rx;
 
-          fixedShapeOutlineColor.value = v.foreground ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B) : undefined;
-          fixedShapeBackground.value = v.background ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B) : undefined;
+          fixedShapeOutlineColor.value = v.foreground
+            ? ConvertRGBtoHex(v.foreground.R, v.foreground.G, v.foreground.B)
+            : undefined;
+          fixedShapeBackground.value = v.background
+            ? ConvertRGBtoHex(v.background.R, v.background.G, v.background.B)
+            : undefined;
           fixedShapeStrokeWidth.value = v.shapeOption.strokeWidth;
           fixedShapeStrokeShape.value = v.shapeOption.rx;
 
@@ -1923,31 +1963,31 @@ function canvasSetting() {
       }
     },
 
-    "selection:cleared": (e: any) => {
+    'selection:cleared': (e: any) => {
       textTranslated.disabled = true;
 
-      shapeTab.style.cursor = "";
-      textTab.style.cursor = "";
+      shapeTab.style.cursor = '';
+      textTab.style.cursor = '';
 
-      floatingTextTool.style.display = "none";
-      floatingShapeTool.style.display = "none";
+      floatingTextTool.style.display = 'none';
+      floatingShapeTool.style.display = 'none';
     },
 
-    "object:modified": (e: any) => {
+    'object:modified': (e: any) => {
       try {
         if (e.target.id !== -1) {
-          let objectType = e.target.get("type");
+          let objectType = e.target.get('type');
 
           let layer = getCurrentLayer();
 
           switch (objectType) {
-            case "rect": {
+            case 'rect': {
               layer.object[e.target.id].rect = e.target;
 
               break;
             }
 
-            case "i-text": {
+            case 'i-text': {
               layer.object[e.target.id].text = e.target;
 
               break;
@@ -1966,7 +2006,7 @@ function canvasSetting() {
       }
     },
 
-    "object:moving": (e: any) => {
+    'object:moving': (e: any) => {
       let object = e.target;
       let layer = getCurrentLayer();
       let objects = myCanvas.getActiveObject();
@@ -2002,9 +2042,9 @@ function canvasSetting() {
       }
 
       if (objects.id !== -1) {
-        if (objects["_objects"]) {
-          for (let i in objects["_objects"]) {
-            let object = objects["_objects"][i];
+        if (objects['_objects']) {
+          for (let i in objects['_objects']) {
+            let object = objects['_objects'][i];
 
             objects.set({
               left: parseInt(objects.left),
@@ -2022,17 +2062,17 @@ function canvasSetting() {
       return;
     },
 
-    "object:scaling": (e: any) => {
+    'object:scaling': (e: any) => {
       let object = e.target;
       let layer = getCurrentLayer();
       let objects = myCanvas.getActiveObject();
-      let objectType = e.target.get("type");
+      let objectType = e.target.get('type');
 
       let height = object.getScaledHeight();
       let width = object.getScaledWidth();
 
       switch (objectType) {
-        case "i-text": {
+        case 'i-text': {
           let size = Math.round(object.fontSize * object.scaleX);
           object.set({
             fontSize: size,
@@ -2052,7 +2092,7 @@ function canvasSetting() {
           break;
       }
 
-      if (editorMode === "crop") {
+      if (editorMode === 'crop') {
         let percentage = Math.round(parseInt(previewSize.value) / 10) * 10 + 10;
 
         let left = Math.floor(object.left / (100 / percentage));
@@ -2078,7 +2118,7 @@ function canvasSetting() {
       }
 
       if (objects.id !== -1) {
-        if (objects["_objects"]) {
+        if (objects['_objects']) {
           //
         } else {
           layer.object[objects.id].pos[2].x = parseInt(width);
@@ -2092,13 +2132,13 @@ function canvasSetting() {
       return;
     },
 
-    "object:rotating": (e) => {
+    'object:rotating': (e) => {
       let object = e.target;
       let layer = getCurrentLayer();
       let objects = myCanvas.getActiveObject();
 
       if (objects.id !== -1) {
-        if (objects["_objects"]) {
+        if (objects['_objects']) {
         } else {
           object.set({
             angle: object.angle,
@@ -2113,20 +2153,20 @@ function canvasSetting() {
       return;
     },
 
-    "mouse:over": (e: any) => {
+    'mouse:over': (e: any) => {
       try {
         if (
-          editorMode === "area-translation" ||
-          editorMode === "area-remove-drag" ||
-          editorMode === "area-remove-brush" ||
-          editorMode === "area-recovery-drag" ||
-          editorMode === "area-recovery-brush" ||
-          editorMode === "crop"
+          editorMode === 'area-translation' ||
+          editorMode === 'area-remove-drag' ||
+          editorMode === 'area-remove-brush' ||
+          editorMode === 'area-recovery-drag' ||
+          editorMode === 'area-recovery-brush' ||
+          editorMode === 'crop'
         ) {
           return;
         }
 
-        e.target.set("backgroundColor", "rgba(41, 136, 255, 0.5)");
+        e.target.set('backgroundColor', 'rgba(41, 136, 255, 0.5)');
 
         myCanvas.renderAll();
       } catch (e) {
@@ -2134,15 +2174,15 @@ function canvasSetting() {
       }
     },
 
-    "mouse:out": (e: any) => {
+    'mouse:out': (e: any) => {
       try {
         if (
-          editorMode === "area-translation" ||
-          editorMode === "area-remove-drag" ||
-          editorMode === "area-remove-brush" ||
-          editorMode === "area-recovery-drag" ||
-          editorMode === "area-recovery-brush" ||
-          editorMode === "crop"
+          editorMode === 'area-translation' ||
+          editorMode === 'area-remove-drag' ||
+          editorMode === 'area-remove-brush' ||
+          editorMode === 'area-recovery-drag' ||
+          editorMode === 'area-recovery-brush' ||
+          editorMode === 'crop'
         ) {
           return;
         }
@@ -2150,15 +2190,15 @@ function canvasSetting() {
         let layer = getCurrentLayer();
         let color = layer.object[e.target.id].background;
 
-        if (layer.object[e.target.id].object === "i-text") {
+        if (layer.object[e.target.id].object === 'i-text') {
           if (color) {
-            e.target.set("backgroundColor", `rgb(${color.R}, ${color.G}, ${color.B})`);
+            e.target.set('backgroundColor', `rgb(${color.R}, ${color.G}, ${color.B})`);
           } else {
-            e.target.set("backgroundColor", `transparent`);
+            e.target.set('backgroundColor', `transparent`);
           }
         } else {
           if (color) {
-            e.target.set("backgroundColor", `transparent`);
+            e.target.set('backgroundColor', `transparent`);
           }
         }
 
@@ -2168,16 +2208,16 @@ function canvasSetting() {
       }
     },
 
-    "mouse:down": async (e: any) => {
+    'mouse:down': async (e: any) => {
       isDrag = true;
 
-      areaPos["x"] = [e.absolutePointer.x];
-      areaPos["y"] = [e.absolutePointer.y];
+      areaPos['x'] = [e.absolutePointer.x];
+      areaPos['y'] = [e.absolutePointer.y];
 
       let layer = getCurrentLayer();
 
       switch (editorMode) {
-        case "area-recovery-drag": {
+        case 'area-recovery-drag': {
           let dragArea: any = await mergeImage(layer.image.origin);
 
           dragImage = new fabric.Image(dragArea);
@@ -2190,7 +2230,7 @@ function canvasSetting() {
           break;
         }
 
-        case "area-recovery-brush": {
+        case 'area-recovery-brush': {
           let dragArea: any = await mergeImage(layer.image.origin);
 
           dragImage = new fabric.Image(dragArea);
@@ -2208,27 +2248,27 @@ function canvasSetting() {
       }
     },
 
-    "mouse:move": (e: any) => {
+    'mouse:move': (e: any) => {
       if (!isDrag) {
         return;
       }
 
       switch (editorMode) {
-        case "area-recovery-drag": {
+        case 'area-recovery-drag': {
           let test: any = {
             x: [],
             y: [],
           };
 
-          test["x"].push(areaPos["x"][0]);
-          test["y"].push(areaPos["y"][0]);
-          test["x"].push(e.absolutePointer.x);
-          test["y"].push(e.absolutePointer.y);
+          test['x'].push(areaPos['x'][0]);
+          test['y'].push(areaPos['y'][0]);
+          test['x'].push(e.absolutePointer.x);
+          test['y'].push(e.absolutePointer.y);
 
-          let xMax = Math.max(...test["x"]);
-          let xMin = Math.min(...test["x"]);
-          let yMax = Math.max(...test["y"]);
-          let yMin = Math.min(...test["y"]);
+          let xMax = Math.max(...test['x']);
+          let xMin = Math.min(...test['x']);
+          let yMax = Math.max(...test['y']);
+          let yMin = Math.min(...test['y']);
 
           let rect = new fabric.Rect({
             left: xMin - dragImage.width / 2,
@@ -2253,20 +2293,20 @@ function canvasSetting() {
       }
     },
 
-    "mouse:up": async (e: any) => {
+    'mouse:up': async (e: any) => {
       isDrag = false;
 
       switch (editorMode) {
-        case "area-translation": {
-          loading.style.display = "";
+        case 'area-translation': {
+          loading.style.display = '';
 
-          areaPos["x"].push(e.absolutePointer.x);
-          areaPos["y"].push(e.absolutePointer.y);
+          areaPos['x'].push(e.absolutePointer.x);
+          areaPos['y'].push(e.absolutePointer.y);
 
-          let xMax = Math.max(...areaPos["x"]);
-          let xMin = Math.min(...areaPos["x"]);
-          let yMax = Math.max(...areaPos["y"]);
-          let yMin = Math.min(...areaPos["y"]);
+          let xMax = Math.max(...areaPos['x']);
+          let xMin = Math.min(...areaPos['x']);
+          let yMax = Math.max(...areaPos['y']);
+          let yMin = Math.min(...areaPos['y']);
 
           let percentage = Math.round(parseInt(previewSize.value) / 10) * 10 + 10;
 
@@ -2290,26 +2330,26 @@ function canvasSetting() {
             },
           });
 
-          await toggleToolbar(areaRemove, "area-translation");
+          await toggleToolbar(areaRemove, 'area-translation');
           await saveCanvas();
 
-          loading.style.display = "none";
+          loading.style.display = 'none';
 
-          floatingToast(`번역이 완료되었습니다.`, "information");
+          floatingToast(`번역이 완료되었습니다.`, 'information');
 
           break;
         }
 
-        case "area-remove-drag": {
-          loading.style.display = "";
+        case 'area-remove-drag': {
+          loading.style.display = '';
 
-          areaPos["x"].push(e.absolutePointer.x);
-          areaPos["y"].push(e.absolutePointer.y);
+          areaPos['x'].push(e.absolutePointer.x);
+          areaPos['y'].push(e.absolutePointer.y);
 
-          let xMax = Math.max(...areaPos["x"]);
-          let xMin = Math.min(...areaPos["x"]);
-          let yMax = Math.max(...areaPos["y"]);
-          let yMin = Math.min(...areaPos["y"]);
+          let xMax = Math.max(...areaPos['x']);
+          let xMin = Math.min(...areaPos['x']);
+          let yMax = Math.max(...areaPos['y']);
+          let yMin = Math.min(...areaPos['y']);
 
           let rect = new fabric.Rect({
             left: xMin,
@@ -2320,23 +2360,23 @@ function canvasSetting() {
           });
 
           await getMaskImage([rect]);
-          await toggleToolbar(areaRemove, "area-remove-drag");
+          await toggleToolbar(areaRemove, 'area-remove-drag');
           await saveCanvas();
 
-          loading.style.display = "none";
+          loading.style.display = 'none';
 
-          floatingToast(`잔상을 제거했습니다.`, "information");
+          floatingToast(`잔상을 제거했습니다.`, 'information');
 
           break;
         }
 
-        case "area-remove-brush": {
-          loading.style.display = "";
+        case 'area-remove-brush': {
+          loading.style.display = '';
 
           let objects = myCanvas.getObjects().filter((v: any) => {
-            let type = v.get("type");
+            let type = v.get('type');
 
-            if (type !== "path") {
+            if (type !== 'path') {
               return false;
             }
 
@@ -2345,28 +2385,28 @@ function canvasSetting() {
 
           await getMaskImage(objects);
 
-          await toggleToolbar(areaRemove, "area-remove-brush");
+          await toggleToolbar(areaRemove, 'area-remove-brush');
           await saveCanvas();
 
-          loading.style.display = "none";
+          loading.style.display = 'none';
 
-          floatingToast(`잔상을 제거했습니다.`, "information");
+          floatingToast(`잔상을 제거했습니다.`, 'information');
 
           break;
         }
 
-        case "area-recovery-drag": {
+        case 'area-recovery-drag': {
           let percentage = Math.round(parseInt(previewSize.value) / 10) * 10 + 10;
 
-          loading.style.display = "";
+          loading.style.display = '';
 
-          areaPos["x"].push(e.absolutePointer.x);
-          areaPos["y"].push(e.absolutePointer.y);
+          areaPos['x'].push(e.absolutePointer.x);
+          areaPos['y'].push(e.absolutePointer.y);
 
-          let xMax = Math.max(...areaPos["x"]);
-          let xMin = Math.min(...areaPos["x"]);
-          let yMax = Math.max(...areaPos["y"]);
-          let yMin = Math.min(...areaPos["y"]);
+          let xMax = Math.max(...areaPos['x']);
+          let xMin = Math.min(...areaPos['x']);
+          let yMax = Math.max(...areaPos['y']);
+          let yMin = Math.min(...areaPos['y']);
 
           let layer = getCurrentLayer();
 
@@ -2404,26 +2444,26 @@ function canvasSetting() {
           layer.image.current = dataUrl;
 
           await displayImage(currentImageIndex, 0);
-          await toggleToolbar(areaRecovery, "area-recovery-drag");
+          await toggleToolbar(areaRecovery, 'area-recovery-drag');
           await saveCanvas();
 
-          loading.style.display = "none";
+          loading.style.display = 'none';
 
-          floatingToast(`영역이 복구되었습니다.`, "information");
+          floatingToast(`영역이 복구되었습니다.`, 'information');
 
           break;
         }
 
-        case "area-recovery-brush": {
+        case 'area-recovery-brush': {
           let percentage = Math.round(parseInt(previewSize.value) / 10) * 10 + 10;
 
-          loading.style.display = "";
+          loading.style.display = '';
 
-          areaPos["x"].push(e.absolutePointer.x);
-          areaPos["y"].push(e.absolutePointer.y);
+          areaPos['x'].push(e.absolutePointer.x);
+          areaPos['y'].push(e.absolutePointer.y);
 
-          let xMin = Math.min(...areaPos["x"]);
-          let yMin = Math.min(...areaPos["y"]);
+          let xMin = Math.min(...areaPos['x']);
+          let yMin = Math.min(...areaPos['y']);
 
           let layer = getCurrentLayer();
 
@@ -2434,9 +2474,9 @@ function canvasSetting() {
           let clipImage: any = new fabric.Image(clipArea);
 
           let objects = myCanvas.getObjects().filter((v: any) => {
-            let type = v.get("type");
+            let type = v.get('type');
 
-            if (type !== "path") {
+            if (type !== 'path') {
               return false;
             }
 
@@ -2471,12 +2511,12 @@ function canvasSetting() {
           layer.image.current = dataUrl;
 
           await displayImage(currentImageIndex, 0);
-          await toggleToolbar(areaRecovery, "area-recovery-brush");
+          await toggleToolbar(areaRecovery, 'area-recovery-brush');
           await saveCanvas();
 
-          loading.style.display = "none";
+          loading.style.display = 'none';
 
-          floatingToast(`영역이 복구되었습니다.`, "information");
+          floatingToast(`영역이 복구되었습니다.`, 'information');
 
           break;
         }
@@ -2493,9 +2533,9 @@ async function setTextFont(e: any) {
 
   let layer = getCurrentLayer();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
       layer.object[object.id].textOption.font = e.target.value;
       layer.object[object.id].text.set({
@@ -2519,11 +2559,11 @@ async function setTextSize(e: any) {
 
   let layer = getCurrentLayer();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
-      if (layer.object[object.id].object == "i-text") {
+      if (layer.object[object.id].object == 'i-text') {
         layer.object[object.id].textOption.size = parseInt(e.target.value);
         layer.object[object.id].text.set({
           fontSize: parseInt(e.target.value),
@@ -2552,11 +2592,11 @@ async function setTextColor(e: any) {
 
   let layer = getCurrentLayer();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
-      if (layer.object[object.id].object == "i-text") {
+      if (layer.object[object.id].object == 'i-text') {
         layer.object[object.id].foreground = {
           R: color.r,
           G: color.g,
@@ -2593,11 +2633,11 @@ async function setTextBackground(e: any) {
 
   let layer = getCurrentLayer();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
-      if (layer.object[object.id].object == "i-text") {
+      if (layer.object[object.id].object == 'i-text') {
         layer.object[object.id].background = {
           R: color.r,
           G: color.g,
@@ -2634,11 +2674,11 @@ async function setShapeColor(e: any) {
 
   let layer = getCurrentLayer();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
-      if (layer.object[object.id].object == "rect") {
+      if (layer.object[object.id].object == 'rect') {
         layer.object[object.id].foreground = {
           R: color.r,
           G: color.g,
@@ -2674,11 +2714,11 @@ async function setShapeStrokeWidth(e: any) {
 
   let layer = getCurrentLayer();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
-      if (layer.object[object.id].object == "rect") {
+      if (layer.object[object.id].object == 'rect') {
         layer.object[object.id].shapeOption.strokeWidth = parseInt(e.target.value);
 
         object.set({
@@ -2705,11 +2745,11 @@ async function setShapeStrokeShape(e) {
     return;
   }
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
-      if (layer.object[object.id].object == "rect") {
+      if (layer.object[object.id].object == 'rect') {
         layer.object[object.id].shapeOption.rx = parseInt(e.target.value);
         layer.object[object.id].shapeOption.ry = parseInt(e.target.value);
 
@@ -2741,11 +2781,11 @@ async function setShapeBackground(e: any) {
 
   let layer = getCurrentLayer();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
-      if (layer.object[object.id].object == "rect") {
+      if (layer.object[object.id].object == 'rect') {
         layer.object[object.id].background = {
           R: color.r,
           G: color.g,
@@ -2777,28 +2817,28 @@ async function setTextBold(e: any) {
 
   let layer = getCurrentLayer();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
-      if (layer.object[object.id].object == "i-text") {
-        layer.object[object.id].textOption.bold = e.target.checked ? "bold" : "normal";
+      if (layer.object[object.id].object == 'i-text') {
+        layer.object[object.id].textOption.bold = e.target.checked ? 'bold' : 'normal';
         layer.object[object.id].text.set({
-          fontWeight: e.target.checked ? "bold" : "normal",
+          fontWeight: e.target.checked ? 'bold' : 'normal',
         });
       }
     }
   } else {
-    layer.object[objects.id].textOption.bold = e.target.checked ? "bold" : "normal";
+    layer.object[objects.id].textOption.bold = e.target.checked ? 'bold' : 'normal';
     layer.object[objects.id].text.set({
-      fontWeight: e.target.checked ? "bold" : "normal",
+      fontWeight: e.target.checked ? 'bold' : 'normal',
     });
   }
 
   if (e.target.checked) {
-    e.target.parentNode.style.color = "rgb(41, 136, 255)";
+    e.target.parentNode.style.color = 'rgb(41, 136, 255)';
   } else {
-    e.target.parentNode.style.color = "white";
+    e.target.parentNode.style.color = 'white';
   }
 
   myCanvas.renderAll();
@@ -2811,28 +2851,28 @@ async function setTextItalic(e: any) {
 
   let layer = getCurrentLayer();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
-      if (layer.object[object.id].object == "i-text") {
-        layer.object[object.id].textOption.italic = e.target.checked ? "italic" : "normal";
+      if (layer.object[object.id].object == 'i-text') {
+        layer.object[object.id].textOption.italic = e.target.checked ? 'italic' : 'normal';
         layer.object[object.id].text.set({
-          fontStyle: e.target.checked ? "italic" : "normal",
+          fontStyle: e.target.checked ? 'italic' : 'normal',
         });
       }
     }
   } else {
-    layer.object[objects.id].textOption.italic = e.target.checked ? "italic" : "normal";
+    layer.object[objects.id].textOption.italic = e.target.checked ? 'italic' : 'normal';
     layer.object[objects.id].text.set({
-      fontStyle: e.target.checked ? "italic" : "normal",
+      fontStyle: e.target.checked ? 'italic' : 'normal',
     });
   }
 
   if (e.target.checked) {
-    e.target.parentNode.style.color = "rgb(41, 136, 255)";
+    e.target.parentNode.style.color = 'rgb(41, 136, 255)';
   } else {
-    e.target.parentNode.style.color = "white";
+    e.target.parentNode.style.color = 'white';
   }
 
   myCanvas.renderAll();
@@ -2845,28 +2885,28 @@ async function setTextLineThrough(e: any) {
 
   let layer = getCurrentLayer();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
-      if (layer.object[object.id].object == "i-text") {
-        layer.object[object.id].textOption.lineThrough = e.target.checked ? "lineThrough" : "normal";
+      if (layer.object[object.id].object == 'i-text') {
+        layer.object[object.id].textOption.lineThrough = e.target.checked ? 'lineThrough' : 'normal';
         layer.object[object.id].text.set({
           linethrough: e.target.checked,
         });
       }
     }
   } else {
-    layer.object[objects.id].textOption.lineThrough = e.target.checked ? "lineThrough" : "normal";
+    layer.object[objects.id].textOption.lineThrough = e.target.checked ? 'lineThrough' : 'normal';
     layer.object[objects.id].text.set({
       linethrough: e.target.checked,
     });
   }
 
   if (e.target.checked) {
-    e.target.parentNode.style.color = "rgb(41, 136, 255)";
+    e.target.parentNode.style.color = 'rgb(41, 136, 255)';
   } else {
-    e.target.parentNode.style.color = "white";
+    e.target.parentNode.style.color = 'white';
   }
 
   myCanvas.renderAll();
@@ -2879,28 +2919,28 @@ async function setTextUnderLine(e: any) {
 
   let layer = getCurrentLayer();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
-      if (layer.object[object.id].object == "i-text") {
-        layer.object[object.id].textOption.underLine = e.target.checked ? "underLine" : "normal";
+      if (layer.object[object.id].object == 'i-text') {
+        layer.object[object.id].textOption.underLine = e.target.checked ? 'underLine' : 'normal';
         layer.object[object.id].text.set({
           underline: e.target.checked,
         });
       }
     }
   } else {
-    layer.object[objects.id].textOption.underLine = e.target.checked ? "underLine" : "normal";
+    layer.object[objects.id].textOption.underLine = e.target.checked ? 'underLine' : 'normal';
     layer.object[objects.id].text.set({
       underline: e.target.checked,
     });
   }
 
   if (e.target.checked) {
-    e.target.parentNode.style.color = "rgb(41, 136, 255)";
+    e.target.parentNode.style.color = 'rgb(41, 136, 255)';
   } else {
-    e.target.parentNode.style.color = "white";
+    e.target.parentNode.style.color = 'white';
   }
 
   myCanvas.renderAll();
@@ -2911,9 +2951,9 @@ async function setTextUnderLine(e: any) {
 async function setTextAlign(direction: any) {
   let objects = myCanvas.getActiveObject();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
       object.set({
         textAlign: direction,
@@ -2933,12 +2973,12 @@ async function setTextAlign(direction: any) {
 async function setGroupAlign(direction: any) {
   let objects = myCanvas.getActiveObject();
 
-  if (objects["_objects"]) {
-    for (let i in objects["_objects"]) {
-      let object = objects["_objects"][i];
+  if (objects['_objects']) {
+    for (let i in objects['_objects']) {
+      let object = objects['_objects'][i];
 
       switch (direction) {
-        case "left": {
+        case 'left': {
           object.set({
             left: 0 - objects.width / 2,
           });
@@ -2946,7 +2986,7 @@ async function setGroupAlign(direction: any) {
           break;
         }
 
-        case "center": {
+        case 'center': {
           object.set({
             left: 0 - object.width / 2,
           });
@@ -2954,7 +2994,7 @@ async function setGroupAlign(direction: any) {
           break;
         }
 
-        case "right": {
+        case 'right': {
           object.set({
             left: objects.width / 2 - object.width,
           });
@@ -2962,7 +3002,7 @@ async function setGroupAlign(direction: any) {
           break;
         }
 
-        case "top": {
+        case 'top': {
           object.set({
             top: 0 - objects.height / 2,
           });
@@ -2970,7 +3010,7 @@ async function setGroupAlign(direction: any) {
           break;
         }
 
-        case "middle": {
+        case 'middle': {
           object.set({
             top: 0 - object.height / 2,
           });
@@ -2978,7 +3018,7 @@ async function setGroupAlign(direction: any) {
           break;
         }
 
-        case "bottom": {
+        case 'bottom': {
           object.set({
             top: objects.height / 2 - object.height,
           });
@@ -2999,57 +3039,57 @@ async function setGroupAlign(direction: any) {
 
 function toggleInit(mode: string) {
   switch (mode) {
-    case "area-translation": {
+    case 'area-translation': {
       startRegion.disabled = false;
       endRegion.disabled = false;
 
       break;
     }
 
-    case "area-remove-drag": {
-      areaRemoveSelect.style.display = "none";
+    case 'area-remove-drag': {
+      areaRemoveSelect.style.display = 'none';
 
       break;
     }
 
-    case "area-remove-brush": {
-      areaRemoveSelect.style.display = "none";
+    case 'area-remove-brush': {
+      areaRemoveSelect.style.display = 'none';
 
       myCanvas.isDrawingMode = false;
 
       break;
     }
 
-    case "area-recovery-drag": {
-      areaRecoverySelect.style.display = "none";
+    case 'area-recovery-drag': {
+      areaRecoverySelect.style.display = 'none';
 
       break;
     }
 
-    case "area-recovery-brush": {
-      areaRecoverySelect.style.display = "none";
+    case 'area-recovery-brush': {
+      areaRecoverySelect.style.display = 'none';
 
       myCanvas.isDrawingMode = false;
 
       break;
     }
 
-    case "crop": {
-      mainCrop.style.display = "none";
-      mainTextEditor.style.display = "";
+    case 'crop': {
+      mainCrop.style.display = 'none';
+      mainTextEditor.style.display = '';
 
       break;
     }
 
-    case "watermark": {
-      mainWaterMark.style.display = "none";
-      mainTextEditor.style.display = "";
+    case 'watermark': {
+      mainWaterMark.style.display = 'none';
+      mainTextEditor.style.display = '';
 
       break;
     }
 
-    case "download": {
-      mainDownload.style.display = "none";
+    case 'download': {
+      mainDownload.style.display = 'none';
 
       // originWidthPCLayout.style.display = "none";
       // originWidthURLLayout.style.display = "none";
@@ -3069,18 +3109,18 @@ function toggleInit(mode: string) {
 }
 
 async function toggleToolbar(element: any, mode: string) {
-  let buttons = document.getElementsByClassName("toolbar");
+  let buttons = document.getElementsByClassName('toolbar');
 
   for (let i = 0; i < buttons.length; i++) {
-    if (element.getAttribute("key") === buttons[i].getAttribute("key")) {
+    if (element.getAttribute('key') === buttons[i].getAttribute('key')) {
       if (editorMode === mode) {
-        editorMode = "idle";
+        editorMode = 'idle';
 
-        buttons[i].className = "toolbar button default btnTooltip";
+        buttons[i].className = 'toolbar button default btnTooltip';
 
         toggleInit(mode);
       } else {
-        if (editorMode !== "idle") {
+        if (editorMode !== 'idle') {
           toggleInit(editorMode);
         }
 
@@ -3088,85 +3128,85 @@ async function toggleToolbar(element: any, mode: string) {
         // buttons[i].className = "toolbar button primary";
 
         switch (mode) {
-          case "area-remove-drag": {
+          case 'area-remove-drag': {
             removeType = mode;
 
             areaRemove.innerHTML = `<span class="btnKeys_bottom">잔상제거 </br> Shift + 4</span> <img src="resources/17eraserdrag.svg" alt="" width="30px" />`;
-            areaRemoveSelect.style.display = "none";
-            buttons[i].className = "toolbar button primary btnTooltip";
+            areaRemoveSelect.style.display = 'none';
+            buttons[i].className = 'toolbar button primary btnTooltip';
 
             break;
           }
 
-          case "area-remove-brush": {
+          case 'area-remove-brush': {
             removeType = mode;
 
             areaRemove.innerHTML = `<span class="btnKeys_bottom">잔상제거 </br> Shift + 4</span> <img src="resources/18eraserbrush.svg" alt="" width="30px" />`;
-            areaRemoveSelect.style.display = "none";
+            areaRemoveSelect.style.display = 'none';
 
             myCanvas.isDrawingMode = true;
             myCanvas.freeDrawingBrush.width = 50;
-            myCanvas.freeDrawingBrush.color = "white";
-            buttons[i].className = "toolbar button primary btnTooltip";
+            myCanvas.freeDrawingBrush.color = 'white';
+            buttons[i].className = 'toolbar button primary btnTooltip';
 
             break;
           }
 
-          case "area-recovery-drag": {
+          case 'area-recovery-drag': {
             recoveryType = mode;
 
             areaRecovery.innerHTML = `<span class="btnKeys_bottom">영역복구 </br> Shift + 5</span> <img src="resources/19restoredrag.svg" alt="" width="30px" />`;
-            areaRecoverySelect.style.display = "none";
-            buttons[i].className = "toolbar button primary btnTooltip";
+            areaRecoverySelect.style.display = 'none';
+            buttons[i].className = 'toolbar button primary btnTooltip';
 
             break;
           }
 
-          case "area-recovery-brush": {
+          case 'area-recovery-brush': {
             recoveryType = mode;
 
             areaRecovery.innerHTML = `<span class="btnKeys_bottom">영역복구 </br> Shift + 5</span> <img src="resources/20restorebrush.svg" alt="" width="30px" />`;
-            areaRecoverySelect.style.display = "none";
+            areaRecoverySelect.style.display = 'none';
 
             myCanvas.isDrawingMode = true;
             myCanvas.freeDrawingBrush.width = 50;
-            myCanvas.freeDrawingBrush.color = "white";
-            buttons[i].className = "toolbar button primary btnTooltip";
+            myCanvas.freeDrawingBrush.color = 'white';
+            buttons[i].className = 'toolbar button primary btnTooltip';
 
             break;
           }
 
-          case "area-translation": {
-            buttons[i].className = "toolbar button primary btnTooltip";
+          case 'area-translation': {
+            buttons[i].className = 'toolbar button primary btnTooltip';
 
             break;
           }
 
-          case "crop": {
-            mainCrop.style.display = "";
-            mainTextEditor.style.display = "none";
-            buttons[i].className = "toolbar button primary btnTooltip";
+          case 'crop': {
+            mainCrop.style.display = '';
+            mainTextEditor.style.display = 'none';
+            buttons[i].className = 'toolbar button primary btnTooltip';
 
             break;
           }
 
-          case "watermark": {
-            mainWaterMark.style.display = "";
-            mainTextEditor.style.display = "none";
-            buttons[i].className = "toolbar button primary btnTooltip";
+          case 'watermark': {
+            mainWaterMark.style.display = '';
+            mainTextEditor.style.display = 'none';
+            buttons[i].className = 'toolbar button primary btnTooltip';
 
             break;
           }
 
-          case "download": {
-            let accept = confirm("모든 이미지가 셀포유에 적용됩니다.\n편집이 모두 완료되었는지 확인 후 저장해주세요.");
-            buttons[i].className = "toolbar button default btnTooltip";
+          case 'download': {
+            let accept = confirm('모든 이미지가 셀포유에 적용됩니다.\n편집이 모두 완료되었는지 확인 후 저장해주세요.');
+            buttons[i].className = 'toolbar button default btnTooltip';
 
             if (!accept) {
               return;
             }
 
-            mainDownload.style.display = "";
+            mainDownload.style.display = '';
             // thisDownload.style.display = "none";
 
             // if (currentType === "0") {
@@ -3198,7 +3238,7 @@ async function toggleToolbar(element: any, mode: string) {
       continue;
     }
 
-    buttons[i].className = "toolbar button default btnTooltip";
+    buttons[i].className = 'toolbar button default btnTooltip';
   }
 
   await displayImage(currentImageIndex, 0);
@@ -3212,7 +3252,7 @@ async function addShape() {
   };
 
   let info = {
-    object: "rect",
+    object: 'rect',
 
     pos: [
       {
@@ -3260,7 +3300,7 @@ async function addText() {
   let color: any = hexToRgb(toolTextColor.value);
 
   let info = {
-    object: "i-text",
+    object: 'i-text',
 
     pos: [
       {
@@ -3281,16 +3321,16 @@ async function addText() {
       },
     ],
 
-    original: "",
-    translated: "텍스트를 입력해주세요.",
+    original: '',
+    translated: '텍스트를 입력해주세요.',
 
     textOption: {
-      font: "NNSQUAREROUNDR",
+      font: 'NNSQUAREROUNDR',
       size: 50,
-      bold: "normal",
-      italic: "normal",
-      lineThrough: "",
-      underLine: "",
+      bold: 'normal',
+      italic: 'normal',
+      lineThrough: '',
+      underLine: '',
     },
 
     foreground: {
@@ -3311,30 +3351,30 @@ async function addText() {
 function setTextTab() {
   let objects = myCanvas.getActiveObject();
   let layer = getCurrentLayer();
-  let length = Object.keys(objects["_objects"]).length;
+  let length = Object.keys(objects['_objects']).length;
 
-  if (objects["_objects"]) {
+  if (objects['_objects']) {
     for (let i = 0; i < length; i++) {
-      if (objects["_objects"][i].text) {
-        textTab.style.backgroundColor = "rgb(80, 80, 80)";
-        shapeTab.style.backgroundColor = "rgb(65, 65, 65)";
-        fixedTextTool.style.display = "";
-        fixedShapeTool.style.display = "none";
+      if (objects['_objects'][i].text) {
+        textTab.style.backgroundColor = 'rgb(80, 80, 80)';
+        shapeTab.style.backgroundColor = 'rgb(65, 65, 65)';
+        fixedTextTool.style.display = '';
+        fixedShapeTool.style.display = 'none';
       }
     }
   } else {
-    if (layer.object[objects.id].object == "i-text") {
-      textTab.style.backgroundColor = "rgb(80, 80, 80)";
-      shapeTab.style.backgroundColor = "rgb(65, 65, 65)";
-      fixedTextTool.style.display = "";
-      fixedShapeTool.style.display = "none";
+    if (layer.object[objects.id].object == 'i-text') {
+      textTab.style.backgroundColor = 'rgb(80, 80, 80)';
+      shapeTab.style.backgroundColor = 'rgb(65, 65, 65)';
+      fixedTextTool.style.display = '';
+      fixedShapeTool.style.display = 'none';
     }
   }
 }
 
 async function addTextVertical() {
   let info = {
-    object: "i-text",
+    object: 'i-text',
 
     pos: [
       {
@@ -3355,17 +3395,17 @@ async function addTextVertical() {
       },
     ],
 
-    original: "",
-    translated: "텍\n스\n트\n를\n입\n력\n해\n주\n세\n요",
+    original: '',
+    translated: '텍\n스\n트\n를\n입\n력\n해\n주\n세\n요',
 
     textOption: {
-      font: "NNSQUAREROUNDR",
+      font: 'NNSQUAREROUNDR',
       size: 50,
-      bold: "normal",
-      italic: "normal",
-      lineThrough: "",
-      underLine: "",
-      direction: "vertical",
+      bold: 'normal',
+      italic: 'normal',
+      lineThrough: '',
+      underLine: '',
+      direction: 'vertical',
     },
 
     foreground: {
@@ -3385,23 +3425,23 @@ async function addTextVertical() {
 function setShapeTab() {
   let objects = myCanvas.getActiveObject();
   let layer = getCurrentLayer();
-  let length = Object.keys(objects["_objects"]).length;
+  let length = Object.keys(objects['_objects']).length;
 
-  if (objects["_objects"]) {
+  if (objects['_objects']) {
     for (let i = 0; i < length; i++) {
-      if (objects["_objects"][i].stroke) {
-        textTab.style.backgroundColor = "rgb(65, 65, 65)";
-        shapeTab.style.backgroundColor = "rgb(80, 80, 80)";
-        fixedTextTool.style.display = "none";
-        fixedShapeTool.style.display = "";
+      if (objects['_objects'][i].stroke) {
+        textTab.style.backgroundColor = 'rgb(65, 65, 65)';
+        shapeTab.style.backgroundColor = 'rgb(80, 80, 80)';
+        fixedTextTool.style.display = 'none';
+        fixedShapeTool.style.display = '';
       }
     }
   } else {
-    if (layer.object[objects.id].object == "rect") {
-      textTab.style.backgroundColor = "rgb(65, 65, 65)";
-      shapeTab.style.backgroundColor = "rgb(80, 80, 80)";
-      fixedTextTool.style.display = "none";
-      fixedShapeTool.style.display = "";
+    if (layer.object[objects.id].object == 'rect') {
+      textTab.style.backgroundColor = 'rgb(65, 65, 65)';
+      shapeTab.style.backgroundColor = 'rgb(80, 80, 80)';
+      fixedTextTool.style.display = 'none';
+      fixedShapeTool.style.display = '';
     }
   }
 }
@@ -3409,17 +3449,17 @@ function setShapeTab() {
 async function multiple() {
   cancel = false;
 
-  loading.style.display = "";
+  loading.style.display = '';
 
-  let filtered = layers.filter((v: any) => v.type === currentType && v.state.check === "checked");
+  let filtered = layers.filter((v: any) => v.type === currentType && v.state.check === 'checked');
   for (let i = 0; i < filtered.length; i++) {
     if (cancel) {
-      floatingToast(`번역이 중지되었습니다.`, "failed");
+      floatingToast(`번역이 중지되었습니다.`, 'failed');
 
       startRegion.disabled = false;
       endRegion.disabled = false;
 
-      loading.style.display = "none";
+      loading.style.display = 'none';
 
       return;
     }
@@ -3430,24 +3470,24 @@ async function multiple() {
 
     await processVisionData(null);
 
-    floatingToast(`번역 중... (${i + 1}/${filtered.length} 완료)`, "information");
+    floatingToast(`번역 중... (${i + 1}/${filtered.length} 완료)`, 'information');
   }
 
   startRegion.disabled = false;
   endRegion.disabled = false;
 
-  loading.style.display = "none";
+  loading.style.display = 'none';
   if (testLayer !== 1) {
     //todo list 이거 다 돌리지말고 몇개만 체크해서 돌릴수있게 처리해야함 .이라고 생각했지만 의미없을지도,,,? 그냥 이렇게 하는게 나을수도 .. ㅎ .. 일단 이거 생각좀 해보자..
     //하ㅏㅏㅏㅏㅏㅏㅏ아
     for (let i = 0; i < filtered.length; i++) {
       if (cancel) {
-        floatingToast(`번역이 중지되었습니다.`, "failed");
+        floatingToast(`번역이 중지되었습니다.`, 'failed');
 
         startRegion.disabled = false;
         endRegion.disabled = false;
 
-        loading.style.display = "none";
+        loading.style.display = 'none';
 
         return;
       }
@@ -3458,15 +3498,15 @@ async function multiple() {
 
       await processVisionData(null);
 
-      floatingToast(`번역 중... (${i + 1}/${filtered.length} 완료)`, "information");
+      floatingToast(`번역 중... (${i + 1}/${filtered.length} 완료)`, 'information');
     }
   }
 
-  floatingToast(`번역이 완료되었습니다.`, "information");
+  floatingToast(`번역이 완료되었습니다.`, 'information');
 }
 
 async function single() {
-  loading.style.display = "";
+  loading.style.display = '';
 
   await processVisionData(null);
 
@@ -3475,13 +3515,13 @@ async function single() {
   startRegion.disabled = false;
   endRegion.disabled = false;
 
-  loading.style.display = "none";
+  loading.style.display = 'none';
 
-  floatingToast(`번역이 완료되었습니다.`, "information");
+  floatingToast(`번역이 완료되었습니다.`, 'information');
 }
 
 function recovery() {
-  let accept = confirm("모든 이미지를 적용 전으로 되돌리시겠습니까?");
+  let accept = confirm('모든 이미지를 적용 전으로 되돌리시겠습니까?');
 
   if (accept) {
     window.location.reload();
@@ -3489,7 +3529,7 @@ function recovery() {
 }
 
 function exit() {
-  let accept = confirm("편집을 종료하시겠습니까?");
+  let accept = confirm('편집을 종료하시겠습니까?');
 
   if (!accept) {
     return;
@@ -3499,7 +3539,7 @@ function exit() {
 }
 
 async function thisRecovery() {
-  let accept = confirm("현재 이미지를 적용 전으로 되돌리시겠습니까?");
+  let accept = confirm('현재 이미지를 적용 전으로 되돌리시겠습니까?');
   let layer = getCurrentLayer();
 
   if (accept) {
@@ -3555,7 +3595,7 @@ async function zoomIn() {
 }
 //avif 확장자의 경우 버킷에 저장하고 다시 번역하게끔 저장하는 부분
 async function saveBadImage() {
-  loading.style.display = "";
+  loading.style.display = '';
 
   let uploadData: any = {
     productId: product.id,
@@ -3565,7 +3605,7 @@ async function saveBadImage() {
 
   let description: any = null;
 
-  if (currentType === "3") {
+  if (currentType === '3') {
     let matched = /product\/[0-9]+\/description.html/.test(product.description);
 
     if (matched) {
@@ -3581,8 +3621,8 @@ async function saveBadImage() {
 
   let dataUrl = null;
   switch (currentType) {
-    case "1": {
-      if (applyOriginWidthThumbnail.value === "N") {
+    case '1': {
+      if (applyOriginWidthThumbnail.value === 'N') {
         dataUrl = await displayImage(currentImageIndex, originWidthThumbnail.value);
       } else {
         dataUrl = await displayImage(currentImageIndex, 0);
@@ -3596,8 +3636,8 @@ async function saveBadImage() {
       break;
     }
 
-    case "2": {
-      if (applyOriginWidthOption.value === "N") {
+    case '2': {
+      if (applyOriginWidthOption.value === 'N') {
         dataUrl = await displayImage(currentImageIndex, originWidthOption.value);
       } else {
         dataUrl = await displayImage(currentImageIndex, 0);
@@ -3606,7 +3646,9 @@ async function saveBadImage() {
       for (let j in product.productOptionName) {
         for (let k in product.productOptionName[j].productOptionValue) {
           let option = product.productOptionName[j].productOptionValue[k];
-          let optionImage = /product\/[0-9]+\/option/.test(option.image) ? `${ENDPOINT_IMAGE}/sellforyou/${option.image}` : option.image;
+          let optionImage = /product\/[0-9]+\/option/.test(option.image)
+            ? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
+            : option.image;
 
           if (layer.image.origin === optionImage) {
             uploadData.optionValues.push({
@@ -3621,14 +3663,14 @@ async function saveBadImage() {
       break;
     }
 
-    case "3": {
-      if (applyOriginWidthDescription.value === "N") {
+    case '3': {
+      if (applyOriginWidthDescription.value === 'N') {
         dataUrl = await displayImage(currentImageIndex, originWidthDescription.value);
       } else {
         dataUrl = await displayImage(currentImageIndex, 0);
       }
 
-      if (description.includes("&amp;")) description = description.replaceAll("&amp;", "&");
+      if (description.includes('&amp;')) description = description.replaceAll('&amp;', '&');
 
       description = description.replaceAll(layer.image.origin, dataUrl);
 
@@ -3639,7 +3681,7 @@ async function saveBadImage() {
       break;
   }
 
-  if (currentType === "3") {
+  if (currentType === '3') {
     if (description) {
       uploadData.description = description;
     }
@@ -3656,7 +3698,7 @@ async function saveBadImage() {
 
   let upload_json = await gql(uploadQuery, uploadData, false);
 
-  loading.style.display = "none";
+  loading.style.display = 'none';
 
   if (upload_json.errors) {
     alert(upload_json.errors[0].message);
@@ -3667,7 +3709,7 @@ async function saveBadImage() {
   if (upload_json.data) {
     chrome.runtime.sendMessage(
       {
-        action: "trangers",
+        action: 'trangers',
         source: JSON.parse(upload_json.data.updateNewProductImageBySomeone),
       },
       async function () {}
@@ -3677,13 +3719,13 @@ async function saveBadImage() {
   }
 }
 async function saveSingle() {
-  let accept = confirm("적용 시 이미지를 되돌릴 수 없습니다.");
+  let accept = confirm('적용 시 이미지를 되돌릴 수 없습니다.');
 
   if (!accept) {
     return;
   }
 
-  loading.style.display = "";
+  loading.style.display = '';
 
   let uploadData: any = {
     productId: product.id,
@@ -3693,7 +3735,7 @@ async function saveSingle() {
 
   let description: any = null;
 
-  if (currentType === "3") {
+  if (currentType === '3') {
     let matched = /product\/[0-9]+\/description.html/.test(product.description);
 
     if (matched) {
@@ -3710,8 +3752,8 @@ async function saveSingle() {
   let dataUrl = null;
 
   switch (currentType) {
-    case "1": {
-      if (applyOriginWidthThumbnail.value === "N") {
+    case '1': {
+      if (applyOriginWidthThumbnail.value === 'N') {
         dataUrl = await displayImage(currentImageIndex, originWidthThumbnail.value);
       } else {
         dataUrl = await displayImage(currentImageIndex, 0);
@@ -3725,8 +3767,8 @@ async function saveSingle() {
       break;
     }
 
-    case "2": {
-      if (applyOriginWidthOption.value === "N") {
+    case '2': {
+      if (applyOriginWidthOption.value === 'N') {
         dataUrl = await displayImage(currentImageIndex, originWidthOption.value);
       } else {
         dataUrl = await displayImage(currentImageIndex, 0);
@@ -3735,7 +3777,9 @@ async function saveSingle() {
       for (let j in product.productOptionName) {
         for (let k in product.productOptionName[j].productOptionValue) {
           let option = product.productOptionName[j].productOptionValue[k];
-          let optionImage = /product\/[0-9]+\/option/.test(option.image) ? `${ENDPOINT_IMAGE}/sellforyou/${option.image}` : option.image;
+          let optionImage = /product\/[0-9]+\/option/.test(option.image)
+            ? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
+            : option.image;
 
           if (layer.image.origin === optionImage) {
             uploadData.optionValues.push({
@@ -3750,14 +3794,14 @@ async function saveSingle() {
       break;
     }
 
-    case "3": {
-      if (applyOriginWidthDescription.value === "N") {
+    case '3': {
+      if (applyOriginWidthDescription.value === 'N') {
         dataUrl = await displayImage(currentImageIndex, originWidthDescription.value);
       } else {
         dataUrl = await displayImage(currentImageIndex, 0);
       }
 
-      if (description.includes("&amp;")) description = description.replaceAll("&amp;", "&");
+      if (description.includes('&amp;')) description = description.replaceAll('&amp;', '&');
 
       description = description.replaceAll(layer.image.origin, dataUrl);
 
@@ -3768,7 +3812,7 @@ async function saveSingle() {
       break;
   }
 
-  if (currentType === "3") {
+  if (currentType === '3') {
     if (description) {
       uploadData.description = description;
     }
@@ -3785,7 +3829,7 @@ async function saveSingle() {
 
   let upload_json = await gql(uploadQuery, uploadData, false);
 
-  loading.style.display = "none";
+  loading.style.display = 'none';
 
   if (upload_json.errors) {
     alert(upload_json.errors[0].message);
@@ -3796,24 +3840,24 @@ async function saveSingle() {
   if (upload_json.data) {
     chrome.runtime.sendMessage(
       {
-        action: "trangers",
+        action: 'trangers',
         source: JSON.parse(upload_json.data.updateNewProductImageBySomeone),
       },
       function () {
-        if (thisImageSave.getAttribute("key") == "5") {
+        if (thisImageSave.getAttribute('key') == '5') {
           window.close();
         }
       }
     );
 
-    floatingToast(`현재 이미지가 셀포유에 적용되었습니다.`, "success");
+    floatingToast(`현재 이미지가 셀포유에 적용되었습니다.`, 'success');
   } else {
     alert(upload_json.errors[0].message);
   }
 }
 
 async function saveMultiple() {
-  loading.style.display = "";
+  loading.style.display = '';
 
   let uploadData: any = {
     productId: product.id,
@@ -3823,7 +3867,7 @@ async function saveMultiple() {
 
   let description: any = null;
 
-  if (currentType === "3") {
+  if (currentType === '3') {
     let matched = /product\/[0-9]+\/description.html/.test(product.description);
 
     if (matched) {
@@ -3841,8 +3885,8 @@ async function saveMultiple() {
     let dataUrl = null;
 
     switch (currentType) {
-      case "1": {
-        if (applyOriginWidthThumbnail.value === "N") {
+      case '1': {
+        if (applyOriginWidthThumbnail.value === 'N') {
           dataUrl = await displayImage(filtered[i].index, originWidthThumbnail.value);
         } else {
           dataUrl = await displayImage(filtered[i].index, 0);
@@ -3856,8 +3900,8 @@ async function saveMultiple() {
         break;
       }
 
-      case "2": {
-        if (applyOriginWidthOption.value === "N") {
+      case '2': {
+        if (applyOriginWidthOption.value === 'N') {
           dataUrl = await displayImage(filtered[i].index, originWidthOption.value);
         } else {
           dataUrl = await displayImage(filtered[i].index, 0);
@@ -3866,7 +3910,9 @@ async function saveMultiple() {
         for (let j in product.productOptionName) {
           for (let k in product.productOptionName[j].productOptionValue) {
             let option = product.productOptionName[j].productOptionValue[k];
-            let optionImage = /product\/[0-9]+\/option/.test(option.image) ? `${ENDPOINT_IMAGE}/sellforyou/${option.image}` : option.image;
+            let optionImage = /product\/[0-9]+\/option/.test(option.image)
+              ? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
+              : option.image;
 
             if (filtered[i].image.origin === optionImage) {
               uploadData.optionValues.push({
@@ -3881,14 +3927,14 @@ async function saveMultiple() {
         break;
       }
 
-      case "3": {
-        if (applyOriginWidthDescription.value === "N") {
+      case '3': {
+        if (applyOriginWidthDescription.value === 'N') {
           dataUrl = await displayImage(filtered[i].index, originWidthDescription.value);
         } else {
           dataUrl = await displayImage(filtered[i].index, 0);
         }
 
-        if (description.includes("&amp;")) description = description.replaceAll("&amp;", "&");
+        if (description.includes('&amp;')) description = description.replaceAll('&amp;', '&');
 
         description = description.replaceAll(filtered[i].image.origin, dataUrl);
 
@@ -3900,7 +3946,7 @@ async function saveMultiple() {
     }
   }
 
-  if (currentType === "3") {
+  if (currentType === '3') {
     if (description) {
       uploadData.description = description;
     }
@@ -3917,7 +3963,7 @@ async function saveMultiple() {
 
   let upload_json = await gql(uploadQuery, uploadData, false);
 
-  loading.style.display = "none";
+  loading.style.display = 'none';
 
   if (upload_json.errors) {
     alert(upload_json.errors[0].message);
@@ -3928,7 +3974,7 @@ async function saveMultiple() {
   if (upload_json.data) {
     chrome.runtime.sendMessage(
       {
-        action: "trangers",
+        action: 'trangers',
         source: JSON.parse(upload_json.data.updateNewProductImageBySomeone),
       },
       function () {
@@ -3941,46 +3987,46 @@ async function saveMultiple() {
 }
 
 function imageToolHelper() {
-  if (product.activeTaobaoProduct.shopName === "express" || product.activeTaobaoProduct.shopName.includes("amazon")) {
-    startRegion.value = "en";
+  if (product.activeTaobaoProduct.shopName === 'express' || product.activeTaobaoProduct.shopName.includes('amazon')) {
+    startRegion.value = 'en';
   }
 
-  let radioList: any = document.getElementsByName("cropRatioType");
+  let radioList: any = document.getElementsByName('cropRatioType');
 
   for (let i = 0; i < radioList.length; i++) {
-    radioList[i].addEventListener("change", (e: any) => {
+    radioList[i].addEventListener('change', (e: any) => {
       for (let j = 0; j < radioList.length; j++) {
         if (e.target.value === radioList[j].value) {
-          radioList[j].parentNode.className = "radio activated";
+          radioList[j].parentNode.className = 'radio activated';
 
           cropRatioType = e.target.value;
 
           displayImage(currentImageIndex, 0);
         } else {
-          radioList[j].parentNode.className = "radio default";
+          radioList[j].parentNode.className = 'radio default';
         }
       }
     });
   }
 
-  textTranslated.addEventListener("keyup", (e: any) => {
+  textTranslated.addEventListener('keyup', (e: any) => {
     let objects = myCanvas.getActiveObject();
 
     let layer = getCurrentLayer();
 
     if (objects) {
-      if (objects["_objects"]) {
-        for (let i in objects["_objects"]) {
-          let object = objects["_objects"][i];
-          let objectType = object.get("type");
+      if (objects['_objects']) {
+        for (let i in objects['_objects']) {
+          let object = objects['_objects'][i];
+          let objectType = object.get('type');
           let objectDirection = layer.object[object.id].textOption.direction;
 
           switch (objectType) {
-            case "i-text": {
-              if (objectDirection == "vertical") {
+            case 'i-text': {
+              if (objectDirection == 'vertical') {
                 layer.object[object.id].translated = e.target.value;
                 layer.object[object.id].text.set({
-                  text: e.target.value.match(/.{1}/g).join("\n"),
+                  text: e.target.value.match(/.{1}/g).join('\n'),
                 });
               } else {
                 layer.object[object.id].translated = e.target.value;
@@ -3997,15 +4043,15 @@ function imageToolHelper() {
           }
         }
       } else {
-        let objectType = objects.get("type");
+        let objectType = objects.get('type');
         let objectDirection = layer.object[objects.id].textOption.direction;
 
         switch (objectType) {
-          case "i-text": {
-            if (objectDirection == "vertical") {
+          case 'i-text': {
+            if (objectDirection == 'vertical') {
               layer.object[objects.id].translated = e.target.value;
               layer.object[objects.id].text.set({
-                text: e.target.value.match(/.{1}/g).join("\n"),
+                text: e.target.value.match(/.{1}/g).join('\n'),
               });
             } else {
               layer.object[objects.id].translated = e.target.value;
@@ -4026,10 +4072,10 @@ function imageToolHelper() {
     }
   });
 
-  multipleTranslation.addEventListener("click", multiple);
-  singleTranslation.addEventListener("click", single);
+  multipleTranslation.addEventListener('click', multiple);
+  singleTranslation.addEventListener('click', single);
 
-  areaTranslation.addEventListener("click", () => toggleToolbar(areaTranslation, "area-translation"));
+  areaTranslation.addEventListener('click', () => toggleToolbar(areaTranslation, 'area-translation'));
 
   // multipleRemove.addEventListener('click', () => {
   //     props.floatingToast(`전체제거 - 준비 중인 기능입니다.`, 'failed');
@@ -4039,39 +4085,39 @@ function imageToolHelper() {
   //     props.floatingToast(`영역제거 - 준비 중인 기능입니다.`, 'failed');
   // });
 
-  areaRemoveDrag.addEventListener("click", () => toggleToolbar(areaRemove, "area-remove-drag"));
-  areaRemoveBrush.addEventListener("click", () => toggleToolbar(areaRemove, "area-remove-brush"));
-  areaRemove.addEventListener("click", () => toggleToolbar(areaRemove, removeType));
-  areaRemoveType.addEventListener("click", () => {
-    if (areaRemoveSelect.style.display === "") {
-      areaRemoveSelect.style.display = "none";
+  areaRemoveDrag.addEventListener('click', () => toggleToolbar(areaRemove, 'area-remove-drag'));
+  areaRemoveBrush.addEventListener('click', () => toggleToolbar(areaRemove, 'area-remove-brush'));
+  areaRemove.addEventListener('click', () => toggleToolbar(areaRemove, removeType));
+  areaRemoveType.addEventListener('click', () => {
+    if (areaRemoveSelect.style.display === '') {
+      areaRemoveSelect.style.display = 'none';
     } else {
-      areaRemoveSelect.style.display = "";
+      areaRemoveSelect.style.display = '';
     }
 
-    areaRecoverySelect.style.display = "none";
-    shapeSelect.style.display = "none";
-    textSelect.style.display = "none";
+    areaRecoverySelect.style.display = 'none';
+    shapeSelect.style.display = 'none';
+    textSelect.style.display = 'none';
   });
 
-  areaRecoveryDrag.addEventListener("click", () => toggleToolbar(areaRecovery, "area-recovery-drag"));
-  areaRecoveryBrush.addEventListener("click", () => toggleToolbar(areaRecovery, "area-recovery-brush"));
-  areaRecovery.addEventListener("click", () => toggleToolbar(areaRecovery, recoveryType));
-  areaRecoveryType.addEventListener("click", () => {
-    if (areaRecoverySelect.style.display === "") {
-      areaRecoverySelect.style.display = "none";
+  areaRecoveryDrag.addEventListener('click', () => toggleToolbar(areaRecovery, 'area-recovery-drag'));
+  areaRecoveryBrush.addEventListener('click', () => toggleToolbar(areaRecovery, 'area-recovery-brush'));
+  areaRecovery.addEventListener('click', () => toggleToolbar(areaRecovery, recoveryType));
+  areaRecoveryType.addEventListener('click', () => {
+    if (areaRecoverySelect.style.display === '') {
+      areaRecoverySelect.style.display = 'none';
     } else {
-      areaRecoverySelect.style.display = "";
+      areaRecoverySelect.style.display = '';
     }
 
-    areaRemoveSelect.style.display = "none";
-    shapeSelect.style.display = "none";
-    textSelect.style.display = "none";
+    areaRemoveSelect.style.display = 'none';
+    shapeSelect.style.display = 'none';
+    textSelect.style.display = 'none';
   });
 
-  cropStart.addEventListener("click", () => toggleToolbar(cropStart, "crop"));
-  cropCancel.addEventListener("click", () => toggleToolbar(cropStart, "crop"));
-  cropAccept.addEventListener("click", async () => {
+  cropStart.addEventListener('click', () => toggleToolbar(cropStart, 'crop'));
+  cropCancel.addEventListener('click', () => toggleToolbar(cropStart, 'crop'));
+  cropAccept.addEventListener('click', async () => {
     let croppedWidth = cropRectangle.width * cropRectangle.scaleX;
     let croppedHeight = cropRectangle.height * cropRectangle.scaleY;
 
@@ -4082,22 +4128,22 @@ function imageToolHelper() {
       top: cropRectangle.top + 1,
       width: croppedWidth - 1,
       height: croppedHeight - 1,
-      globalCompositeOperation: "source-over",
+      globalCompositeOperation: 'source-over',
     });
 
     let layer = getCurrentLayer();
 
     layer.image.current = dataUrl;
 
-    await toggleToolbar(cropStart, "crop");
+    await toggleToolbar(cropStart, 'crop');
     await saveCanvas();
 
-    floatingToast(`변경사항이 저장되었습니다.`, "success");
+    floatingToast(`변경사항이 저장되었습니다.`, 'success');
   });
 
-  shapeFill.addEventListener("click", () => {
+  shapeFill.addEventListener('click', () => {
     isShapeFill = true;
-    shapeSelect.style.display = "none";
+    shapeSelect.style.display = 'none';
 
     shapeStart.innerHTML = `<img src="resources/08figurebox.svg" alt="" width="30px" />`;
 
@@ -4122,70 +4168,70 @@ function imageToolHelper() {
   //     addShape();
   // });
 
-  shapeStart.addEventListener("click", () => addShape());
-  shapeType.addEventListener("click", () => {
-    if (shapeSelect.style.display === "") {
-      shapeSelect.style.display = "none";
+  shapeStart.addEventListener('click', () => addShape());
+  shapeType.addEventListener('click', () => {
+    if (shapeSelect.style.display === '') {
+      shapeSelect.style.display = 'none';
     } else {
-      shapeSelect.style.display = "";
+      shapeSelect.style.display = '';
     }
 
-    areaRemoveSelect.style.display = "none";
-    areaRecoverySelect.style.display = "none";
-    textSelect.style.display = "none";
+    areaRemoveSelect.style.display = 'none';
+    areaRecoverySelect.style.display = 'none';
+    textSelect.style.display = 'none';
   });
 
-  textStart.addEventListener("click", () => {
+  textStart.addEventListener('click', () => {
     addText();
-    textSelect.style.display = "none";
+    textSelect.style.display = 'none';
   });
 
-  textType.addEventListener("click", () => {
-    if (textSelect.style.display === "") {
-      textSelect.style.display = "none";
+  textType.addEventListener('click', () => {
+    if (textSelect.style.display === '') {
+      textSelect.style.display = 'none';
     } else {
-      textSelect.style.display = "";
+      textSelect.style.display = '';
     }
 
-    areaRemoveSelect.style.display = "none";
-    areaRecoverySelect.style.display = "none";
-    shapeSelect.style.display = "none";
+    areaRemoveSelect.style.display = 'none';
+    areaRecoverySelect.style.display = 'none';
+    shapeSelect.style.display = 'none';
   });
 
-  horizontal.addEventListener("click", () => {
+  horizontal.addEventListener('click', () => {
     addText();
-    textSelect.style.display = "none";
+    textSelect.style.display = 'none';
   });
 
-  vertical.addEventListener("click", () => {
+  vertical.addEventListener('click', () => {
     addTextVertical();
-    textSelect.style.display = "none";
+    textSelect.style.display = 'none';
   });
 
-  alignLeft.addEventListener("click", () => setGroupAlign("left"));
-  alignCenter.addEventListener("click", () => setGroupAlign("center"));
-  alignRight.addEventListener("click", () => setGroupAlign("right"));
-  alignTop.addEventListener("click", () => setGroupAlign("top"));
-  alignMiddle.addEventListener("click", () => setGroupAlign("middle"));
-  alignBottom.addEventListener("click", () => setGroupAlign("bottom"));
+  alignLeft.addEventListener('click', () => setGroupAlign('left'));
+  alignCenter.addEventListener('click', () => setGroupAlign('center'));
+  alignRight.addEventListener('click', () => setGroupAlign('right'));
+  alignTop.addEventListener('click', () => setGroupAlign('top'));
+  alignMiddle.addEventListener('click', () => setGroupAlign('middle'));
+  alignBottom.addEventListener('click', () => setGroupAlign('bottom'));
 
-  playOriginal.addEventListener("mousedown", (e: any) => {
+  playOriginal.addEventListener('mousedown', (e: any) => {
     isOriginal = true;
 
     displayImage(currentImageIndex, 0);
   });
 
-  playOriginal.addEventListener("mouseup", (e: any) => {
+  playOriginal.addEventListener('mouseup', (e: any) => {
     isOriginal = false;
 
     displayImage(currentImageIndex, 0);
   });
 
-  previewSize.addEventListener("input", (e: any) => {
+  previewSize.addEventListener('input', (e: any) => {
     displayImage(currentImageIndex, 0);
   });
 
-  previewZoomOut.addEventListener("click", () => {
+  previewZoomOut.addEventListener('click', () => {
     let percentage = parseInt(previewSize.value);
 
     if (percentage - 10 < 0) {
@@ -4199,7 +4245,7 @@ function imageToolHelper() {
     displayImage(currentImageIndex, 0);
   });
 
-  previewZoomIn.addEventListener("click", (e: any) => {
+  previewZoomIn.addEventListener('click', (e: any) => {
     let percentage = parseInt(previewSize.value);
 
     if (percentage + 10 > 200) {
@@ -4213,25 +4259,25 @@ function imageToolHelper() {
     displayImage(currentImageIndex, 0);
   });
 
-  playUndo.addEventListener("click", () => {
-    replayCanvas("undo");
+  playUndo.addEventListener('click', () => {
+    replayCanvas('undo');
   });
 
-  playRedo.addEventListener("click", () => {
-    replayCanvas("redo");
+  playRedo.addEventListener('click', () => {
+    replayCanvas('redo');
   });
 
-  displayDouble.addEventListener("click", () => {
-    if (doubleFrame.style.display === "none") {
+  displayDouble.addEventListener('click', () => {
+    if (doubleFrame.style.display === 'none') {
       displayDouble.innerHTML = `<img src="resources/27double.svg" alt="" width="30px" />`;
 
-      doubleFrame.style.display = "";
-      doubleBorder.style.display = "";
+      doubleFrame.style.display = '';
+      doubleBorder.style.display = '';
     } else {
       displayDouble.innerHTML = `<img src="resources/26single.svg" alt="" width="30px" />`;
 
-      doubleFrame.style.display = "none";
-      doubleBorder.style.display = "none";
+      doubleFrame.style.display = 'none';
+      doubleBorder.style.display = 'none';
     }
   });
 
@@ -4245,157 +4291,157 @@ function imageToolHelper() {
   //     displayImage(currentImageIndex);
   // });
 
-  applyWaterMarkText.addEventListener("keyup", (e: any) => {
-    saveLocalSettings("waterMarkText", e.target.value);
+  applyWaterMarkText.addEventListener('keyup', (e: any) => {
+    saveLocalSettings('waterMarkText', e.target.value);
 
     displayImage(currentImageIndex, 0);
   });
 
-  applyWaterMarkOpacity.addEventListener("change", (e: any) => {
-    saveLocalSettings("waterMarkOpacity", e.target.value);
+  applyWaterMarkOpacity.addEventListener('change', (e: any) => {
+    saveLocalSettings('waterMarkOpacity', e.target.value);
 
     displayImage(currentImageIndex, 0);
   });
 
-  applyOriginWidthPC.addEventListener("change", (e: any) => {
-    saveLocalSettings("originWidthPC", e.target.value);
+  applyOriginWidthPC.addEventListener('change', (e: any) => {
+    saveLocalSettings('originWidthPC', e.target.value);
 
-    if (e.target.value === "Y") {
+    if (e.target.value === 'Y') {
       originWidthPC.disabled = true;
     } else {
       originWidthPC.disabled = false;
     }
   });
 
-  originWidthPC.addEventListener("change", (e: any) => {
-    saveLocalSettings("originWidthPCSize", e.target.value);
+  originWidthPC.addEventListener('change', (e: any) => {
+    saveLocalSettings('originWidthPCSize', e.target.value);
   });
 
-  applyOriginWidthThumbnail.addEventListener("change", (e: any) => {
-    saveLocalSettings("originWidthThumbnail", e.target.value);
+  applyOriginWidthThumbnail.addEventListener('change', (e: any) => {
+    saveLocalSettings('originWidthThumbnail', e.target.value);
 
-    if (e.target.value === "Y") {
+    if (e.target.value === 'Y') {
       originWidthThumbnail.disabled = true;
     } else {
       originWidthThumbnail.disabled = false;
     }
   });
 
-  originWidthThumbnail.addEventListener("change", (e: any) => {
-    saveLocalSettings("originWidthThumbnailSize", e.target.value);
+  originWidthThumbnail.addEventListener('change', (e: any) => {
+    saveLocalSettings('originWidthThumbnailSize', e.target.value);
   });
 
-  applyOriginWidthOption.addEventListener("change", (e: any) => {
-    saveLocalSettings("originWidthOption", e.target.value);
+  applyOriginWidthOption.addEventListener('change', (e: any) => {
+    saveLocalSettings('originWidthOption', e.target.value);
 
-    if (e.target.value === "Y") {
+    if (e.target.value === 'Y') {
       originWidthOption.disabled = true;
     } else {
       originWidthOption.disabled = false;
     }
   });
 
-  originWidthOption.addEventListener("change", (e: any) => {
-    saveLocalSettings("originWidthOptionSize", e.target.value);
+  originWidthOption.addEventListener('change', (e: any) => {
+    saveLocalSettings('originWidthOptionSize', e.target.value);
   });
 
-  applyOriginWidthDescription.addEventListener("change", (e: any) => {
-    saveLocalSettings("originWidthDescription", e.target.value);
+  applyOriginWidthDescription.addEventListener('change', (e: any) => {
+    saveLocalSettings('originWidthDescription', e.target.value);
 
-    if (e.target.value === "Y") {
+    if (e.target.value === 'Y') {
       originWidthDescription.disabled = true;
     } else {
       originWidthDescription.disabled = false;
     }
   });
 
-  originWidthDescription.addEventListener("change", (e: any) => {
-    saveLocalSettings("originWidthDescriptionSize", e.target.value);
+  originWidthDescription.addEventListener('change', (e: any) => {
+    saveLocalSettings('originWidthDescriptionSize', e.target.value);
   });
 
-  btnSetting.addEventListener("click", () => {
-    setting.style.display = "";
+  btnSetting.addEventListener('click', () => {
+    setting.style.display = '';
   });
 
-  applySensitive.addEventListener("change", (e: any) => {
-    saveLocalSettings("originSensitive", e.target.value);
+  applySensitive.addEventListener('change', (e: any) => {
+    saveLocalSettings('originSensitive', e.target.value);
   });
 
-  settingAccept.addEventListener("click", () => {
-    setting.style.display = "none";
+  settingAccept.addEventListener('click', () => {
+    setting.style.display = 'none';
   });
 
-  toolShapeOutlineColor.addEventListener("input", setShapeColor);
-  toolShapeOutlineColor.addEventListener("change", () => {
+  toolShapeOutlineColor.addEventListener('input', setShapeColor);
+  toolShapeOutlineColor.addEventListener('change', () => {
     saveCanvas();
   });
-  toolShapeStrokeWidth.addEventListener("input", setShapeStrokeWidth);
-  toolShapeStrokeWidth.addEventListener("change", () => {
+  toolShapeStrokeWidth.addEventListener('input', setShapeStrokeWidth);
+  toolShapeStrokeWidth.addEventListener('change', () => {
     saveCanvas();
   });
-  toolShapeStrokeShape.addEventListener("input", setShapeStrokeShape);
-  toolShapeStrokeShape.addEventListener("change", () => {
+  toolShapeStrokeShape.addEventListener('input', setShapeStrokeShape);
+  toolShapeStrokeShape.addEventListener('change', () => {
     saveCanvas();
   });
-  toolShapeBackground.addEventListener("input", setShapeBackground);
-  toolShapeBackground.addEventListener("change", () => {
-    saveCanvas();
-  });
-
-  toolTextFont.addEventListener("change", setTextFont);
-  toolTextSize.addEventListener("change", setTextSize);
-  toolTextColor.addEventListener("input", setTextColor);
-  toolTextColor.addEventListener("change", () => {
-    saveCanvas();
-  });
-  toolTextBackground.addEventListener("input", setTextBackground);
-  toolTextBackground.addEventListener("change", () => {
-    saveCanvas();
-  });
-  toolTextBold.addEventListener("change", setTextBold);
-  toolTextItalic.addEventListener("change", setTextItalic);
-  toolTextLineThrough.addEventListener("change", setTextLineThrough);
-  toolTextUnderLine.addEventListener("change", setTextUnderLine);
-  toolTextAlignLeft.addEventListener("click", () => setTextAlign("left"));
-  toolTextAlignCenter.addEventListener("click", () => setTextAlign("center"));
-  toolTextAlignRight.addEventListener("click", () => setTextAlign("right"));
-
-  fixedShapeOutlineColor.addEventListener("input", setShapeColor);
-  fixedShapeOutlineColor.addEventListener("change", () => {
-    saveCanvas();
-  });
-  fixedShapeStrokeWidth.addEventListener("input", setShapeStrokeWidth);
-  fixedShapeStrokeWidth.addEventListener("change", () => {
-    saveCanvas();
-  });
-  fixedShapeStrokeShape.addEventListener("input", setShapeStrokeShape);
-  fixedShapeStrokeShape.addEventListener("change", () => {
-    saveCanvas();
-  });
-  fixedShapeBackground.addEventListener("input", setShapeBackground);
-  fixedShapeBackground.addEventListener("change", () => {
+  toolShapeBackground.addEventListener('input', setShapeBackground);
+  toolShapeBackground.addEventListener('change', () => {
     saveCanvas();
   });
 
-  fixedTextFont.addEventListener("change", setTextFont);
-  fixedTextSize.addEventListener("change", setTextSize);
-  fixedTextColor.addEventListener("input", setTextColor);
-  fixedTextColor.addEventListener("change", () => {
+  toolTextFont.addEventListener('change', setTextFont);
+  toolTextSize.addEventListener('change', setTextSize);
+  toolTextColor.addEventListener('input', setTextColor);
+  toolTextColor.addEventListener('change', () => {
     saveCanvas();
   });
-  fixedTextBackground.addEventListener("input", setTextBackground);
-  fixedTextBackground.addEventListener("change", () => {
+  toolTextBackground.addEventListener('input', setTextBackground);
+  toolTextBackground.addEventListener('change', () => {
     saveCanvas();
   });
-  fixedTextBold.addEventListener("change", setTextBold);
-  fixedTextItalic.addEventListener("change", setTextItalic);
-  fixedTextLineThrough.addEventListener("change", setTextLineThrough);
-  fixedTextUnderLine.addEventListener("change", setTextUnderLine);
-  fixedTextAlignLeft.addEventListener("change", () => setTextAlign("left"));
-  fixedTextAlignCenter.addEventListener("change", () => setTextAlign("center"));
-  fixedTextAlignRight.addEventListener("change", () => setTextAlign("right"));
+  toolTextBold.addEventListener('change', setTextBold);
+  toolTextItalic.addEventListener('change', setTextItalic);
+  toolTextLineThrough.addEventListener('change', setTextLineThrough);
+  toolTextUnderLine.addEventListener('change', setTextUnderLine);
+  toolTextAlignLeft.addEventListener('click', () => setTextAlign('left'));
+  toolTextAlignCenter.addEventListener('click', () => setTextAlign('center'));
+  toolTextAlignRight.addEventListener('click', () => setTextAlign('right'));
 
-  floatingTextToolDragger.addEventListener("drag", (e: any) => {
+  fixedShapeOutlineColor.addEventListener('input', setShapeColor);
+  fixedShapeOutlineColor.addEventListener('change', () => {
+    saveCanvas();
+  });
+  fixedShapeStrokeWidth.addEventListener('input', setShapeStrokeWidth);
+  fixedShapeStrokeWidth.addEventListener('change', () => {
+    saveCanvas();
+  });
+  fixedShapeStrokeShape.addEventListener('input', setShapeStrokeShape);
+  fixedShapeStrokeShape.addEventListener('change', () => {
+    saveCanvas();
+  });
+  fixedShapeBackground.addEventListener('input', setShapeBackground);
+  fixedShapeBackground.addEventListener('change', () => {
+    saveCanvas();
+  });
+
+  fixedTextFont.addEventListener('change', setTextFont);
+  fixedTextSize.addEventListener('change', setTextSize);
+  fixedTextColor.addEventListener('input', setTextColor);
+  fixedTextColor.addEventListener('change', () => {
+    saveCanvas();
+  });
+  fixedTextBackground.addEventListener('input', setTextBackground);
+  fixedTextBackground.addEventListener('change', () => {
+    saveCanvas();
+  });
+  fixedTextBold.addEventListener('change', setTextBold);
+  fixedTextItalic.addEventListener('change', setTextItalic);
+  fixedTextLineThrough.addEventListener('change', setTextLineThrough);
+  fixedTextUnderLine.addEventListener('change', setTextUnderLine);
+  fixedTextAlignLeft.addEventListener('change', () => setTextAlign('left'));
+  fixedTextAlignCenter.addEventListener('change', () => setTextAlign('center'));
+  fixedTextAlignRight.addEventListener('change', () => setTextAlign('right'));
+
+  floatingTextToolDragger.addEventListener('drag', (e: any) => {
     if (e.x === 0 && e.y === 0) {
       return;
     }
@@ -4404,7 +4450,7 @@ function imageToolHelper() {
     floatingTextTool.style.top = `${e.y + 52}px`;
   });
 
-  floatingShapeToolDragger.addEventListener("drag", (e: any) => {
+  floatingShapeToolDragger.addEventListener('drag', (e: any) => {
     if (e.x === 0 && e.y === 0) {
       return;
     }
@@ -4413,26 +4459,26 @@ function imageToolHelper() {
     floatingShapeTool.style.top = `${e.y + 52}px`;
   });
 
-  imageRecovery.addEventListener("click", recovery);
+  imageRecovery.addEventListener('click', recovery);
 
-  textTab.addEventListener("click", setTextTab);
-  shapeTab.addEventListener("click", setShapeTab);
+  textTab.addEventListener('click', setTextTab);
+  shapeTab.addEventListener('click', setShapeTab);
 
-  imageSave.addEventListener("click", () => toggleToolbar(imageSave, "download"));
-  saveCancel.addEventListener("click", () => toggleToolbar(imageSave, "download"));
-  saveAccept.addEventListener("click", async () => {
+  imageSave.addEventListener('click', () => toggleToolbar(imageSave, 'download'));
+  saveCancel.addEventListener('click', () => toggleToolbar(imageSave, 'download'));
+  saveAccept.addEventListener('click', async () => {
     let now = getClock();
 
     let filtered = layers.filter((v: any) => v.type === currentType);
 
-    mainDownload.style.display = "none";
+    mainDownload.style.display = 'none';
 
     for (let i = 0; i < filtered.length; i++) {
       let dataUrl: any = null;
 
       switch (currentType) {
-        case "0": {
-          if (applyOriginWidthPC.value === "N") {
+        case '0': {
+          if (applyOriginWidthPC.value === 'N') {
             dataUrl = await displayImage(filtered[i].index, originWidthPC.value);
           } else {
             dataUrl = await displayImage(filtered[i].index, 0);
@@ -4441,8 +4487,8 @@ function imageToolHelper() {
           break;
         }
 
-        case "1": {
-          if (applyOriginWidthThumbnail.value === "N") {
+        case '1': {
+          if (applyOriginWidthThumbnail.value === 'N') {
             dataUrl = await displayImage(filtered[i].index, originWidthThumbnail.value);
           } else {
             dataUrl = await displayImage(filtered[i].index, 0);
@@ -4451,8 +4497,8 @@ function imageToolHelper() {
           break;
         }
 
-        case "2": {
-          if (applyOriginWidthOption.value === "N") {
+        case '2': {
+          if (applyOriginWidthOption.value === 'N') {
             dataUrl = await displayImage(filtered[i].index, originWidthOption.value);
           } else {
             dataUrl = await displayImage(filtered[i].index, 0);
@@ -4461,8 +4507,8 @@ function imageToolHelper() {
           break;
         }
 
-        case "3": {
-          if (applyOriginWidthDescription.value === "N") {
+        case '3': {
+          if (applyOriginWidthDescription.value === 'N') {
             dataUrl = await displayImage(filtered[i].index, originWidthDescription.value);
           } else {
             dataUrl = await displayImage(filtered[i].index, 0);
@@ -4477,22 +4523,22 @@ function imageToolHelper() {
 
       let dataPath = `트랜져스/${now.YY}${now.MM}${now.DD}_${now.hh}${now.mm}${now.ss}/`;
 
-      let indexed = (parseInt(filtered[i].index) + 1).toString().padStart(2, "0");
+      let indexed = (parseInt(filtered[i].index) + 1).toString().padStart(2, '0');
 
       switch (currentType) {
-        case "1": {
+        case '1': {
           dataPath += `썸네일/thumb-${indexed}.png`;
 
           break;
         }
 
-        case "2": {
+        case '2': {
           dataPath += `옵션/option-${indexed}.png`;
 
           break;
         }
 
-        case "3": {
+        case '3': {
           dataPath += `상세페이지/detail-${indexed}.png`;
 
           break;
@@ -4509,25 +4555,25 @@ function imageToolHelper() {
       });
     }
 
-    mainDownload.style.display = "none";
+    mainDownload.style.display = 'none';
 
-    floatingToast(`모든 이미지가 PC에 저장되었습니다.`, "success");
+    floatingToast(`모든 이미지가 PC에 저장되었습니다.`, 'success');
   });
 
-  uploadAccept.addEventListener("click", () => {
+  uploadAccept.addEventListener('click', () => {
     saveMultiple();
   });
 
-  imageExit.addEventListener("click", exit);
+  imageExit.addEventListener('click', exit);
 
-  thisImageRecovery.addEventListener("click", thisRecovery);
-  thisImageSave.addEventListener("click", () => {
+  thisImageRecovery.addEventListener('click', thisRecovery);
+  thisImageSave.addEventListener('click', () => {
     saveSingle();
   });
 }
 
 function setKeyEvents() {
-  window.addEventListener("wheel", (e) => {
+  window.addEventListener('wheel', (e) => {
     if (e.shiftKey) {
       if (e.deltaY > 0) {
         zoomOut();
@@ -4537,34 +4583,34 @@ function setKeyEvents() {
     }
   });
 
-  window.addEventListener("keydown", (e) => {
+  window.addEventListener('keydown', (e) => {
     let objects = myCanvas.getActiveObject();
     let layer = getCurrentLayer();
 
     if (objects == null) {
       switch (e.key) {
-        case e.shiftKey && "!": {
+        case e.shiftKey && '!': {
           multiple();
           break;
         }
 
-        case e.shiftKey && "@": {
+        case e.shiftKey && '@': {
           single();
           break;
         }
 
-        case e.shiftKey && "#": {
-          toggleToolbar(areaTranslation, "area-translation");
+        case e.shiftKey && '#': {
+          toggleToolbar(areaTranslation, 'area-translation');
           break;
         }
 
-        case e.shiftKey && "$": {
-          toggleToolbar(areaRemove, "area-remove-drag");
+        case e.shiftKey && '$': {
+          toggleToolbar(areaRemove, 'area-remove-drag');
           break;
         }
 
-        case e.shiftKey && "%": {
-          toggleToolbar(areaRecovery, "area-recovery-drag");
+        case e.shiftKey && '%': {
+          toggleToolbar(areaRecovery, 'area-recovery-drag');
           break;
         }
       }
@@ -4572,8 +4618,8 @@ function setKeyEvents() {
 
     if (copyBox.length != 0) {
       switch (e.key) {
-        case e.ctrlKey && "v":
-        case e.ctrlKey && "V": {
+        case e.ctrlKey && 'v':
+        case e.ctrlKey && 'V': {
           layer.object.push(copyBox[copyBox.length - 1]);
 
           let copyXY = layer.object[layer.object.length - 1];
@@ -4594,62 +4640,62 @@ function setKeyEvents() {
     }
 
     switch (e.key) {
-      case "Escape": {
+      case 'Escape': {
         cancel = true;
         break;
       }
 
-      case e.ctrlKey && "c":
-      case e.ctrlKey && "C": {
+      case e.ctrlKey && 'c':
+      case e.ctrlKey && 'C': {
         copyBox.push(JSON.parse(JSON.stringify(layer.object[objects.id])));
 
         break;
       }
 
-      case e.ctrlKey && "z":
-      case e.ctrlKey && "Z": {
-        replayCanvas("undo");
+      case e.ctrlKey && 'z':
+      case e.ctrlKey && 'Z': {
+        replayCanvas('undo');
         break;
       }
 
-      case e.ctrlKey && "x":
-      case e.ctrlKey && "X": {
-        replayCanvas("redo");
+      case e.ctrlKey && 'x':
+      case e.ctrlKey && 'X': {
+        replayCanvas('redo');
         break;
       }
 
-      case e.shiftKey && "t":
-      case e.shiftKey && "T": {
+      case e.shiftKey && 't':
+      case e.shiftKey && 'T': {
         addText();
-        textSelect.style.display = "none";
+        textSelect.style.display = 'none';
         break;
       }
-      case e.shiftKey && "a":
-      case e.shiftKey && "A": {
+      case e.shiftKey && 'a':
+      case e.shiftKey && 'A': {
         e.preventDefault();
         recovery();
         break;
       }
 
-      case e.shiftKey && "s":
-      case e.shiftKey && "S": {
+      case e.shiftKey && 's':
+      case e.shiftKey && 'S': {
         e.preventDefault();
-        if (imageSave.getAttribute("key") == "5") {
-          toggleToolbar(imageSave, "download");
-        } else if (thisImageSave.getAttribute("key") == "5") {
+        if (imageSave.getAttribute('key') == '5') {
+          toggleToolbar(imageSave, 'download');
+        } else if (thisImageSave.getAttribute('key') == '5') {
           saveSingle();
         }
         break;
       }
 
-      case e.shiftKey && "e":
-      case e.shiftKey && "E": {
-        toggleToolbar(cropStart, "crop");
+      case e.shiftKey && 'e':
+      case e.shiftKey && 'E': {
+        toggleToolbar(cropStart, 'crop');
         break;
       }
 
-      case e.shiftKey && "d":
-      case e.shiftKey && "D": {
+      case e.shiftKey && 'd':
+      case e.shiftKey && 'D': {
         e.preventDefault();
         exit();
         break;
@@ -4663,17 +4709,17 @@ function setKeyEvents() {
       //     break;
       // }
 
-      case "Delete": {
+      case 'Delete': {
         let objects = myCanvas.getActiveObject();
 
         if (objects) {
-          if (objects["_objects"]) {
-            for (let i in objects["_objects"]) {
-              let object = objects["_objects"][i];
-              let objectType = object.get("type");
+          if (objects['_objects']) {
+            for (let i in objects['_objects']) {
+              let object = objects['_objects'][i];
+              let objectType = object.get('type');
 
               switch (objectType) {
-                case "rect": {
+                case 'rect': {
                   object.set({
                     visible: false,
                   });
@@ -4681,7 +4727,7 @@ function setKeyEvents() {
                   break;
                 }
 
-                case "i-text": {
+                case 'i-text': {
                   object.set({
                     visible: false,
                   });
@@ -4694,10 +4740,10 @@ function setKeyEvents() {
               }
             }
           } else {
-            let objectType = objects.get("type");
+            let objectType = objects.get('type');
 
             switch (objectType) {
-              case "rect": {
+              case 'rect': {
                 objects.set({
                   visible: false,
                 });
@@ -4705,7 +4751,7 @@ function setKeyEvents() {
                 break;
               }
 
-              case "i-text": {
+              case 'i-text': {
                 if (!objects.isEditing) {
                   objects.set({
                     visible: false,
@@ -4729,19 +4775,19 @@ function setKeyEvents() {
       }
     }
 
-    if (e.key === "ArrowUp") {
+    if (e.key === 'ArrowUp') {
       e.preventDefault();
 
       let objects = myCanvas.getActiveObject();
 
       if (objects) {
-        if (objects["_objects"]) {
-          for (let i in objects["_objects"]) {
-            let object = objects["_objects"][i];
-            let objectType = object.get("type");
+        if (objects['_objects']) {
+          for (let i in objects['_objects']) {
+            let object = objects['_objects'][i];
+            let objectType = object.get('type');
 
             switch (objectType) {
-              case "rect": {
+              case 'rect': {
                 object.set({
                   top: object.top - 5,
                 });
@@ -4749,7 +4795,7 @@ function setKeyEvents() {
                 break;
               }
 
-              case "i-text": {
+              case 'i-text': {
                 object.set({
                   top: object.top - 5,
                 });
@@ -4762,10 +4808,10 @@ function setKeyEvents() {
             }
           }
         } else {
-          let objectType = objects.get("type");
+          let objectType = objects.get('type');
 
           switch (objectType) {
-            case "rect": {
+            case 'rect': {
               objects.set({
                 top: objects.top - 5,
               });
@@ -4773,7 +4819,7 @@ function setKeyEvents() {
               break;
             }
 
-            case "i-text": {
+            case 'i-text': {
               if (!objects.isEditing) {
                 objects.set({
                   top: objects.top - 5,
@@ -4794,19 +4840,19 @@ function setKeyEvents() {
       saveCanvas();
     }
 
-    if (e.key === "ArrowDown") {
+    if (e.key === 'ArrowDown') {
       e.preventDefault();
 
       let objects = myCanvas.getActiveObject();
 
       if (objects) {
-        if (objects["_objects"]) {
-          for (let i in objects["_objects"]) {
-            let object = objects["_objects"][i];
-            let objectType = object.get("type");
+        if (objects['_objects']) {
+          for (let i in objects['_objects']) {
+            let object = objects['_objects'][i];
+            let objectType = object.get('type');
 
             switch (objectType) {
-              case "rect": {
+              case 'rect': {
                 object.set({
                   top: object.top + 5,
                 });
@@ -4814,7 +4860,7 @@ function setKeyEvents() {
                 break;
               }
 
-              case "i-text": {
+              case 'i-text': {
                 object.set({
                   top: object.top + 5,
                 });
@@ -4827,10 +4873,10 @@ function setKeyEvents() {
             }
           }
         } else {
-          let objectType = objects.get("type");
+          let objectType = objects.get('type');
 
           switch (objectType) {
-            case "rect": {
+            case 'rect': {
               objects.set({
                 top: objects.top + 5,
               });
@@ -4838,7 +4884,7 @@ function setKeyEvents() {
               break;
             }
 
-            case "i-text": {
+            case 'i-text': {
               if (!objects.isEditing) {
                 objects.set({
                   top: objects.top + 5,
@@ -4859,19 +4905,19 @@ function setKeyEvents() {
       saveCanvas();
     }
 
-    if (e.key === "ArrowLeft") {
+    if (e.key === 'ArrowLeft') {
       e.preventDefault();
 
       let objects = myCanvas.getActiveObject();
 
       if (objects) {
-        if (objects["_objects"]) {
-          for (let i in objects["_objects"]) {
-            let object = objects["_objects"][i];
-            let objectType = object.get("type");
+        if (objects['_objects']) {
+          for (let i in objects['_objects']) {
+            let object = objects['_objects'][i];
+            let objectType = object.get('type');
 
             switch (objectType) {
-              case "rect": {
+              case 'rect': {
                 object.set({
                   left: object.left - 5,
                 });
@@ -4879,7 +4925,7 @@ function setKeyEvents() {
                 break;
               }
 
-              case "i-text": {
+              case 'i-text': {
                 object.set({
                   left: object.left - 5,
                 });
@@ -4892,10 +4938,10 @@ function setKeyEvents() {
             }
           }
         } else {
-          let objectType = objects.get("type");
+          let objectType = objects.get('type');
 
           switch (objectType) {
-            case "rect": {
+            case 'rect': {
               objects.set({
                 left: objects.left - 5,
               });
@@ -4903,7 +4949,7 @@ function setKeyEvents() {
               break;
             }
 
-            case "i-text": {
+            case 'i-text': {
               if (!objects.isEditing) {
                 objects.set({
                   left: objects.left - 5,
@@ -4924,19 +4970,19 @@ function setKeyEvents() {
       saveCanvas();
     }
 
-    if (e.key === "ArrowRight") {
+    if (e.key === 'ArrowRight') {
       e.preventDefault();
 
       let objects = myCanvas.getActiveObject();
 
       if (objects) {
-        if (objects["_objects"]) {
-          for (let i in objects["_objects"]) {
-            let object = objects["_objects"][i];
-            let objectType = object.get("type");
+        if (objects['_objects']) {
+          for (let i in objects['_objects']) {
+            let object = objects['_objects'][i];
+            let objectType = object.get('type');
 
             switch (objectType) {
-              case "rect": {
+              case 'rect': {
                 object.set({
                   left: object.left + 5,
                 });
@@ -4944,7 +4990,7 @@ function setKeyEvents() {
                 break;
               }
 
-              case "i-text": {
+              case 'i-text': {
                 object.set({
                   left: object.left + 5,
                 });
@@ -4957,10 +5003,10 @@ function setKeyEvents() {
             }
           }
         } else {
-          let objectType = objects.get("type");
+          let objectType = objects.get('type');
 
           switch (objectType) {
-            case "rect": {
+            case 'rect': {
               objects.set({
                 left: objects.left + 5,
               });
@@ -4968,7 +5014,7 @@ function setKeyEvents() {
               break;
             }
 
-            case "i-text": {
+            case 'i-text': {
               if (!objects.isEditing) {
                 objects.set({
                   left: objects.left + 5,
@@ -4992,25 +5038,25 @@ function setKeyEvents() {
 }
 
 function setTypeEvents() {
-  let menuList = document.getElementsByClassName("menu");
+  let menuList = document.getElementsByClassName('menu');
 
   for (let i = 0; i < menuList.length; i++) {
-    menuList[i].addEventListener("click", async (e: any) => {
-      if (currentType === e.target.getAttribute("key")) {
+    menuList[i].addEventListener('click', async (e: any) => {
+      if (currentType === e.target.getAttribute('key')) {
         return;
       }
 
-      currentType = e.target.getAttribute("key");
+      currentType = e.target.getAttribute('key');
 
       for (let j = 0; j < menuList.length; j++) {
-        if (menuList[j].getAttribute("key") === currentType) {
-          if (menuList[j].className === "menu") {
-            menuList[j].className = "menu selected";
+        if (menuList[j].getAttribute('key') === currentType) {
+          if (menuList[j].className === 'menu') {
+            menuList[j].className = 'menu selected';
 
             await loadImageList();
           }
         } else {
-          menuList[j].className = "menu";
+          menuList[j].className = 'menu';
         }
       }
     });
@@ -5018,7 +5064,7 @@ function setTypeEvents() {
 }
 async function reloadTranslate() {
   while (true) {
-    if (loading.style.display === "none") {
+    if (loading.style.display === 'none') {
       break;
     }
 
@@ -5030,7 +5076,7 @@ async function reloadTranslate() {
 }
 async function autoTranslation() {
   while (true) {
-    if (loading.style.display === "none") {
+    if (loading.style.display === 'none') {
       break;
     }
 
@@ -5046,11 +5092,11 @@ let testLayer = 1;
 let testLayerList: any = [];
 
 async function main() {
-  loading.style.display = "";
+  loading.style.display = '';
 
   chrome.runtime.onMessage.addListener((request, sender: any, sendResponse) => {
     switch (request.action) {
-      case "auto-translate": {
+      case 'auto-translate': {
         autoTranslation().then(sendResponse);
 
         return true;
@@ -5077,7 +5123,7 @@ async function main() {
     return;
   }
 
-  let appInfo = localStorage.getItem("appInfo");
+  let appInfo = localStorage.getItem('appInfo');
 
   if (!appInfo) {
     appData = {
@@ -5088,11 +5134,11 @@ async function main() {
       login: true,
 
       settings: {
-        extensionType: "jpeg",
-        waterMarkType: "N",
-        originWidthDescription: "N",
-        originWidthOption: "N",
-        originWidthThumbnail: "N",
+        extensionType: 'jpeg',
+        waterMarkType: 'N',
+        originWidthDescription: 'N',
+        originWidthOption: 'N',
+        originWidthThumbnail: 'N',
 
         waterMarkOpacity: 20,
         originWidthPCSize: 800,
@@ -5103,19 +5149,19 @@ async function main() {
       },
     };
 
-    localStorage.setItem("appInfo", JSON.stringify(appData));
+    localStorage.setItem('appInfo', JSON.stringify(appData));
   } else {
     appData = JSON.parse(appInfo);
   }
 
   loadLocalSettings();
 
-  let keyResp = await fetch(FLASK_URL + "getkey", {
+  let keyResp = await fetch(FLASK_URL + 'getkey', {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
 
-    method: "POST",
+    method: 'POST',
   });
 
   visionKey = await keyResp.text();
@@ -5129,9 +5175,9 @@ async function main() {
   }
 
   if (!product) {
-    alert("상품 정보를 찾을 수 없습니다.");
+    alert('상품 정보를 찾을 수 없습니다.');
 
-    loading.style.display = "none";
+    loading.style.display = 'none';
 
     return;
   }
@@ -5145,14 +5191,14 @@ async function main() {
 
   await addToLayers();
 
-  currentType = "1";
+  currentType = '1';
 
   await loadImageList();
 
   // headerFromURL.style.display = "";
-  menuToolbar.style.display = "";
+  menuToolbar.style.display = '';
 
-  loading.style.display = "none";
+  loading.style.display = 'none';
 }
 
 main();

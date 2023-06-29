@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
 import {
   styled,
   Box,
@@ -16,14 +16,14 @@ import {
   TableRow,
   TableCell,
   Typography,
-} from "@mui/material";
+} from '@mui/material';
 
-import CloseIcon from "@mui/icons-material/Close";
+import CloseIcon from '@mui/icons-material/Close';
 
 // 커스텀 테이블 열 스타일 설정
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
-  borderBottom: "1px solid ghostwhite",
+  textAlign: 'center',
+  borderBottom: '1px solid ghostwhite',
   padding: 0,
   fontSize: 12,
 });
@@ -33,9 +33,9 @@ function CircularProgressWithLabel(props: any) {
   return (
     <Box
       sx={{
-        position: "relative",
-        display: "inline-flex",
-        alignItems: "center",
+        position: 'relative',
+        display: 'inline-flex',
+        alignItems: 'center',
       }}
     >
       <CircularProgress variant="determinate" {...props} size="2rem" />
@@ -47,10 +47,10 @@ function CircularProgressWithLabel(props: any) {
             left: 0,
             bottom: 0,
             right: 0,
-            position: "absolute",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            position: 'absolute',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <Typography variant="caption" component="div" fontSize={10} fontWeight="bold">
@@ -77,9 +77,9 @@ export const Esm2UploadDisabledModal = observer(() => {
       >
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             mb: 3,
           }}
         >
@@ -113,7 +113,7 @@ export const Esm2UploadDisabledModal = observer(() => {
                 <StyledTableCell
                   colSpan={2}
                   sx={{
-                    textAlign: "left",
+                    textAlign: 'left',
                   }}
                 >
                   <FormControlLabel
@@ -128,9 +128,9 @@ export const Esm2UploadDisabledModal = observer(() => {
                     label={
                       <Box
                         sx={{
-                          display: "flex",
+                          display: 'flex',
                           fontSize: 12,
-                          alignItems: "center",
+                          alignItems: 'center',
                         }}
                       >
                         오픈마켓 전체선택
@@ -144,50 +144,50 @@ export const Esm2UploadDisabledModal = observer(() => {
 
               <TableRow>
                 <StyledTableCell
-                  width={"35%"}
+                  width={'35%'}
                   sx={{
-                    textAlign: "left",
+                    textAlign: 'left',
                   }}
                 >
                   오픈마켓
                 </StyledTableCell>
 
-                <StyledTableCell width={"15%"}>상태</StyledTableCell>
+                <StyledTableCell width={'15%'}>상태</StyledTableCell>
 
                 <StyledTableCell
-                  width={"35%"}
+                  width={'35%'}
                   sx={{
-                    textAlign: "left",
+                    textAlign: 'left',
                   }}
                 >
                   오픈마켓
                 </StyledTableCell>
 
-                <StyledTableCell width={"15%"}>상태</StyledTableCell>
+                <StyledTableCell width={'15%'}>상태</StyledTableCell>
               </TableRow>
               <TableRow>
                 <StyledTableCell
                   sx={{
-                    textAlign: "left",
+                    textAlign: 'left',
                   }}
                 >
                   <FormControlLabel
                     control={
                       <Checkbox
                         size="small"
-                        disabled={common.uploadDisabledInfo.markets.find((v: any) => v.code === "A523").disabled}
-                        checked={common.uploadDisabledInfo.markets.find((v: any) => v.code === "A523").upload}
+                        disabled={common.uploadDisabledInfo.markets.find((v: any) => v.code === 'A523').disabled}
+                        checked={common.uploadDisabledInfo.markets.find((v: any) => v.code === 'A523').upload}
                         onChange={(e) => {
-                          common.toggleUploadDisabledInfoMarket("A523", e.target.checked);
+                          common.toggleUploadDisabledInfoMarket('A523', e.target.checked);
                         }}
                       />
                     }
                     label={
                       <Box
                         sx={{
-                          display: "flex",
+                          display: 'flex',
                           fontSize: 12,
-                          alignItems: "center",
+                          alignItems: 'center',
                         }}
                       >
                         <img src="/resources/icon-gmarket.png" />
@@ -198,12 +198,15 @@ export const Esm2UploadDisabledModal = observer(() => {
                 </StyledTableCell>
 
                 <StyledTableCell>
-                  {common.uploadDisabledInfo.markets.find((v: any) => v.code === "A523").progress > 0 ? (
-                    <CircularProgressWithLabel color="error" value={common.uploadDisabledInfo.markets.find((v: any) => v.code === "A523").progress} />
-                  ) : common.uploadDisabledInfo.markets.find((v: any) => v.code === "A523").disabled ? (
+                  {common.uploadDisabledInfo.markets.find((v: any) => v.code === 'A523').progress > 0 ? (
+                    <CircularProgressWithLabel
+                      color="error"
+                      value={common.uploadDisabledInfo.markets.find((v: any) => v.code === 'A523').progress}
+                    />
+                  ) : common.uploadDisabledInfo.markets.find((v: any) => v.code === 'A523').disabled ? (
                     <Typography
                       sx={{
-                        color: "red",
+                        color: 'red',
                         fontSize: 12,
                       }}
                     >
@@ -212,7 +215,7 @@ export const Esm2UploadDisabledModal = observer(() => {
                   ) : (
                     <Typography
                       sx={{
-                        color: "green",
+                        color: 'green',
                         fontSize: 12,
                       }}
                     >
@@ -223,26 +226,26 @@ export const Esm2UploadDisabledModal = observer(() => {
 
                 <StyledTableCell
                   sx={{
-                    textAlign: "left",
+                    textAlign: 'left',
                   }}
                 >
                   <FormControlLabel
                     control={
                       <Checkbox
                         size="small"
-                        disabled={common.uploadDisabledInfo.markets.find((v: any) => v.code === "A522").disabled}
-                        checked={common.uploadDisabledInfo.markets.find((v: any) => v.code === "A522").upload}
+                        disabled={common.uploadDisabledInfo.markets.find((v: any) => v.code === 'A522').disabled}
+                        checked={common.uploadDisabledInfo.markets.find((v: any) => v.code === 'A522').upload}
                         onChange={(e) => {
-                          common.toggleUploadDisabledInfoMarket("A522", e.target.checked);
+                          common.toggleUploadDisabledInfoMarket('A522', e.target.checked);
                         }}
                       />
                     }
                     label={
                       <Box
                         sx={{
-                          display: "flex",
+                          display: 'flex',
                           fontSize: 12,
-                          alignItems: "center",
+                          alignItems: 'center',
                         }}
                       >
                         <img src="/resources/icon-auction.png" />
@@ -253,12 +256,15 @@ export const Esm2UploadDisabledModal = observer(() => {
                 </StyledTableCell>
 
                 <StyledTableCell>
-                  {common.uploadDisabledInfo.markets.find((v: any) => v.code === "A522").progress > 0 ? (
-                    <CircularProgressWithLabel color="error" value={common.uploadDisabledInfo.markets.find((v: any) => v.code === "A522").progress} />
-                  ) : common.uploadDisabledInfo.markets.find((v: any) => v.code === "A522").disabled ? (
+                  {common.uploadDisabledInfo.markets.find((v: any) => v.code === 'A522').progress > 0 ? (
+                    <CircularProgressWithLabel
+                      color="error"
+                      value={common.uploadDisabledInfo.markets.find((v: any) => v.code === 'A522').progress}
+                    />
+                  ) : common.uploadDisabledInfo.markets.find((v: any) => v.code === 'A522').disabled ? (
                     <Typography
                       sx={{
-                        color: "red",
+                        color: 'red',
                         fontSize: 12,
                       }}
                     >
@@ -267,7 +273,7 @@ export const Esm2UploadDisabledModal = observer(() => {
                   ) : (
                     <Typography
                       sx={{
-                        color: "green",
+                        color: 'green',
                         fontSize: 12,
                       }}
                     >
@@ -284,7 +290,7 @@ export const Esm2UploadDisabledModal = observer(() => {
           variant="outlined"
           sx={{
             height: 100,
-            overflowY: "auto",
+            overflowY: 'auto',
             mt: 1,
           }}
         >
@@ -301,9 +307,9 @@ export const Esm2UploadDisabledModal = observer(() => {
 
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             mt: 3,
           }}
         >
@@ -313,7 +319,7 @@ export const Esm2UploadDisabledModal = observer(() => {
             variant="contained"
             color="info"
             sx={{
-              width: "33%",
+              width: '33%',
               mx: 0.5,
             }}
             onClick={async () => {
@@ -323,7 +329,7 @@ export const Esm2UploadDisabledModal = observer(() => {
               await product.toggleEsm2UploadDisabledModal(-1, false, common);
             }}
           >
-            {!common.uploadInfo.uploadable && !common.uploadInfo.stopped ? "등록해제 중..." : "등록해제"}
+            {!common.uploadInfo.uploadable && !common.uploadInfo.stopped ? '등록해제 중...' : '등록해제'}
           </Button>
 
           <Button
@@ -332,18 +338,20 @@ export const Esm2UploadDisabledModal = observer(() => {
             variant="contained"
             color="error"
             sx={{
-              width: "33%",
+              width: '33%',
               mx: 0.5,
             }}
             onClick={async () => {
-              let accept = confirm("상품등록을 중단하시겠습니까?\n상품등록이 중단되더라도 이전에 등록된 상품은 삭제되지 않을 수 있습니다.");
+              let accept = confirm(
+                '상품등록을 중단하시겠습니까?\n상품등록이 중단되더라도 이전에 등록된 상품은 삭제되지 않을 수 있습니다.'
+              );
 
               if (accept) {
                 await common.setStopped(true);
               }
             }}
           >
-            {!common.uploadInfo.uploadable && common.uploadInfo.stopped ? "중단 중..." : "중단"}
+            {!common.uploadInfo.uploadable && common.uploadInfo.stopped ? '중단 중...' : '중단'}
           </Button>
 
           <Button
@@ -351,7 +359,7 @@ export const Esm2UploadDisabledModal = observer(() => {
             variant="contained"
             color="inherit"
             sx={{
-              width: "33%",
+              width: '33%',
               mx: 0.5,
             }}
             onClick={() => {

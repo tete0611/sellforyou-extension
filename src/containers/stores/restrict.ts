@@ -1,24 +1,24 @@
 // 금지어, 치환어 스토리지
 
-import gql from "../../pages/Main/GraphQL/Requests";
-import QUERIES from "../../pages/Main/GraphQL/Queries";
-import MUTATIONS from "../../pages/Main/GraphQL/Mutations";
+import gql from '../../pages/Main/GraphQL/Requests';
+import QUERIES from '../../pages/Main/GraphQL/Queries';
+import MUTATIONS from '../../pages/Main/GraphQL/Mutations';
 
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable } from 'mobx';
 
 export class restrict {
   restrictWordInfo: any = {
     banChecked: [],
     banList: [],
     banExcelInput: null,
-    banWordInput: "",
+    banWordInput: '',
 
-    findWordInput: "",
+    findWordInput: '',
 
     replaceChecked: [],
     replaceList: [],
     replaceExcelInput: null,
-    replaceWordInput: "",
+    replaceWordInput: '',
 
     loading: false,
   };
@@ -37,14 +37,15 @@ export class restrict {
         isReplace: data.isReplace,
       },
 
-      query: "mutation ($data: Upload!, $isReplace: Boolean!) {\n  addWordByExcelByUser(data: $data, isReplace: $isReplace)\n}\n",
+      query:
+        'mutation ($data: Upload!, $isReplace: Boolean!) {\n  addWordByExcelByUser(data: $data, isReplace: $isReplace)\n}\n',
     };
 
-    let map = { "1": ["variables.data"] };
+    let map = { '1': ['variables.data'] };
 
-    formData.append("operations", JSON.stringify(operations));
-    formData.append("map", JSON.stringify(map));
-    formData.append("1", data.data, `${data.data.name.split(".")[0]}.${data.data.name.split(".")[1]}`);
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('1', data.data, `${data.data.name.split('.')[0]}.${data.data.name.split('.')[1]}`);
 
     const response = await gql(null, formData, true);
 
@@ -65,10 +66,14 @@ export class restrict {
       return;
     }
 
-    this.restrictWordInfo.banList = response.data.selectWordTablesBySomeone.filter((v: any) => v.findWord && !v.replaceWord);
+    this.restrictWordInfo.banList = response.data.selectWordTablesBySomeone.filter(
+      (v: any) => v.findWord && !v.replaceWord
+    );
     this.restrictWordInfo.banList.map(() => this.restrictWordInfo.banChecked.push(false));
 
-    this.restrictWordInfo.replaceList = response.data.selectWordTablesBySomeone.filter((v: any) => v.findWord && v.replaceWord);
+    this.restrictWordInfo.replaceList = response.data.selectWordTablesBySomeone.filter(
+      (v: any) => v.findWord && v.replaceWord
+    );
     this.restrictWordInfo.replaceList.map(() => this.restrictWordInfo.replaceChecked.push(false));
 
     this.restrictWordInfo.loading = true;
@@ -96,14 +101,14 @@ export class restrict {
   // 치환어 추가
   addReplaceWordTable = async () => {
     if (!this.restrictWordInfo.findWordInput) {
-      alert("검색어명에 공백을 입력하실 수 없습니다.");
+      alert('검색어명에 공백을 입력하실 수 없습니다.');
 
       return;
     }
 
     const response = await gql(MUTATIONS.ADD_WORD_BY_USER, {
       findWord: this.restrictWordInfo.findWordInput,
-      replaceWord: this.restrictWordInfo.replaceWordInput !== "" ? this.restrictWordInfo.replaceWordInput : " ",
+      replaceWord: this.restrictWordInfo.replaceWordInput !== '' ? this.restrictWordInfo.replaceWordInput : ' ',
     });
 
     if (response.errors) {

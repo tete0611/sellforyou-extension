@@ -1,17 +1,17 @@
 @font-face {
-  font-family: "NNSQUAREROUNDR";
-  src: url("resources/NanumSquareRoundR.ttf");
+  font-family: 'NNSQUAREROUNDR';
+  src: url('resources/NanumSquareRoundR.ttf');
 }
 
 html * {
-  font-family: "NNSQUAREROUNDR";
+  font-family: 'NNSQUAREROUNDR';
   font-weight: bold;
 }
 
 body {
   background: rgb(41, 41, 41);
 
-  font-family: "NNSQUAREROUNDR";
+  font-family: 'NNSQUAREROUNDR';
 
   margin: 0px 0px 0px;
 }

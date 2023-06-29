@@ -1,9 +1,20 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, FormControl, FormControlLabel, Grid, Modal, Paper, Radio, RadioGroup, TextField, Typography } from "@mui/material";
-import { MyButton } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import {
+  Box,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  Modal,
+  Paper,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { MyButton } from '../Common/UI';
 
 // 상품명 일괄설정 모달 뷰
 export const ManyLockModal = observer(() => {
@@ -20,9 +31,9 @@ export const ManyLockModal = observer(() => {
       >
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             mb: 3,
           }}
         >
@@ -59,7 +70,7 @@ export const ManyLockModal = observer(() => {
                 minWidth: 60,
               }}
               onClick={async () => {
-                let test = confirm("해당 상품을 정말로 잠금 해제하시겠습니까?");
+                let test = confirm('해당 상품을 정말로 잠금 해제하시겠습니까?');
                 if (!test) return;
                 await Promise.all(
                   product.itemInfo.items.map(async (v: any, i: number) => {

@@ -1,6 +1,6 @@
 // 결제 스토리지
 
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable } from 'mobx';
 
 interface CardInfo {
   birthYMD: string;
@@ -40,13 +40,13 @@ interface PlanInfo {
 
 export class payments {
   cardInfo: CardInfo = {
-    birthYMD: "",
-    numPart1: "",
-    numPart2: "",
-    numPart3: "",
-    numPart4: "",
-    validYear: "",
-    validMonth: "",
+    birthYMD: '',
+    numPart1: '',
+    numPart2: '',
+    numPart3: '',
+    numPart4: '',
+    validYear: '',
+    validMonth: '',
   };
 
   modalInfo: any = {
@@ -55,14 +55,14 @@ export class payments {
 
   payInfo: PayInfo = {
     accounts: [],
-    company: "null",
-    etc: "false",
-    name: "",
-    period: "1",
-    planLevel: "3",
+    company: 'null',
+    etc: 'false',
+    name: '',
+    period: '1',
+    planLevel: '3',
     point: 0,
     serviceAgreed: false,
-    type: "CASH",
+    type: 'CASH',
   };
 
   priceInfo: PriceInfo = {

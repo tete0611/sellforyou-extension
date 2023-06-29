@@ -1,23 +1,37 @@
-import React from "react";
-import ErrorIcon from "@mui/icons-material/Error";
-import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
-import TranslateIcon from "@mui/icons-material/Translate";
-import LockIcon from "@mui/icons-material/Lock";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import LooksTwoOutlinedIcon from "@mui/icons-material/LooksTwoOutlined";
-import { format } from "date-fns";
-import { observer } from "mobx-react";
-import { AppContext } from "../../../../containers/AppContext";
-import { styled, Box, Chip, Grid, IconButton, TableCell, TableRow, Tooltip, Typography, Button, Checkbox, CircularProgress, Paper } from "@mui/material";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import { Image, Input, MyButton, Search } from "../../Common/UI";
-import { byteLength, byteSlice } from "../../../Tools/Common";
+import React from 'react';
+import ErrorIcon from '@mui/icons-material/Error';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import TranslateIcon from '@mui/icons-material/Translate';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
+import { format } from 'date-fns';
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../../containers/AppContext';
+import {
+  styled,
+  Box,
+  Chip,
+  Grid,
+  IconButton,
+  TableCell,
+  TableRow,
+  Tooltip,
+  Typography,
+  Button,
+  Checkbox,
+  CircularProgress,
+  Paper,
+} from '@mui/material';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
+import { Image, Input, MyButton, Search } from '../../Common/UI';
+import { byteLength, byteSlice } from '../../../Tools/Common';
 
 // 커스텀 테이블 컬럼 스타일
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
+  textAlign: 'center',
   padding: 0,
-  border: "none",
+  border: 'none',
   fontSize: 14,
 });
 
@@ -31,8 +45,8 @@ export const Summary = observer((props: any) => {
     <div className="inform">
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         <div className="loading" />
@@ -55,7 +69,7 @@ export const Summary = observer((props: any) => {
             }}
           />
 
-          <Tooltip title={props.item.collapse ? "상세정보접기" : "상세정보열기"}>
+          <Tooltip title={props.item.collapse ? '상세정보접기' : '상세정보열기'}>
             <IconButton
               size="small"
               onClick={() => {
@@ -78,31 +92,39 @@ export const Summary = observer((props: any) => {
             onClick={() => {
               navigator.clipboard.writeText(props.item.productCode).then(
                 function () {
-                  alert("클립보드에 복사되었습니다.");
+                  alert('클립보드에 복사되었습니다.');
                 },
                 function () {
-                  alert("클립보드에 복사할 수 없습니다.");
+                  alert('클립보드에 복사할 수 없습니다.');
                 }
               );
             }}
           />
 
           {props.item.state === 6 ? (
-            <Chip size="small" sx={{ fontSize: 13, width: 85 }} label={`${format(new Date(props.item.createdAt), "yy-MM-dd")}`} />
+            <Chip
+              size="small"
+              sx={{ fontSize: 13, width: 85 }}
+              label={`${format(new Date(props.item.createdAt), 'yy-MM-dd')}`}
+            />
           ) : (
-            <Chip size="small" sx={{ fontSize: 13, width: 85 }} label={`${format(new Date(props.item.stockUpdatedAt), "yy-MM-dd")}`} />
+            <Chip
+              size="small"
+              sx={{ fontSize: 13, width: 85 }}
+              label={`${format(new Date(props.item.stockUpdatedAt), 'yy-MM-dd')}`}
+            />
           )}
         </StyledTableCell>
 
         <StyledTableCell width={100}>
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               p: 0,
-              height: "100%",
-              width: "100%",
+              height: '100%',
+              width: '100%',
             }}
           >
             <Image
@@ -110,8 +132,8 @@ export const Summary = observer((props: any) => {
               width={props.item.state === 7 ? 105 : 82}
               height={props.item.state === 7 ? 105 : 82}
               style={{
-                background: "black",
-                objectFit: "contain",
+                background: 'black',
+                objectFit: 'contain',
               }}
               onClick={(e) => {
                 product.setImagePopOver({
@@ -129,15 +151,15 @@ export const Summary = observer((props: any) => {
             <Grid item xs={6} md={4.5}>
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
+                  display: 'flex',
+                  alignItems: 'center',
                   p: 0,
-                  height: "100%",
-                  width: "100%",
+                  height: '100%',
+                  width: '100%',
                 }}
               >
                 <Input
-                  color={props.item.edited.summary ? "warning" : "info"}
+                  color={props.item.edited.summary ? 'warning' : 'info'}
                   id={`product_row_title_${props.index}`}
                   value={props.item.name}
                   onChange={(e: any) => {
@@ -161,7 +183,7 @@ export const Summary = observer((props: any) => {
                 >
                   <Typography
                     sx={{
-                      fontSize: "10px",
+                      fontSize: '10px',
                     }}
                   >
                     {props.item.name.length} 자
@@ -169,8 +191,8 @@ export const Summary = observer((props: any) => {
 
                   <Typography
                     sx={{
-                      color: common.darkTheme ? "info.light" : "info.dark",
-                      fontSize: "10px",
+                      color: common.darkTheme ? 'info.light' : 'info.dark',
+                      fontSize: '10px',
                     }}
                   >
                     {byteLength(props.item.name)} B
@@ -191,14 +213,14 @@ export const Summary = observer((props: any) => {
                     }}
                     onClick={async () => {
                       const regExp = /[^가-힣a-zA-Z0-9 ]+/g;
-                      const name1 = props.item.name.replace(regExp, " ");
+                      const name1 = props.item.name.replace(regExp, ' ');
                       const name2 = byteSlice(name1, 100);
 
-                      const nameList = name2.split(" ");
+                      const nameList = name2.split(' ');
                       const nameListFixed = [...new Set(nameList)];
 
-                      const name3 = nameListFixed.join(" ");
-                      const name4 = name3.replaceAll("  ", " ");
+                      const name3 = nameListFixed.join(' ');
+                      const name4 = name3.replaceAll('  ', ' ');
 
                       product.setProductName(name4, props.index);
                       product.updateProductName(props.index);
@@ -215,7 +237,7 @@ export const Summary = observer((props: any) => {
               xs={6}
               md={2.7}
               sx={{
-                margin: "auto",
+                margin: 'auto',
               }}
             >
               <Grid container spacing={0.5}>
@@ -224,122 +246,122 @@ export const Summary = observer((props: any) => {
                   xs={6}
                   md={12}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      p: "4.5px",
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      p: '4.5px',
                     }}
                   >
                     <Box
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
+                        display: 'flex',
+                        alignItems: 'center',
                       }}
                     >
                       <Tooltip
                         title={
                           <>
                             <img
-                              style={{ margin: "1px" }}
+                              style={{ margin: '1px' }}
                               src={
-                                props.item.activeProductStore.find((v: any) => v.siteCode === "A077" && v.inflow)
-                                  ? "/resources/icon-smartstore.png"
-                                  : "/resources/icon-smartstore-gray.png"
+                                props.item.activeProductStore.find((v: any) => v.siteCode === 'A077' && v.inflow)
+                                  ? '/resources/icon-smartstore.png'
+                                  : '/resources/icon-smartstore-gray.png'
                               }
                             />
 
                             <img
-                              style={{ margin: "1px" }}
+                              style={{ margin: '1px' }}
                               src={
-                                props.item.activeProductStore.find((v: any) => v.siteCode === "B378" && v.inflow)
-                                  ? "/resources/icon-coupang.png"
-                                  : "/resources/icon-coupang-gray.png"
+                                props.item.activeProductStore.find((v: any) => v.siteCode === 'B378' && v.inflow)
+                                  ? '/resources/icon-coupang.png'
+                                  : '/resources/icon-coupang-gray.png'
                               }
                             />
 
                             <img
-                              style={{ margin: "1px" }}
+                              style={{ margin: '1px' }}
                               src={
-                                props.item.activeProductStore.find((v: any) => v.siteCode === "A112" && v.inflow)
-                                  ? "/resources/icon-street-global.png"
-                                  : "/resources/icon-street-global-gray.png"
+                                props.item.activeProductStore.find((v: any) => v.siteCode === 'A112' && v.inflow)
+                                  ? '/resources/icon-street-global.png'
+                                  : '/resources/icon-street-global-gray.png'
                               }
                             />
 
                             <img
-                              style={{ margin: "1px" }}
+                              style={{ margin: '1px' }}
                               src={
-                                props.item.activeProductStore.find((v: any) => v.siteCode === "A113" && v.inflow)
-                                  ? "/resources/icon-street-normal.png"
-                                  : "/resources/icon-street-normal-gray.png"
+                                props.item.activeProductStore.find((v: any) => v.siteCode === 'A113' && v.inflow)
+                                  ? '/resources/icon-street-normal.png'
+                                  : '/resources/icon-street-normal-gray.png'
                               }
                             />
 
                             <img
-                              style={{ margin: "1px" }}
+                              style={{ margin: '1px' }}
                               src={
-                                props.item.activeProductStore.find((v: any) => v.siteCode === "A006" && v.inflow)
-                                  ? "/resources/icon-gmarket.png"
-                                  : "/resources/icon-gmarket-gray.png"
+                                props.item.activeProductStore.find((v: any) => v.siteCode === 'A006' && v.inflow)
+                                  ? '/resources/icon-gmarket.png'
+                                  : '/resources/icon-gmarket-gray.png'
                               }
                             />
 
                             <img
-                              style={{ margin: "1px" }}
+                              style={{ margin: '1px' }}
                               src={
-                                props.item.activeProductStore.find((v: any) => v.siteCode === "A001" && v.inflow)
-                                  ? "/resources/icon-auction.png"
-                                  : "/resources/icon-auction-gray.png"
+                                props.item.activeProductStore.find((v: any) => v.siteCode === 'A001' && v.inflow)
+                                  ? '/resources/icon-auction.png'
+                                  : '/resources/icon-auction-gray.png'
                               }
                             />
 
                             <img
-                              style={{ margin: "1px" }}
+                              style={{ margin: '1px' }}
                               src={
-                                props.item.activeProductStore.find((v: any) => v.siteCode === "A027" && v.inflow)
-                                  ? "/resources/icon-interpark.png"
-                                  : "/resources/icon-interpark-gray.png"
+                                props.item.activeProductStore.find((v: any) => v.siteCode === 'A027' && v.inflow)
+                                  ? '/resources/icon-interpark.png'
+                                  : '/resources/icon-interpark-gray.png'
                               }
                             />
 
                             <img
-                              style={{ margin: "1px" }}
+                              style={{ margin: '1px' }}
                               src={
-                                props.item.activeProductStore.find((v: any) => v.siteCode === "B719" && v.inflow)
-                                  ? "/resources/icon-wemakeprice.png"
-                                  : "/resources/icon-wemakeprice-gray.png"
+                                props.item.activeProductStore.find((v: any) => v.siteCode === 'B719' && v.inflow)
+                                  ? '/resources/icon-wemakeprice.png'
+                                  : '/resources/icon-wemakeprice-gray.png'
                               }
                             />
 
                             <img
-                              style={{ margin: "1px" }}
+                              style={{ margin: '1px' }}
                               src={
-                                props.item.activeProductStore.find((v: any) => v.siteCode === "A524" && v.inflow)
-                                  ? "/resources/icon-lotteon-global.png"
-                                  : "/resources/icon-lotteon-global-gray.png"
+                                props.item.activeProductStore.find((v: any) => v.siteCode === 'A524' && v.inflow)
+                                  ? '/resources/icon-lotteon-global.png'
+                                  : '/resources/icon-lotteon-global-gray.png'
                               }
                             />
 
                             <img
-                              style={{ margin: "1px" }}
+                              style={{ margin: '1px' }}
                               src={
-                                props.item.activeProductStore.find((v: any) => v.siteCode === "A525" && v.inflow)
-                                  ? "/resources/icon-lotteon-normal.png"
-                                  : "/resources/icon-lotteon-normal-gray.png"
+                                props.item.activeProductStore.find((v: any) => v.siteCode === 'A525' && v.inflow)
+                                  ? '/resources/icon-lotteon-normal.png'
+                                  : '/resources/icon-lotteon-normal-gray.png'
                               }
                             />
 
                             <img
-                              style={{ margin: "1px" }}
+                              style={{ margin: '1px' }}
                               src={
-                                props.item.activeProductStore.find((v: any) => v.siteCode === "B956" && v.inflow)
-                                  ? "/resources/icon-tmon.png"
-                                  : "/resources/icon-tmon-gray.png"
+                                props.item.activeProductStore.find((v: any) => v.siteCode === 'B956' && v.inflow)
+                                  ? '/resources/icon-tmon.png'
+                                  : '/resources/icon-tmon-gray.png'
                               }
                             />
                           </>
@@ -347,44 +369,44 @@ export const Summary = observer((props: any) => {
                       >
                         <Chip
                           size="small"
-                          color={props.item.activeProductStore.some((v) => v.inflow) ? "success" : "default"}
+                          color={props.item.activeProductStore.some((v) => v.inflow) ? 'success' : 'default'}
                           sx={{ fontSize: 12 }}
-                          label={props.item.activeProductStore.some((v) => v.inflow) ? "추적분석중" : "코드미설치"}
+                          label={props.item.activeProductStore.some((v) => v.inflow) ? '추적분석중' : '코드미설치'}
                         />
                       </Tooltip>
                     </Box>
 
                     <Box
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
+                        display: 'flex',
+                        alignItems: 'center',
                       }}
                     >
                       <Typography
                         fontSize={13}
                         sx={{
-                          color: common.darkTheme ? "error.light" : "error.dark",
-                          textAlign: "right",
+                          color: common.darkTheme ? 'error.light' : 'error.dark',
+                          textAlign: 'right',
                         }}
                       >
-                        {props.item.activeTaobaoProduct.price.toLocaleString("ko-KR")}
-                        {props.item.activeTaobaoProduct.shopName === "express"
-                          ? "원"
-                          : props.item.activeTaobaoProduct.shopName === "amazon-us"
-                          ? "$"
-                          : props.item.activeTaobaoProduct.shopName === "amazon-de"
-                          ? "€"
-                          : "¥"}
+                        {props.item.activeTaobaoProduct.price.toLocaleString('ko-KR')}
+                        {props.item.activeTaobaoProduct.shopName === 'express'
+                          ? '원'
+                          : props.item.activeTaobaoProduct.shopName === 'amazon-us'
+                          ? '$'
+                          : props.item.activeTaobaoProduct.shopName === 'amazon-de'
+                          ? '€'
+                          : '¥'}
                       </Typography>
                       &nbsp; / &nbsp;
                       <Typography
                         fontSize={13}
                         sx={{
-                          color: common.darkTheme ? "info.light" : "info.dark",
-                          textAlign: "right",
+                          color: common.darkTheme ? 'info.light' : 'info.dark',
+                          textAlign: 'right',
                         }}
                       >
-                        {props.item.price.toLocaleString("ko-KR")}원
+                        {props.item.price.toLocaleString('ko-KR')}원
                       </Typography>
                     </Box>
                   </Box>
@@ -401,29 +423,29 @@ export const Summary = observer((props: any) => {
                 <Search
                   value={props.item.categoryInfoA077}
                   options={
-                    product.categoryInfo.markets.find((v: any) => v.code === "A077").input
-                      ? product.categoryInfo.markets.find((v: any) => v.code === "A077").data
+                    product.categoryInfo.markets.find((v: any) => v.code === 'A077').input
+                      ? product.categoryInfo.markets.find((v: any) => v.code === 'A077').data
                       : [props.item.categoryInfoA077]
                   }
-                  getOptionLabel={(option: any) => option.name ?? ""}
+                  getOptionLabel={(option: any) => option.name ?? ''}
                   isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                   onChange={(e: any, value: any) => {
                     product.updateCategoryAuto(value, props.index);
                   }}
                   onInputChange={(e: any, value: any, reason: any) => {
-                    if (reason !== "input") {
+                    if (reason !== 'input') {
                       return;
                     }
 
-                    product.setCategoryInput("A077", value);
+                    product.setCategoryInput('A077', value);
                   }}
                   onOpen={() => {
-                    product.getCategoryList("A077");
+                    product.getCategoryList('A077');
                   }}
                   onClose={() => {
-                    product.setCategoryInput("A077", "");
+                    product.setCategoryInput('A077', '');
                   }}
-                  loading={product.categoryInfo.markets.find((v: any) => v.code === "A077").loading}
+                  loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077').loading}
                 />
               </Box>
             </Grid>
@@ -431,9 +453,9 @@ export const Summary = observer((props: any) => {
             <Grid item xs={6} md={4.5}>
               <Box
                 sx={{
-                  display: "flex",
+                  display: 'flex',
                   // alignItems: "center",
-                  marginTop: "6px",
+                  marginTop: '6px',
                   p: 0,
                   // height: "100%",
                   // width: "100%",
@@ -441,7 +463,7 @@ export const Summary = observer((props: any) => {
               >
                 <Box
                   sx={{
-                    display: "flex",
+                    display: 'flex',
                     // alignItems: "center",
                   }}
                 >
@@ -452,17 +474,17 @@ export const Summary = observer((props: any) => {
                         window.open(props.item.activeTaobaoProduct.url);
                       }}
                     >
-                      {props.item.activeTaobaoProduct.shopName === "taobao" ? (
+                      {props.item.activeTaobaoProduct.shopName === 'taobao' ? (
                         <img src="/resources/icon-taobao.png" />
-                      ) : props.item.activeTaobaoProduct.shopName === "tmall" ? (
+                      ) : props.item.activeTaobaoProduct.shopName === 'tmall' ? (
                         <img src="/resources/icon-tmall.png" />
-                      ) : props.item.activeTaobaoProduct.shopName === "express" ? (
+                      ) : props.item.activeTaobaoProduct.shopName === 'express' ? (
                         <img src="/resources/icon-express.png" />
-                      ) : props.item.activeTaobaoProduct.shopName === "alibaba" ? (
+                      ) : props.item.activeTaobaoProduct.shopName === 'alibaba' ? (
                         <img src="/resources/icon-1688.png" />
-                      ) : props.item.activeTaobaoProduct.shopName === "vvic" ? (
+                      ) : props.item.activeTaobaoProduct.shopName === 'vvic' ? (
                         <img src="/resources/icon-vvic.png" />
-                      ) : props.item.activeTaobaoProduct.shopName.includes("amazon") ? (
+                      ) : props.item.activeTaobaoProduct.shopName.includes('amazon') ? (
                         <img src="/resources/icon-amazon.png" />
                       ) : null}
                     </IconButton>
@@ -481,7 +503,11 @@ export const Summary = observer((props: any) => {
                         window.open(videoUrl);
                       }}
                     >
-                      {props.item.activeTaobaoProduct.videoUrl ? <img src="/resources/icon-video.png" /> : <img src="/resources/icon-video-gray.png" />}
+                      {props.item.activeTaobaoProduct.videoUrl ? (
+                        <img src="/resources/icon-video.png" />
+                      ) : (
+                        <img src="/resources/icon-video-gray.png" />
+                      )}
                     </IconButton>
                   </Tooltip>
                 </Box>
@@ -489,10 +515,10 @@ export const Summary = observer((props: any) => {
                 <Typography
                   noWrap
                   sx={{
-                    color: common.darkTheme ? "info.light" : "info.dark",
+                    color: common.darkTheme ? 'info.light' : 'info.dark',
                     fontSize: 13,
                     maxWidth: 500,
-                    marginTop: "4px",
+                    marginTop: '4px',
                   }}
                 >
                   {props.item.activeTaobaoProduct.name}
@@ -506,17 +532,17 @@ export const Summary = observer((props: any) => {
               md={2.7}
               sx={{
                 // margin: "auto",
-                marginTop: "4px",
+                marginTop: '4px',
               }}
             >
               {props.item.state === 7 ? (
                 <Box
                   sx={{
-                    display: "flex",
-                    flexWrap: "wrap",
+                    display: 'flex',
+                    flexWrap: 'wrap',
                     // alignItems: "center",
-                    justifyContent: "right",
-                    p: "4.5px",
+                    justifyContent: 'right',
+                    p: '4.5px',
                   }}
                 >
                   <IconButton
@@ -526,7 +552,9 @@ export const Summary = observer((props: any) => {
                       margin: 1,
                     }}
                     onClick={() => {
-                      const connected = props.item.productStore.find((v: any) => v.siteCode === "A077" && v.state === 2);
+                      const connected = props.item.productStore.find(
+                        (v: any) => v.siteCode === 'A077' && v.state === 2
+                      );
 
                       if (!connected) {
                         return;
@@ -537,9 +565,9 @@ export const Summary = observer((props: any) => {
                   >
                     <img
                       src={
-                        props.item.productStore.find((v: any) => v.siteCode === "A077" && v.state === 2)
-                          ? "/resources/icon-smartstore.png"
-                          : "/resources/icon-smartstore-gray.png"
+                        props.item.productStore.find((v: any) => v.siteCode === 'A077' && v.state === 2)
+                          ? '/resources/icon-smartstore.png'
+                          : '/resources/icon-smartstore-gray.png'
                       }
                     />
                   </IconButton>
@@ -556,9 +584,9 @@ export const Summary = observer((props: any) => {
                   >
                     <img
                       src={
-                        props.item.productStore.find((v: any) => v.siteCode === "B378" && v.state === 2)
-                          ? "/resources/icon-coupang.png"
-                          : "/resources/icon-coupang-gray.png"
+                        props.item.productStore.find((v: any) => v.siteCode === 'B378' && v.state === 2)
+                          ? '/resources/icon-coupang.png'
+                          : '/resources/icon-coupang-gray.png'
                       }
                     />
                   </IconButton>
@@ -570,7 +598,9 @@ export const Summary = observer((props: any) => {
                       margin: 1,
                     }}
                     onClick={() => {
-                      const connected = props.item.productStore.find((v: any) => v.siteCode === "A112" && v.state === 2);
+                      const connected = props.item.productStore.find(
+                        (v: any) => v.siteCode === 'A112' && v.state === 2
+                      );
 
                       if (!connected) {
                         return;
@@ -581,9 +611,9 @@ export const Summary = observer((props: any) => {
                   >
                     <img
                       src={
-                        props.item.productStore.find((v: any) => v.siteCode === "A112" && v.state === 2)
-                          ? "/resources/icon-street-global.png"
-                          : "/resources/icon-street-global-gray.png"
+                        props.item.productStore.find((v: any) => v.siteCode === 'A112' && v.state === 2)
+                          ? '/resources/icon-street-global.png'
+                          : '/resources/icon-street-global-gray.png'
                       }
                     />
                   </IconButton>
@@ -595,7 +625,9 @@ export const Summary = observer((props: any) => {
                       margin: 1,
                     }}
                     onClick={() => {
-                      const connected = props.item.productStore.find((v: any) => v.siteCode === "A113" && v.state === 2);
+                      const connected = props.item.productStore.find(
+                        (v: any) => v.siteCode === 'A113' && v.state === 2
+                      );
 
                       if (!connected) {
                         return;
@@ -606,9 +638,9 @@ export const Summary = observer((props: any) => {
                   >
                     <img
                       src={
-                        props.item.productStore.find((v: any) => v.siteCode === "A113" && v.state === 2)
-                          ? "/resources/icon-street-normal.png"
-                          : "/resources/icon-street-normal-gray.png"
+                        props.item.productStore.find((v: any) => v.siteCode === 'A113' && v.state === 2)
+                          ? '/resources/icon-street-normal.png'
+                          : '/resources/icon-street-normal-gray.png'
                       }
                     />
                   </IconButton>
@@ -620,7 +652,9 @@ export const Summary = observer((props: any) => {
                       margin: 1,
                     }}
                     onClick={() => {
-                      const connected = props.item.productStore.find((v: any) => v.siteCode === "A006" && v.state === 2);
+                      const connected = props.item.productStore.find(
+                        (v: any) => v.siteCode === 'A006' && v.state === 2
+                      );
 
                       if (!connected) {
                         return;
@@ -631,9 +665,9 @@ export const Summary = observer((props: any) => {
                   >
                     <img
                       src={
-                        props.item.productStore.find((v: any) => v.siteCode === "A006" && v.state === 2)
-                          ? "/resources/icon-gmarket.png"
-                          : "/resources/icon-gmarket-gray.png"
+                        props.item.productStore.find((v: any) => v.siteCode === 'A006' && v.state === 2)
+                          ? '/resources/icon-gmarket.png'
+                          : '/resources/icon-gmarket-gray.png'
                       }
                     />
                   </IconButton>
@@ -645,7 +679,9 @@ export const Summary = observer((props: any) => {
                       margin: 1,
                     }}
                     onClick={() => {
-                      const connected = props.item.productStore.find((v: any) => v.siteCode === "A001" && v.state === 2);
+                      const connected = props.item.productStore.find(
+                        (v: any) => v.siteCode === 'A001' && v.state === 2
+                      );
 
                       if (!connected) {
                         return;
@@ -656,9 +692,9 @@ export const Summary = observer((props: any) => {
                   >
                     <img
                       src={
-                        props.item.productStore.find((v: any) => v.siteCode === "A001" && v.state === 2)
-                          ? "/resources/icon-auction.png"
-                          : "/resources/icon-auction-gray.png"
+                        props.item.productStore.find((v: any) => v.siteCode === 'A001' && v.state === 2)
+                          ? '/resources/icon-auction.png'
+                          : '/resources/icon-auction-gray.png'
                       }
                     />
                   </IconButton>
@@ -670,7 +706,9 @@ export const Summary = observer((props: any) => {
                       margin: 1,
                     }}
                     onClick={() => {
-                      const connected = props.item.productStore.find((v: any) => v.siteCode === "A027" && v.state === 2);
+                      const connected = props.item.productStore.find(
+                        (v: any) => v.siteCode === 'A027' && v.state === 2
+                      );
 
                       if (!connected) {
                         return;
@@ -681,9 +719,9 @@ export const Summary = observer((props: any) => {
                   >
                     <img
                       src={
-                        props.item.productStore.find((v: any) => v.siteCode === "A027" && v.state === 2)
-                          ? "/resources/icon-interpark.png"
-                          : "/resources/icon-interpark-gray.png"
+                        props.item.productStore.find((v: any) => v.siteCode === 'A027' && v.state === 2)
+                          ? '/resources/icon-interpark.png'
+                          : '/resources/icon-interpark-gray.png'
                       }
                     />
                   </IconButton>
@@ -695,7 +733,9 @@ export const Summary = observer((props: any) => {
                       margin: 1,
                     }}
                     onClick={() => {
-                      const connected = props.item.productStore.find((v: any) => v.siteCode === "B719" && v.state === 2);
+                      const connected = props.item.productStore.find(
+                        (v: any) => v.siteCode === 'B719' && v.state === 2
+                      );
 
                       if (!connected) {
                         return;
@@ -706,9 +746,9 @@ export const Summary = observer((props: any) => {
                   >
                     <img
                       src={
-                        props.item.productStore.find((v: any) => v.siteCode === "B719" && v.state === 2)
-                          ? "/resources/icon-wemakeprice.png"
-                          : "/resources/icon-wemakeprice-gray.png"
+                        props.item.productStore.find((v: any) => v.siteCode === 'B719' && v.state === 2)
+                          ? '/resources/icon-wemakeprice.png'
+                          : '/resources/icon-wemakeprice-gray.png'
                       }
                     />
                   </IconButton>
@@ -720,7 +760,9 @@ export const Summary = observer((props: any) => {
                       margin: 1,
                     }}
                     onClick={() => {
-                      const connected = props.item.productStore.find((v: any) => v.siteCode === "A524" && v.state === 2);
+                      const connected = props.item.productStore.find(
+                        (v: any) => v.siteCode === 'A524' && v.state === 2
+                      );
 
                       if (!connected) {
                         return;
@@ -731,9 +773,9 @@ export const Summary = observer((props: any) => {
                   >
                     <img
                       src={
-                        props.item.productStore.find((v: any) => v.siteCode === "A524" && v.state === 2)
-                          ? "/resources/icon-lotteon-global.png"
-                          : "/resources/icon-lotteon-global-gray.png"
+                        props.item.productStore.find((v: any) => v.siteCode === 'A524' && v.state === 2)
+                          ? '/resources/icon-lotteon-global.png'
+                          : '/resources/icon-lotteon-global-gray.png'
                       }
                     />
                   </IconButton>
@@ -745,7 +787,9 @@ export const Summary = observer((props: any) => {
                       margin: 1,
                     }}
                     onClick={() => {
-                      const connected = props.item.productStore.find((v: any) => v.siteCode === "A525" && v.state === 2);
+                      const connected = props.item.productStore.find(
+                        (v: any) => v.siteCode === 'A525' && v.state === 2
+                      );
 
                       if (!connected) {
                         return;
@@ -756,9 +800,9 @@ export const Summary = observer((props: any) => {
                   >
                     <img
                       src={
-                        props.item.productStore.find((v: any) => v.siteCode === "A525" && v.state === 2)
-                          ? "/resources/icon-lotteon-normal.png"
-                          : "/resources/icon-lotteon-normal-gray.png"
+                        props.item.productStore.find((v: any) => v.siteCode === 'A525' && v.state === 2)
+                          ? '/resources/icon-lotteon-normal.png'
+                          : '/resources/icon-lotteon-normal-gray.png'
                       }
                     />
                   </IconButton>
@@ -770,7 +814,9 @@ export const Summary = observer((props: any) => {
                       margin: 1,
                     }}
                     onClick={() => {
-                      const connected = props.item.productStore.find((v: any) => v.siteCode === "B956" && v.state === 2);
+                      const connected = props.item.productStore.find(
+                        (v: any) => v.siteCode === 'B956' && v.state === 2
+                      );
 
                       if (!connected) {
                         return;
@@ -781,9 +827,9 @@ export const Summary = observer((props: any) => {
                   >
                     <img
                       src={
-                        props.item.productStore.find((v: any) => v.siteCode === "B956" && v.state === 2)
-                          ? "/resources/icon-tmon.png"
-                          : "/resources/icon-tmon-gray.png"
+                        props.item.productStore.find((v: any) => v.siteCode === 'B956' && v.state === 2)
+                          ? '/resources/icon-tmon.png'
+                          : '/resources/icon-tmon-gray.png'
                       }
                     />
                   </IconButton>
@@ -794,9 +840,9 @@ export const Summary = observer((props: any) => {
             <Grid item xs={6} md={4.8}>
               <Box
                 sx={{
-                  alignItems: "center",
-                  display: "flex",
-                  justifyContent: "right",
+                  alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'right',
                 }}
               >
                 {/* 주석필요 */}
@@ -814,7 +860,9 @@ export const Summary = observer((props: any) => {
                         margin: 1,
                       }}
                       onClick={() => {
-                        const connected = props.item.productStore.find((v: any) => v.siteCode === "A523" && v.state === 2);
+                        const connected = props.item.productStore.find(
+                          (v: any) => v.siteCode === 'A523' && v.state === 2
+                        );
 
                         if (!connected) {
                           return;
@@ -825,9 +873,9 @@ export const Summary = observer((props: any) => {
                     >
                       <img
                         src={
-                          props.item.productStore.find((v: any) => v.siteCode === "A523" && v.state === 2)
-                            ? "/resources/icon-gmarket.png"
-                            : "/resources/icon-gmarket-gray.png"
+                          props.item.productStore.find((v: any) => v.siteCode === 'A523' && v.state === 2)
+                            ? '/resources/icon-gmarket.png'
+                            : '/resources/icon-gmarket-gray.png'
                         }
                       />
                     </IconButton>
@@ -839,7 +887,9 @@ export const Summary = observer((props: any) => {
                         margin: 1,
                       }}
                       onClick={() => {
-                        const connected = props.item.productStore.find((v: any) => v.siteCode === "A522" && v.state === 2);
+                        const connected = props.item.productStore.find(
+                          (v: any) => v.siteCode === 'A522' && v.state === 2
+                        );
 
                         if (!connected) {
                           return;
@@ -850,9 +900,9 @@ export const Summary = observer((props: any) => {
                     >
                       <img
                         src={
-                          props.item.productStore.find((v: any) => v.siteCode === "A522" && v.state === 2)
-                            ? "/resources/icon-auction.png"
-                            : "/resources/icon-auction-gray.png"
+                          props.item.productStore.find((v: any) => v.siteCode === 'A522' && v.state === 2)
+                            ? '/resources/icon-auction.png'
+                            : '/resources/icon-auction-gray.png'
                         }
                       />
                     </IconButton>
@@ -862,21 +912,21 @@ export const Summary = observer((props: any) => {
                 {props.item.state === 7 ? (
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                     }}
                   >
                     <IconButton
                       size="small"
                       onClick={() => {
                         if (common.user.purchaseInfo2.level < 3) {
-                          alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                          alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                           return;
                         }
 
                         if (props.item.myLock === 2) {
-                          let test: any = confirm("해당 상품을 정말로 잠금 해제하시겠습니까?");
+                          let test: any = confirm('해당 상품을 정말로 잠금 해제하시겠습니까?');
                           if (test) {
                             product.updateLockProduct(props.index, {
                               productId: props.item.id,
@@ -898,8 +948,8 @@ export const Summary = observer((props: any) => {
 
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                     mr: 0.5,
                   }}
                 >
@@ -926,9 +976,9 @@ export const Summary = observer((props: any) => {
 
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "left",
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'left',
                     mr: 1,
                   }}
                 >
@@ -950,7 +1000,7 @@ export const Summary = observer((props: any) => {
                         <CircularProgress size="1rem" />
                       </>
                     ) : (
-                      "에러체크"
+                      '에러체크'
                     )}
                   </MyButton>
 
@@ -963,7 +1013,7 @@ export const Summary = observer((props: any) => {
                     }}
                     onClick={() => {
                       if (common.user.purchaseInfo2.level < 3) {
-                        alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                        alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                         return;
                       }
@@ -1039,7 +1089,7 @@ export const Summary = observer((props: any) => {
                       }}
                       onClick={() => {
                         if (props.item.myLock === 2) {
-                          alert("잠금 상품은 등록해제 불가능 합니다");
+                          alert('잠금 상품은 등록해제 불가능 합니다');
                           return;
                         }
                         product.toggleUploadDisabledModal(props.index, true, common);
@@ -1050,7 +1100,7 @@ export const Summary = observer((props: any) => {
                           <CircularProgress size="1rem" />
                         </>
                       ) : (
-                        "등록해제"
+                        '등록해제'
                       )}
                     </MyButton>
                   ) : (
@@ -1069,7 +1119,7 @@ export const Summary = observer((props: any) => {
                           <CircularProgress size="1rem" />
                         </>
                       ) : (
-                        "상품삭제"
+                        '상품삭제'
                       )}
                     </MyButton>
                   )}
@@ -1079,10 +1129,10 @@ export const Summary = observer((props: any) => {
               {props.item.state === 7 ? (
                 <Box
                   style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    marginRight: "8px",
-                    margin: "5px",
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    marginRight: '8px',
+                    margin: '5px',
                   }}
                 >
                   <Button
@@ -1137,7 +1187,7 @@ export const Summary = observer((props: any) => {
                     }}
                     onClick={() => {
                       if (props.item.myLock === 2) {
-                        alert("잠금 상품은 등록해제 불가능 합니다");
+                        alert('잠금 상품은 등록해제 불가능 합니다');
                         return;
                       }
                       product.toggleEsm2UploadDisabledModal(props.index, true, common);
@@ -1148,7 +1198,7 @@ export const Summary = observer((props: any) => {
                         <CircularProgress size="1rem" />
                       </>
                     ) : (
-                      "등록해제(2.0)"
+                      '등록해제(2.0)'
                     )}
                   </Button>
                 </Box>

@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Grid, Modal, Paper, TextField, Typography } from "@mui/material";
-import { MyButton } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Grid, Modal, Paper, TextField, Typography } from '@mui/material';
+import { MyButton } from '../Common/UI';
 
 // 상품속성 일괄설정 모달 뷰
 export const MyKeywardModal = observer(() => {
@@ -37,9 +37,9 @@ export const MyKeywardModal = observer(() => {
         >
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
               mb: 3,
             }}
           >
@@ -84,7 +84,7 @@ export const MyKeywardModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <Typography fontSize={14}>개인분류</Typography>
@@ -95,15 +95,15 @@ export const MyKeywardModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_keyward`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {

@@ -1,4 +1,4 @@
-import { sleep } from "./Common";
+import { sleep } from './Common';
 
 // 크롬 스토리지는 일반 브라우저 스토리지랑 공유되지 않음 (서로 접근불가)
 // sessionStorage / localStorage 는 일반 브라우저에서 사용
@@ -50,21 +50,21 @@ const deleteLocalStorage = (keys: any) => {
 
 // 메시지 전송 (콘텐츠스크립트 -> 확장프로그램)
 const sendRuntimeMessage = (obj: any) => {
-  console.log("runtime", obj);
+  console.log('runtime', obj);
 
   return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage(obj, function (response) {
       let lastError = chrome.runtime.lastError;
 
       if (lastError) {
-        console.log("runtime rejected", obj, lastError.message);
+        console.log('runtime rejected', obj, lastError.message);
 
         resolve(null);
 
         return;
       }
 
-      console.log("runtime resolved", obj, response);
+      console.log('runtime resolved', obj, response);
 
       resolve(response);
     });
@@ -144,7 +144,7 @@ const createTabCompletely = async (options: any, limit: number) => {
     }
 
     const tabs: any = await queryTabs({});
-    const result: any = tabs.find((v: any) => v.id === tab.id && v.status === "complete");
+    const result: any = tabs.find((v: any) => v.id === tab.id && v.status === 'complete');
 
     if (result) {
       return result;
@@ -156,4 +156,14 @@ const createTabCompletely = async (options: any, limit: number) => {
   }
 };
 
-export { getLocalStorage, setLocalStorage, deleteLocalStorage, sendRuntimeMessage, sendTabMessage, queryWindow, queryTabs, createTab, createTabCompletely };
+export {
+  getLocalStorage,
+  setLocalStorage,
+  deleteLocalStorage,
+  sendRuntimeMessage,
+  sendTabMessage,
+  queryWindow,
+  queryTabs,
+  createTab,
+  createTabCompletely,
+};

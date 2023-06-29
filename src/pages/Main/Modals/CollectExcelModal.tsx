@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Button, Box, Grid, Modal, Paper, Typography } from "@mui/material";
-import { readFileBinary } from "../../Tools/Common";
-import { createTabCompletely, sendTabMessage } from "../../Tools/ChromeAsync";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Button, Box, Grid, Modal, Paper, Typography } from '@mui/material';
+import { readFileBinary } from '../../Tools/Common';
+import { createTabCompletely, sendTabMessage } from '../../Tools/ChromeAsync';
 
-const XLSX = require("xlsx");
+const XLSX = require('xlsx');
 
 // 엑셀 상품 수집 모달
 export const CollectExcelModal = observer(() => {
@@ -44,7 +44,7 @@ export const CollectExcelModal = observer(() => {
                 xs={8}
                 md={7}
                 sx={{
-                  m: "auto",
+                  m: 'auto',
                 }}
               >
                 <Typography fontSize={14}>상품단위 대량수집하기</Typography>
@@ -55,7 +55,7 @@ export const CollectExcelModal = observer(() => {
                 xs={8}
                 md={5}
                 sx={{
-                  m: "auto",
+                  m: 'auto',
                 }}
               >
                 <Button
@@ -63,7 +63,7 @@ export const CollectExcelModal = observer(() => {
                   variant="contained"
                   color="info"
                   sx={{
-                    width: "100%",
+                    width: '100%',
                     height: 30,
                   }}
                   onClick={() => {
@@ -79,7 +79,7 @@ export const CollectExcelModal = observer(() => {
                 xs={8}
                 md={12}
                 sx={{
-                  m: "auto",
+                  m: 'auto',
                 }}
               >
                 <Button
@@ -88,7 +88,7 @@ export const CollectExcelModal = observer(() => {
                   variant="contained"
                   color="info"
                   sx={{
-                    width: "100%",
+                    width: '100%',
                     height: 30,
                   }}
                 >
@@ -101,19 +101,19 @@ export const CollectExcelModal = observer(() => {
                       const fileList = e.target.files ?? [];
                       const fileData = await readFileBinary(fileList[0]);
 
-                      let workbook = XLSX.read(fileData, { type: "binary" });
+                      let workbook = XLSX.read(fileData, { type: 'binary' });
                       let excelData = workbook.SheetNames.map((name: any) => {
                         return XLSX.utils.sheet_to_json(workbook.Sheets[name], {
-                          header: ["url", "productName", "productTags"],
-                          defval: "",
+                          header: ['url', 'productName', 'productTags'],
+                          defval: '',
                           range: 2,
                         });
                       })[0];
 
-                      const tab = await createTabCompletely({ active: false, url: "https://www.google.com/" }, 10);
+                      const tab = await createTabCompletely({ active: false, url: 'https://www.google.com/' }, 10);
 
                       await sendTabMessage(tab.id, {
-                        action: "collect-product-excel",
+                        action: 'collect-product-excel',
                         source: { data: excelData, retry: false },
                       });
 
@@ -137,7 +137,7 @@ export const CollectExcelModal = observer(() => {
                 xs={8}
                 md={7}
                 sx={{
-                  m: "auto",
+                  m: 'auto',
                 }}
               >
                 <Typography fontSize={14}>페이지단위 대량수집하기</Typography>
@@ -148,7 +148,7 @@ export const CollectExcelModal = observer(() => {
                 xs={8}
                 md={5}
                 sx={{
-                  m: "auto",
+                  m: 'auto',
                 }}
               >
                 <Button
@@ -156,7 +156,7 @@ export const CollectExcelModal = observer(() => {
                   variant="contained"
                   color="info"
                   sx={{
-                    width: "100%",
+                    width: '100%',
                     height: 30,
                   }}
                   onClick={() => {
@@ -172,7 +172,7 @@ export const CollectExcelModal = observer(() => {
                 xs={8}
                 md={12}
                 sx={{
-                  m: "auto",
+                  m: 'auto',
                 }}
               >
                 <Button
@@ -181,7 +181,7 @@ export const CollectExcelModal = observer(() => {
                   variant="contained"
                   color="info"
                   sx={{
-                    width: "100%",
+                    width: '100%',
                     height: 30,
                   }}
                 >
@@ -194,19 +194,19 @@ export const CollectExcelModal = observer(() => {
                       const fileList = e.target.files ?? [];
                       const fileData = await readFileBinary(fileList[0]);
 
-                      let workbook = XLSX.read(fileData, { type: "binary" });
+                      let workbook = XLSX.read(fileData, { type: 'binary' });
                       let excelData = workbook.SheetNames.map((name: any) => {
                         return XLSX.utils.sheet_to_json(workbook.Sheets[name], {
-                          header: ["url"],
-                          defval: "",
+                          header: ['url'],
+                          defval: '',
                           range: 2,
                         });
                       })[0];
 
-                      const tab = await createTabCompletely({ active: false, url: "https://www.google.com/" }, 10);
+                      const tab = await createTabCompletely({ active: false, url: 'https://www.google.com/' }, 10);
 
                       await sendTabMessage(tab.id, {
-                        action: "collect-page-excel",
+                        action: 'collect-page-excel',
                         source: { data: excelData, retry: false },
                       });
 

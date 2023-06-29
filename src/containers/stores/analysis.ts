@@ -1,21 +1,21 @@
 // 키워드 분석 스토리지
 
-import CryptoJS from "crypto-js";
-import QUERIES from "../../pages/Main/GraphQL/Queries";
-import gql from "../../pages/Main/GraphQL/Requests";
-import papagoTranslation from "../../pages/Tools/Translation";
+import CryptoJS from 'crypto-js';
+import QUERIES from '../../pages/Main/GraphQL/Queries';
+import gql from '../../pages/Main/GraphQL/Requests';
+import papagoTranslation from '../../pages/Tools/Translation';
 
-import { runInAction, makeAutoObservable } from "mobx";
-import { downloadExcel, sleep } from "../../pages/Tools/Common";
+import { runInAction, makeAutoObservable } from 'mobx';
+import { downloadExcel, sleep } from '../../pages/Tools/Common';
 
-const GBK = require("gbk-encode");
+const GBK = require('gbk-encode');
 
 export class analysis {
   searchInfo: any = {
     expose: 100,
     keyword: null,
     results: [],
-    saveAuto: "N",
+    saveAuto: 'N',
     progress: 0,
   };
 
@@ -38,52 +38,52 @@ export class analysis {
     });
 
     if (!this.searchInfo.keyword) {
-      alert("키워드를 입력해주세요.");
+      alert('키워드를 입력해주세요.');
 
       return;
     }
 
-    let keyword_list = this.searchInfo.keyword.split("\n");
-    let keyword_string = "";
+    let keyword_list = this.searchInfo.keyword.split('\n');
+    let keyword_string = '';
 
     if (keyword_list.length > 5) {
-      alert("키워드는 최대 5개까지만 입력 가능합니다.");
+      alert('키워드는 최대 5개까지만 입력 가능합니다.');
 
       return 0;
     }
 
     for (let i in keyword_list) {
-      let word = keyword_list[i].replaceAll(" ", "");
+      let word = keyword_list[i].replaceAll(' ', '');
 
-      if (word !== "") {
+      if (word !== '') {
         keyword_string += word;
 
         if (parseInt(i) < keyword_list.length - 1) {
-          keyword_string += ",";
+          keyword_string += ',';
         }
       }
     }
 
     let refer_body = {
-      method: "GET",
-      path: "https://api.naver.com",
-      query: "/keywordstool",
+      method: 'GET',
+      path: 'https://api.naver.com',
+      query: '/keywordstool',
       params: `?hintKeywords=${encodeURI(keyword_string)}&showDetail=1`,
       data: {},
     };
 
     let now = new Date().getTime();
 
-    const accesskey = "01000000002bb6eefe11996a564314121b57c8d70cf7435ccf640f458eb5094e4eba6a0696";
-    const secretkey = "AQAAAAArtu7+EZlqVkMUEhtXyNcMIRQiJOWkR0m3rzMeoViXyw==";
+    const accesskey = '01000000002bb6eefe11996a564314121b57c8d70cf7435ccf640f458eb5094e4eba6a0696';
+    const secretkey = 'AQAAAAArtu7+EZlqVkMUEhtXyNcMIRQiJOWkR0m3rzMeoViXyw==';
     const base_str = `${now}.${refer_body.method}.${refer_body.query}`;
     const signature = CryptoJS.HmacSHA256(base_str, secretkey).toString(CryptoJS.enc.Base64);
 
     let refer_headers: any = {
-      "X-Timestamp": now,
-      "X-API-KEY": accesskey,
-      "X-Customer": "2356466",
-      "X-Signature": signature,
+      'X-Timestamp': now,
+      'X-API-KEY': accesskey,
+      'X-Customer': '2356466',
+      'X-Signature': signature,
     };
 
     // 네이버 광고 API
@@ -93,8 +93,8 @@ export class analysis {
 
     let refer_json = await refer_resp.json();
 
-    if (refer_json.title === "Invalid Parameter") {
-      alert("키워드를 입력해주세요.");
+    if (refer_json.title === 'Invalid Parameter') {
+      alert('키워드를 입력해주세요.');
 
       return;
     }
@@ -104,25 +104,25 @@ export class analysis {
     let result_count = 0;
     let result_category_list: any = [];
 
-    let translate_string = "";
-    let translate_string_temp = "";
+    let translate_string = '';
+    let translate_string_temp = '';
 
     for (let i in sliced) {
-      let keyword_filtered = sliced[i].relKeyword.replace(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi, "");
+      let keyword_filtered = sliced[i].relKeyword.replace(/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi, '');
 
       if (translate_string.length + keyword_filtered.length + 1 > 4000) {
         translate_string_temp += keyword_filtered;
-        translate_string_temp += "\n";
+        translate_string_temp += '\n';
       } else {
         translate_string += keyword_filtered;
-        translate_string += "\n";
+        translate_string += '\n';
       }
     }
 
-    let translate_list = await papagoTranslation(null, "ko", "zh-CN", translate_string);
+    let translate_list = await papagoTranslation(null, 'ko', 'zh-CN', translate_string);
 
     if (translate_string_temp.length > 0) {
-      let translate_list_temp = await papagoTranslation(null, "ko", "zh-CN", translate_string_temp);
+      let translate_list_temp = await papagoTranslation(null, 'ko', 'zh-CN', translate_string_temp);
 
       translate_list = translate_list.concat(translate_list_temp);
     }
@@ -139,13 +139,13 @@ export class analysis {
         let search_resp = await fetch(search_link);
 
         let search_text = await search_resp.text();
-        let search_html: any = new DOMParser().parseFromString(search_text, "text/html");
-        let search_json = JSON.parse(search_html.querySelector("#__NEXT_DATA__").innerText);
+        let search_html: any = new DOMParser().parseFromString(search_text, 'text/html');
+        let search_json = JSON.parse(search_html.querySelector('#__NEXT_DATA__').innerText);
 
         let summary_search = keyword.monthlyPcQcCnt + keyword.monthlyMobileQcCnt;
         let summary_product = 0;
 
-        let category_id = "";
+        let category_id = '';
 
         if (search_json.props.pageProps.cmpResult && search_json.props.pageProps.cmpResult.catId) {
           category_id = search_json.props.pageProps.cmpResult.catId;
@@ -161,7 +161,7 @@ export class analysis {
 
         let percentage = Math.round((result_count * 100) / sliced.length);
 
-        competition = isNaN(competition) ? "산정 불가" : competition;
+        competition = isNaN(competition) ? '산정 불가' : competition;
 
         runInAction(() => {
           this.setSearchInfo({
@@ -174,16 +174,16 @@ export class analysis {
         return {
           순번: index + 1,
           연관키워드: keyword.relKeyword,
-          "월간검색수(PC)": keyword.monthlyPcQcCnt,
-          "월간검색수(모바일)": keyword.monthlyMobileQcCnt,
-          "월간검색수(합계)": summary_search,
+          '월간검색수(PC)': keyword.monthlyPcQcCnt,
+          '월간검색수(모바일)': keyword.monthlyMobileQcCnt,
+          '월간검색수(합계)': summary_search,
           검색상품수: summary_product,
           경쟁률: competition,
           카테고리: category_id,
-          "월평균클릭수(PC)": keyword.monthlyAvePcClkCnt,
-          "월평균클릭수(모바일)": keyword.monthlyAveMobileClkCnt,
-          "월평균클릭률(PC)": keyword.monthlyAvePcCtr,
-          "월평균클릭률(모바일)": keyword.monthlyAveMobileCtr,
+          '월평균클릭수(PC)': keyword.monthlyAvePcClkCnt,
+          '월평균클릭수(모바일)': keyword.monthlyAveMobileClkCnt,
+          '월평균클릭률(PC)': keyword.monthlyAvePcCtr,
+          '월평균클릭률(모바일)': keyword.monthlyAveMobileCtr,
           광고경쟁정도: keyword.compIdx,
           월평균노출광고수: keyword.plAvgDepth,
 
@@ -197,11 +197,11 @@ export class analysis {
     );
 
     let result_sorted = result_array.sort(function (a, b) {
-      if (a["순번"] < b["순번"]) {
+      if (a['순번'] < b['순번']) {
         return -1;
       }
 
-      if (a["순번"] > b["순번"]) {
+      if (a['순번'] > b['순번']) {
         return 1;
       }
 
@@ -220,8 +220,9 @@ export class analysis {
     }
 
     for (let i in result_sorted) {
-      result_sorted[i]["카테고리"] =
-        category_info.data.searchManyCategoryInfoA077BySomeone.find((v: any) => v.code === result_sorted[i]["카테고리"])?.name ?? "-";
+      result_sorted[i]['카테고리'] =
+        category_info.data.searchManyCategoryInfoA077BySomeone.find((v: any) => v.code === result_sorted[i]['카테고리'])
+          ?.name ?? '-';
     }
 
     runInAction(() => {
@@ -233,7 +234,7 @@ export class analysis {
         progress: 0,
       });
 
-      if (this.searchInfo.saveAuto === "Y") {
+      if (this.searchInfo.saveAuto === 'Y') {
         this.download();
       }
     });
@@ -242,11 +243,11 @@ export class analysis {
   // 엑셀 다운로드
   download = () => {
     if (this.searchInfo.results.length <= 0) {
-      alert("분석 결과를 찾을 수 없습니다.");
+      alert('분석 결과를 찾을 수 없습니다.');
 
       return 0;
     }
 
-    downloadExcel(this.searchInfo.results, `키워드분석`, `키워드분석`, false, "xlsx");
+    downloadExcel(this.searchInfo.results, `키워드분석`, `키워드분석`, false, 'xlsx');
   };
 }

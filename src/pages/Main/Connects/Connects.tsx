@@ -1,13 +1,26 @@
-import React from "react";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
+import React from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Header } from "../Common/Header";
-import { Box, Button, Container, FormControlLabel, IconButton, Grid, Paper, Radio, RadioGroup, Switch, TextField, Typography } from "@mui/material";
-import { Frame, Title } from "../Common/UI";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Header } from '../Common/Header';
+import {
+  Box,
+  Button,
+  Container,
+  FormControlLabel,
+  IconButton,
+  Grid,
+  Paper,
+  Radio,
+  RadioGroup,
+  Switch,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { Frame, Title } from '../Common/UI';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // 오픈마켓 연동 뷰
 export const Connects = observer(() => {
@@ -19,7 +32,7 @@ export const Connects = observer(() => {
     () =>
       createTheme({
         palette: {
-          mode: common.darkTheme ? "dark" : "light",
+          mode: common.darkTheme ? 'dark' : 'light',
         },
       }),
     [common.darkTheme]
@@ -31,9 +44,9 @@ export const Connects = observer(() => {
         <Header />
 
         <Container
-          maxWidth={"lg"}
+          maxWidth={'lg'}
           sx={{
-            py: "10px",
+            py: '10px',
           }}
         >
           {common.user.userInfo ? (
@@ -50,7 +63,7 @@ export const Connects = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Paper
@@ -63,10 +76,10 @@ export const Connects = observer(() => {
                       스마트스토어
                       <Switch
                         size="small"
-                        checked={common.user.userInfo?.naverUseType === "Y" ? true : false}
-                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === "A077").connected}
+                        checked={common.user.userInfo?.naverUseType === 'Y' ? true : false}
+                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A077').connected}
                         onChange={async (e) => {
-                          const naverUseType = e.target.checked ? "Y" : "N";
+                          const naverUseType = e.target.checked ? 'Y' : 'N';
 
                           await common.testUserInfo({ naverUseType });
 
@@ -87,7 +100,7 @@ export const Connects = observer(() => {
                         container
                         spacing={1}
                         sx={{
-                          textAlign: "center",
+                          textAlign: 'center',
                           p: 1,
                         }}
                       >
@@ -96,7 +109,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           스마트스토어 주소
@@ -107,17 +120,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_naver1"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "A077").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A077').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -141,12 +154,12 @@ export const Connects = observer(() => {
                         p: 1,
                       }}
                     >
-                      {common.uploadInfo.markets.find((v: any) => v.code === "A077").connected ? (
+                      {common.uploadInfo.markets.find((v: any) => v.code === 'A077').connected ? (
                         <Button
                           disabled
                           variant="contained"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                         >
                           연동완료
@@ -157,10 +170,10 @@ export const Connects = observer(() => {
                           variant="contained"
                           color="info"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                           onClick={() => {
-                            common.verifyConnectedInfo("A077");
+                            common.verifyConnectedInfo('A077');
                           }}
                         >
                           연동하기
@@ -175,7 +188,7 @@ export const Connects = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Paper
@@ -188,10 +201,10 @@ export const Connects = observer(() => {
                       쿠팡
                       <Switch
                         size="small"
-                        checked={common.user.userInfo?.coupangUseType === "Y" ? true : false}
-                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === "B378").connected}
+                        checked={common.user.userInfo?.coupangUseType === 'Y' ? true : false}
+                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected}
                         onChange={async (e) => {
-                          const coupangUseType = e.target.checked ? "Y" : "N";
+                          const coupangUseType = e.target.checked ? 'Y' : 'N';
 
                           await common.testUserInfo({ coupangUseType });
 
@@ -212,7 +225,7 @@ export const Connects = observer(() => {
                         container
                         spacing={1}
                         sx={{
-                          textAlign: "center",
+                          textAlign: 'center',
                           p: 1,
                         }}
                       >
@@ -221,7 +234,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           아이디
@@ -232,17 +245,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_coupang1"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "B378").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -264,7 +277,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           업체코드
@@ -275,17 +288,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_coupang2"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "B378").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -307,7 +320,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           액세스키
@@ -318,17 +331,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_coupang3"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "B378").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -350,7 +363,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           시크릿키
@@ -361,17 +374,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_coupang4"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "B378").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -395,12 +408,12 @@ export const Connects = observer(() => {
                         p: 1,
                       }}
                     >
-                      {common.uploadInfo.markets.find((v: any) => v.code === "B378").connected ? (
+                      {common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected ? (
                         <Button
                           disabled
                           variant="contained"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                         >
                           연동완료
@@ -411,10 +424,10 @@ export const Connects = observer(() => {
                           variant="contained"
                           color="info"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                           onClick={() => {
-                            common.verifyConnectedInfo("B378");
+                            common.verifyConnectedInfo('B378');
                           }}
                         >
                           연동하기
@@ -429,7 +442,7 @@ export const Connects = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Paper
@@ -441,8 +454,8 @@ export const Connects = observer(() => {
                     <Title dark={common.darkTheme}>
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center',
                         }}
                       >
                         11번가 글로벌
@@ -458,21 +471,21 @@ export const Connects = observer(() => {
                           }}
                           onClick={() => {
                             if (!common.user.userInfo.streetApiKey) {
-                              alert("글로벌셀러 오픈 API 키 최초등록을 먼저 진행해주세요.");
+                              alert('글로벌셀러 오픈 API 키 최초등록을 먼저 진행해주세요.');
 
                               return;
                             }
 
                             if (common.streetMaxmumCount > 3) {
-                              alert("더 이상 추가할 수 없습니다.");
+                              alert('더 이상 추가할 수 없습니다.');
 
                               return;
                             }
 
-                            const apiKey = prompt("글로벌셀러 오픈 API 키를 입력해주세요.");
+                            const apiKey = prompt('글로벌셀러 오픈 API 키를 입력해주세요.');
 
                             if (!apiKey) {
-                              alert("글로벌셀러 오픈 API 키가 입력되지 않았습니다.");
+                              alert('글로벌셀러 오픈 API 키가 입력되지 않았습니다.');
 
                               return;
                             }
@@ -480,11 +493,11 @@ export const Connects = observer(() => {
                             if (!common.user.userInfo.streetApiKey2) {
                               common.setUserInfo({
                                 ...common.user.userInfo,
-                                streetUseKeyType: "2",
+                                streetUseKeyType: '2',
                                 streetApiKey2: common.user.userInfo.streetApiKey2 ? undefined : apiKey,
                               });
 
-                              common.verifyConnectedInfo("A112");
+                              common.verifyConnectedInfo('A112');
 
                               return;
                             }
@@ -492,11 +505,11 @@ export const Connects = observer(() => {
                             if (!common.user.userInfo.streetApiKey3) {
                               common.setUserInfo({
                                 ...common.user.userInfo,
-                                streetUseKeyType: "3",
+                                streetUseKeyType: '3',
                                 streetApiKey3: common.user.userInfo.streetApiKey3 ? undefined : apiKey,
                               });
 
-                              common.verifyConnectedInfo("A112");
+                              common.verifyConnectedInfo('A112');
 
                               return;
                             }
@@ -504,11 +517,11 @@ export const Connects = observer(() => {
                             if (!common.user.userInfo.streetApiKey4) {
                               common.setUserInfo({
                                 ...common.user.userInfo,
-                                streetUseKeyType: "4",
+                                streetUseKeyType: '4',
                                 streetApiKey4: common.user.userInfo.streetApiKey4 ? undefined : apiKey,
                               });
 
-                              common.verifyConnectedInfo("A112");
+                              common.verifyConnectedInfo('A112');
 
                               return;
                             }
@@ -520,10 +533,10 @@ export const Connects = observer(() => {
 
                       <Switch
                         size="small"
-                        checked={common.user.userInfo?.streetUseType === "Y" ? true : false}
-                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === "A112").connected}
+                        checked={common.user.userInfo?.streetUseType === 'Y' ? true : false}
+                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected}
                         onChange={async (e) => {
-                          const streetUseType = e.target.checked ? "Y" : "N";
+                          const streetUseType = e.target.checked ? 'Y' : 'N';
 
                           await common.testUserInfo({ streetUseType });
 
@@ -550,7 +563,7 @@ export const Connects = observer(() => {
                             streetUseKeyType: e.target.value,
                           });
 
-                          common.verifyConnectedInfo("A112");
+                          common.verifyConnectedInfo('A112');
                         }}
                         value={common.user.userInfo.streetUseKeyType}
                       >
@@ -558,7 +571,7 @@ export const Connects = observer(() => {
                           container
                           spacing={1}
                           sx={{
-                            textAlign: "center",
+                            textAlign: 'center',
                             p: 1,
                           }}
                         >
@@ -567,7 +580,7 @@ export const Connects = observer(() => {
                             xs={6}
                             md={4}
                             sx={{
-                              margin: "auto",
+                              margin: 'auto',
                             }}
                           >
                             <FormControlLabel
@@ -576,8 +589,8 @@ export const Connects = observer(() => {
                               label={
                                 <Box
                                   sx={{
-                                    display: "flex",
-                                    alignItems: "center",
+                                    display: 'flex',
+                                    alignItems: 'center',
                                     width: 125,
                                   }}
                                 >
@@ -589,7 +602,7 @@ export const Connects = observer(() => {
                                       mx: 0.5,
                                     }}
                                     onClick={() => {
-                                      const nick = prompt("별칭을 입력해주세요.");
+                                      const nick = prompt('별칭을 입력해주세요.');
 
                                       if (!nick) {
                                         return;
@@ -614,7 +627,9 @@ export const Connects = observer(() => {
                                   </IconButton>
 
                                   <Typography noWrap fontSize={14}>
-                                    {common.user.userInfo.streetApiMemo ? common.user.userInfo.streetApiMemo : "오픈 API (G1)"}
+                                    {common.user.userInfo.streetApiMemo
+                                      ? common.user.userInfo.streetApiMemo
+                                      : '오픈 API (G1)'}
                                   </Typography>
                                 </Box>
                               }
@@ -626,17 +641,17 @@ export const Connects = observer(() => {
                             xs={6}
                             md={8}
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
+                              display: 'flex',
+                              alignItems: 'center',
                             }}
                           >
                             <TextField
                               id="connects_streetGlobal1"
                               size="small"
-                              disabled={common.uploadInfo.markets.find((v: any) => v.code === "A112").connected}
+                              disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected}
                               variant="outlined"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                               }}
                               inputProps={{
                                 style: {
@@ -650,7 +665,7 @@ export const Connects = observer(() => {
                                   streetApiKey: e.target.value,
                                 });
 
-                                common.initConnectedInfo("A112");
+                                common.initConnectedInfo('A112');
                               }}
                             />
                           </Grid>
@@ -662,7 +677,7 @@ export const Connects = observer(() => {
                                 xs={6}
                                 md={4}
                                 sx={{
-                                  margin: "auto",
+                                  margin: 'auto',
                                 }}
                               >
                                 <FormControlLabel
@@ -671,8 +686,8 @@ export const Connects = observer(() => {
                                   label={
                                     <Box
                                       sx={{
-                                        display: "flex",
-                                        alignItems: "center",
+                                        display: 'flex',
+                                        alignItems: 'center',
                                         width: 125,
                                       }}
                                     >
@@ -684,7 +699,7 @@ export const Connects = observer(() => {
                                           mx: 0.5,
                                         }}
                                         onClick={() => {
-                                          const nick = prompt("별칭을 입력해주세요.");
+                                          const nick = prompt('별칭을 입력해주세요.');
 
                                           if (!nick) {
                                             return;
@@ -709,7 +724,9 @@ export const Connects = observer(() => {
                                       </IconButton>
 
                                       <Typography noWrap fontSize={14}>
-                                        {common.user.userInfo.streetApiMemo2 ? common.user.userInfo.streetApiMemo2 : "오픈 API (G2)"}
+                                        {common.user.userInfo.streetApiMemo2
+                                          ? common.user.userInfo.streetApiMemo2
+                                          : '오픈 API (G2)'}
                                       </Typography>
                                     </Box>
                                   }
@@ -721,17 +738,17 @@ export const Connects = observer(() => {
                                 xs={6}
                                 md={8}
                                 sx={{
-                                  display: "flex",
-                                  alignItems: "center",
+                                  display: 'flex',
+                                  alignItems: 'center',
                                 }}
                               >
                                 <TextField
                                   id="connects_streetGlobal2"
                                   size="small"
-                                  disabled={common.uploadInfo.markets.find((v: any) => v.code === "A112").connected}
+                                  disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected}
                                   variant="outlined"
                                   sx={{
-                                    width: "100%",
+                                    width: '100%',
                                   }}
                                   inputProps={{
                                     style: {
@@ -745,7 +762,7 @@ export const Connects = observer(() => {
                                       streetApiKey2: e.target.value,
                                     });
 
-                                    common.initConnectedInfo("A112");
+                                    common.initConnectedInfo('A112');
                                   }}
                                 />
                               </Grid>
@@ -759,7 +776,7 @@ export const Connects = observer(() => {
                                 xs={6}
                                 md={4}
                                 sx={{
-                                  margin: "auto",
+                                  margin: 'auto',
                                 }}
                               >
                                 <FormControlLabel
@@ -768,8 +785,8 @@ export const Connects = observer(() => {
                                   label={
                                     <Box
                                       sx={{
-                                        display: "flex",
-                                        alignItems: "center",
+                                        display: 'flex',
+                                        alignItems: 'center',
                                         width: 125,
                                       }}
                                     >
@@ -781,7 +798,7 @@ export const Connects = observer(() => {
                                           mx: 0.5,
                                         }}
                                         onClick={() => {
-                                          const nick = prompt("별칭을 입력해주세요.");
+                                          const nick = prompt('별칭을 입력해주세요.');
 
                                           if (!nick) {
                                             return;
@@ -806,7 +823,9 @@ export const Connects = observer(() => {
                                       </IconButton>
 
                                       <Typography noWrap fontSize={14}>
-                                        {common.user.userInfo.streetApiMemo3 ? common.user.userInfo.streetApiMemo3 : "오픈 API (G3)"}
+                                        {common.user.userInfo.streetApiMemo3
+                                          ? common.user.userInfo.streetApiMemo3
+                                          : '오픈 API (G3)'}
                                       </Typography>
                                     </Box>
                                   }
@@ -818,17 +837,17 @@ export const Connects = observer(() => {
                                 xs={6}
                                 md={8}
                                 sx={{
-                                  display: "flex",
-                                  alignItems: "center",
+                                  display: 'flex',
+                                  alignItems: 'center',
                                 }}
                               >
                                 <TextField
                                   id="connects_streetGlobal3"
                                   size="small"
-                                  disabled={common.uploadInfo.markets.find((v: any) => v.code === "A112").connected}
+                                  disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected}
                                   variant="outlined"
                                   sx={{
-                                    width: "100%",
+                                    width: '100%',
                                   }}
                                   inputProps={{
                                     style: {
@@ -842,7 +861,7 @@ export const Connects = observer(() => {
                                       streetApiKey3: e.target.value,
                                     });
 
-                                    common.initConnectedInfo("A112");
+                                    common.initConnectedInfo('A112');
                                   }}
                                 />
                               </Grid>
@@ -856,7 +875,7 @@ export const Connects = observer(() => {
                                 xs={6}
                                 md={4}
                                 sx={{
-                                  margin: "auto",
+                                  margin: 'auto',
                                 }}
                               >
                                 <FormControlLabel
@@ -865,8 +884,8 @@ export const Connects = observer(() => {
                                   label={
                                     <Box
                                       sx={{
-                                        display: "flex",
-                                        alignItems: "center",
+                                        display: 'flex',
+                                        alignItems: 'center',
                                         width: 125,
                                       }}
                                     >
@@ -878,7 +897,7 @@ export const Connects = observer(() => {
                                           mx: 0.5,
                                         }}
                                         onClick={() => {
-                                          const nick = prompt("별칭을 입력해주세요.");
+                                          const nick = prompt('별칭을 입력해주세요.');
 
                                           if (!nick) {
                                             return;
@@ -903,7 +922,9 @@ export const Connects = observer(() => {
                                       </IconButton>
 
                                       <Typography noWrap fontSize={14}>
-                                        {common.user.userInfo.streetApiMemo4 ? common.user.userInfo.streetApiMemo4 : "오픈 API (G4)"}
+                                        {common.user.userInfo.streetApiMemo4
+                                          ? common.user.userInfo.streetApiMemo4
+                                          : '오픈 API (G4)'}
                                       </Typography>
                                     </Box>
                                   }
@@ -915,17 +936,17 @@ export const Connects = observer(() => {
                                 xs={6}
                                 md={8}
                                 sx={{
-                                  display: "flex",
-                                  alignItems: "center",
+                                  display: 'flex',
+                                  alignItems: 'center',
                                 }}
                               >
                                 <TextField
                                   id="connects_streetGlobal4"
                                   size="small"
-                                  disabled={common.uploadInfo.markets.find((v: any) => v.code === "A112").connected}
+                                  disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected}
                                   variant="outlined"
                                   sx={{
-                                    width: "100%",
+                                    width: '100%',
                                   }}
                                   inputProps={{
                                     style: {
@@ -939,7 +960,7 @@ export const Connects = observer(() => {
                                       streetApiKey4: e.target.value,
                                     });
 
-                                    common.initConnectedInfo("A112");
+                                    common.initConnectedInfo('A112');
                                   }}
                                 />
                               </Grid>
@@ -954,12 +975,12 @@ export const Connects = observer(() => {
                         p: 1,
                       }}
                     >
-                      {common.uploadInfo.markets.find((v: any) => v.code === "A112").connected ? (
+                      {common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected ? (
                         <Button
                           disabled
                           variant="contained"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                         >
                           연동완료
@@ -970,10 +991,10 @@ export const Connects = observer(() => {
                           variant="contained"
                           color="info"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                           onClick={() => {
-                            common.verifyConnectedInfo("A112");
+                            common.verifyConnectedInfo('A112');
                           }}
                         >
                           연동하기
@@ -988,7 +1009,7 @@ export const Connects = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Paper
@@ -1000,8 +1021,8 @@ export const Connects = observer(() => {
                     <Title dark={common.darkTheme}>
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center',
                         }}
                       >
                         11번가 일반
@@ -1017,21 +1038,21 @@ export const Connects = observer(() => {
                           }}
                           onClick={() => {
                             if (!common.user.userInfo.streetNormalApiKey) {
-                              alert("일반셀러 오픈 API 키 최초등록을 먼저 진행해주세요.");
+                              alert('일반셀러 오픈 API 키 최초등록을 먼저 진행해주세요.');
 
                               return;
                             }
 
                             if (common.streetMaxmumCount > 3) {
-                              alert("더 이상 추가할 수 없습니다.");
+                              alert('더 이상 추가할 수 없습니다.');
 
                               return;
                             }
 
-                            const apiKey = prompt("일반셀러 오픈 API 키를 입력해주세요.");
+                            const apiKey = prompt('일반셀러 오픈 API 키를 입력해주세요.');
 
                             if (!apiKey) {
-                              alert("일반셀러 오픈 API 키가 입력되지 않았습니다.");
+                              alert('일반셀러 오픈 API 키가 입력되지 않았습니다.');
 
                               return;
                             }
@@ -1039,11 +1060,11 @@ export const Connects = observer(() => {
                             if (!common.user.userInfo.streetNormalApiKey2) {
                               common.setUserInfo({
                                 ...common.user.userInfo,
-                                streetNormalUseKeyType: "2",
+                                streetNormalUseKeyType: '2',
                                 streetNormalApiKey2: common.user.userInfo.streetNormalApiKey2 ? undefined : apiKey,
                               });
 
-                              common.verifyConnectedInfo("A113");
+                              common.verifyConnectedInfo('A113');
 
                               return;
                             }
@@ -1051,11 +1072,11 @@ export const Connects = observer(() => {
                             if (!common.user.userInfo.streetNormalApiKey3) {
                               common.setUserInfo({
                                 ...common.user.userInfo,
-                                streetNormalUseKeyType: "3",
+                                streetNormalUseKeyType: '3',
                                 streetNormalApiKey3: common.user.userInfo.streetNormalApiKey3 ? undefined : apiKey,
                               });
 
-                              common.verifyConnectedInfo("A113");
+                              common.verifyConnectedInfo('A113');
 
                               return;
                             }
@@ -1063,11 +1084,11 @@ export const Connects = observer(() => {
                             if (!common.user.userInfo.streetNormalApiKey4) {
                               common.setUserInfo({
                                 ...common.user.userInfo,
-                                streetNormalUseKeyType: "4",
+                                streetNormalUseKeyType: '4',
                                 streetNormalApiKey4: common.user.userInfo.streetNormalApiKey4 ? undefined : apiKey,
                               });
 
-                              common.verifyConnectedInfo("A113");
+                              common.verifyConnectedInfo('A113');
 
                               return;
                             }
@@ -1079,10 +1100,10 @@ export const Connects = observer(() => {
 
                       <Switch
                         size="small"
-                        checked={common.user.userInfo?.streetNormalUseType === "Y" ? true : false}
-                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === "A113").connected}
+                        checked={common.user.userInfo?.streetNormalUseType === 'Y' ? true : false}
+                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected}
                         onChange={async (e) => {
-                          const streetNormalUseType = e.target.checked ? "Y" : "N";
+                          const streetNormalUseType = e.target.checked ? 'Y' : 'N';
 
                           await common.testUserInfo({ streetNormalUseType });
 
@@ -1109,7 +1130,7 @@ export const Connects = observer(() => {
                             streetNormalUseKeyType: e.target.value,
                           });
 
-                          common.verifyConnectedInfo("A113");
+                          common.verifyConnectedInfo('A113');
                         }}
                         value={common.user.userInfo.streetNormalUseKeyType}
                       >
@@ -1117,7 +1138,7 @@ export const Connects = observer(() => {
                           container
                           spacing={1}
                           sx={{
-                            textAlign: "center",
+                            textAlign: 'center',
                             p: 1,
                           }}
                         >
@@ -1126,7 +1147,7 @@ export const Connects = observer(() => {
                             xs={6}
                             md={4}
                             sx={{
-                              margin: "auto",
+                              margin: 'auto',
                             }}
                           >
                             <FormControlLabel
@@ -1135,8 +1156,8 @@ export const Connects = observer(() => {
                               label={
                                 <Box
                                   sx={{
-                                    display: "flex",
-                                    alignItems: "center",
+                                    display: 'flex',
+                                    alignItems: 'center',
                                     width: 125,
                                   }}
                                 >
@@ -1148,7 +1169,7 @@ export const Connects = observer(() => {
                                       mx: 0.5,
                                     }}
                                     onClick={() => {
-                                      const nick = prompt("별칭을 입력해주세요.");
+                                      const nick = prompt('별칭을 입력해주세요.');
 
                                       if (!nick) {
                                         return;
@@ -1173,7 +1194,9 @@ export const Connects = observer(() => {
                                   </IconButton>
 
                                   <Typography noWrap fontSize={14}>
-                                    {common.user.userInfo.streetNormalApiMemo ? common.user.userInfo.streetNormalApiMemo : "오픈 API (N1)"}
+                                    {common.user.userInfo.streetNormalApiMemo
+                                      ? common.user.userInfo.streetNormalApiMemo
+                                      : '오픈 API (N1)'}
                                   </Typography>
                                 </Box>
                               }
@@ -1185,17 +1208,17 @@ export const Connects = observer(() => {
                             xs={6}
                             md={8}
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
+                              display: 'flex',
+                              alignItems: 'center',
                             }}
                           >
                             <TextField
                               id="connects_streetNormal1"
                               size="small"
-                              disabled={common.uploadInfo.markets.find((v: any) => v.code === "A113").connected}
+                              disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected}
                               variant="outlined"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                               }}
                               inputProps={{
                                 style: {
@@ -1209,7 +1232,7 @@ export const Connects = observer(() => {
                                   streetNormalApiKey: e.target.value,
                                 });
 
-                                common.initConnectedInfo("A113");
+                                common.initConnectedInfo('A113');
                               }}
                             />
                           </Grid>
@@ -1221,7 +1244,7 @@ export const Connects = observer(() => {
                                 xs={6}
                                 md={4}
                                 sx={{
-                                  margin: "auto",
+                                  margin: 'auto',
                                 }}
                               >
                                 <FormControlLabel
@@ -1230,8 +1253,8 @@ export const Connects = observer(() => {
                                   label={
                                     <Box
                                       sx={{
-                                        display: "flex",
-                                        alignItems: "center",
+                                        display: 'flex',
+                                        alignItems: 'center',
                                         width: 125,
                                       }}
                                     >
@@ -1243,7 +1266,7 @@ export const Connects = observer(() => {
                                           mx: 0.5,
                                         }}
                                         onClick={() => {
-                                          const nick = prompt("별칭을 입력해주세요.");
+                                          const nick = prompt('별칭을 입력해주세요.');
 
                                           if (!nick) {
                                             return;
@@ -1268,7 +1291,9 @@ export const Connects = observer(() => {
                                       </IconButton>
 
                                       <Typography noWrap fontSize={14}>
-                                        {common.user.userInfo.streetNormalApiMemo2 ? common.user.userInfo.streetNormalApiMemo2 : "오픈 API (N2)"}
+                                        {common.user.userInfo.streetNormalApiMemo2
+                                          ? common.user.userInfo.streetNormalApiMemo2
+                                          : '오픈 API (N2)'}
                                       </Typography>
                                     </Box>
                                   }
@@ -1280,17 +1305,17 @@ export const Connects = observer(() => {
                                 xs={6}
                                 md={8}
                                 sx={{
-                                  display: "flex",
-                                  alignItems: "center",
+                                  display: 'flex',
+                                  alignItems: 'center',
                                 }}
                               >
                                 <TextField
                                   id="connects_streetNormal2"
                                   size="small"
-                                  disabled={common.uploadInfo.markets.find((v: any) => v.code === "A113").connected}
+                                  disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected}
                                   variant="outlined"
                                   sx={{
-                                    width: "100%",
+                                    width: '100%',
                                   }}
                                   inputProps={{
                                     style: {
@@ -1304,7 +1329,7 @@ export const Connects = observer(() => {
                                       streetNormalApiKey2: e.target.value,
                                     });
 
-                                    common.initConnectedInfo("A113");
+                                    common.initConnectedInfo('A113');
                                   }}
                                 />
                               </Grid>
@@ -1318,7 +1343,7 @@ export const Connects = observer(() => {
                                 xs={6}
                                 md={4}
                                 sx={{
-                                  margin: "auto",
+                                  margin: 'auto',
                                 }}
                               >
                                 <FormControlLabel
@@ -1327,8 +1352,8 @@ export const Connects = observer(() => {
                                   label={
                                     <Box
                                       sx={{
-                                        display: "flex",
-                                        alignItems: "center",
+                                        display: 'flex',
+                                        alignItems: 'center',
                                         width: 125,
                                       }}
                                     >
@@ -1340,7 +1365,7 @@ export const Connects = observer(() => {
                                           mx: 0.5,
                                         }}
                                         onClick={() => {
-                                          const nick = prompt("별칭을 입력해주세요.");
+                                          const nick = prompt('별칭을 입력해주세요.');
 
                                           if (!nick) {
                                             return;
@@ -1365,7 +1390,9 @@ export const Connects = observer(() => {
                                       </IconButton>
 
                                       <Typography noWrap fontSize={14}>
-                                        {common.user.userInfo.streetNormalApiMemo3 ? common.user.userInfo.streetNormalApiMemo3 : "오픈 API (N3)"}
+                                        {common.user.userInfo.streetNormalApiMemo3
+                                          ? common.user.userInfo.streetNormalApiMemo3
+                                          : '오픈 API (N3)'}
                                       </Typography>
                                     </Box>
                                   }
@@ -1377,17 +1404,17 @@ export const Connects = observer(() => {
                                 xs={6}
                                 md={8}
                                 sx={{
-                                  display: "flex",
-                                  alignItems: "center",
+                                  display: 'flex',
+                                  alignItems: 'center',
                                 }}
                               >
                                 <TextField
                                   id="connects_streetNormal3"
                                   size="small"
-                                  disabled={common.uploadInfo.markets.find((v: any) => v.code === "A113").connected}
+                                  disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected}
                                   variant="outlined"
                                   sx={{
-                                    width: "100%",
+                                    width: '100%',
                                   }}
                                   inputProps={{
                                     style: {
@@ -1401,7 +1428,7 @@ export const Connects = observer(() => {
                                       streetNormalApiKey3: e.target.value,
                                     });
 
-                                    common.initConnectedInfo("A113");
+                                    common.initConnectedInfo('A113');
                                   }}
                                 />
                               </Grid>
@@ -1415,7 +1442,7 @@ export const Connects = observer(() => {
                                 xs={6}
                                 md={4}
                                 sx={{
-                                  margin: "auto",
+                                  margin: 'auto',
                                 }}
                               >
                                 <FormControlLabel
@@ -1424,8 +1451,8 @@ export const Connects = observer(() => {
                                   label={
                                     <Box
                                       sx={{
-                                        display: "flex",
-                                        alignItems: "center",
+                                        display: 'flex',
+                                        alignItems: 'center',
                                         width: 125,
                                       }}
                                     >
@@ -1437,7 +1464,7 @@ export const Connects = observer(() => {
                                           mx: 0.5,
                                         }}
                                         onClick={() => {
-                                          const nick = prompt("별칭을 입력해주세요.");
+                                          const nick = prompt('별칭을 입력해주세요.');
 
                                           if (!nick) {
                                             return;
@@ -1462,7 +1489,9 @@ export const Connects = observer(() => {
                                       </IconButton>
 
                                       <Typography noWrap fontSize={14}>
-                                        {common.user.userInfo.streetNormalApiMemo4 ? common.user.userInfo.streetNormalApiMemo4 : "오픈 API (N4)"}
+                                        {common.user.userInfo.streetNormalApiMemo4
+                                          ? common.user.userInfo.streetNormalApiMemo4
+                                          : '오픈 API (N4)'}
                                       </Typography>
                                     </Box>
                                   }
@@ -1474,17 +1503,17 @@ export const Connects = observer(() => {
                                 xs={6}
                                 md={8}
                                 sx={{
-                                  display: "flex",
-                                  alignItems: "center",
+                                  display: 'flex',
+                                  alignItems: 'center',
                                 }}
                               >
                                 <TextField
                                   id="connects_streetNormal4"
                                   size="small"
-                                  disabled={common.uploadInfo.markets.find((v: any) => v.code === "A113").connected}
+                                  disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected}
                                   variant="outlined"
                                   sx={{
-                                    width: "100%",
+                                    width: '100%',
                                   }}
                                   inputProps={{
                                     style: {
@@ -1498,7 +1527,7 @@ export const Connects = observer(() => {
                                       streetNormalApiKey4: e.target.value,
                                     });
 
-                                    common.initConnectedInfo("A113");
+                                    common.initConnectedInfo('A113');
                                   }}
                                 />
                               </Grid>
@@ -1513,12 +1542,12 @@ export const Connects = observer(() => {
                         p: 1,
                       }}
                     >
-                      {common.uploadInfo.markets.find((v: any) => v.code === "A113").connected ? (
+                      {common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected ? (
                         <Button
                           disabled
                           variant="contained"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                         >
                           연동완료
@@ -1529,10 +1558,10 @@ export const Connects = observer(() => {
                           variant="contained"
                           color="info"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                           onClick={() => {
-                            common.verifyConnectedInfo("A113");
+                            common.verifyConnectedInfo('A113');
                           }}
                         >
                           연동하기
@@ -1547,7 +1576,7 @@ export const Connects = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Paper
@@ -1560,10 +1589,10 @@ export const Connects = observer(() => {
                       지마켓
                       <Switch
                         size="small"
-                        checked={common.user.userInfo?.gmarketUseType === "Y" ? true : false}
-                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === "A006").connected}
+                        checked={common.user.userInfo?.gmarketUseType === 'Y' ? true : false}
+                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A006').connected}
                         onChange={async (e) => {
-                          const gmarketUseType = e.target.checked ? "Y" : "N";
+                          const gmarketUseType = e.target.checked ? 'Y' : 'N';
 
                           await common.testUserInfo({ gmarketUseType });
 
@@ -1584,7 +1613,7 @@ export const Connects = observer(() => {
                         container
                         spacing={1}
                         sx={{
-                          textAlign: "center",
+                          textAlign: 'center',
                           p: 1,
                         }}
                       >
@@ -1593,7 +1622,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           지마켓 아이디
@@ -1604,17 +1633,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_gmarket1"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "A006").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A006').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -1638,12 +1667,12 @@ export const Connects = observer(() => {
                         p: 1,
                       }}
                     >
-                      {common.uploadInfo.markets.find((v: any) => v.code === "A006").connected ? (
+                      {common.uploadInfo.markets.find((v: any) => v.code === 'A006').connected ? (
                         <Button
                           disabled
                           variant="contained"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                         >
                           연동완료
@@ -1654,10 +1683,10 @@ export const Connects = observer(() => {
                           variant="contained"
                           color="info"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                           onClick={() => {
-                            common.verifyConnectedInfo("A006");
+                            common.verifyConnectedInfo('A006');
                           }}
                         >
                           연동하기
@@ -1672,7 +1701,7 @@ export const Connects = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Paper
@@ -1685,10 +1714,10 @@ export const Connects = observer(() => {
                       옥션
                       <Switch
                         size="small"
-                        checked={common.user.userInfo?.auctionUseType === "Y" ? true : false}
-                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === "A001").connected}
+                        checked={common.user.userInfo?.auctionUseType === 'Y' ? true : false}
+                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A001').connected}
                         onChange={async (e) => {
-                          const auctionUseType = e.target.checked ? "Y" : "N";
+                          const auctionUseType = e.target.checked ? 'Y' : 'N';
 
                           await common.testUserInfo({ auctionUseType });
 
@@ -1709,7 +1738,7 @@ export const Connects = observer(() => {
                         container
                         spacing={1}
                         sx={{
-                          textAlign: "center",
+                          textAlign: 'center',
                           p: 1,
                         }}
                       >
@@ -1718,7 +1747,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           옥션 아이디
@@ -1729,17 +1758,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_auction1"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "A001").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A001').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -1763,12 +1792,12 @@ export const Connects = observer(() => {
                         p: 1,
                       }}
                     >
-                      {common.uploadInfo.markets.find((v: any) => v.code === "A001").connected ? (
+                      {common.uploadInfo.markets.find((v: any) => v.code === 'A001').connected ? (
                         <Button
                           disabled
                           variant="contained"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                         >
                           연동완료
@@ -1779,10 +1808,10 @@ export const Connects = observer(() => {
                           variant="contained"
                           color="info"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                           onClick={() => {
-                            common.verifyConnectedInfo("A001");
+                            common.verifyConnectedInfo('A001');
                           }}
                         >
                           연동하기
@@ -1797,7 +1826,7 @@ export const Connects = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Paper
@@ -1810,10 +1839,10 @@ export const Connects = observer(() => {
                       인터파크
                       <Switch
                         size="small"
-                        checked={common.user.userInfo?.interparkUseType === "Y" ? true : false}
-                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === "A027").connected}
+                        checked={common.user.userInfo?.interparkUseType === 'Y' ? true : false}
+                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected}
                         onChange={async (e) => {
-                          const interparkUseType = e.target.checked ? "Y" : "N";
+                          const interparkUseType = e.target.checked ? 'Y' : 'N';
 
                           await common.testUserInfo({ interparkUseType });
 
@@ -1834,7 +1863,7 @@ export const Connects = observer(() => {
                         container
                         spacing={1}
                         sx={{
-                          textAlign: "center",
+                          textAlign: 'center',
                           p: 1,
                         }}
                       >
@@ -1843,7 +1872,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           상품등록 인증키
@@ -1854,17 +1883,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_interpark1"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "A027").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -1886,7 +1915,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           상품등록 비밀키
@@ -1897,17 +1926,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_interpark2"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "A027").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -1929,7 +1958,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           상품수정 인증키
@@ -1940,17 +1969,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_interpark3"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "A027").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -1972,7 +2001,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           상품수정 비밀키
@@ -1983,17 +2012,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_interpark4"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "A027").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -2017,12 +2046,12 @@ export const Connects = observer(() => {
                         p: 1,
                       }}
                     >
-                      {common.uploadInfo.markets.find((v: any) => v.code === "A027").connected ? (
+                      {common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected ? (
                         <Button
                           disabled
                           variant="contained"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                         >
                           연동완료
@@ -2033,10 +2062,10 @@ export const Connects = observer(() => {
                           variant="contained"
                           color="info"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                           onClick={() => {
-                            common.verifyConnectedInfo("A027");
+                            common.verifyConnectedInfo('A027');
                           }}
                         >
                           연동하기
@@ -2051,7 +2080,7 @@ export const Connects = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Paper
@@ -2064,10 +2093,10 @@ export const Connects = observer(() => {
                       위메프
                       <Switch
                         size="small"
-                        checked={common.user.userInfo?.wemakepriceUseType === "Y" ? true : false}
-                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === "B719").connected}
+                        checked={common.user.userInfo?.wemakepriceUseType === 'Y' ? true : false}
+                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'B719').connected}
                         onChange={async (e) => {
-                          const wemakepriceUseType = e.target.checked ? "Y" : "N";
+                          const wemakepriceUseType = e.target.checked ? 'Y' : 'N';
 
                           await common.testUserInfo({ wemakepriceUseType });
 
@@ -2088,7 +2117,7 @@ export const Connects = observer(() => {
                         container
                         spacing={1}
                         sx={{
-                          textAlign: "center",
+                          textAlign: 'center',
                           p: 1,
                         }}
                       >
@@ -2097,7 +2126,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           위메프 아이디
@@ -2108,17 +2137,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_wemakeprice1"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "B719").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B719').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -2142,12 +2171,12 @@ export const Connects = observer(() => {
                         p: 1,
                       }}
                     >
-                      {common.uploadInfo.markets.find((v: any) => v.code === "B719").connected ? (
+                      {common.uploadInfo.markets.find((v: any) => v.code === 'B719').connected ? (
                         <Button
                           disabled
                           variant="contained"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                         >
                           연동완료
@@ -2158,10 +2187,10 @@ export const Connects = observer(() => {
                           variant="contained"
                           color="info"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                           onClick={() => {
-                            common.verifyConnectedInfo("B719");
+                            common.verifyConnectedInfo('B719');
                           }}
                         >
                           연동하기
@@ -2176,7 +2205,7 @@ export const Connects = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Paper
@@ -2189,15 +2218,15 @@ export const Connects = observer(() => {
                       롯데온
                       <Switch
                         size="small"
-                        checked={common.user.userInfo?.lotteonUseType === "Y" ? true : false}
+                        checked={common.user.userInfo?.lotteonUseType === 'Y' ? true : false}
                         disabled={
                           !(
-                            common.uploadInfo.markets.find((v: any) => v.code === "A524").connected ||
-                            common.uploadInfo.markets.find((v: any) => v.code === "A525").connected
+                            common.uploadInfo.markets.find((v: any) => v.code === 'A524').connected ||
+                            common.uploadInfo.markets.find((v: any) => v.code === 'A525').connected
                           )
                         }
                         onChange={async (e) => {
-                          const lotteonUseType = e.target.checked ? "Y" : "N";
+                          const lotteonUseType = e.target.checked ? 'Y' : 'N';
 
                           await common.testUserInfo({ lotteonUseType });
 
@@ -2218,7 +2247,7 @@ export const Connects = observer(() => {
                         container
                         spacing={1}
                         sx={{
-                          textAlign: "center",
+                          textAlign: 'center',
                           p: 1,
                         }}
                       >
@@ -2227,7 +2256,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           거래처번호
@@ -2238,20 +2267,20 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_lotteon1"
                             size="small"
                             disabled={
-                              common.uploadInfo.markets.find((v: any) => v.code === "A524").connected &&
-                              common.uploadInfo.markets.find((v: any) => v.code === "A525").connected
+                              common.uploadInfo.markets.find((v: any) => v.code === 'A524').connected &&
+                              common.uploadInfo.markets.find((v: any) => v.code === 'A525').connected
                             }
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -2273,7 +2302,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           인증키
@@ -2284,20 +2313,20 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_lotteon2"
                             size="small"
                             disabled={
-                              common.uploadInfo.markets.find((v: any) => v.code === "A524").connected &&
-                              common.uploadInfo.markets.find((v: any) => v.code === "A525").connected
+                              common.uploadInfo.markets.find((v: any) => v.code === 'A524').connected &&
+                              common.uploadInfo.markets.find((v: any) => v.code === 'A525').connected
                             }
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -2321,13 +2350,13 @@ export const Connects = observer(() => {
                         p: 1,
                       }}
                     >
-                      {common.uploadInfo.markets.find((v: any) => v.code === "A524").connected &&
-                      common.uploadInfo.markets.find((v: any) => v.code === "A525").connected ? (
+                      {common.uploadInfo.markets.find((v: any) => v.code === 'A524').connected &&
+                      common.uploadInfo.markets.find((v: any) => v.code === 'A525').connected ? (
                         <Button
                           disabled
                           variant="contained"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                         >
                           연동완료
@@ -2338,10 +2367,10 @@ export const Connects = observer(() => {
                           variant="contained"
                           color="info"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                           onClick={() => {
-                            common.verifyConnectedInfo("A524/A525");
+                            common.verifyConnectedInfo('A524/A525');
                           }}
                         >
                           연동하기
@@ -2356,7 +2385,7 @@ export const Connects = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Paper
@@ -2369,10 +2398,10 @@ export const Connects = observer(() => {
                       티몬
                       <Switch
                         size="small"
-                        checked={common.user.userInfo?.tmonUseType === "Y" ? true : false}
-                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === "B956").connected}
+                        checked={common.user.userInfo?.tmonUseType === 'Y' ? true : false}
+                        disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'B956').connected}
                         onChange={async (e) => {
-                          const tmonUseType = e.target.checked ? "Y" : "N";
+                          const tmonUseType = e.target.checked ? 'Y' : 'N';
 
                           await common.testUserInfo({ tmonUseType });
 
@@ -2393,7 +2422,7 @@ export const Connects = observer(() => {
                         container
                         spacing={1}
                         sx={{
-                          textAlign: "center",
+                          textAlign: 'center',
                           p: 1,
                         }}
                       >
@@ -2402,7 +2431,7 @@ export const Connects = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           티몬 파트너 번호
@@ -2413,17 +2442,17 @@ export const Connects = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <TextField
                             id="connects_tmon1"
                             size="small"
-                            disabled={common.uploadInfo.markets.find((v: any) => v.code === "B956").connected}
+                            disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B956').connected}
                             variant="outlined"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -2447,12 +2476,12 @@ export const Connects = observer(() => {
                         p: 1,
                       }}
                     >
-                      {common.uploadInfo.markets.find((v: any) => v.code === "B956").connected ? (
+                      {common.uploadInfo.markets.find((v: any) => v.code === 'B956').connected ? (
                         <Button
                           disabled
                           variant="contained"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                         >
                           연동완료
@@ -2463,10 +2492,10 @@ export const Connects = observer(() => {
                           variant="contained"
                           color="info"
                           sx={{
-                            width: "100%",
+                            width: '100%',
                           }}
                           onClick={() => {
-                            common.verifyConnectedInfo("B956");
+                            common.verifyConnectedInfo('B956');
                           }}
                         >
                           연동하기

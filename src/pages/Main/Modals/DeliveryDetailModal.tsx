@@ -1,11 +1,11 @@
-import React from "react";
-import ErrorIcon from "@mui/icons-material/Error";
-import WarningIcon from "@mui/icons-material/Warning";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import React from 'react';
+import ErrorIcon from '@mui/icons-material/Error';
+import WarningIcon from '@mui/icons-material/Warning';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Chip, Grid, Modal, Paper, Typography } from "@mui/material";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Chip, Grid, Modal, Paper, Typography } from '@mui/material';
 
 // 발주확인된 주문 상세정보 모달
 export const DeliveryDetailModal = observer(() => {
@@ -13,7 +13,10 @@ export const DeliveryDetailModal = observer(() => {
   const { common, delivery } = React.useContext(AppContext);
 
   return (
-    <Modal open={delivery.modalInfo.delivery} onClose={() => delivery.toggleDeliveryDetailModal(false, delivery.orderInfo.current)}>
+    <Modal
+      open={delivery.modalInfo.delivery}
+      onClose={() => delivery.toggleDeliveryDetailModal(false, delivery.orderInfo.current)}
+    >
       <Paper
         className="uploadModal"
         sx={{
@@ -45,8 +48,8 @@ export const DeliveryDetailModal = observer(() => {
                 >
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                     }}
                   >
                     <ErrorIcon
@@ -78,17 +81,17 @@ export const DeliveryDetailModal = observer(() => {
                   >
                     <Box
                       sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
                       }}
                     >
                       <Typography fontSize={12}>통관부호 검증결과</Typography>
 
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center',
                         }}
                       >
                         {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].icucResult?.code === 0 ? (
@@ -105,7 +108,7 @@ export const DeliveryDetailModal = observer(() => {
                               noWrap
                               fontSize={12}
                               sx={{
-                                color: "#d32f2f",
+                                color: '#d32f2f',
                               }}
                             >
                               {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].icucResult?.message}
@@ -125,7 +128,7 @@ export const DeliveryDetailModal = observer(() => {
                               noWrap
                               fontSize={12}
                               sx={{
-                                color: "#2e7d32",
+                                color: '#2e7d32',
                               }}
                             >
                               {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].icucResult?.message}
@@ -145,7 +148,7 @@ export const DeliveryDetailModal = observer(() => {
                               noWrap
                               fontSize={12}
                               sx={{
-                                color: "#ed6c02",
+                                color: '#ed6c02',
                               }}
                             >
                               {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].icucResult?.message}
@@ -172,27 +175,33 @@ export const DeliveryDetailModal = observer(() => {
               >
                 <Box
                   sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                     mb: 3,
                   }}
                 >
                   <Typography fontSize={12}>구매처 주문정보</Typography>
 
                   <Chip
-                    label={<Typography fontSize={12}>{delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].id}</Typography>}
+                    label={
+                      <Typography fontSize={12}>
+                        {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].id}
+                      </Typography>
+                    }
                     size="small"
                     color="info"
                     onClick={() => {
-                      navigator.clipboard.writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].id).then(
-                        function () {
-                          alert("클립보드에 복사되었습니다.");
-                        },
-                        function () {
-                          alert("클립보드에 복사할 수 없습니다.");
-                        }
-                      );
+                      navigator.clipboard
+                        .writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].id)
+                        .then(
+                          function () {
+                            alert('클립보드에 복사되었습니다.');
+                          },
+                          function () {
+                            alert('클립보드에 복사할 수 없습니다.');
+                          }
+                        );
                     }}
                   />
                 </Box>
@@ -203,7 +212,7 @@ export const DeliveryDetailModal = observer(() => {
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={12}>상품명</Typography>
@@ -214,22 +223,24 @@ export const DeliveryDetailModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <Typography
                       noWrap
                       fontSize={12}
                       onClick={() => {
-                        navigator.clipboard.writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].productName).then(
-                          function () {
-                            alert("클립보드에 복사되었습니다.");
-                          },
-                          function () {
-                            alert("클립보드에 복사할 수 없습니다.");
-                          }
-                        );
+                        navigator.clipboard
+                          .writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].productName)
+                          .then(
+                            function () {
+                              alert('클립보드에 복사되었습니다.');
+                            },
+                            function () {
+                              alert('클립보드에 복사할 수 없습니다.');
+                            }
+                          );
                       }}
                     >
                       {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].productName}
@@ -241,7 +252,7 @@ export const DeliveryDetailModal = observer(() => {
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={12}>옵션명</Typography>
@@ -252,8 +263,8 @@ export const DeliveryDetailModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <Typography
@@ -261,14 +272,16 @@ export const DeliveryDetailModal = observer(() => {
                       fontSize={12}
                       color="#1565c0"
                       onClick={() => {
-                        navigator.clipboard.writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].optionInfo).then(
-                          function () {
-                            alert("클립보드에 복사되었습니다.");
-                          },
-                          function () {
-                            alert("클립보드에 복사할 수 없습니다.");
-                          }
-                        );
+                        navigator.clipboard
+                          .writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].optionInfo)
+                          .then(
+                            function () {
+                              alert('클립보드에 복사되었습니다.');
+                            },
+                            function () {
+                              alert('클립보드에 복사할 수 없습니다.');
+                            }
+                          );
                       }}
                     >
                       {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].optionInfo}
@@ -280,7 +293,7 @@ export const DeliveryDetailModal = observer(() => {
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={12}>트래킹넘버</Typography>
@@ -291,8 +304,8 @@ export const DeliveryDetailModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <Typography
@@ -300,14 +313,16 @@ export const DeliveryDetailModal = observer(() => {
                       fontSize={12}
                       color="#d32f2f"
                       onClick={() => {
-                        navigator.clipboard.writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].trackingNumber).then(
-                          function () {
-                            alert("클립보드에 복사되었습니다.");
-                          },
-                          function () {
-                            alert("클립보드에 복사할 수 없습니다.");
-                          }
-                        );
+                        navigator.clipboard
+                          .writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].trackingNumber)
+                          .then(
+                            function () {
+                              alert('클립보드에 복사되었습니다.');
+                            },
+                            function () {
+                              alert('클립보드에 복사할 수 없습니다.');
+                            }
+                          );
                       }}
                     >
                       {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].trackingNumber}
@@ -319,7 +334,7 @@ export const DeliveryDetailModal = observer(() => {
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={12}>배송메시지</Typography>
@@ -330,8 +345,8 @@ export const DeliveryDetailModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <Typography
@@ -339,14 +354,16 @@ export const DeliveryDetailModal = observer(() => {
                       fontSize={12}
                       color="#1565c0"
                       onClick={() => {
-                        navigator.clipboard.writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].deliveryMessage).then(
-                          function () {
-                            alert("클립보드에 복사되었습니다.");
-                          },
-                          function () {
-                            alert("클립보드에 복사할 수 없습니다.");
-                          }
-                        );
+                        navigator.clipboard
+                          .writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].deliveryMessage)
+                          .then(
+                            function () {
+                              alert('클립보드에 복사되었습니다.');
+                            },
+                            function () {
+                              alert('클립보드에 복사할 수 없습니다.');
+                            }
+                          );
                       }}
                     >
                       {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].deliveryMessage}
@@ -358,7 +375,7 @@ export const DeliveryDetailModal = observer(() => {
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={12}>주문일</Typography>
@@ -369,22 +386,24 @@ export const DeliveryDetailModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <Typography
                       noWrap
                       fontSize={12}
                       onClick={() => {
-                        navigator.clipboard.writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].dateOrdered).then(
-                          function () {
-                            alert("클립보드에 복사되었습니다.");
-                          },
-                          function () {
-                            alert("클립보드에 복사할 수 없습니다.");
-                          }
-                        );
+                        navigator.clipboard
+                          .writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].dateOrdered)
+                          .then(
+                            function () {
+                              alert('클립보드에 복사되었습니다.');
+                            },
+                            function () {
+                              alert('클립보드에 복사할 수 없습니다.');
+                            }
+                          );
                       }}
                     >
                       {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].dateOrdered}
@@ -396,7 +415,7 @@ export const DeliveryDetailModal = observer(() => {
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={12}>결제일</Typography>
@@ -407,22 +426,24 @@ export const DeliveryDetailModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <Typography
                       noWrap
                       fontSize={12}
                       onClick={() => {
-                        navigator.clipboard.writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].datePaid).then(
-                          function () {
-                            alert("클립보드에 복사되었습니다.");
-                          },
-                          function () {
-                            alert("클립보드에 복사할 수 없습니다.");
-                          }
-                        );
+                        navigator.clipboard
+                          .writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].datePaid)
+                          .then(
+                            function () {
+                              alert('클립보드에 복사되었습니다.');
+                            },
+                            function () {
+                              alert('클립보드에 복사할 수 없습니다.');
+                            }
+                          );
                       }}
                     >
                       {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].datePaid}
@@ -446,27 +467,33 @@ export const DeliveryDetailModal = observer(() => {
                 >
                   <Box
                     sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
                       mb: 3,
                     }}
                   >
                     <Typography fontSize={12}>오픈마켓 주문정보</Typography>
 
                     <Chip
-                      label={<Typography fontSize={12}>{delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.orderNo}</Typography>}
+                      label={
+                        <Typography fontSize={12}>
+                          {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.orderNo}
+                        </Typography>
+                      }
                       size="small"
                       color="info"
                       onClick={() => {
-                        navigator.clipboard.writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.orderNo).then(
-                          function () {
-                            alert("클립보드에 복사되었습니다.");
-                          },
-                          function () {
-                            alert("클립보드에 복사할 수 없습니다.");
-                          }
-                        );
+                        navigator.clipboard
+                          .writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.orderNo)
+                          .then(
+                            function () {
+                              alert('클립보드에 복사되었습니다.');
+                            },
+                            function () {
+                              alert('클립보드에 복사할 수 없습니다.');
+                            }
+                          );
                       }}
                     />
                   </Box>
@@ -477,7 +504,7 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={4}
                       sx={{
-                        m: "auto",
+                        m: 'auto',
                       }}
                     >
                       <Typography fontSize={12}>상품명</Typography>
@@ -488,22 +515,26 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={8}
                       sx={{
-                        m: "auto",
-                        textAlign: "right",
+                        m: 'auto',
+                        textAlign: 'right',
                       }}
                     >
                       <Typography
                         noWrap
                         fontSize={12}
                         onClick={() => {
-                          navigator.clipboard.writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.productName).then(
-                            function () {
-                              alert("클립보드에 복사되었습니다.");
-                            },
-                            function () {
-                              alert("클립보드에 복사할 수 없습니다.");
-                            }
-                          );
+                          navigator.clipboard
+                            .writeText(
+                              delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.productName
+                            )
+                            .then(
+                              function () {
+                                alert('클립보드에 복사되었습니다.');
+                              },
+                              function () {
+                                alert('클립보드에 복사할 수 없습니다.');
+                              }
+                            );
                         }}
                       >
                         {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.productName}
@@ -515,7 +546,7 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={4}
                       sx={{
-                        m: "auto",
+                        m: 'auto',
                       }}
                     >
                       <Typography fontSize={12}>옵션명</Typography>
@@ -526,8 +557,8 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={8}
                       sx={{
-                        m: "auto",
-                        textAlign: "right",
+                        m: 'auto',
+                        textAlign: 'right',
                       }}
                     >
                       <Typography
@@ -535,14 +566,19 @@ export const DeliveryDetailModal = observer(() => {
                         fontSize={12}
                         color="#1565c0"
                         onClick={() => {
-                          navigator.clipboard.writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.productOptionContents).then(
-                            function () {
-                              alert("클립보드에 복사되었습니다.");
-                            },
-                            function () {
-                              alert("클립보드에 복사할 수 없습니다.");
-                            }
-                          );
+                          navigator.clipboard
+                            .writeText(
+                              delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected
+                                .productOptionContents
+                            )
+                            .then(
+                              function () {
+                                alert('클립보드에 복사되었습니다.');
+                              },
+                              function () {
+                                alert('클립보드에 복사할 수 없습니다.');
+                              }
+                            );
                         }}
                       >
                         {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.productOptionContents}
@@ -554,7 +590,7 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={4}
                       sx={{
-                        m: "auto",
+                        m: 'auto',
                       }}
                     >
                       <Typography fontSize={12}>구매자</Typography>
@@ -565,8 +601,8 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={8}
                       sx={{
-                        m: "auto",
-                        textAlign: "right",
+                        m: 'auto',
+                        textAlign: 'right',
                       }}
                     >
                       <Typography
@@ -575,16 +611,18 @@ export const DeliveryDetailModal = observer(() => {
                         onClick={() => {
                           navigator.clipboard
                             .writeText(
-                              `${delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.orderMemberName} (${
+                              `${
+                                delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.orderMemberName
+                              } (${
                                 delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.orderMemberTelNo
                               })`
                             )
                             .then(
                               function () {
-                                alert("클립보드에 복사되었습니다.");
+                                alert('클립보드에 복사되었습니다.');
                               },
                               function () {
-                                alert("클립보드에 복사할 수 없습니다.");
+                                alert('클립보드에 복사할 수 없습니다.');
                               }
                             );
                         }}
@@ -599,7 +637,7 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={4}
                       sx={{
-                        m: "auto",
+                        m: 'auto',
                       }}
                     >
                       <Typography fontSize={12}>수취인</Typography>
@@ -610,8 +648,8 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={8}
                       sx={{
-                        m: "auto",
-                        textAlign: "right",
+                        m: 'auto',
+                        textAlign: 'right',
                       }}
                     >
                       <Typography
@@ -620,16 +658,18 @@ export const DeliveryDetailModal = observer(() => {
                         onClick={() => {
                           navigator.clipboard
                             .writeText(
-                              `${delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.receiverName} (${
+                              `${
+                                delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.receiverName
+                              } (${
                                 delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.receiverTelNo1
                               })`
                             )
                             .then(
                               function () {
-                                alert("클립보드에 복사되었습니다.");
+                                alert('클립보드에 복사되었습니다.');
                               },
                               function () {
-                                alert("클립보드에 복사할 수 없습니다.");
+                                alert('클립보드에 복사할 수 없습니다.');
                               }
                             );
                         }}
@@ -644,7 +684,7 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={4}
                       sx={{
-                        m: "auto",
+                        m: 'auto',
                       }}
                     >
                       <Typography fontSize={12}>배송주소</Typography>
@@ -655,8 +695,8 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={8}
                       sx={{
-                        m: "auto",
-                        textAlign: "right",
+                        m: 'auto',
+                        textAlign: 'right',
                       }}
                     >
                       <Typography
@@ -665,22 +705,28 @@ export const DeliveryDetailModal = observer(() => {
                         onClick={() => {
                           navigator.clipboard
                             .writeText(
-                              `(${delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.receiverZipCode}) ${
-                                delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.receiverIntegratedAddress
+                              `(${
+                                delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.receiverZipCode
+                              }) ${
+                                delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected
+                                  .receiverIntegratedAddress
                               }`
                             )
                             .then(
                               function () {
-                                alert("클립보드에 복사되었습니다.");
+                                alert('클립보드에 복사되었습니다.');
                               },
                               function () {
-                                alert("클립보드에 복사할 수 없습니다.");
+                                alert('클립보드에 복사할 수 없습니다.');
                               }
                             );
                         }}
                       >
-                        ({delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.receiverZipCode}){" "}
-                        {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.receiverIntegratedAddress}
+                        ({delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.receiverZipCode}){' '}
+                        {
+                          delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected
+                            .receiverIntegratedAddress
+                        }
                       </Typography>
                     </Grid>
 
@@ -689,7 +735,7 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={4}
                       sx={{
-                        m: "auto",
+                        m: 'auto',
                       }}
                     >
                       <Typography fontSize={12}>배송메시지</Typography>
@@ -700,22 +746,26 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={8}
                       sx={{
-                        m: "auto",
-                        textAlign: "right",
+                        m: 'auto',
+                        textAlign: 'right',
                       }}
                     >
                       <Typography
                         noWrap
                         fontSize={12}
                         onClick={() => {
-                          navigator.clipboard.writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.productOrderMemo).then(
-                            function () {
-                              alert("클립보드에 복사되었습니다.");
-                            },
-                            function () {
-                              alert("클립보드에 복사할 수 없습니다.");
-                            }
-                          );
+                          navigator.clipboard
+                            .writeText(
+                              delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.productOrderMemo
+                            )
+                            .then(
+                              function () {
+                                alert('클립보드에 복사되었습니다.');
+                              },
+                              function () {
+                                alert('클립보드에 복사할 수 없습니다.');
+                              }
+                            );
                         }}
                       >
                         {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.productOrderMemo}
@@ -727,7 +777,7 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={4}
                       sx={{
-                        m: "auto",
+                        m: 'auto',
                       }}
                     >
                       <Typography fontSize={12}>개인통관고유부호</Typography>
@@ -738,8 +788,8 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={8}
                       sx={{
-                        m: "auto",
-                        textAlign: "right",
+                        m: 'auto',
+                        textAlign: 'right',
                       }}
                     >
                       <Typography
@@ -748,18 +798,24 @@ export const DeliveryDetailModal = observer(() => {
                         color="#1565c0"
                         onClick={() => {
                           navigator.clipboard
-                            .writeText(delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.individualCustomUniqueCode)
+                            .writeText(
+                              delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected
+                                .individualCustomUniqueCode
+                            )
                             .then(
                               function () {
-                                alert("클립보드에 복사되었습니다.");
+                                alert('클립보드에 복사되었습니다.');
                               },
                               function () {
-                                alert("클립보드에 복사할 수 없습니다.");
+                                alert('클립보드에 복사할 수 없습니다.');
                               }
                             );
                         }}
                       >
-                        {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected.individualCustomUniqueCode}
+                        {
+                          delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].connected
+                            .individualCustomUniqueCode
+                        }
                       </Typography>
                     </Grid>
                   </Grid>
@@ -781,9 +837,9 @@ export const DeliveryDetailModal = observer(() => {
                 >
                   <Box
                     sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
                       mb: 3,
                     }}
                   >
@@ -796,7 +852,7 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={4}
                       sx={{
-                        m: "auto",
+                        m: 'auto',
                       }}
                     >
                       <Typography fontSize={12}>배대지</Typography>
@@ -807,8 +863,8 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={8}
                       sx={{
-                        m: "auto",
-                        textAlign: "right",
+                        m: 'auto',
+                        textAlign: 'right',
                       }}
                     >
                       <Typography
@@ -818,10 +874,10 @@ export const DeliveryDetailModal = observer(() => {
                         onClick={() => {
                           navigator.clipboard.writeText(common.user.userInfo.orderToDeliveryName).then(
                             function () {
-                              alert("클립보드에 복사되었습니다.");
+                              alert('클립보드에 복사되었습니다.');
                             },
                             function () {
-                              alert("클립보드에 복사할 수 없습니다.");
+                              alert('클립보드에 복사할 수 없습니다.');
                             }
                           );
                         }}
@@ -835,7 +891,7 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={4}
                       sx={{
-                        m: "auto",
+                        m: 'auto',
                       }}
                     >
                       <Typography fontSize={12}>배송등급</Typography>
@@ -846,8 +902,8 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={8}
                       sx={{
-                        m: "auto",
-                        textAlign: "right",
+                        m: 'auto',
+                        textAlign: 'right',
                       }}
                     >
                       <Typography
@@ -856,10 +912,10 @@ export const DeliveryDetailModal = observer(() => {
                         onClick={() => {
                           navigator.clipboard.writeText(common.user.userInfo.orderToDeliveryMembership).then(
                             function () {
-                              alert("클립보드에 복사되었습니다.");
+                              alert('클립보드에 복사되었습니다.');
                             },
                             function () {
-                              alert("클립보드에 복사할 수 없습니다.");
+                              alert('클립보드에 복사할 수 없습니다.');
                             }
                           );
                         }}
@@ -873,7 +929,7 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={4}
                       sx={{
-                        m: "auto",
+                        m: 'auto',
                       }}
                     >
                       <Typography fontSize={12}>배송지</Typography>
@@ -884,8 +940,8 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={8}
                       sx={{
-                        m: "auto",
-                        textAlign: "right",
+                        m: 'auto',
+                        textAlign: 'right',
                       }}
                     >
                       <Typography
@@ -894,10 +950,10 @@ export const DeliveryDetailModal = observer(() => {
                         onClick={() => {
                           navigator.clipboard.writeText(common.user.userInfo.orderToDeliveryMethod).then(
                             function () {
-                              alert("클립보드에 복사되었습니다.");
+                              alert('클립보드에 복사되었습니다.');
                             },
                             function () {
-                              alert("클립보드에 복사할 수 없습니다.");
+                              alert('클립보드에 복사할 수 없습니다.');
                             }
                           );
                         }}
@@ -911,7 +967,7 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={4}
                       sx={{
-                        m: "auto",
+                        m: 'auto',
                       }}
                     >
                       <Typography fontSize={12}>품목분류</Typography>
@@ -922,8 +978,8 @@ export const DeliveryDetailModal = observer(() => {
                       xs={6}
                       md={8}
                       sx={{
-                        m: "auto",
-                        textAlign: "right",
+                        m: 'auto',
+                        textAlign: 'right',
                       }}
                     >
                       <Typography
@@ -933,21 +989,23 @@ export const DeliveryDetailModal = observer(() => {
                         onClick={() => {
                           navigator.clipboard
                             .writeText(
-                              `(${delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].deliveryInfo.category.code}) ${
+                              `(${
+                                delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].deliveryInfo.category.code
+                              }) ${
                                 delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].deliveryInfo.category.name
                               }`
                             )
                             .then(
                               function () {
-                                alert("클립보드에 복사되었습니다.");
+                                alert('클립보드에 복사되었습니다.');
                               },
                               function () {
-                                alert("클립보드에 복사할 수 없습니다.");
+                                alert('클립보드에 복사할 수 없습니다.');
                               }
                             );
                         }}
                       >
-                        ({delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].deliveryInfo.category.code}){" "}
+                        ({delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].deliveryInfo.category.code}){' '}
                         {delivery.orderInfo.ordersFiltered[delivery.orderInfo.current].deliveryInfo.category.name}
                       </Typography>
                     </Grid>

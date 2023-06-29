@@ -1,18 +1,29 @@
-import React from "react";
-import gql from "../../../pages/Main/GraphQL/Requests";
-import MUTATIONS from "../../../pages/Main/GraphQL/Mutations";
-import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
-import LinkIcon from "@mui/icons-material/Link";
-import DeleteIcon from "@mui/icons-material/Delete";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import React from 'react';
+import gql from '../../../pages/Main/GraphQL/Requests';
+import MUTATIONS from '../../../pages/Main/GraphQL/Mutations';
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import LinkIcon from '@mui/icons-material/Link';
+import DeleteIcon from '@mui/icons-material/Delete';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Header } from "../Common/Header";
-import { readFileDataURL } from "../../Tools/Common";
-import { Box, Container, Grid, IconButton, MenuItem, Paper, Select, TextField, Tooltip, Typography } from "@mui/material";
-import { Frame, Title } from "../Common/UI";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Header } from '../Common/Header';
+import { readFileDataURL } from '../../Tools/Common';
+import {
+  Box,
+  Container,
+  Grid,
+  IconButton,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import { Frame, Title } from '../Common/UI';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // 다른 GQL과 달리 formData 형식으로 백엔드에 요청해야 해서 별도로 구현
 async function uploadImage(data: any) {
@@ -26,14 +37,14 @@ async function uploadImage(data: any) {
         fixImageTop: null,
       },
 
-      query: "mutation ($fixImageTop: Upload) {\n  updateMyDataByUser(\n    fixImageTop: $fixImageTop\n  )\n}\n",
+      query: 'mutation ($fixImageTop: Upload) {\n  updateMyDataByUser(\n    fixImageTop: $fixImageTop\n  )\n}\n',
     };
 
-    let map = { "1": ["variables.fixImageTop"] };
+    let map = { '1': ['variables.fixImageTop'] };
 
-    formData.append("operations", JSON.stringify(operations));
-    formData.append("map", JSON.stringify(map));
-    formData.append("1", data.fixImageTop, `top1.${data.fixImageTop.name.split(".")[1]}`);
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('1', data.fixImageTop, `top1.${data.fixImageTop.name.split('.')[1]}`);
   }
 
   // 상단이미지2
@@ -43,14 +54,15 @@ async function uploadImage(data: any) {
         fixImageSubTop: null,
       },
 
-      query: "mutation ($fixImageSubTop: Upload) {\n  updateMyDataByUser(\n    fixImageSubTop: $fixImageSubTop\n  )\n}\n",
+      query:
+        'mutation ($fixImageSubTop: Upload) {\n  updateMyDataByUser(\n    fixImageSubTop: $fixImageSubTop\n  )\n}\n',
     };
 
-    let map = { "1": ["variables.fixImageSubTop"] };
+    let map = { '1': ['variables.fixImageSubTop'] };
 
-    formData.append("operations", JSON.stringify(operations));
-    formData.append("map", JSON.stringify(map));
-    formData.append("1", data.fixImageSubTop, `top2.${data.fixImageSubTop.name.split(".")[1]}`);
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('1', data.fixImageSubTop, `top2.${data.fixImageSubTop.name.split('.')[1]}`);
   }
 
   // 하단이미지 1
@@ -60,14 +72,15 @@ async function uploadImage(data: any) {
         fixImageBottom: null,
       },
 
-      query: "mutation ($fixImageBottom: Upload) {\n  updateMyDataByUser(\n    fixImageBottom: $fixImageBottom\n  )\n}\n",
+      query:
+        'mutation ($fixImageBottom: Upload) {\n  updateMyDataByUser(\n    fixImageBottom: $fixImageBottom\n  )\n}\n',
     };
 
-    let map = { "1": ["variables.fixImageBottom"] };
+    let map = { '1': ['variables.fixImageBottom'] };
 
-    formData.append("operations", JSON.stringify(operations));
-    formData.append("map", JSON.stringify(map));
-    formData.append("1", data.fixImageBottom, `bottom1.${data.fixImageBottom.name.split(".")[1]}`);
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('1', data.fixImageBottom, `bottom1.${data.fixImageBottom.name.split('.')[1]}`);
   }
 
   // 하단이미지 2
@@ -77,14 +90,15 @@ async function uploadImage(data: any) {
         fixImageSubBottom: null,
       },
 
-      query: "mutation ($fixImageSubBottom: Upload) {\n  updateMyDataByUser(\n    fixImageSubBottom: $fixImageSubBottom\n  )\n}\n",
+      query:
+        'mutation ($fixImageSubBottom: Upload) {\n  updateMyDataByUser(\n    fixImageSubBottom: $fixImageSubBottom\n  )\n}\n',
     };
 
-    let map = { "1": ["variables.fixImageSubBottom"] };
+    let map = { '1': ['variables.fixImageSubBottom'] };
 
-    formData.append("operations", JSON.stringify(operations));
-    formData.append("map", JSON.stringify(map));
-    formData.append("1", data.fixImageSubBottom, `bottom2.${data.fixImageSubBottom.name.split(".")[1]}`);
+    formData.append('operations', JSON.stringify(operations));
+    formData.append('map', JSON.stringify(map));
+    formData.append('1', data.fixImageSubBottom, `bottom2.${data.fixImageSubBottom.name.split('.')[1]}`);
   }
 
   // 폼데이터 전송
@@ -128,7 +142,7 @@ export const Settings = observer(() => {
     () =>
       createTheme({
         palette: {
-          mode: common.darkTheme ? "dark" : "light",
+          mode: common.darkTheme ? 'dark' : 'light',
         },
       }),
     [common.darkTheme]
@@ -140,9 +154,9 @@ export const Settings = observer(() => {
         <Header />
 
         <Container
-          maxWidth={"lg"}
+          maxWidth={'lg'}
           sx={{
-            py: "10px",
+            py: '10px',
           }}
         >
           {common.user.userInfo ? (
@@ -154,7 +168,7 @@ export const Settings = observer(() => {
                   container
                   spacing={1}
                   sx={{
-                    textAlign: "center",
+                    textAlign: 'center',
                     p: 1,
                   }}
                 >
@@ -171,14 +185,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={1}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>개인 분류</Typography>
@@ -190,14 +204,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={11}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -205,16 +219,20 @@ export const Settings = observer(() => {
                               size="small"
                               variant="outlined"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                               }}
                               inputProps={{
                                 readOnly: true,
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
-                              defaultValue={`${common.user.keywardMemo === null ? "설정된 키워드가 없습니다. " : common.user.keywardMemo}`}
+                              defaultValue={`${
+                                common.user.keywardMemo === null
+                                  ? '설정된 키워드가 없습니다. '
+                                  : common.user.keywardMemo
+                              }`}
                             />
                           </Box>
                         </Grid>
@@ -235,7 +253,7 @@ export const Settings = observer(() => {
                   container
                   spacing={1}
                   sx={{
-                    textAlign: "center",
+                    textAlign: 'center',
                     p: 1,
                   }}
                 >
@@ -252,14 +270,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>위안화 환율</Typography>
@@ -280,14 +298,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -300,7 +318,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.cnyRate}`}
@@ -308,7 +326,7 @@ export const Settings = observer(() => {
                                 const cnyRate = parseInt(e.target.value);
 
                                 if (isNaN(cnyRate)) {
-                                  alert("[환율] 숫자만 입력하실 수 있습니다.");
+                                  alert('[환율] 숫자만 입력하실 수 있습니다.');
 
                                   return;
                                 }
@@ -338,14 +356,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>달러화 환율</Typography>
@@ -366,14 +384,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -386,7 +404,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.cnyRateDollar}`}
@@ -394,7 +412,7 @@ export const Settings = observer(() => {
                                 const cnyRateDollar = parseInt(e.target.value);
 
                                 if (isNaN(cnyRateDollar)) {
-                                  alert("[환율] 숫자만 입력하실 수 있습니다.");
+                                  alert('[환율] 숫자만 입력하실 수 있습니다.');
 
                                   return;
                                 }
@@ -424,14 +442,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>유로화 환율</Typography>
@@ -452,14 +470,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -472,7 +490,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.cnyRateEuro}`}
@@ -480,7 +498,7 @@ export const Settings = observer(() => {
                                 const cnyRateEuro = parseInt(e.target.value);
 
                                 if (isNaN(cnyRateEuro)) {
-                                  alert("[환율] 숫자만 입력하실 수 있습니다.");
+                                  alert('[환율] 숫자만 입력하실 수 있습니다.');
 
                                   return;
                                 }
@@ -510,14 +528,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>엔화 환율</Typography>
@@ -538,14 +556,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -558,7 +576,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.cnyRateYen}`}
@@ -566,7 +584,7 @@ export const Settings = observer(() => {
                                 const cnyRateYen = parseInt(e.target.value);
 
                                 if (isNaN(cnyRateYen)) {
-                                  alert("[환율] 숫자만 입력하실 수 있습니다.");
+                                  alert('[환율] 숫자만 입력하실 수 있습니다.');
 
                                   return;
                                 }
@@ -597,7 +615,7 @@ export const Settings = observer(() => {
                   container
                   spacing={1}
                   sx={{
-                    textAlign: "center",
+                    textAlign: 'center',
                     p: 1,
                   }}
                 >
@@ -614,14 +632,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>배대지배송비</Typography>
@@ -642,14 +660,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -662,7 +680,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.defaultShippingFee}`}
@@ -670,7 +688,7 @@ export const Settings = observer(() => {
                                 const defaultShippingFee = parseInt(e.target.value);
 
                                 if (isNaN(defaultShippingFee)) {
-                                  alert("[배대지배송비] 숫자만 입력하실 수 있습니다.");
+                                  alert('[배대지배송비] 숫자만 입력하실 수 있습니다.');
 
                                   return;
                                 }
@@ -700,14 +718,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>마진율</Typography>
@@ -728,14 +746,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -748,7 +766,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.marginRate}`}
@@ -756,7 +774,7 @@ export const Settings = observer(() => {
                                 const marginRate = parseInt(e.target.value);
 
                                 if (isNaN(marginRate)) {
-                                  alert("[마진율] 숫자만 입력하실 수 있습니다.");
+                                  alert('[마진율] 숫자만 입력하실 수 있습니다.');
 
                                   return;
                                 }
@@ -777,7 +795,7 @@ export const Settings = observer(() => {
                                 const marginUnitType = e.target.value;
 
                                 if (!marginUnitType) {
-                                  alert("[마진단위] 입력이 잘못되었습니다.");
+                                  alert('[마진단위] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -809,14 +827,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>기본할인가</Typography>
@@ -837,14 +855,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -857,7 +875,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.discountAmount}`}
@@ -865,7 +883,7 @@ export const Settings = observer(() => {
                                 const discountAmount = parseInt(e.target.value);
 
                                 if (isNaN(discountAmount)) {
-                                  alert("[기본할인가] 숫자만 입력하실 수 있습니다.");
+                                  alert('[기본할인가] 숫자만 입력하실 수 있습니다.');
 
                                   return;
                                 }
@@ -886,7 +904,7 @@ export const Settings = observer(() => {
                                 const discountUnitType = e.target.value;
 
                                 if (!discountUnitType) {
-                                  alert("[기본할인가단위] 입력이 잘못되었습니다.");
+                                  alert('[기본할인가단위] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -918,14 +936,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>유료배송비</Typography>
@@ -946,14 +964,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -966,7 +984,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.extraShippingFee}`}
@@ -974,7 +992,7 @@ export const Settings = observer(() => {
                                 const extraShippingFee = parseInt(e.target.value);
 
                                 if (isNaN(extraShippingFee)) {
-                                  alert("[유료배송비] 숫자만 입력하실 수 있습니다.");
+                                  alert('[유료배송비] 숫자만 입력하실 수 있습니다.');
 
                                   return;
                                 }
@@ -1004,14 +1022,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>반품배송비</Typography>
@@ -1023,14 +1041,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -1043,7 +1061,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.refundShippingFee}`}
@@ -1051,7 +1069,7 @@ export const Settings = observer(() => {
                                 const refundShippingFee = parseInt(e.target.value);
 
                                 if (isNaN(refundShippingFee)) {
-                                  alert("[반품배송비] 숫자만 입력하실 수 있습니다.");
+                                  alert('[반품배송비] 숫자만 입력하실 수 있습니다.');
 
                                   return;
                                 }
@@ -1081,14 +1099,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>교환배송비</Typography>
@@ -1100,14 +1118,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -1120,7 +1138,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.exchangeShippingFee}`}
@@ -1128,7 +1146,7 @@ export const Settings = observer(() => {
                                 const exchangeShippingFee = parseInt(e.target.value);
 
                                 if (isNaN(exchangeShippingFee)) {
-                                  alert("[교환배송비] 숫자만 입력하실 수 있습니다.");
+                                  alert('[교환배송비] 숫자만 입력하실 수 있습니다.');
 
                                   return;
                                 }
@@ -1158,14 +1176,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>제주/도서배송비</Typography>
@@ -1177,14 +1195,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -1197,7 +1215,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.additionalShippingFeeJeju}`}
@@ -1205,7 +1223,7 @@ export const Settings = observer(() => {
                                 const additionalShippingFeeJeju = parseInt(e.target.value);
 
                                 if (isNaN(additionalShippingFeeJeju)) {
-                                  alert("[제주/도서배송비] 숫자만 입력하실 수 있습니다.");
+                                  alert('[제주/도서배송비] 숫자만 입력하실 수 있습니다.');
 
                                   return;
                                 }
@@ -1235,14 +1253,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>재고수량</Typography>
@@ -1263,14 +1281,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -1283,7 +1301,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.collectStock}`}
@@ -1291,7 +1309,7 @@ export const Settings = observer(() => {
                                 const collectStock = parseInt(e.target.value);
 
                                 if (isNaN(collectStock)) {
-                                  alert("[재고수량] 입력이 잘못되었습니다.");
+                                  alert('[재고수량] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -1321,14 +1339,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>A/S전화번호</Typography>
@@ -1340,14 +1358,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -1355,7 +1373,7 @@ export const Settings = observer(() => {
                               size="small"
                               variant="outlined"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                               }}
                               inputProps={{
                                 style: {
@@ -1367,7 +1385,7 @@ export const Settings = observer(() => {
                                 const asTel = e.target.value;
 
                                 if (!asTel) {
-                                  alert("[A/S전화번호] 입력이 잘못되었습니다.");
+                                  alert('[A/S전화번호] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -1395,14 +1413,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={1.9}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>A/S안내내용</Typography>
@@ -1414,14 +1432,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={10.1}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -1429,7 +1447,7 @@ export const Settings = observer(() => {
                               size="small"
                               variant="outlined"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                               }}
                               inputProps={{
                                 style: {
@@ -1441,7 +1459,7 @@ export const Settings = observer(() => {
                                 const asInformation = e.target.value;
 
                                 if (!asInformation) {
-                                  alert("[A/S안내내용] 입력이 잘못되었습니다.");
+                                  alert('[A/S안내내용] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -1469,14 +1487,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>상단이미지1</Typography>
@@ -1488,12 +1506,12 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
+                              display: 'flex',
                             }}
                           >
                             <a target="_blank" href={common.user.userInfo?.fixImageTop}>
@@ -1502,7 +1520,7 @@ export const Settings = observer(() => {
                                 width={126}
                                 height={126}
                                 style={{
-                                  objectFit: "contain",
+                                  objectFit: 'contain',
                                 }}
                               />
                             </a>
@@ -1511,8 +1529,8 @@ export const Settings = observer(() => {
                           <Paper
                             variant="outlined"
                             sx={{
-                              display: "flex",
-                              justifyContent: "center",
+                              display: 'flex',
+                              justifyContent: 'center',
                             }}
                           >
                             <label htmlFor="fixImageTop">
@@ -1521,7 +1539,7 @@ export const Settings = observer(() => {
                                 id="fixImageTop"
                                 type="file"
                                 style={{
-                                  display: "none",
+                                  display: 'none',
                                 }}
                                 onChange={async (e) => {
                                   const fileList = e.target.files ?? [];
@@ -1544,10 +1562,10 @@ export const Settings = observer(() => {
                               size="small"
                               component="span"
                               onClick={async () => {
-                                const url = prompt("이미지 URL을 입력해주세요.") ?? "";
+                                const url = prompt('이미지 URL을 입력해주세요.') ?? '';
 
-                                if (url === "") {
-                                  alert("주소가 올바르지 않습니다.");
+                                if (url === '') {
+                                  alert('주소가 올바르지 않습니다.');
 
                                   return 0;
                                 }
@@ -1594,14 +1612,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>상단이미지2</Typography>
@@ -1613,12 +1631,12 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
+                              display: 'flex',
                             }}
                           >
                             <a target="_blank" href={common.user.userInfo?.fixImageSubTop}>
@@ -1627,7 +1645,7 @@ export const Settings = observer(() => {
                                 width={126}
                                 height={126}
                                 style={{
-                                  objectFit: "contain",
+                                  objectFit: 'contain',
                                 }}
                               />
                             </a>
@@ -1636,8 +1654,8 @@ export const Settings = observer(() => {
                           <Paper
                             variant="outlined"
                             sx={{
-                              display: "flex",
-                              justifyContent: "center",
+                              display: 'flex',
+                              justifyContent: 'center',
                             }}
                           >
                             <label htmlFor="fixImageSubTop">
@@ -1646,7 +1664,7 @@ export const Settings = observer(() => {
                                 id="fixImageSubTop"
                                 type="file"
                                 style={{
-                                  display: "none",
+                                  display: 'none',
                                 }}
                                 onChange={async (e) => {
                                   const fileList = e.target.files ?? [];
@@ -1669,10 +1687,10 @@ export const Settings = observer(() => {
                               size="small"
                               component="span"
                               onClick={async () => {
-                                const url = prompt("이미지 URL을 입력해주세요.") ?? "";
+                                const url = prompt('이미지 URL을 입력해주세요.') ?? '';
 
-                                if (url === "") {
-                                  alert("주소가 올바르지 않습니다.");
+                                if (url === '') {
+                                  alert('주소가 올바르지 않습니다.');
 
                                   return 0;
                                 }
@@ -1719,14 +1737,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>하단이미지1</Typography>
@@ -1738,12 +1756,12 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
+                              display: 'flex',
                             }}
                           >
                             <a target="_blank" href={common.user.userInfo?.fixImageBottom}>
@@ -1752,7 +1770,7 @@ export const Settings = observer(() => {
                                 width={126}
                                 height={126}
                                 style={{
-                                  objectFit: "contain",
+                                  objectFit: 'contain',
                                 }}
                               />
                             </a>
@@ -1761,8 +1779,8 @@ export const Settings = observer(() => {
                           <Paper
                             variant="outlined"
                             sx={{
-                              display: "flex",
-                              justifyContent: "center",
+                              display: 'flex',
+                              justifyContent: 'center',
                             }}
                           >
                             <label htmlFor="fixImageBottom">
@@ -1771,7 +1789,7 @@ export const Settings = observer(() => {
                                 id="fixImageBottom"
                                 type="file"
                                 style={{
-                                  display: "none",
+                                  display: 'none',
                                 }}
                                 onChange={async (e) => {
                                   const fileList = e.target.files ?? [];
@@ -1794,10 +1812,10 @@ export const Settings = observer(() => {
                               size="small"
                               component="span"
                               onClick={async () => {
-                                const url = prompt("이미지 URL을 입력해주세요.") ?? "";
+                                const url = prompt('이미지 URL을 입력해주세요.') ?? '';
 
-                                if (url === "") {
-                                  alert("주소가 올바르지 않습니다.");
+                                if (url === '') {
+                                  alert('주소가 올바르지 않습니다.');
 
                                   return 0;
                                 }
@@ -1844,14 +1862,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>하단이미지2</Typography>
@@ -1863,12 +1881,12 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
+                              display: 'flex',
                             }}
                           >
                             <a target="_blank" href={common.user.userInfo?.fixImageSubBottom}>
@@ -1877,7 +1895,7 @@ export const Settings = observer(() => {
                                 width={126}
                                 height={126}
                                 style={{
-                                  objectFit: "contain",
+                                  objectFit: 'contain',
                                 }}
                               />
                             </a>
@@ -1886,8 +1904,8 @@ export const Settings = observer(() => {
                           <Paper
                             variant="outlined"
                             sx={{
-                              display: "flex",
-                              justifyContent: "center",
+                              display: 'flex',
+                              justifyContent: 'center',
                             }}
                           >
                             <label htmlFor="fixImageSubBottom">
@@ -1896,7 +1914,7 @@ export const Settings = observer(() => {
                                 id="fixImageSubBottom"
                                 type="file"
                                 style={{
-                                  display: "none",
+                                  display: 'none',
                                 }}
                                 onChange={async (e) => {
                                   const fileList = e.target.files ?? [];
@@ -1919,10 +1937,10 @@ export const Settings = observer(() => {
                               size="small"
                               component="span"
                               onClick={async () => {
-                                const url = prompt("이미지 URL을 입력해주세요.") ?? "";
+                                const url = prompt('이미지 URL을 입력해주세요.') ?? '';
 
-                                if (url === "") {
-                                  alert("주소가 올바르지 않습니다.");
+                                if (url === '') {
+                                  alert('주소가 올바르지 않습니다.');
 
                                   return 0;
                                 }
@@ -1969,14 +1987,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -2001,28 +2019,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.optionAlignTop ?? ""}
+                              value={common.user.userInfo?.optionAlignTop ?? ''}
                               onChange={async (e) => {
                                 const optionAlignTop = e.target.value;
 
                                 if (!optionAlignTop) {
-                                  alert("[상세페이지옵션위치] 입력이 잘못되었습니다.");
+                                  alert('[상세페이지옵션위치] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -2031,8 +2049,8 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, optionAlignTop });
                               }}
                             >
-                              <MenuItem value={"Y"}>상단</MenuItem>
-                              <MenuItem value={"N"}>하단</MenuItem>
+                              <MenuItem value={'Y'}>상단</MenuItem>
+                              <MenuItem value={'N'}>하단</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -2053,14 +2071,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -2085,28 +2103,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.descriptionShowTitle ?? ""}
+                              value={common.user.userInfo?.descriptionShowTitle ?? ''}
                               onChange={async (e) => {
                                 const descriptionShowTitle = e.target.value;
 
                                 if (!descriptionShowTitle) {
-                                  alert("[상세페이지상품명표시] 입력이 잘못되었습니다.");
+                                  alert('[상세페이지상품명표시] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -2115,8 +2133,8 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, descriptionShowTitle });
                               }}
                             >
-                              <MenuItem value={"Y"}>사용</MenuItem>
-                              <MenuItem value={"N"}>사용안함</MenuItem>
+                              <MenuItem value={'Y'}>사용</MenuItem>
+                              <MenuItem value={'N'}>사용안함</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -2137,14 +2155,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -2169,28 +2187,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.useDetailInformation ?? ""}
+                              value={common.user.userInfo?.useDetailInformation ?? ''}
                               onChange={async (e) => {
                                 const useDetailInformation = e.target.value;
 
                                 if (!useDetailInformation) {
-                                  alert("[옵션정보안내문구표시] 입력이 잘못되었습니다.");
+                                  alert('[옵션정보안내문구표시] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -2199,8 +2217,8 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, useDetailInformation });
                               }}
                             >
-                              <MenuItem value={"Y"}>사용</MenuItem>
-                              <MenuItem value={"N"}>사용안함</MenuItem>
+                              <MenuItem value={'Y'}>사용</MenuItem>
+                              <MenuItem value={'N'}>사용안함</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -2221,14 +2239,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -2253,28 +2271,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.optionIndexType ?? ""}
+                              value={common.user.userInfo?.optionIndexType ?? ''}
                               onChange={async (e) => {
                                 const optionIndexType = e.target.value;
 
                                 if (!optionIndexType) {
-                                  alert("[옵션정보표기방식] 입력이 잘못되었습니다.");
+                                  alert('[옵션정보표기방식] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -2305,14 +2323,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -2337,28 +2355,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.optionTwoWays ?? ""}
+                              value={common.user.userInfo?.optionTwoWays ?? ''}
                               onChange={async (e) => {
                                 const optionTwoWays = e.target.value;
 
                                 if (!optionTwoWays) {
-                                  alert("[옵션정보배치형식] 입력이 잘못되었습니다.");
+                                  alert('[옵션정보배치형식] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -2367,8 +2385,8 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, optionTwoWays });
                               }}
                             >
-                              <MenuItem value={"N"}>1열</MenuItem>
-                              <MenuItem value={"Y"}>2열</MenuItem>
+                              <MenuItem value={'N'}>1열</MenuItem>
+                              <MenuItem value={'Y'}>2열</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -2389,14 +2407,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -2421,28 +2439,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.autoPrice ?? ""}
+                              value={common.user.userInfo?.autoPrice ?? ''}
                               onChange={async (e) => {
                                 const autoPrice = e.target.value;
 
                                 if (!autoPrice) {
-                                  alert("[옵션가격자동설정] 입력이 잘못되었습니다.");
+                                  alert('[옵션가격자동설정] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -2451,8 +2469,8 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, autoPrice });
                               }}
                             >
-                              <MenuItem value={"Y"}>사용</MenuItem>
-                              <MenuItem value={"N"}>사용안함</MenuItem>
+                              <MenuItem value={'Y'}>사용</MenuItem>
+                              <MenuItem value={'N'}>사용안함</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -2473,14 +2491,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -2505,28 +2523,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.defaultPrice ?? ""}
+                              value={common.user.userInfo?.defaultPrice ?? ''}
                               onChange={async (e) => {
                                 const defaultPrice = e.target.value;
 
                                 if (!defaultPrice) {
-                                  alert("[판매가격노출설정] 입력이 잘못되었습니다.");
+                                  alert('[판매가격노출설정] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -2535,8 +2553,8 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, defaultPrice });
                               }}
                             >
-                              <MenuItem value={"L"}>최저가격</MenuItem>
-                              <MenuItem value={"M"}>중간가격</MenuItem>
+                              <MenuItem value={'L'}>최저가격</MenuItem>
+                              <MenuItem value={'M'}>중간가격</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -2557,14 +2575,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -2589,28 +2607,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.calculateWonType ?? ""}
+                              value={common.user.userInfo?.calculateWonType ?? ''}
                               onChange={async (e) => {
                                 const calculateWonType = e.target.value;
 
                                 if (!calculateWonType) {
-                                  alert("[판매가격설정단위] 입력이 잘못되었습니다.");
+                                  alert('[판매가격설정단위] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -2619,9 +2637,9 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, calculateWonType });
                               }}
                             >
-                              <MenuItem value={"100"}>100원</MenuItem>
-                              <MenuItem value={"500"}>500원</MenuItem>
-                              <MenuItem value={"1000"}>1000원</MenuItem>
+                              <MenuItem value={'100'}>100원</MenuItem>
+                              <MenuItem value={'500'}>500원</MenuItem>
+                              <MenuItem value={'1000'}>1000원</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -2643,7 +2661,7 @@ export const Settings = observer(() => {
                   container
                   spacing={1}
                   sx={{
-                    textAlign: "center",
+                    textAlign: 'center',
                     p: 1,
                   }}
                 >
@@ -2660,14 +2678,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -2692,14 +2710,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -2712,7 +2730,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={`${common.user.userInfo?.collectTimeout}`}
@@ -2720,7 +2738,7 @@ export const Settings = observer(() => {
                                 const collectTimeout = parseInt(e.target.value);
 
                                 if (isNaN(collectTimeout)) {
-                                  alert("[상품수집제한시간] 입력이 잘못되었습니다.");
+                                  alert('[상품수집제한시간] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -2750,14 +2768,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -2782,28 +2800,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.collectCheckPosition ?? ""}
+                              value={common.user.userInfo?.collectCheckPosition ?? ''}
                               onChange={async (e) => {
                                 const collectCheckPosition = e.target.value;
 
                                 if (!collectCheckPosition) {
-                                  alert("[대량수집체크위치] 입력이 잘못되었습니다.");
+                                  alert('[대량수집체크위치] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -2812,8 +2830,8 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, collectCheckPosition });
                               }}
                             >
-                              <MenuItem value={"L"}>왼쪽</MenuItem>
-                              <MenuItem value={"R"}>오른쪽</MenuItem>
+                              <MenuItem value={'L'}>왼쪽</MenuItem>
+                              <MenuItem value={'R'}>오른쪽</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -2834,14 +2852,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -2866,28 +2884,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.sillFromCategory ?? ""}
+                              value={common.user.userInfo?.sillFromCategory ?? ''}
                               onChange={async (e) => {
                                 const sillFromCategory = e.target.value;
 
                                 if (!sillFromCategory) {
-                                  alert("[고시정보자동설정] 입력이 잘못되었습니다.");
+                                  alert('[고시정보자동설정] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -2896,8 +2914,8 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, sillFromCategory });
                               }}
                             >
-                              <MenuItem value={"Y"}>카테고리에 따라 지정</MenuItem>
-                              <MenuItem value={"N"}>기타재화로 일괄 지정</MenuItem>
+                              <MenuItem value={'Y'}>카테고리에 따라 지정</MenuItem>
+                              <MenuItem value={'N'}>기타재화로 일괄 지정</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -2918,14 +2936,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -2950,26 +2968,26 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
                               value={common.user.userInfo?.thumbnailRepresentNo}
                               onChange={async (e) => {
                                 if (common.user.purchaseInfo2.level < 3) {
-                                  alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                                  alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                                   return;
                                 }
@@ -2977,7 +2995,7 @@ export const Settings = observer(() => {
                                 const thumbnailRepresentNo = parseInt(e.target.value);
 
                                 if (isNaN(thumbnailRepresentNo)) {
-                                  alert("[대표이미지기준값설정] 입력이 잘못되었습니다.");
+                                  alert('[대표이미지기준값설정] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -2988,12 +3006,12 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, thumbnailRepresentNo: converted });
                               }}
                             >
-                              <MenuItem value={"0"}>랜덤</MenuItem>
-                              <MenuItem value={"1"}>첫번째이미지</MenuItem>
-                              <MenuItem value={"2"}>두번째이미지</MenuItem>
-                              <MenuItem value={"3"}>세번째이미지</MenuItem>
-                              <MenuItem value={"4"}>네번째이미지</MenuItem>
-                              <MenuItem value={"5"}>다섯번째이미지</MenuItem>
+                              <MenuItem value={'0'}>랜덤</MenuItem>
+                              <MenuItem value={'1'}>첫번째이미지</MenuItem>
+                              <MenuItem value={'2'}>두번째이미지</MenuItem>
+                              <MenuItem value={'3'}>세번째이미지</MenuItem>
+                              <MenuItem value={'4'}>네번째이미지</MenuItem>
+                              <MenuItem value={'5'}>다섯번째이미지</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -3015,7 +3033,7 @@ export const Settings = observer(() => {
                   container
                   spacing={1}
                   sx={{
-                    textAlign: "center",
+                    textAlign: 'center',
                     p: 1,
                   }}
                 >
@@ -3032,14 +3050,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>기본배대지</Typography>
@@ -3060,20 +3078,20 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
                               value={common.user.userInfo?.orderToDeliveryName}
@@ -3081,23 +3099,23 @@ export const Settings = observer(() => {
                                 const orderToDeliveryName = e.target.value;
 
                                 if (!orderToDeliveryName) {
-                                  alert("[기본배대지] 입력이 잘못되었습니다.");
+                                  alert('[기본배대지] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
 
                                 await common.testUserInfo({
                                   orderToDeliveryName,
-                                  orderToDeliveryMembership: "",
-                                  orderToDeliveryMethod: "",
+                                  orderToDeliveryMembership: '',
+                                  orderToDeliveryMethod: '',
                                 });
 
                                 common.setUserInfo({
                                   ...common.user.userInfo,
 
                                   orderToDeliveryName,
-                                  orderToDeliveryMembership: "",
-                                  orderToDeliveryMethod: "",
+                                  orderToDeliveryMembership: '',
+                                  orderToDeliveryMethod: '',
                                 });
 
                                 delivery.initDeliveryInfo();
@@ -3113,7 +3131,9 @@ export const Settings = observer(() => {
                     </Paper>
                   </Grid>
 
-                  {delivery.deliveryList.find((v) => v.name === common.user.userInfo?.orderToDeliveryName && v.membership) ? (
+                  {delivery.deliveryList.find(
+                    (v) => v.name === common.user.userInfo?.orderToDeliveryName && v.membership
+                  ) ? (
                     <Grid item xs={6} md={3}>
                       <Paper
                         variant="outlined"
@@ -3127,14 +3147,14 @@ export const Settings = observer(() => {
                             xs={6}
                             md={6}
                             sx={{
-                              margin: "auto",
+                              margin: 'auto',
                             }}
                           >
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-between",
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
                               }}
                             >
                               <Typography fontSize={14}>배송등급</Typography>
@@ -3155,20 +3175,20 @@ export const Settings = observer(() => {
                             xs={6}
                             md={6}
                             sx={{
-                              margin: "auto",
+                              margin: 'auto',
                             }}
                           >
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-between",
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
                               }}
                             >
                               <Select
                                 size="small"
                                 sx={{
-                                  width: "100%",
+                                  width: '100%',
                                   fontSize: 14,
                                 }}
                                 value={common.user.userInfo?.orderToDeliveryMembership}
@@ -3176,7 +3196,7 @@ export const Settings = observer(() => {
                                   const orderToDeliveryMembership = e.target.value;
 
                                   if (!orderToDeliveryMembership) {
-                                    alert("[배송등급] 입력이 잘못되었습니다.");
+                                    alert('[배송등급] 입력이 잘못되었습니다.');
 
                                     return;
                                   }
@@ -3196,7 +3216,9 @@ export const Settings = observer(() => {
                     </Grid>
                   ) : null}
 
-                  {delivery.deliveryList.find((v) => v.name === common.user.userInfo?.orderToDeliveryName && v.method) ? (
+                  {delivery.deliveryList.find(
+                    (v) => v.name === common.user.userInfo?.orderToDeliveryName && v.method
+                  ) ? (
                     <Grid item xs={6} md={3}>
                       <Paper
                         variant="outlined"
@@ -3210,14 +3232,14 @@ export const Settings = observer(() => {
                             xs={6}
                             md={6}
                             sx={{
-                              margin: "auto",
+                              margin: 'auto',
                             }}
                           >
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-between",
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
                               }}
                             >
                               <Typography fontSize={14}>배송방법</Typography>
@@ -3238,20 +3260,20 @@ export const Settings = observer(() => {
                             xs={6}
                             md={6}
                             sx={{
-                              margin: "auto",
+                              margin: 'auto',
                             }}
                           >
                             <Box
                               sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "space-between",
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
                               }}
                             >
                               <Select
                                 size="small"
                                 sx={{
-                                  width: "100%",
+                                  width: '100%',
                                   fontSize: 14,
                                 }}
                                 value={common.user.userInfo?.orderToDeliveryMethod}
@@ -3259,7 +3281,7 @@ export const Settings = observer(() => {
                                   const orderToDeliveryMethod = e.target.value;
 
                                   if (!orderToDeliveryMethod) {
-                                    alert("[배송방법] 입력이 잘못되었습니다.");
+                                    alert('[배송방법] 입력이 잘못되었습니다.');
 
                                     return;
                                   }
@@ -3293,7 +3315,7 @@ export const Settings = observer(() => {
                   container
                   spacing={1}
                   sx={{
-                    textAlign: "center",
+                    textAlign: 'center',
                     p: 1,
                   }}
                 >
@@ -3310,7 +3332,7 @@ export const Settings = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <img src="/resources/icon-smartstore.png" />
@@ -3321,14 +3343,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -3341,7 +3363,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.naverFee}
@@ -3349,7 +3371,7 @@ export const Settings = observer(() => {
                                 const naverFee = parseFloat(e.target.value);
 
                                 if (isNaN(naverFee)) {
-                                  alert("[스마트스토어 수수료] 숫자만 입력할 수 있습니다.");
+                                  alert('[스마트스토어 수수료] 숫자만 입력할 수 있습니다.');
 
                                   return;
                                 }
@@ -3379,7 +3401,7 @@ export const Settings = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <img src="/resources/icon-coupang.png" />
@@ -3390,14 +3412,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -3410,7 +3432,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.coupangFee}
@@ -3418,7 +3440,7 @@ export const Settings = observer(() => {
                                 const coupangFee = parseFloat(e.target.value);
 
                                 if (isNaN(coupangFee)) {
-                                  alert("[쿠팡 수수료] 숫자만 입력할 수 있습니다.");
+                                  alert('[쿠팡 수수료] 숫자만 입력할 수 있습니다.');
 
                                   return;
                                 }
@@ -3448,7 +3470,7 @@ export const Settings = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <img src="/resources/icon-street-global.png" />
@@ -3459,14 +3481,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -3479,7 +3501,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.streetFee}
@@ -3487,7 +3509,7 @@ export const Settings = observer(() => {
                                 const streetFee = parseFloat(e.target.value);
 
                                 if (isNaN(streetFee)) {
-                                  alert("[11번가(글로벌) 수수료] 숫자만 입력할 수 있습니다.");
+                                  alert('[11번가(글로벌) 수수료] 숫자만 입력할 수 있습니다.');
 
                                   return;
                                 }
@@ -3517,7 +3539,7 @@ export const Settings = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <img src="/resources/icon-street-normal.png" />
@@ -3528,14 +3550,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -3548,7 +3570,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.streetNormalFee}
@@ -3556,7 +3578,7 @@ export const Settings = observer(() => {
                                 const streetNormalFee = parseFloat(e.target.value);
 
                                 if (isNaN(streetNormalFee)) {
-                                  alert("[11번가(일반) 수수료] 숫자만 입력할 수 있습니다.");
+                                  alert('[11번가(일반) 수수료] 숫자만 입력할 수 있습니다.');
 
                                   return;
                                 }
@@ -3586,7 +3608,7 @@ export const Settings = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <img src="/resources/icon-gmarket.png" />
@@ -3597,14 +3619,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -3617,7 +3639,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.gmarketFee}
@@ -3625,7 +3647,7 @@ export const Settings = observer(() => {
                                 const gmarketFee = parseFloat(e.target.value);
 
                                 if (isNaN(gmarketFee)) {
-                                  alert("[지마켓 수수료] 숫자만 입력할 수 있습니다.");
+                                  alert('[지마켓 수수료] 숫자만 입력할 수 있습니다.');
 
                                   return;
                                 }
@@ -3655,7 +3677,7 @@ export const Settings = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <img src="/resources/icon-auction.png" />
@@ -3666,14 +3688,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -3686,7 +3708,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.auctionFee}
@@ -3694,7 +3716,7 @@ export const Settings = observer(() => {
                                 const auctionFee = parseFloat(e.target.value);
 
                                 if (isNaN(auctionFee)) {
-                                  alert("[옥션 수수료] 숫자만 입력할 수 있습니다.");
+                                  alert('[옥션 수수료] 숫자만 입력할 수 있습니다.');
 
                                   return;
                                 }
@@ -3724,7 +3746,7 @@ export const Settings = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <img src="/resources/icon-interpark.png" />
@@ -3735,14 +3757,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -3755,7 +3777,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.interparkFee}
@@ -3763,7 +3785,7 @@ export const Settings = observer(() => {
                                 const interparkFee = parseFloat(e.target.value);
 
                                 if (isNaN(interparkFee)) {
-                                  alert("[인터파크 수수료] 숫자만 입력할 수 있습니다.");
+                                  alert('[인터파크 수수료] 숫자만 입력할 수 있습니다.');
 
                                   return;
                                 }
@@ -3793,7 +3815,7 @@ export const Settings = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <img src="/resources/icon-wemakeprice.png" />
@@ -3804,14 +3826,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -3824,7 +3846,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.wemakepriceFee}
@@ -3832,7 +3854,7 @@ export const Settings = observer(() => {
                                 const wemakepriceFee = parseFloat(e.target.value);
 
                                 if (isNaN(wemakepriceFee)) {
-                                  alert("[위메프 수수료] 숫자만 입력할 수 있습니다.");
+                                  alert('[위메프 수수료] 숫자만 입력할 수 있습니다.');
 
                                   return;
                                 }
@@ -3862,7 +3884,7 @@ export const Settings = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <img src="/resources/icon-lotteon-global.png" />
@@ -3873,14 +3895,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -3893,7 +3915,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.lotteonFee}
@@ -3901,7 +3923,7 @@ export const Settings = observer(() => {
                                 const lotteonFee = parseFloat(e.target.value);
 
                                 if (isNaN(lotteonFee)) {
-                                  alert("[롯데온(글로벌) 수수료] 숫자만 입력할 수 있습니다.");
+                                  alert('[롯데온(글로벌) 수수료] 숫자만 입력할 수 있습니다.');
 
                                   return;
                                 }
@@ -3931,7 +3953,7 @@ export const Settings = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <img src="/resources/icon-lotteon-normal.png" />
@@ -3942,14 +3964,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -3962,7 +3984,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.lotteonNormalFee}
@@ -3970,7 +3992,7 @@ export const Settings = observer(() => {
                                 const lotteonNormalFee = parseFloat(e.target.value);
 
                                 if (isNaN(lotteonNormalFee)) {
-                                  alert("[롯데온(일반) 수수료] 숫자만 입력할 수 있습니다.");
+                                  alert('[롯데온(일반) 수수료] 숫자만 입력할 수 있습니다.');
 
                                   return;
                                 }
@@ -4000,7 +4022,7 @@ export const Settings = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <img src="/resources/icon-tmon.png" />
@@ -4011,14 +4033,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -4031,7 +4053,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.tmonFee}
@@ -4039,7 +4061,7 @@ export const Settings = observer(() => {
                                 const tmonFee = parseFloat(e.target.value);
 
                                 if (isNaN(tmonFee)) {
-                                  alert("[티몬 수수료] 숫자만 입력할 수 있습니다.");
+                                  alert('[티몬 수수료] 숫자만 입력할 수 있습니다.');
 
                                   return;
                                 }
@@ -4070,7 +4092,7 @@ export const Settings = observer(() => {
                   container
                   spacing={1}
                   sx={{
-                    textAlign: "center",
+                    textAlign: 'center',
                     p: 1,
                   }}
                 >
@@ -4087,14 +4109,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>원산지</Typography>
@@ -4106,28 +4128,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.naverOriginCode ?? ""}
+                              value={common.user.userInfo?.naverOriginCode ?? ''}
                               onChange={async (e) => {
                                 const naverOriginCode = e.target.value;
 
                                 if (!naverOriginCode) {
-                                  alert("[원산지] 입력이 잘못되었습니다.");
+                                  alert('[원산지] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -4136,10 +4158,10 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, naverOriginCode });
                               }}
                             >
-                              <MenuItem value={"0200037"}>중국</MenuItem>
-                              <MenuItem value={"0204000"}>미국</MenuItem>
-                              <MenuItem value={"0200036"}>일본</MenuItem>
-                              <MenuItem value={"0201005"}>독일</MenuItem>
+                              <MenuItem value={'0200037'}>중국</MenuItem>
+                              <MenuItem value={'0204000'}>미국</MenuItem>
+                              <MenuItem value={'0200036'}>일본</MenuItem>
+                              <MenuItem value={'0201005'}>독일</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -4160,14 +4182,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>수입사</Typography>
@@ -4179,14 +4201,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -4194,7 +4216,7 @@ export const Settings = observer(() => {
                               size="small"
                               variant="outlined"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                               }}
                               inputProps={{
                                 style: {
@@ -4206,7 +4228,7 @@ export const Settings = observer(() => {
                                 const naverOrigin = e.target.value;
 
                                 if (!naverOrigin) {
-                                  alert("[수입사] 입력이 잘못되었습니다.");
+                                  alert('[수입사] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -4234,14 +4256,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>스토어전용상품명</Typography>
@@ -4253,28 +4275,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.naverStoreOnly ?? ""}
+                              value={common.user.userInfo?.naverStoreOnly ?? ''}
                               onChange={async (e) => {
                                 const naverStoreOnly = e.target.value;
 
                                 if (!naverStoreOnly) {
-                                  alert("[스토어상품명] 입력이 잘못되었습니다.");
+                                  alert('[스토어상품명] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -4283,8 +4305,8 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, naverStoreOnly });
                               }}
                             >
-                              <MenuItem value={"Y"}>사용</MenuItem>
-                              <MenuItem value={"N"}>사용안함</MenuItem>
+                              <MenuItem value={'Y'}>사용</MenuItem>
+                              <MenuItem value={'N'}>사용안함</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -4305,14 +4327,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>태그자동입력</Typography>
@@ -4333,20 +4355,20 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
                               value={`${common.user.userInfo?.naverAutoSearchTag}`}
@@ -4354,7 +4376,7 @@ export const Settings = observer(() => {
                                 const naverAutoSearchTag = e.target.value;
 
                                 if (!naverAutoSearchTag) {
-                                  alert("[태그자동입력] 입력이 잘못되었습니다.");
+                                  alert('[태그자동입력] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -4387,7 +4409,7 @@ export const Settings = observer(() => {
                   container
                   spacing={1}
                   sx={{
-                    textAlign: "center",
+                    textAlign: 'center',
                     p: 1,
                   }}
                 >
@@ -4404,14 +4426,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={2.9}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>기본출고지</Typography>
@@ -4423,20 +4445,20 @@ export const Settings = observer(() => {
                           xs={6}
                           md={9.1}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
                               value={`${common.user.userInfo?.coupangDefaultOutbound}`}
@@ -4444,7 +4466,7 @@ export const Settings = observer(() => {
                                 const coupangDefaultOutbound = e.target.value;
 
                                 if (!coupangDefaultOutbound) {
-                                  alert("[기본출고지] 입력이 잘못되었습니다.");
+                                  alert('[기본출고지] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -4455,7 +4477,8 @@ export const Settings = observer(() => {
                             >
                               {common.deliveryPolicy.coupangOutboundList?.map((v: any) => (
                                 <MenuItem value={`${v.outboundShippingPlaceCode}`}>
-                                  [{v.shippingPlaceName}] {v.placeAddresses[0].returnAddress} {v.placeAddresses[0].returnAddressDetail}
+                                  [{v.shippingPlaceName}] {v.placeAddresses[0].returnAddress}{' '}
+                                  {v.placeAddresses[0].returnAddressDetail}
                                 </MenuItem>
                               ))}
                             </Select>
@@ -4478,14 +4501,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={2.9}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>기본반품지</Typography>
@@ -4497,20 +4520,20 @@ export const Settings = observer(() => {
                           xs={6}
                           md={9.1}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
                               value={`${common.user.userInfo?.coupangDefaultInbound}`}
@@ -4518,7 +4541,7 @@ export const Settings = observer(() => {
                                 const coupangDefaultInbound = e.target.value;
 
                                 if (!coupangDefaultInbound) {
-                                  alert("[기본반품지] 입력이 잘못되었습니다.");
+                                  alert('[기본반품지] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -4529,7 +4552,8 @@ export const Settings = observer(() => {
                             >
                               {common.deliveryPolicy.coupangInboundList?.map((v: any) => (
                                 <MenuItem value={`${v.returnCenterCode}`}>
-                                  [{v.shippingPlaceName}] {v.placeAddresses[0].returnAddress} {v.placeAddresses[0].returnAddressDetail}
+                                  [{v.shippingPlaceName}] {v.placeAddresses[0].returnAddress}{' '}
+                                  {v.placeAddresses[0].returnAddressDetail}
                                 </MenuItem>
                               ))}
                             </Select>
@@ -4552,14 +4576,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -4575,14 +4599,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -4595,7 +4619,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.coupangOutboundShippingTimeDay}
@@ -4603,7 +4627,7 @@ export const Settings = observer(() => {
                                 const coupangOutboundShippingTimeDay = parseInt(e.target.value);
 
                                 if (isNaN(coupangOutboundShippingTimeDay)) {
-                                  alert("[배송출고소요기간] 입력이 잘못되었습니다.");
+                                  alert('[배송출고소요기간] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -4633,14 +4657,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -4656,28 +4680,28 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.coupangUnionDeliveryType ?? ""}
+                              value={common.user.userInfo?.coupangUnionDeliveryType ?? ''}
                               onChange={async (e) => {
                                 const coupangUnionDeliveryType = e.target.value;
 
                                 if (!coupangUnionDeliveryType) {
-                                  alert("[묶음배송] 입력이 잘못되었습니다.");
+                                  alert('[묶음배송] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -4686,8 +4710,8 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, coupangUnionDeliveryType });
                               }}
                             >
-                              <MenuItem value={"Y"}>사용</MenuItem>
-                              <MenuItem value={"N"}>사용안함</MenuItem>
+                              <MenuItem value={'Y'}>사용</MenuItem>
+                              <MenuItem value={'N'}>사용안함</MenuItem>
                             </Select>
                           </Box>
                         </Grid>
@@ -4708,14 +4732,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>
@@ -4740,14 +4764,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <TextField
@@ -4760,7 +4784,7 @@ export const Settings = observer(() => {
                               inputProps={{
                                 style: {
                                   fontSize: 14,
-                                  textAlign: "right",
+                                  textAlign: 'right',
                                 },
                               }}
                               defaultValue={common.user.userInfo?.coupangMaximumBuyForPerson}
@@ -4768,7 +4792,7 @@ export const Settings = observer(() => {
                                 const coupangMaximumBuyForPerson = parseInt(e.target.value);
 
                                 if (isNaN(coupangMaximumBuyForPerson)) {
-                                  alert("[1인당최대구매수량] 입력이 잘못되었습니다.");
+                                  alert('[1인당최대구매수량] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -4883,7 +4907,7 @@ export const Settings = observer(() => {
                   container
                   spacing={1}
                   sx={{
-                    textAlign: "center",
+                    textAlign: 'center',
                     p: 1,
                   }}
                 >
@@ -4900,14 +4924,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={2.9}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>기본출고지(글로벌)</Typography>
@@ -4919,20 +4943,20 @@ export const Settings = observer(() => {
                           xs={6}
                           md={9.1}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
                               value={`${common.user.userInfo?.streetDefaultOutbound}`}
@@ -4940,7 +4964,7 @@ export const Settings = observer(() => {
                                 const streetDefaultOutbound = e.target.value;
 
                                 if (!streetDefaultOutbound) {
-                                  alert("[기본출고지(글로벌)] 입력이 잘못되었습니다.");
+                                  alert('[기본출고지(글로벌)] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -4974,14 +4998,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={2.9}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>기본반품지(글로벌)</Typography>
@@ -4993,20 +5017,20 @@ export const Settings = observer(() => {
                           xs={6}
                           md={9.1}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
                               value={`${common.user.userInfo?.streetDefaultInbound}`}
@@ -5014,7 +5038,7 @@ export const Settings = observer(() => {
                                 const streetDefaultInbound = e.target.value;
 
                                 if (!streetDefaultInbound) {
-                                  alert("[기본반품지(글로벌)] 입력이 잘못되었습니다.");
+                                  alert('[기본반품지(글로벌)] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -5048,14 +5072,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={2.9}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>기본출고지(일반)</Typography>
@@ -5067,20 +5091,20 @@ export const Settings = observer(() => {
                           xs={6}
                           md={9.1}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
                               value={`${common.user.userInfo?.streetNormalOutbound}`}
@@ -5088,7 +5112,7 @@ export const Settings = observer(() => {
                                 const streetNormalOutbound = e.target.value;
 
                                 if (!streetNormalOutbound) {
-                                  alert("[기본출고지(일반)] 입력이 잘못되었습니다.");
+                                  alert('[기본출고지(일반)] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -5122,14 +5146,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={2.9}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>기본반품지(일반)</Typography>
@@ -5141,20 +5165,20 @@ export const Settings = observer(() => {
                           xs={6}
                           md={9.1}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
                               value={`${common.user.userInfo?.streetNormalInbound}`}
@@ -5162,7 +5186,7 @@ export const Settings = observer(() => {
                                 const streetNormalInbound = e.target.value;
 
                                 if (!streetNormalInbound) {
-                                  alert("[기본반품지(일반)] 입력이 잘못되었습니다.");
+                                  alert('[기본반품지(일반)] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -5192,7 +5216,7 @@ export const Settings = observer(() => {
                   container
                   spacing={1}
                   sx={{
-                    textAlign: "center",
+                    textAlign: 'center',
                     p: 1,
                   }}
                 >
@@ -5209,14 +5233,14 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Typography fontSize={14}>셀러구분</Typography>
@@ -5237,20 +5261,20 @@ export const Settings = observer(() => {
                           xs={6}
                           md={6}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
                             }}
                           >
                             <Select
                               size="small"
                               sx={{
-                                width: "100%",
+                                width: '100%',
                                 fontSize: 14,
                               }}
                               value={`${common.user.userInfo?.lotteonSellerType}`}
@@ -5258,7 +5282,7 @@ export const Settings = observer(() => {
                                 const lotteonSellerType = e.target.value;
 
                                 if (!lotteonSellerType) {
-                                  alert("[기본반품지(일반)] 입력이 잘못되었습니다.");
+                                  alert('[기본반품지(일반)] 입력이 잘못되었습니다.');
 
                                   return;
                                 }
@@ -5267,9 +5291,9 @@ export const Settings = observer(() => {
                                 common.setUserInfo({ ...common.user.userInfo, lotteonSellerType });
                               }}
                             >
-                              <MenuItem value={"G"}>글로벌</MenuItem>
+                              <MenuItem value={'G'}>글로벌</MenuItem>
 
-                              <MenuItem value={"N"}>일반</MenuItem>
+                              <MenuItem value={'N'}>일반</MenuItem>
                             </Select>
                           </Box>
                         </Grid>

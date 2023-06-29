@@ -1212,27 +1212,39 @@ function md5Customized(e) {
   }
   function a(e) {
     var t,
-      o = "",
-      n = "";
-    for (t = 0; 3 >= t; t++) o += (n = "0" + ((e >>> (8 * t)) & 255).toString(16)).substr(n.length - 2, 2);
+      o = '',
+      n = '';
+    for (t = 0; 3 >= t; t++) o += (n = '0' + ((e >>> (8 * t)) & 255).toString(16)).substr(n.length - 2, 2);
     return o;
   }
   var p, u, c, d, l, f, m, h, g, _;
   for (
     _ = (function (e) {
-      for (var t, o = e.length, n = o + 8, r = 16 * ((n - (n % 64)) / 64 + 1), i = new Array(r - 1), s = 0, a = 0; o > a; )
+      for (
+        var t, o = e.length, n = o + 8, r = 16 * ((n - (n % 64)) / 64 + 1), i = new Array(r - 1), s = 0, a = 0;
+        o > a;
+
+      )
         (s = (a % 4) * 8), (i[(t = (a - (a % 4)) / 4)] = i[t] | (e.charCodeAt(a) << s)), a++;
-      return (s = (a % 4) * 8), (i[(t = (a - (a % 4)) / 4)] = i[t] | (128 << s)), (i[r - 2] = o << 3), (i[r - 1] = o >>> 29), i;
+      return (
+        (s = (a % 4) * 8),
+        (i[(t = (a - (a % 4)) / 4)] = i[t] | (128 << s)),
+        (i[r - 2] = o << 3),
+        (i[r - 1] = o >>> 29),
+        i
+      );
     })(
       (e = (function (e) {
-        e = e.replace(/\r\n/g, "\n");
-        for (var t = "", o = 0; o < e.length; o++) {
+        e = e.replace(/\r\n/g, '\n');
+        for (var t = '', o = 0; o < e.length; o++) {
           var n = e.charCodeAt(o);
           128 > n
             ? (t += String.fromCharCode(n))
             : n > 127 && 2048 > n
             ? ((t += String.fromCharCode((n >> 6) | 192)), (t += String.fromCharCode((63 & n) | 128)))
-            : ((t += String.fromCharCode((n >> 12) | 224)), (t += String.fromCharCode(((n >> 6) & 63) | 128)), (t += String.fromCharCode((63 & n) | 128)));
+            : ((t += String.fromCharCode((n >> 12) | 224)),
+              (t += String.fromCharCode(((n >> 6) & 63) | 128)),
+              (t += String.fromCharCode((63 & n) | 128)));
         }
         return t;
       })(e))
@@ -1319,13 +1331,13 @@ function md5Customized(e) {
 
 // 브라우저 쿠키정보 가져오기
 function getCookie(cookieName) {
-  let cookieValue = "";
+  let cookieValue = '';
 
   if (document.cookie) {
-    let array = document.cookie.split(escape(cookieName) + "=");
+    let array = document.cookie.split(escape(cookieName) + '=');
 
     if (array.length >= 2) {
-      let arraySub = array[1].split(";");
+      let arraySub = array[1].split(';');
 
       cookieValue = unescape(arraySub[0]);
     }
@@ -1342,10 +1354,10 @@ function urlEncodedObject(urlEncodedData) {
     let encodedKey = encodeURIComponent(property);
     let encodedValue = encodeURIComponent(urlEncodedData[property]);
 
-    urlEncodedContent.push(encodedKey + "=" + encodedValue);
+    urlEncodedContent.push(encodedKey + '=' + encodedValue);
   }
 
-  return urlEncodedContent.join("&");
+  return urlEncodedContent.join('&');
 }
 
 // XHR Request (응답 데이터 문자열 형식)
@@ -1378,7 +1390,7 @@ function request(url, opts) {
       reject({
         status: this.status,
         statusText: xhr.statusText,
-        data: "rejected",
+        data: 'rejected',
       });
     };
 
@@ -1393,12 +1405,12 @@ async function getShippingInfo(productId, minPrice, maxPrice, ext) {
   const ext2 = JSON.stringify(ext);
 
   //application > 쿠키 > https://ko.aliexpress.com 클릭 후 tk 검색
-  const token = getCookie("_m_h5_tk");
+  const token = getCookie('_m_h5_tk');
 
   const time = new Date().getTime();
 
   // 고정값
-  const appKey = "12574478";
+  const appKey = '12574478';
 
   // escape 문법에 주의 (Object Property가 문자열 형태로 암호화에 사용되므로 규격을 반드시 확인)
   const body = {
@@ -1406,18 +1418,18 @@ async function getShippingInfo(productId, minPrice, maxPrice, ext) {
   };
 
   // 암호화된 해시 생성
-  const sign = md5Customized(`${token.split("_")[0]}&${time}&${appKey}&${body.data}`);
+  const sign = md5Customized(`${token.split('_')[0]}&${time}&${appKey}&${body.data}`);
 
   // 알리익스프레스 배송비 목록 API (URL 변경될 가능성 있음)
   const dataResp = await request(
     `https://acs.aliexpress.com/h5/mtop.aliexpress.itemdetail.queryexpression/1.0/?jsv=2.5.1&appKey=${appKey}&t=${time}&sign=${sign}&api=mtop.aliexpress.itemdetail.queryExpression&v=1.0&type=originaljson&dataType=jsonp`,
     {
       headers: {
-        "content-type": "application/x-www-form-urlencoded",
+        'content-type': 'application/x-www-form-urlencoded',
       },
 
       body: urlEncodedObject(body),
-      method: "POST",
+      method: 'POST',
     }
   );
 
@@ -1428,7 +1440,7 @@ async function getShippingInfo(productId, minPrice, maxPrice, ext) {
   const dataJson = JSON.parse(dataResp);
 
   // 데이터 정상 수신 여부 확인
-  console.log("shipdata", dataJson);
+  console.log('shipdata', dataJson);
 
   return dataJson.data.data.deliveryExpressionResponse;
 }
@@ -1441,7 +1453,7 @@ async function main() {
       let json = {};
 
       //알리의 모든 페이지 정보에서 itemScene과 관련된 곳에서 ext를 찾음
-      console.log("페이지정보", window.runParams.data);
+      console.log('페이지정보', window.runParams.data);
 
       if (!window._dida_config_) {
         if (!window.runParams.data.abTestComponent) {
@@ -1485,44 +1497,44 @@ async function main() {
       }
 
       if (
-        json["shippingModule"] &&
-        json["commonModule"] &&
-        json["descriptionModule"] &&
-        json["imageModule"] &&
-        json["priceModule"] &&
-        json["titleModule"] &&
-        json["specsModule"]
+        json['shippingModule'] &&
+        json['commonModule'] &&
+        json['descriptionModule'] &&
+        json['imageModule'] &&
+        json['priceModule'] &&
+        json['titleModule'] &&
+        json['specsModule']
       ) {
-        if (json["pageType"] === 3) {
-          const productId = json["commonModule"].id.toString();
+        if (json['pageType'] === 3) {
+          const productId = json['commonModule'].id.toString();
 
-          const minPrice = json["priceModule"]["discountPrice"].hasOwnProperty("minActivityAmount")
-            ? json["priceModule"]["discountPrice"].minActivityAmount.value
-            : json["priceModule"]["discountPrice"].minAmount.value;
-          const maxPrice = json["priceModule"]["discountPrice"].hasOwnProperty("maxActivityAmount")
-            ? json["priceModule"]["discountPrice"].maxActivityAmount.value
-            : json["priceModule"]["discountPrice"].maxAmount.value;
+          const minPrice = json['priceModule']['discountPrice'].hasOwnProperty('minActivityAmount')
+            ? json['priceModule']['discountPrice'].minActivityAmount.value
+            : json['priceModule']['discountPrice'].minAmount.value;
+          const maxPrice = json['priceModule']['discountPrice'].hasOwnProperty('maxActivityAmount')
+            ? json['priceModule']['discountPrice'].maxActivityAmount.value
+            : json['priceModule']['discountPrice'].maxAmount.value;
 
           const extList = JSON.parse(json.priceModule.skuJson);
           const ext = extList.find((v) => v.skuVal.availQuantity !== 0)?.freightExt; //품절 아닌 임의의 옵션 ext 정보
 
-          json["shippingModule"]["generalFreightInfo"] = await getShippingInfo(productId, minPrice, maxPrice, ext); //bizdata
-        } else if (json["pageType"] !== 3) {
-          const productId = json["commonModule"].productId.toString();
+          json['shippingModule']['generalFreightInfo'] = await getShippingInfo(productId, minPrice, maxPrice, ext); //bizdata
+        } else if (json['pageType'] !== 3) {
+          const productId = json['commonModule'].productId.toString();
 
-          const minPrice = json["priceModule"].hasOwnProperty("minActivityAmount")
-            ? json["priceModule"].minActivityAmount.value
-            : json["priceModule"].minAmount.value;
-          const maxPrice = json["priceModule"].hasOwnProperty("maxActivityAmount")
-            ? json["priceModule"].maxActivityAmount.value
-            : json["priceModule"].maxAmount.value;
+          const minPrice = json['priceModule'].hasOwnProperty('minActivityAmount')
+            ? json['priceModule'].minActivityAmount.value
+            : json['priceModule'].minAmount.value;
+          const maxPrice = json['priceModule'].hasOwnProperty('maxActivityAmount')
+            ? json['priceModule'].maxActivityAmount.value
+            : json['priceModule'].maxAmount.value;
 
           const ext = json.skuModule.skuPriceList.find((v) => v.skuVal.availQuantity !== 0)?.freightExt; // 품절 아닌 임의의 옵션의 ext 정보
 
-          json["shippingModule"]["generalFreightInfo"] = await getShippingInfo(productId, minPrice, maxPrice, ext); //bizdata
+          json['shippingModule']['generalFreightInfo'] = await getShippingInfo(productId, minPrice, maxPrice, ext); //bizdata
         }
 
-        sessionStorage.setItem("sfy-express-item", JSON.stringify(json));
+        sessionStorage.setItem('sfy-express-item', JSON.stringify(json));
 
         break;
       }

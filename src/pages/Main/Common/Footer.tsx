@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
+import { observer } from 'mobx-react';
 
 // 푸터 뷰
 export const Footer = observer(function () {
@@ -8,8 +8,8 @@ export const Footer = observer(function () {
     <>
       <div
         style={{
-          background: "cornflowerblue",
-          color: "white",
+          background: 'cornflowerblue',
+          color: 'white',
           padding: 25,
         }}
       >

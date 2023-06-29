@@ -1,8 +1,8 @@
-import React from "react";
-import CloseIcon from "@mui/icons-material/Close";
+import React from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
 import {
   styled,
   Box,
@@ -24,15 +24,15 @@ import {
   TableRow,
   TableCell,
   Typography,
-} from "@mui/material";
-import { request } from "../../Tools/Common";
-import { useTheme } from "@mui/material/styles";
-import { ComboBox, Image } from "../Common/UI";
+} from '@mui/material';
+import { request } from '../../Tools/Common';
+import { useTheme } from '@mui/material/styles';
+import { ComboBox, Image } from '../Common/UI';
 
 // 커스텀 테이블 열 스타일 설정
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
-  borderBottom: "1px solid ghostwhite",
+  textAlign: 'center',
+  borderBottom: '1px solid ghostwhite',
   padding: 0,
   fontSize: 12,
 });
@@ -49,7 +49,13 @@ function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div role="tabpanel" hidden={value !== index} id={`full-width-tabpanel-${index}`} aria-labelledby={`full-width-tab-${index}`} {...other}>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
       {value === index && (
         <Box
           sx={{
@@ -67,7 +73,7 @@ function TabPanel(props: TabPanelProps) {
 function tabProps(index: number) {
   return {
     id: `full-width-tab-${index}`,
-    "aria-controls": `full-width-tabpanel-${index}`,
+    'aria-controls': `full-width-tabpanel-${index}`,
   };
 }
 
@@ -76,9 +82,9 @@ function CircularProgressWithLabel(props: any) {
   return (
     <Box
       sx={{
-        position: "relative",
-        display: "inline-flex",
-        alignItems: "center",
+        position: 'relative',
+        display: 'inline-flex',
+        alignItems: 'center',
       }}
     >
       <CircularProgress variant="determinate" {...props} size="2rem" />
@@ -90,10 +96,10 @@ function CircularProgressWithLabel(props: any) {
             left: 0,
             bottom: 0,
             right: 0,
-            position: "absolute",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            position: 'absolute',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <Typography variant="caption" component="div" fontSize={10} fontWeight="bold">
@@ -121,14 +127,14 @@ export const Esm2UploadModal = observer(() => {
       >
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             mb: 3,
           }}
         >
           <Typography fontSize={16} sx={{}}>
-            {common.uploadInfo.editable ? "ESM2.0 상품 수정등록" : "ESM2.0 상품 신규등록"}
+            {common.uploadInfo.editable ? 'ESM2.0 상품 수정등록' : 'ESM2.0 상품 신규등록'}
           </Typography>
 
           <IconButton
@@ -144,7 +150,7 @@ export const Esm2UploadModal = observer(() => {
         <Paper variant="outlined">
           <Tabs
             style={{
-              borderBottom: "1px solid #0000001f",
+              borderBottom: '1px solid #0000001f',
             }}
             value={product.modalInfo.Esm2uploadTabIndex}
             onChange={(e, value) => {
@@ -155,12 +161,12 @@ export const Esm2UploadModal = observer(() => {
               label={
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
                   <Typography fontSize={12} sx={{}}>
-                    {common.uploadInfo.editable ? "수정대기" : "등록대기"}
+                    {common.uploadInfo.editable ? '수정대기' : '등록대기'}
                   </Typography>
                 </Box>
               }
@@ -171,11 +177,11 @@ export const Esm2UploadModal = observer(() => {
               label={
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
-                  <img src={chrome.runtime.getURL("/resources/icon-success.png")} width={16} height={16} />
+                  <img src={chrome.runtime.getURL('/resources/icon-success.png')} width={16} height={16} />
 
                   <Typography
                     fontSize={12}
@@ -183,8 +189,13 @@ export const Esm2UploadModal = observer(() => {
                       ml: 1,
                     }}
                   >
-                    {common.uploadInfo.editable ? "수정완료" : "등록완료"} (
-                    {product.registeredInfo.success.filter((w: any) => w.site_code === "A522" || w.site_code === "A523").length})
+                    {common.uploadInfo.editable ? '수정완료' : '등록완료'} (
+                    {
+                      product.registeredInfo.success.filter(
+                        (w: any) => w.site_code === 'A522' || w.site_code === 'A523'
+                      ).length
+                    }
+                    )
                   </Typography>
                 </Box>
               }
@@ -195,11 +206,11 @@ export const Esm2UploadModal = observer(() => {
               label={
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
-                  <img src={chrome.runtime.getURL("/resources/icon-failed.png")} width={16} height={16} />
+                  <img src={chrome.runtime.getURL('/resources/icon-failed.png')} width={16} height={16} />
 
                   <Typography
                     fontSize={12}
@@ -207,21 +218,26 @@ export const Esm2UploadModal = observer(() => {
                       ml: 1,
                     }}
                   >
-                    {common.uploadInfo.editable ? "수정실패" : "등록실패"} (
-                    {product.registeredInfo.failed.filter((w: any) => w.site_code === "A522" || w.site_code === "A523").length})
+                    {common.uploadInfo.editable ? '수정실패' : '등록실패'} (
+                    {
+                      product.registeredInfo.failed.filter((w: any) => w.site_code === 'A522' || w.site_code === 'A523')
+                        .length
+                    }
+                    )
                   </Typography>
                 </Box>
               }
               {...tabProps(3)}
             />
 
-            {product.registeredInfo.wait.filter((w: any) => w.site_code === "A522" || w.site_code === "A523").length > 0 ? (
+            {product.registeredInfo.wait.filter((w: any) => w.site_code === 'A522' || w.site_code === 'A523').length >
+            0 ? (
               <Tab
                 label={
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                     }}
                   >
                     <CircularProgress size="1rem" />
@@ -232,8 +248,12 @@ export const Esm2UploadModal = observer(() => {
                         ml: 1,
                       }}
                     >
-                      {common.uploadInfo.editable ? "수정중" : "등록중"} (
-                      {product.registeredInfo.wait.filter((w: any) => w.site_code === "A522" || w.site_code === "A523").length})
+                      {common.uploadInfo.editable ? '수정중' : '등록중'} (
+                      {
+                        product.registeredInfo.wait.filter((w: any) => w.site_code === 'A522' || w.site_code === 'A523')
+                          .length
+                      }
+                      )
                     </Typography>
                   </Box>
                 }
@@ -256,7 +276,7 @@ export const Esm2UploadModal = observer(() => {
                       <StyledTableCell
                         colSpan={3}
                         sx={{
-                          textAlign: "left",
+                          textAlign: 'left',
                         }}
                       >
                         <FormControlLabel
@@ -271,9 +291,9 @@ export const Esm2UploadModal = observer(() => {
                           label={
                             <Box
                               sx={{
-                                display: "flex",
+                                display: 'flex',
                                 fontSize: 12,
-                                alignItems: "center",
+                                alignItems: 'center',
                               }}
                             >
                               오픈마켓 전체선택
@@ -285,7 +305,7 @@ export const Esm2UploadModal = observer(() => {
                       <StyledTableCell
                         colSpan={3}
                         sx={{
-                          textAlign: "left",
+                          textAlign: 'left',
                         }}
                       >
                         <FormControlLabel
@@ -300,9 +320,9 @@ export const Esm2UploadModal = observer(() => {
                           label={
                             <Box
                               sx={{
-                                display: "flex",
+                                display: 'flex',
                                 fontSize: 12,
-                                alignItems: "center",
+                                alignItems: 'center',
                               }}
                             >
                               동영상 전체선택
@@ -314,55 +334,55 @@ export const Esm2UploadModal = observer(() => {
 
                     <TableRow>
                       <StyledTableCell
-                        width={"30%"}
+                        width={'30%'}
                         sx={{
-                          textAlign: "left",
+                          textAlign: 'left',
                         }}
                       >
                         오픈마켓
                       </StyledTableCell>
 
-                      <StyledTableCell width={"5%"}>동영상</StyledTableCell>
+                      <StyledTableCell width={'5%'}>동영상</StyledTableCell>
 
-                      <StyledTableCell width={"15%"}>상태</StyledTableCell>
+                      <StyledTableCell width={'15%'}>상태</StyledTableCell>
 
                       <StyledTableCell
-                        width={"30%"}
+                        width={'30%'}
                         sx={{
-                          textAlign: "left",
+                          textAlign: 'left',
                         }}
                       >
                         오픈마켓
                       </StyledTableCell>
 
-                      <StyledTableCell width={"5%"}>동영상</StyledTableCell>
+                      <StyledTableCell width={'5%'}>동영상</StyledTableCell>
 
-                      <StyledTableCell width={"15%"}>상태</StyledTableCell>
+                      <StyledTableCell width={'15%'}>상태</StyledTableCell>
                     </TableRow>
 
                     <TableRow>
                       <StyledTableCell
                         sx={{
-                          textAlign: "left",
+                          textAlign: 'left',
                         }}
                       >
                         <FormControlLabel
                           control={
                             <Checkbox
                               size="small"
-                              disabled={common.uploadInfo.markets.find((v: any) => v.code === "A523").disabled}
-                              checked={common.uploadInfo.markets.find((v: any) => v.code === "A523").upload}
+                              disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A523').disabled}
+                              checked={common.uploadInfo.markets.find((v: any) => v.code === 'A523').upload}
                               onChange={(e) => {
-                                common.toggleUploadInfoMarket("A523", e.target.checked);
+                                common.toggleUploadInfoMarket('A523', e.target.checked);
                               }}
                             />
                           }
                           label={
                             <Box
                               sx={{
-                                display: "flex",
+                                display: 'flex',
                                 fontSize: 12,
-                                alignItems: "center",
+                                alignItems: 'center',
                               }}
                             >
                               <img src="/resources/icon-gmarket.png" />
@@ -375,60 +395,62 @@ export const Esm2UploadModal = observer(() => {
                       <StyledTableCell>
                         <Checkbox
                           size="small"
-                          disabled={common.uploadInfo.markets.find((v: any) => v.code === "A523").disabled}
-                          checked={common.uploadInfo.markets.find((v: any) => v.code === "A523").video}
+                          disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A523').disabled}
+                          checked={common.uploadInfo.markets.find((v: any) => v.code === 'A523').video}
                           onChange={(e) => {
-                            common.toggleUploadInfoVideo("A523", e.target.checked);
+                            common.toggleUploadInfoVideo('A523', e.target.checked);
                           }}
                         />
                       </StyledTableCell>
 
                       <StyledTableCell>
-                        {common.uploadInfo.markets.find((v: any) => v.code === "A523").progress > 0 ? (
-                          <CircularProgressWithLabel value={common.uploadInfo.markets.find((v: any) => v.code === "A523").progress} />
-                        ) : common.uploadInfo.markets.find((v: any) => v.code === "A523").disabled ? (
+                        {common.uploadInfo.markets.find((v: any) => v.code === 'A523').progress > 0 ? (
+                          <CircularProgressWithLabel
+                            value={common.uploadInfo.markets.find((v: any) => v.code === 'A523').progress}
+                          />
+                        ) : common.uploadInfo.markets.find((v: any) => v.code === 'A523').disabled ? (
                           <Typography
                             sx={{
-                              color: "error.main",
+                              color: 'error.main',
                               fontSize: 12,
                             }}
                           >
-                            {common.uploadInfo.editable ? "수정불가" : "등록불가"}
+                            {common.uploadInfo.editable ? '수정불가' : '등록불가'}
                           </Typography>
                         ) : (
                           <Typography
                             sx={{
-                              color: "success.main",
+                              color: 'success.main',
                               fontSize: 12,
                             }}
                           >
-                            {common.uploadInfo.editable ? "수정가능" : "등록가능"}
+                            {common.uploadInfo.editable ? '수정가능' : '등록가능'}
                           </Typography>
                         )}
                       </StyledTableCell>
 
                       <StyledTableCell
                         sx={{
-                          textAlign: "left",
+                          textAlign: 'left',
                         }}
                       >
                         <FormControlLabel
                           control={
                             <Checkbox
                               size="small"
-                              disabled={common.uploadInfo.markets.find((v: any) => v.code === "A522").disabled}
-                              checked={common.uploadInfo.markets.find((v: any) => v.code === "A522").upload}
+                              disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A522').disabled}
+                              checked={common.uploadInfo.markets.find((v: any) => v.code === 'A522').upload}
                               onChange={(e) => {
-                                common.toggleUploadInfoMarket("A522", e.target.checked);
+                                common.toggleUploadInfoMarket('A522', e.target.checked);
                               }}
                             />
                           }
                           label={
                             <Box
                               sx={{
-                                display: "flex",
+                                display: 'flex',
                                 fontSize: 12,
-                                alignItems: "center",
+                                alignItems: 'center',
                               }}
                             >
                               <img src="/resources/icon-auction.png" />
@@ -441,34 +463,36 @@ export const Esm2UploadModal = observer(() => {
                       <StyledTableCell>
                         <Checkbox
                           size="small"
-                          disabled={common.uploadInfo.markets.find((v: any) => v.code === "A522").disabled}
-                          checked={common.uploadInfo.markets.find((v: any) => v.code === "A522").video}
+                          disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A522').disabled}
+                          checked={common.uploadInfo.markets.find((v: any) => v.code === 'A522').video}
                           onChange={(e) => {
-                            common.toggleUploadInfoVideo("A522", e.target.checked);
+                            common.toggleUploadInfoVideo('A522', e.target.checked);
                           }}
                         />
                       </StyledTableCell>
 
                       <StyledTableCell>
-                        {common.uploadInfo.markets.find((v: any) => v.code === "A522").progress > 0 ? (
-                          <CircularProgressWithLabel value={common.uploadInfo.markets.find((v: any) => v.code === "A522").progress} />
-                        ) : common.uploadInfo.markets.find((v: any) => v.code === "A522").disabled ? (
+                        {common.uploadInfo.markets.find((v: any) => v.code === 'A522').progress > 0 ? (
+                          <CircularProgressWithLabel
+                            value={common.uploadInfo.markets.find((v: any) => v.code === 'A522').progress}
+                          />
+                        ) : common.uploadInfo.markets.find((v: any) => v.code === 'A522').disabled ? (
                           <Typography
                             sx={{
-                              color: "error.main",
+                              color: 'error.main',
                               fontSize: 12,
                             }}
                           >
-                            {common.uploadInfo.editable ? "수정불가" : "등록불가"}
+                            {common.uploadInfo.editable ? '수정불가' : '등록불가'}
                           </Typography>
                         ) : (
                           <Typography
                             sx={{
-                              color: "success.main",
+                              color: 'success.main',
                               fontSize: 12,
                             }}
                           >
-                            {common.uploadInfo.editable ? "수정가능" : "등록가능"}
+                            {common.uploadInfo.editable ? '수정가능' : '등록가능'}
                           </Typography>
                         )}
                       </StyledTableCell>
@@ -484,17 +508,17 @@ export const Esm2UploadModal = observer(() => {
               sx={{
                 p: 1,
                 height: 449,
-                overflowY: "scroll",
+                overflowY: 'scroll',
               }}
             >
               {product.registeredInfo.success
-                .filter((w: any) => w.site_code === "A522" || w.site_code === "A523")
+                .filter((w: any) => w.site_code === 'A522' || w.site_code === 'A523')
                 .map((v: any) => (
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
                       p: 0,
                     }}
                   >
@@ -504,13 +528,13 @@ export const Esm2UploadModal = observer(() => {
                         xs={6}
                         md={4}
                         sx={{
-                          m: "auto",
+                          m: 'auto',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <IconButton
@@ -520,14 +544,16 @@ export const Esm2UploadModal = observer(() => {
                             }}
                             onClick={() => {
                               switch (v.site_code) {
-                                case "A523": {
+                                case 'A523': {
                                   window.open(`http://item.gmarket.co.kr/Item?goodscode=${v.error}`);
 
                                   break;
                                 }
 
-                                case "A522": {
-                                  window.open(`http://itempage3.auction.co.kr/DetailView.aspx?ItemNo=${v.error}&frm3=V2`);
+                                case 'A522': {
+                                  window.open(
+                                    `http://itempage3.auction.co.kr/DetailView.aspx?ItemNo=${v.error}&frm3=V2`
+                                  );
 
                                   break;
                                 }
@@ -537,9 +563,9 @@ export const Esm2UploadModal = observer(() => {
                               }
                             }}
                           >
-                            {v.site_code === "A523" ? (
+                            {v.site_code === 'A523' ? (
                               <img src="/resources/icon-gmarket.png" />
-                            ) : v.site_code === "A522" ? (
+                            ) : v.site_code === 'A522' ? (
                               <img src="/resources/icon-auction.png" />
                             ) : null}
                           </IconButton>
@@ -550,8 +576,8 @@ export const Esm2UploadModal = observer(() => {
                             height={24}
                             style={{
                               // border: "1px solid lightgray",
-                              background: "black",
-                              objectFit: "contain",
+                              background: 'black',
+                              objectFit: 'contain',
                             }}
                             onClick={(e) => {
                               product.setImagePopOver({
@@ -579,7 +605,7 @@ export const Esm2UploadModal = observer(() => {
                         xs={6}
                         md={2}
                         sx={{
-                          m: "auto",
+                          m: 'auto',
                         }}
                       >
                         <Typography
@@ -598,18 +624,18 @@ export const Esm2UploadModal = observer(() => {
                         xs={6}
                         md={6}
                         sx={{
-                          m: "auto",
-                          justifyContent: "right",
+                          m: 'auto',
+                          justifyContent: 'right',
                         }}
                       >
                         <Typography
                           sx={{
                             ml: 1,
                             fontSize: 12,
-                            textAlign: "right",
+                            textAlign: 'right',
                           }}
                         >
-                          상품이 정상 {common.uploadInfo.editable ? "수정" : "등록"}
+                          상품이 정상 {common.uploadInfo.editable ? '수정' : '등록'}
                           되었습니다.
                         </Typography>
                       </Grid>
@@ -624,17 +650,17 @@ export const Esm2UploadModal = observer(() => {
               sx={{
                 p: 1,
                 height: 449,
-                overflowY: "scroll",
+                overflowY: 'scroll',
               }}
             >
               {product.registeredInfo.failed
-                .filter((w: any) => w.site_code === "A522" || w.site_code === "A523")
+                .filter((w: any) => w.site_code === 'A522' || w.site_code === 'A523')
                 .map((v: any) => (
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
                       p: 0,
                     }}
                   >
@@ -644,13 +670,13 @@ export const Esm2UploadModal = observer(() => {
                         xs={6}
                         md={4}
                         sx={{
-                          m: "auto",
+                          m: 'auto',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <IconButton
@@ -659,9 +685,9 @@ export const Esm2UploadModal = observer(() => {
                               mr: 1,
                             }}
                           >
-                            {v.site_code === "A523" ? (
+                            {v.site_code === 'A523' ? (
                               <img src="/resources/icon-gmarket.png" />
-                            ) : v.site_code === "A522" ? (
+                            ) : v.site_code === 'A522' ? (
                               <img src="/resources/icon-auction.png" />
                             ) : null}
                           </IconButton>
@@ -672,8 +698,8 @@ export const Esm2UploadModal = observer(() => {
                             height={24}
                             style={{
                               // border: "1px solid lightgray",
-                              background: "black",
-                              objectFit: "contain",
+                              background: 'black',
+                              objectFit: 'contain',
                             }}
                             onClick={(e) => {
                               product.setImagePopOver({
@@ -701,7 +727,7 @@ export const Esm2UploadModal = observer(() => {
                         xs={6}
                         md={2}
                         sx={{
-                          m: "auto",
+                          m: 'auto',
                         }}
                       >
                         <Typography
@@ -720,14 +746,14 @@ export const Esm2UploadModal = observer(() => {
                         xs={6}
                         md={6}
                         sx={{
-                          m: "auto",
-                          justifyContent: "right",
+                          m: 'auto',
+                          justifyContent: 'right',
                         }}
                       >
                         <Typography
                           sx={{
                             ml: 1,
-                            textAlign: "right",
+                            textAlign: 'right',
                             fontSize: 12,
                           }}
                         >
@@ -745,17 +771,17 @@ export const Esm2UploadModal = observer(() => {
               sx={{
                 p: 1,
                 height: 449,
-                overflowY: "scroll",
+                overflowY: 'scroll',
               }}
             >
               {product.registeredInfo.wait
-                .filter((w: any) => w.site_code === "A522" || w.site_code === "A523")
+                .filter((w: any) => w.site_code === 'A522' || w.site_code === 'A523')
                 .map((v: any) => (
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
                       p: 0,
                     }}
                   >
@@ -765,13 +791,13 @@ export const Esm2UploadModal = observer(() => {
                         xs={6}
                         md={4}
                         sx={{
-                          m: "auto",
+                          m: 'auto',
                         }}
                       >
                         <Box
                           sx={{
-                            display: "flex",
-                            alignItems: "center",
+                            display: 'flex',
+                            alignItems: 'center',
                           }}
                         >
                           <IconButton
@@ -780,9 +806,9 @@ export const Esm2UploadModal = observer(() => {
                               mr: 1,
                             }}
                           >
-                            {v.site_code === "A523" ? (
+                            {v.site_code === 'A523' ? (
                               <img src="/resources/icon-gmarket.png" />
-                            ) : v.site_code === "A522" ? (
+                            ) : v.site_code === 'A522' ? (
                               <img src="/resources/icon-auction.png" />
                             ) : null}
                           </IconButton>
@@ -793,8 +819,8 @@ export const Esm2UploadModal = observer(() => {
                             height={24}
                             style={{
                               // border: "1px solid lightgray",
-                              background: "black",
-                              objectFit: "contain",
+                              background: 'black',
+                              objectFit: 'contain',
                             }}
                             onClick={(e) => {
                               product.setImagePopOver({
@@ -822,7 +848,7 @@ export const Esm2UploadModal = observer(() => {
                         xs={6}
                         md={2}
                         sx={{
-                          m: "auto",
+                          m: 'auto',
                         }}
                       >
                         <Typography
@@ -841,18 +867,18 @@ export const Esm2UploadModal = observer(() => {
                         xs={6}
                         md={6}
                         sx={{
-                          m: "auto",
-                          justifyContent: "right",
+                          m: 'auto',
+                          justifyContent: 'right',
                         }}
                       >
                         <Typography
                           sx={{
                             ml: 1,
-                            textAlign: "right",
+                            textAlign: 'right',
                             fontSize: 12,
                           }}
                         >
-                          상품을 {common.uploadInfo.editable ? "수정" : "등록"}
+                          상품을 {common.uploadInfo.editable ? '수정' : '등록'}
                           하는 중...
                         </Typography>
                       </Grid>
@@ -867,13 +893,13 @@ export const Esm2UploadModal = observer(() => {
           variant="outlined"
           sx={{
             height: 50,
-            overflowY: "auto",
+            overflowY: 'auto',
             mt: 1,
             p: 1,
           }}
         >
           {product.uploadConsole
-            ?.filter((w: any) => w.includes("2.0)"))
+            ?.filter((w: any) => w.includes('2.0)'))
             .map((v: any) => (
               <Typography
                 sx={{
@@ -887,9 +913,9 @@ export const Esm2UploadModal = observer(() => {
 
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             mt: 3,
           }}
         >
@@ -900,7 +926,7 @@ export const Esm2UploadModal = observer(() => {
               variant="contained"
               color="info"
               sx={{
-                width: "33%",
+                width: '33%',
                 mx: 0.5,
               }}
               onClick={async () => {
@@ -909,7 +935,7 @@ export const Esm2UploadModal = observer(() => {
                 await product.Esm2uploadItems(common, true);
               }}
             >
-              {!common.uploadInfo.uploadable && !common.uploadInfo.stopped ? "수정 중..." : "수정"}
+              {!common.uploadInfo.uploadable && !common.uploadInfo.stopped ? '수정 중...' : '수정'}
             </Button>
           ) : (
             <Button
@@ -918,7 +944,7 @@ export const Esm2UploadModal = observer(() => {
               variant="contained"
               color="info"
               sx={{
-                width: "33%",
+                width: '33%',
                 mx: 0.5,
               }}
               onClick={async () => {
@@ -927,7 +953,7 @@ export const Esm2UploadModal = observer(() => {
                 await product.Esm2uploadItems(common, false);
               }}
             >
-              {!common.uploadInfo.uploadable && !common.uploadInfo.stopped ? "등록 중..." : "등록"}
+              {!common.uploadInfo.uploadable && !common.uploadInfo.stopped ? '등록 중...' : '등록'}
             </Button>
           )}
 
@@ -937,18 +963,20 @@ export const Esm2UploadModal = observer(() => {
             variant="contained"
             color="error"
             sx={{
-              width: "33%",
+              width: '33%',
               mx: 0.5,
             }}
             onClick={async () => {
-              let accept = confirm("상품등록/수정을 중단하시겠습니까? 중단 이전에 등록/수정된 상품은 삭제되지 않을 수 있습니다.");
+              let accept = confirm(
+                '상품등록/수정을 중단하시겠습니까? 중단 이전에 등록/수정된 상품은 삭제되지 않을 수 있습니다.'
+              );
 
               if (accept) {
                 await common.setStopped(true);
               }
             }}
           >
-            {!common.uploadInfo.uploadable && common.uploadInfo.stopped ? "중단 중..." : "중단"}
+            {!common.uploadInfo.uploadable && common.uploadInfo.stopped ? '중단 중...' : '중단'}
           </Button>
 
           <Button
@@ -956,7 +984,7 @@ export const Esm2UploadModal = observer(() => {
             variant="contained"
             color="inherit"
             sx={{
-              width: "33%",
+              width: '33%',
               mx: 0.5,
             }}
             onClick={() => {

@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import { render } from "react-dom";
-import { Sourcing } from "./Sourcing";
+import { render } from 'react-dom';
+import { Sourcing } from './Sourcing';
 
-import "./index.css";
+import './index.css';
 
 render(
   <Sourcing />,
 
-  window.document.querySelector("#app-container")
+  window.document.querySelector('#app-container')
 );

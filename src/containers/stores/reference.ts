@@ -1,9 +1,9 @@
 // 미사용 스토리지(키워드 추천)
 
-import CryptoJS from "crypto-js";
+import CryptoJS from 'crypto-js';
 
-import { runInAction, makeAutoObservable } from "mobx";
-import { downloadExcel } from "../../pages/Tools/Common";
+import { runInAction, makeAutoObservable } from 'mobx';
+import { downloadExcel } from '../../pages/Tools/Common';
 
 export class reference {
   searchInfo: any = {
@@ -56,7 +56,7 @@ export class reference {
         ac: null,
       },
     },
-    saveAuto: "N",
+    saveAuto: 'N',
     progress: 0,
   };
 
@@ -76,31 +76,31 @@ export class reference {
     });
 
     if (!this.searchInfo.keyword) {
-      alert("키워드를 입력해주세요.");
+      alert('키워드를 입력해주세요.');
 
       return;
     }
 
     let refer_body = {
-      method: "GET",
-      path: "https://api.naver.com",
-      query: "/keywordstool",
+      method: 'GET',
+      path: 'https://api.naver.com',
+      query: '/keywordstool',
       params: `?hintKeywords=${encodeURI(this.searchInfo.keyword)}&showDetail=1`,
       data: {},
     };
 
     let now = new Date().getTime();
 
-    const accesskey = "01000000002bb6eefe11996a564314121b57c8d70cf7435ccf640f458eb5094e4eba6a0696";
-    const secretkey = "AQAAAAArtu7+EZlqVkMUEhtXyNcMIRQiJOWkR0m3rzMeoViXyw==";
+    const accesskey = '01000000002bb6eefe11996a564314121b57c8d70cf7435ccf640f458eb5094e4eba6a0696';
+    const secretkey = 'AQAAAAArtu7+EZlqVkMUEhtXyNcMIRQiJOWkR0m3rzMeoViXyw==';
     const base_str = `${now}.${refer_body.method}.${refer_body.query}`;
     const signature = CryptoJS.HmacSHA256(base_str, secretkey).toString(CryptoJS.enc.Base64);
 
     let naverDNHeader: any = {
-      "X-Timestamp": now,
-      "X-API-KEY": accesskey,
-      "X-Customer": "2356466",
-      "X-Signature": signature,
+      'X-Timestamp': now,
+      'X-API-KEY': accesskey,
+      'X-Customer': '2356466',
+      'X-Signature': signature,
     };
 
     let naverDNResp = await fetch(`${refer_body.path}${refer_body.query}${refer_body.params}`, {
@@ -112,8 +112,8 @@ export class reference {
 
     let naverRTResp = await fetch(`https://search.shopping.naver.com/search/all?query=${this.searchInfo.keyword}`);
     let naverRTText = await naverRTResp.text();
-    let naverRTHtml = new DOMParser().parseFromString(naverRTText, "text/html");
-    let naverRTElem: any = naverRTHtml.querySelector("#__NEXT_DATA__");
+    let naverRTHtml = new DOMParser().parseFromString(naverRTText, 'text/html');
+    let naverRTElem: any = naverRTHtml.querySelector('#__NEXT_DATA__');
     let naverRTJson = JSON.parse(naverRTElem.innerText);
     let naverRTData = naverRTJson.props.pageProps.initialState.relatedTags;
 
@@ -125,23 +125,25 @@ export class reference {
     let naverACJson = await naverACResp.json();
     let naverACData = naverACJson.items[1].map((v) => v[0]);
 
-    let coupangRTResp = await fetch(`https://www.coupang.com/np/search?component=&q=${encodeURI(this.searchInfo.keyword)}&channel=user`);
+    let coupangRTResp = await fetch(
+      `https://www.coupang.com/np/search?component=&q=${encodeURI(this.searchInfo.keyword)}&channel=user`
+    );
     let coupangRTText = await coupangRTResp.text();
-    let coupangRTHtml = new DOMParser().parseFromString(coupangRTText, "text/html");
-    let coupangRTList = coupangRTHtml.querySelectorAll("head > meta");
+    let coupangRTHtml = new DOMParser().parseFromString(coupangRTText, 'text/html');
+    let coupangRTList = coupangRTHtml.querySelectorAll('head > meta');
     let coupangRTData: any = [];
 
     for (let i in coupangRTList) {
       try {
-        if (coupangRTList[i].getAttribute("name") === "description") {
-          let refContent: any = coupangRTList[i].getAttribute("content");
-          let refContentList = refContent.split(",");
+        if (coupangRTList[i].getAttribute('name') === 'description') {
+          let refContent: any = coupangRTList[i].getAttribute('content');
+          let refContentList = refContent.split(',');
 
           for (let j = 0; j < refContentList.length; j++) {
-            let refData = "";
+            let refData = '';
 
             if (j === 0) {
-              refData = refContentList[j].split(".")[1].trim();
+              refData = refContentList[j].split('.')[1].trim();
             } else {
               refData = refContentList[j].trim();
             }
@@ -158,7 +160,9 @@ export class reference {
       }
     }
 
-    let coupangACResp = await fetch(`https://www.coupang.com/np/search/autoComplete?callback=&keyword=${encodeURI(this.searchInfo.keyword)}`);
+    let coupangACResp = await fetch(
+      `https://www.coupang.com/np/search/autoComplete?callback=&keyword=${encodeURI(this.searchInfo.keyword)}`
+    );
     let coupangACText = await coupangACResp.text();
     let coupangACJson = JSON.parse(coupangACText.slice(1, coupangACText.length - 1));
     let coupangACData = coupangACJson.map((v) => v.keyword);
@@ -190,7 +194,9 @@ export class reference {
     let streetRTData = [];
 
     let streetACResp = await fetch(
-      `https://www.11st.co.kr/AutoCompleteAjaxAction.tmall?method=getAutoCompleteJson&q=${encodeURI(encodeURI(this.searchInfo.keyword))}&callback=`
+      `https://www.11st.co.kr/AutoCompleteAjaxAction.tmall?method=getAutoCompleteJson&q=${encodeURI(
+        encodeURI(this.searchInfo.keyword)
+      )}&callback=`
     );
     let streetACText = await streetACResp.text();
     // let streetACJson = JSON.parse(streetACText.slice(1, streetACText.length - 1));
@@ -199,85 +205,103 @@ export class reference {
 
     let gmarketRTResp = await fetch(`http://browse.gmarket.co.kr/search?keyword=${encodeURI(this.searchInfo.keyword)}`);
     let gmarketRTText = await gmarketRTResp.text();
-    let gmarketRTHtml: any = new DOMParser().parseFromString(gmarketRTText, "text/html");
-    let gmarketRTVars = gmarketRTHtml.querySelector("#initial-state").innerHTML;
+    let gmarketRTHtml: any = new DOMParser().parseFromString(gmarketRTText, 'text/html');
+    let gmarketRTVars = gmarketRTHtml.querySelector('#initial-state').innerHTML;
     let gmarketRTJson = JSON.parse(gmarketRTVars.slice(29, gmarketRTVars.length));
     let gmarketRTData = gmarketRTJson.regions[1].modules[0].rows[0].viewModel.keywordList.map((v) => v.text);
 
-    let gmarketACResp = await fetch(`https://frontapi.gmarket.co.kr/autocompleteV2/kr/json/${encodeURI(this.searchInfo.keyword)}`);
+    let gmarketACResp = await fetch(
+      `https://frontapi.gmarket.co.kr/autocompleteV2/kr/json/${encodeURI(this.searchInfo.keyword)}`
+    );
     let gmarketACJson = await gmarketACResp.json();
     let gmarketACData = gmarketACJson.Data.map((v) => v.Keyword);
 
     let auctionRTResp = await fetch(`http://browse.auction.co.kr/search?keyword=${encodeURI(this.searchInfo.keyword)}`);
     let auctionRTText = await auctionRTResp.text();
-    let auctionRTHtml: any = new DOMParser().parseFromString(auctionRTText, "text/html");
-    let auctionRTVars = auctionRTHtml.querySelector("#initial-state").innerHTML;
+    let auctionRTHtml: any = new DOMParser().parseFromString(auctionRTText, 'text/html');
+    let auctionRTVars = auctionRTHtml.querySelector('#initial-state').innerHTML;
     let auctionRTJson = JSON.parse(auctionRTVars.slice(29, gmarketRTVars.length));
     let auctionRTData = auctionRTJson.regions[1].modules[0].rows[0].viewModel.keywordList.map((v) => v.text);
 
-    let auctionACResp = await fetch("http://suggest.auction.co.kr/Suggest/SuggestWebService.asmx", {
+    let auctionACResp = await fetch('http://suggest.auction.co.kr/Suggest/SuggestWebService.asmx', {
       headers: {
-        "content-type": "text/xml; charset=UTF-8",
+        'content-type': 'text/xml; charset=UTF-8',
         soapaction: '"ns/GetKeywordSuggest"',
       },
       body: `<?xml version='1.0' encoding='utf-8'?><soap:Envelope xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:soap='http://schemas.xmlsoap.org/soap/envelope/'><soap:Body><GetKeywordSuggest xmlns='ns'><keywordHint>${encodeURI(
         this.searchInfo.keyword
       )}</keywordHint></GetKeywordSuggest></soap:Body></soap:Envelope>`,
-      method: "POST",
+      method: 'POST',
     });
 
     let auctionACText = await auctionACResp.text();
-    let auctionACXml = new DOMParser().parseFromString(auctionACText, "text/xml");
-    let auctionACList = auctionACXml.getElementsByTagName("KeywordContents");
+    let auctionACXml = new DOMParser().parseFromString(auctionACText, 'text/xml');
+    let auctionACList = auctionACXml.getElementsByTagName('KeywordContents');
     let auctionACData: any = [];
 
     for (let i = 0; i < auctionACList.length; i++) {
-      let keyword = auctionACList[i].getAttribute("Keyword");
+      let keyword = auctionACList[i].getAttribute('Keyword');
 
       if (keyword) {
         auctionACData.push(keyword);
       }
     }
 
-    let interparkRTResp = await fetch(`http://shopapi.interpark.com/niSearch/common/listRelatedKeyword.json?keyword=${encodeURI(this.searchInfo.keyword)}`);
+    let interparkRTResp = await fetch(
+      `http://shopapi.interpark.com/niSearch/common/listRelatedKeyword.json?keyword=${encodeURI(
+        this.searchInfo.keyword
+      )}`
+    );
     let interparkRTJson = await interparkRTResp.json();
     let interparkRTData = interparkRTJson.data.listRelatedKeyword;
 
-    let interparkACResp = await fetch(`http://shop-searchcloud.interpark.com/autocmpl/select?res.euckr=false&q=${encodeURI(this.searchInfo.keyword)}`);
+    let interparkACResp = await fetch(
+      `http://shop-searchcloud.interpark.com/autocmpl/select?res.euckr=false&q=${encodeURI(this.searchInfo.keyword)}`
+    );
     let interparkACJson = await interparkACResp.json();
     let interparkACData = interparkACJson.all.map((v) => v.searchquery_raw);
 
     let wemakepRTResp = await fetch(
-      `https://search.wemakeprice.com/api/wmpsearch/api/v3.0/wmp-search/search.json?keyword=${encodeURI(this.searchInfo.keyword)}`
+      `https://search.wemakeprice.com/api/wmpsearch/api/v3.0/wmp-search/search.json?keyword=${encodeURI(
+        this.searchInfo.keyword
+      )}`
     );
     let wemakepRTJson = await wemakepRTResp.json();
     let wemakepRTData = wemakepRTJson.data.relationKeyword;
 
-    let wemakepACResp = await fetch(`https://front.wemakeprice.com/api/wmpsuggest/api_auto_search.json?os=pc&q=${encodeURI(this.searchInfo.keyword)}`);
+    let wemakepACResp = await fetch(
+      `https://front.wemakeprice.com/api/wmpsuggest/api_auto_search.json?os=pc&q=${encodeURI(this.searchInfo.keyword)}`
+    );
     let wemakepACJson = await wemakepACResp.json();
     let wemakepACData = wemakepACJson.result_set.keywords;
 
-    let tmonRTResp = await fetch(`https://search.tmon.co.kr/api/search/v4/deals?keyword=${encodeURI(this.searchInfo.keyword)}`);
+    let tmonRTResp = await fetch(
+      `https://search.tmon.co.kr/api/search/v4/deals?keyword=${encodeURI(this.searchInfo.keyword)}`
+    );
     let tmonRTJson = await tmonRTResp.json();
     let tmonRTData = tmonRTJson.data.extraSearchResultInfo.relativeKeywords.map((v) => v.keyword);
 
     let tmonACResp = await fetch(
-      `https://www.tmon.co.kr/api/direct/v1/searchextra2api/api/search/autocomplete/v2/pc?keyword=${encodeURI(this.searchInfo.keyword)}`
+      `https://www.tmon.co.kr/api/direct/v1/searchextra2api/api/search/autocomplete/v2/pc?keyword=${encodeURI(
+        this.searchInfo.keyword
+      )}`
     );
     let tmonACJson = await tmonACResp.json();
     let tmonACData = tmonACJson.data.suggestKeywords.map((v) => v.suggestKeyword);
 
     let lotteonRTResp = await fetch(
-      `https://www.lotteon.com/search/search/search.ecn?render=search&platform=pc&q=${encodeURI(this.searchInfo.keyword)}&mallId=1`
+      `https://www.lotteon.com/search/search/search.ecn?render=search&platform=pc&q=${encodeURI(
+        this.searchInfo.keyword
+      )}&mallId=1`
     );
     let lotteonRTText = await lotteonRTResp.text();
-    let lotteonRTHtml = new DOMParser().parseFromString(lotteonRTText, "text/html");
-    let lotteonRTList = lotteonRTHtml.getElementsByClassName("srchKeywordBox")[0].querySelectorAll("a");
+    let lotteonRTHtml = new DOMParser().parseFromString(lotteonRTText, 'text/html');
+    let lotteonRTList = lotteonRTHtml.getElementsByClassName('srchKeywordBox')[0].querySelectorAll('a');
     let lotteonRTData: any = [];
 
     for (let i in lotteonRTList) {
       try {
-        if (lotteonRTList[i].getAttribute("class") === "srchKeyword") {
+        if (lotteonRTList[i].getAttribute('class') === 'srchKeyword') {
           lotteonRTData.push(lotteonRTList[i].innerText.trim());
         }
       } catch (e) {
@@ -285,7 +309,9 @@ export class reference {
       }
     }
 
-    let lotteonACResp = await fetch(`https://www.lotteon.com/search/api/v3/autoComplete.ecn?q=${encodeURI(this.searchInfo.keyword)}&mallCode=LTON`);
+    let lotteonACResp = await fetch(
+      `https://www.lotteon.com/search/api/v3/autoComplete.ecn?q=${encodeURI(this.searchInfo.keyword)}&mallCode=LTON`
+    );
     let lotteonACJson = await lotteonACResp.json();
     let lotteonACData = lotteonACJson.result.keyword.map((v) => v.keyword);
 
@@ -353,11 +379,11 @@ export class reference {
 
   download = () => {
     if (this.searchInfo.results.length <= 0) {
-      alert("분석 결과를 찾을 수 없습니다.");
+      alert('분석 결과를 찾을 수 없습니다.');
 
       return 0;
     }
 
-    downloadExcel(this.searchInfo.results, `키워드분석`, `키워드분석`, false, "xlsx");
+    downloadExcel(this.searchInfo.results, `키워드분석`, `키워드분석`, false, 'xlsx');
   };
 }

@@ -1,17 +1,17 @@
-import React from "react";
-import ReactQuill, { Quill } from "react-quill";
-import BlotFormatter from "quill-blot-formatter";
+import React from 'react';
+import ReactQuill, { Quill } from 'react-quill';
+import BlotFormatter from 'quill-blot-formatter';
 
-import { DeleteAction, ResizeAction, ImageSpec } from "quill-blot-formatter";
-import { ImageDrop } from "quill-image-drop-module";
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Modal, Paper, Typography } from "@mui/material";
-import { readFileDataURL } from "../../Tools/Common";
-import { MyButton } from "../Common/UI";
+import { DeleteAction, ResizeAction, ImageSpec } from 'quill-blot-formatter';
+import { ImageDrop } from 'quill-image-drop-module';
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Modal, Paper, Typography } from '@mui/material';
+import { readFileDataURL } from '../../Tools/Common';
+import { MyButton } from '../Common/UI';
 
 // 에디터 스타일 설정
-import "react-quill/dist/quill.snow.css";
+import 'react-quill/dist/quill.snow.css';
 
 // 에디터 이미지 삭제/리사이징 플러그인
 class CustomImageSpec extends ImageSpec {
@@ -21,14 +21,14 @@ class CustomImageSpec extends ImageSpec {
 }
 
 // 에디터 텍스트 정렬, 폰트, 사이즈 커스터마이징 허용
-const quill_align = Quill.import("attributors/style/align");
-const quill_font = Quill.import("attributors/style/font");
-const quill_size = Quill.import("attributors/style/size");
+const quill_align = Quill.import('attributors/style/align');
+const quill_font = Quill.import('attributors/style/font');
+const quill_size = Quill.import('attributors/style/size');
 
 // 실제 커스터마이징한 값
-quill_align.whitelist = ["left", "center", "right", "justify"];
-quill_font.whitelist = ["Sans-Serif", "Serif", "Monospace"];
-quill_size.whitelist = ["10px", "12px", "16px", "20px", "28px", "36px", "44px"];
+quill_align.whitelist = ['left', 'center', 'right', 'justify'];
+quill_font.whitelist = ['Sans-Serif', 'Serif', 'Monospace'];
+quill_size.whitelist = ['10px', '12px', '16px', '20px', '28px', '36px', '44px'];
 
 // 커스마이징 값 적용
 Quill.register(quill_align, true);
@@ -36,46 +36,46 @@ Quill.register(quill_font, true);
 Quill.register(quill_size, true);
 
 // 이미지 플러그인 적용
-Quill.register("modules/blotFormatter", BlotFormatter);
-Quill.register("modules/ImageDrop", ImageDrop);
+Quill.register('modules/blotFormatter', BlotFormatter);
+Quill.register('modules/ImageDrop', ImageDrop);
 
 // 텍스트/배경 색상 변경 시 선택 가능한 리스트
 const colors = [
-  "#000000",
-  "#e60000",
-  "#ff9900",
-  "#ffff00",
-  "#008a00",
-  "#0066cc",
-  "#9933ff",
-  "#ffffff",
-  "#facccc",
-  "#ffebcc",
-  "#ffffcc",
-  "#cce8cc",
-  "#cce0f5",
-  "#ebd6ff",
-  "#bbbbbb",
-  "#f06666",
-  "#ffc266",
-  "#ffff66",
-  "#66b966",
-  "#66a3e0",
-  "#c285ff",
-  "#888888",
-  "#a10000",
-  "#b26b00",
-  "#b2b200",
-  "#006100",
-  "#0047b2",
-  "#6b24b2",
-  "#444444",
-  "#5c0000",
-  "#663d00",
-  "#666600",
-  "#003700",
-  "#002966",
-  "#3d1466",
+  '#000000',
+  '#e60000',
+  '#ff9900',
+  '#ffff00',
+  '#008a00',
+  '#0066cc',
+  '#9933ff',
+  '#ffffff',
+  '#facccc',
+  '#ffebcc',
+  '#ffffcc',
+  '#cce8cc',
+  '#cce0f5',
+  '#ebd6ff',
+  '#bbbbbb',
+  '#f06666',
+  '#ffc266',
+  '#ffff66',
+  '#66b966',
+  '#66a3e0',
+  '#c285ff',
+  '#888888',
+  '#a10000',
+  '#b26b00',
+  '#b2b200',
+  '#006100',
+  '#0047b2',
+  '#6b24b2',
+  '#444444',
+  '#5c0000',
+  '#663d00',
+  '#666600',
+  '#003700',
+  '#002966',
+  '#3d1466',
 ];
 
 export const DescriptionModal = observer(() => {
@@ -100,15 +100,15 @@ export const DescriptionModal = observer(() => {
   const imageHandler = () => {
     const range = quillRef.current?.getEditor().getSelection()?.index;
 
-    const input = document.createElement("input");
+    const input = document.createElement('input');
 
-    input.setAttribute("type", "file");
-    input.setAttribute("multiple", "true");
-    input.setAttribute("accept", "image/jpeg, image/png, image/gif, image/bmp");
+    input.setAttribute('type', 'file');
+    input.setAttribute('multiple', 'true');
+    input.setAttribute('accept', 'image/jpeg, image/png, image/gif, image/bmp');
 
     input.click();
 
-    input.addEventListener("change", async function (e: any) {
+    input.addEventListener('change', async function (e: any) {
       var files = e.target.files;
 
       for (var i = 0; i < files.length; i++) {
@@ -135,7 +135,7 @@ export const DescriptionModal = observer(() => {
         specs: [CustomImageSpec],
         overlay: {
           style: {
-            border: "2px solid #1976d2",
+            border: '2px solid #1976d2',
           },
         },
       },
@@ -145,7 +145,7 @@ export const DescriptionModal = observer(() => {
       },
 
       toolbar: {
-        container: "#toolbar",
+        container: '#toolbar',
 
         handlers: {
           image: imageHandler,
@@ -170,7 +170,20 @@ export const DescriptionModal = observer(() => {
   // link: 링크 걸기
   // image: 이미지 업로드
   // align: 텍스트 정렬
-  const formats = ["header", "bold", "italic", "underline", "strike", "font", "size", "color", "background", "link", "image", "align"];
+  const formats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'font',
+    'size',
+    'color',
+    'background',
+    'link',
+    'image',
+    'align',
+  ];
 
   // 상세페이지 모달
   return (
@@ -188,13 +201,15 @@ export const DescriptionModal = observer(() => {
       <Paper className="uploadModal">
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             mb: 3,
           }}
         >
-          <Typography fontSize={16}>{product.itemInfo.current > -1 ? "상세설명 에디터" : "상세설명 일괄추가(앞)"}</Typography>
+          <Typography fontSize={16}>
+            {product.itemInfo.current > -1 ? '상세설명 에디터' : '상세설명 일괄추가(앞)'}
+          </Typography>
 
           {product.itemInfo.current > -1 ? null : (
             <Box>
@@ -226,7 +241,7 @@ export const DescriptionModal = observer(() => {
         </Box>
 
         <div id="toolbar">
-          <select className="ql-font" defaultValue={"Sans-Serif"} onChange={(e) => e.persist()}>
+          <select className="ql-font" defaultValue={'Sans-Serif'} onChange={(e) => e.persist()}>
             <option value="Sans-Serif" selected>
               San-Serif
             </option>
@@ -234,7 +249,7 @@ export const DescriptionModal = observer(() => {
             <option value="Monospace">Monospace</option>
           </select>
 
-          <select className="ql-header" defaultValue={""} onChange={(e) => e.persist()}>
+          <select className="ql-header" defaultValue={''} onChange={(e) => e.persist()}>
             <option value="1">H1</option>
 
             <option value="2">H2</option>
@@ -246,7 +261,7 @@ export const DescriptionModal = observer(() => {
             </option>
           </select>
 
-          <select className="ql-size" defaultValue={"12px"} onChange={(e) => e.persist()}>
+          <select className="ql-size" defaultValue={'12px'} onChange={(e) => e.persist()}>
             <option value="10px">10px</option>
             <option value="12px" selected>
               12px
@@ -284,16 +299,20 @@ export const DescriptionModal = observer(() => {
         <Box
           className="parent-scroll"
           sx={{
-            width: "800px",
-            maxHeight: "80vh",
-            overflowY: "auto",
+            width: '800px',
+            maxHeight: '80vh',
+            overflowY: 'auto',
           }}
         >
           <ReactQuill
             placeholder="상품 상세설명 입력"
             scrollingContainer=".parent-scroll"
             ref={quillRef}
-            defaultValue={product.itemInfo.current > -1 ? product.itemInfo.items[product.itemInfo.current]?.description : product.manyDescriptionInfo.html}
+            defaultValue={
+              product.itemInfo.current > -1
+                ? product.itemInfo.items[product.itemInfo.current]?.description
+                : product.manyDescriptionInfo.html
+            }
             modules={modules}
             formats={formats}
             onChange={(html) => {

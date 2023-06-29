@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Button, Grid, Modal, Paper, Typography } from "@mui/material";
-import { Search } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Button, Grid, Modal, Paper, Typography } from '@mui/material';
+import { Search } from '../Common/UI';
 
 // 품목코드 일괄설정 모달 뷰
 export const ManyDeliveryInfoModal = observer(() => {
@@ -19,14 +19,14 @@ export const ManyDeliveryInfoModal = observer(() => {
     // 초기값 설정
     delivery.setManyDeliveryInfo({
       category: {
-        name: "",
-        code: "",
+        name: '',
+        code: '',
       },
 
-      input: "",
-      membership: "",
-      method: "",
-      name: "",
+      input: '',
+      membership: '',
+      method: '',
+      name: '',
     });
   }, [common.loaded]);
 
@@ -60,7 +60,7 @@ export const ManyDeliveryInfoModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <Typography fontSize={14}>품목분류명</Typography>
@@ -71,12 +71,16 @@ export const ManyDeliveryInfoModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <Search
-                    disabled={!delivery.deliveryList.find((v) => v.name === common.user.userInfo.orderToDeliveryName && v.hscode)}
+                    disabled={
+                      !delivery.deliveryList.find(
+                        (v) => v.name === common.user.userInfo.orderToDeliveryName && v.hscode
+                      )
+                    }
                     value={delivery.manyDeliveryInfo.category}
                     onChange={(e: any, value: any) => {
                       delivery.setManyDeliveryInfo({
@@ -86,7 +90,7 @@ export const ManyDeliveryInfoModal = observer(() => {
                       });
                     }}
                     onInputChange={(e, value, reason) => {
-                      if (reason !== "input") {
+                      if (reason !== 'input') {
                         return;
                       }
 
@@ -98,16 +102,17 @@ export const ManyDeliveryInfoModal = observer(() => {
                     }}
                     options={
                       delivery.manyDeliveryInfo.input
-                        ? delivery.deliveryData.find((v: any) => v.company === common.user.userInfo.orderToDeliveryName).category
+                        ? delivery.deliveryData.find((v: any) => v.company === common.user.userInfo.orderToDeliveryName)
+                            .category
                         : [delivery.manyDeliveryInfo.category]
                     }
-                    getOptionLabel={(option: any) => option.name ?? ""}
+                    getOptionLabel={(option: any) => option.name ?? ''}
                     isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                     onClose={() => {
                       delivery.setManyDeliveryInfo({
                         ...delivery.manyDeliveryInfo,
 
-                        input: "",
+                        input: '',
                       });
                     }}
                   />
@@ -118,9 +123,9 @@ export const ManyDeliveryInfoModal = observer(() => {
 
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               mt: 3,
             }}
           >
@@ -129,7 +134,7 @@ export const ManyDeliveryInfoModal = observer(() => {
               variant="contained"
               color="info"
               sx={{
-                width: "50%",
+                width: '50%',
                 mx: 0.5,
               }}
               onClick={() => {
@@ -144,7 +149,7 @@ export const ManyDeliveryInfoModal = observer(() => {
               variant="contained"
               color="inherit"
               sx={{
-                width: "50%",
+                width: '50%',
                 mx: 0.5,
               }}
               onClick={() => {

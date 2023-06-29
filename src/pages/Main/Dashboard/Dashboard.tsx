@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
 
-import { format } from "date-fns";
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Header } from "../Common/Header";
-import { NoticeModal } from "../Modals/NoticeModal";
-import { Box, Button, CircularProgress, Container, Grid, Paper, Tooltip, Typography } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Frame } from "../Common/UI";
+import { format } from 'date-fns';
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Header } from '../Common/Header';
+import { NoticeModal } from '../Modals/NoticeModal';
+import { Box, Button, CircularProgress, Container, Grid, Paper, Tooltip, Typography } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Frame } from '../Common/UI';
 
 // 대시보드 뷰
 export const Dashboard = observer(() => {
@@ -37,7 +37,7 @@ export const Dashboard = observer(() => {
     () =>
       createTheme({
         palette: {
-          mode: common.darkTheme ? "dark" : "light",
+          mode: common.darkTheme ? 'dark' : 'light',
         },
       }),
     [common.darkTheme]
@@ -58,9 +58,9 @@ export const Dashboard = observer(() => {
         </Container> */}
 
         <Container
-          maxWidth={"xl"}
+          maxWidth={'xl'}
           sx={{
-            py: "10px",
+            py: '10px',
           }}
         >
           <Grid container spacing={1}>
@@ -76,12 +76,16 @@ export const Dashboard = observer(() => {
                   >
                     <img
                       style={{
-                        width: "100%",
-                        height: "100%",
+                        width: '100%',
+                        height: '100%',
                         // objectFit: "cover", 이미지 비율 맞춤 여부
-                        cursor: "pointer",
+                        cursor: 'pointer',
                       }}
-                      src={common.banner01Image ? common.banner01Image + `?${Date.now()}` : "https://ai.esmplus.com/koozapas/banner01.jpg?" + Date.now()}
+                      src={
+                        common.banner01Image
+                          ? common.banner01Image + `?${Date.now()}`
+                          : 'https://ai.esmplus.com/koozapas/banner01.jpg?' + Date.now()
+                      }
                       onClick={() => {
                         window.open(`${common.banner01Url}`);
                       }}
@@ -105,11 +109,11 @@ export const Dashboard = observer(() => {
                   >
                     <Box
                       sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                       }}
                     >
                       <Grid
@@ -124,7 +128,7 @@ export const Dashboard = observer(() => {
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             광고베너
@@ -159,11 +163,11 @@ export const Dashboard = observer(() => {
                   >
                     <Box
                       sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                       }}
                     >
                       <Grid
@@ -178,7 +182,7 @@ export const Dashboard = observer(() => {
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             광고베너
@@ -205,11 +209,11 @@ export const Dashboard = observer(() => {
                   >
                     <Box
                       sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                       }}
                     >
                       <Grid
@@ -224,7 +228,7 @@ export const Dashboard = observer(() => {
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             관리상품
@@ -236,14 +240,14 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            textAlign: "right",
+                            textAlign: 'right',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {common.user.productCount}
@@ -263,7 +267,7 @@ export const Dashboard = observer(() => {
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             수집상품
@@ -275,22 +279,22 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            textAlign: "right",
+                            textAlign: 'right',
                           }}
                         >
-                          {dashboard.countInfo.product.collected === "-" ? (
+                          {dashboard.countInfo.product.collected === '-' ? (
                             <CircularProgress disableShrink size="1.5rem" />
                           ) : (
                             <Typography
                               noWrap
                               sx={{
-                                cursor: "pointer",
+                                cursor: 'pointer',
                                 fontSize: 18,
-                                fontWeight: "bold",
-                                textDecoration: "underline",
+                                fontWeight: 'bold',
+                                textDecoration: 'underline',
                               }}
                               onClick={() => {
-                                window.location.href = "/product/collected.html";
+                                window.location.href = '/product/collected.html';
                               }}
                             >
                               {dashboard.countInfo.product.collected}
@@ -303,7 +307,7 @@ export const Dashboard = observer(() => {
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             등록상품
@@ -315,22 +319,22 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            textAlign: "right",
+                            textAlign: 'right',
                           }}
                         >
-                          {dashboard.countInfo.product.registered === "-" ? (
+                          {dashboard.countInfo.product.registered === '-' ? (
                             <CircularProgress disableShrink size="1.5rem" />
                           ) : (
                             <Typography
                               noWrap
                               sx={{
-                                cursor: "pointer",
+                                cursor: 'pointer',
                                 fontSize: 18,
-                                fontWeight: "bold",
-                                textDecoration: "underline",
+                                fontWeight: 'bold',
+                                textDecoration: 'underline',
                               }}
                               onClick={() => {
-                                window.location.href = "/product/registered.html";
+                                window.location.href = '/product/registered.html';
                               }}
                             >
                               {dashboard.countInfo.product.registered}
@@ -343,7 +347,7 @@ export const Dashboard = observer(() => {
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             잠금상품
@@ -355,22 +359,22 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            textAlign: "right",
+                            textAlign: 'right',
                           }}
                         >
-                          {dashboard.countInfo.product.collected === "-" ? (
+                          {dashboard.countInfo.product.collected === '-' ? (
                             <CircularProgress disableShrink size="1.5rem" />
                           ) : (
                             <Typography
                               noWrap
                               sx={{
-                                cursor: "pointer",
+                                cursor: 'pointer',
                                 fontSize: 18,
-                                fontWeight: "bold",
-                                textDecoration: "underline",
+                                fontWeight: 'bold',
+                                textDecoration: 'underline',
                               }}
                               onClick={() => {
-                                window.location.href = "/product/locked.html";
+                                window.location.href = '/product/locked.html';
                               }}
                             >
                               {dashboard.countInfo.product.locked}
@@ -390,11 +394,11 @@ export const Dashboard = observer(() => {
                   >
                     <Box
                       sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                       }}
                     >
                       <Grid
@@ -409,7 +413,7 @@ export const Dashboard = observer(() => {
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             신규주문
@@ -421,22 +425,22 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            textAlign: "right",
+                            textAlign: 'right',
                           }}
                         >
-                          {dashboard.countInfo.order.countAll === "-" ? (
+                          {dashboard.countInfo.order.countAll === '-' ? (
                             <CircularProgress disableShrink size="1.5rem" />
                           ) : (
                             <Typography
                               noWrap
                               sx={{
-                                cursor: "pointer",
+                                cursor: 'pointer',
                                 fontSize: 18,
-                                fontWeight: "bold",
-                                textDecoration: "underline",
+                                fontWeight: 'bold',
+                                textDecoration: 'underline',
                               }}
                               onClick={() => {
-                                window.location.href = "/order/new.html";
+                                window.location.href = '/order/new.html';
                               }}
                             >
                               {dashboard.countInfo.order.countAll}
@@ -457,11 +461,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A077" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A077' && v.connected) ? (
                             <img src="/resources/icon-smartstore.png" />
                           ) : (
                             <img src="/resources/icon-smartstore-gray.png" />
@@ -473,15 +477,15 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {dashboard.countInfo.order.countA077}
@@ -493,11 +497,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "B378" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'B378' && v.connected) ? (
                             <img src="/resources/icon-coupang.png" />
                           ) : (
                             <img src="/resources/icon-coupang-gray.png" />
@@ -509,15 +513,15 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {dashboard.countInfo.order.countB378}
@@ -529,11 +533,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A112" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A112' && v.connected) ? (
                             <img src="/resources/icon-street-global.png" />
                           ) : (
                             <img src="/resources/icon-street-global-gray.png" />
@@ -545,15 +549,15 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {dashboard.countInfo.order.countA112}
@@ -565,11 +569,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A113" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A113' && v.connected) ? (
                             <img src="/resources/icon-street-normal.png" />
                           ) : (
                             <img src="/resources/icon-street-normal-gray.png" />
@@ -581,15 +585,15 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {dashboard.countInfo.order.countA113}
@@ -601,11 +605,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A006" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A006' && v.connected) ? (
                             <img src="/resources/icon-gmarket.png" />
                           ) : (
                             <img src="/resources/icon-gmarket-gray.png" />
@@ -617,15 +621,15 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {dashboard.countInfo.order.countA006}
@@ -637,11 +641,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A001" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A001' && v.connected) ? (
                             <img src="/resources/icon-auction.png" />
                           ) : (
                             <img src="/resources/icon-auction-gray.png" />
@@ -653,15 +657,15 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {dashboard.countInfo.order.countA001}
@@ -673,11 +677,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A027" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A027' && v.connected) ? (
                             <img src="/resources/icon-interpark.png" />
                           ) : (
                             <img src="/resources/icon-interpark-gray.png" />
@@ -689,15 +693,15 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {dashboard.countInfo.order.countA027}
@@ -709,11 +713,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "B719" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'B719' && v.connected) ? (
                             <img src="/resources/icon-wemakeprice.png" />
                           ) : (
                             <img src="/resources/icon-wemakeprice-gray.png" />
@@ -725,15 +729,15 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {dashboard.countInfo.order.countB719}
@@ -745,11 +749,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A524" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A524' && v.connected) ? (
                             <img src="/resources/icon-lotteon-global.png" />
                           ) : (
                             <img src="/resources/icon-lotteon-global-gray.png" />
@@ -761,15 +765,15 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {dashboard.countInfo.order.countA524}
@@ -781,11 +785,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A525" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A525' && v.connected) ? (
                             <img src="/resources/icon-lotteon-normal.png" />
                           ) : (
                             <img src="/resources/icon-lotteon-normal-gray.png" />
@@ -797,15 +801,15 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {dashboard.countInfo.order.countA525}
@@ -817,11 +821,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "B956" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'B956' && v.connected) ? (
                             <img src="/resources/icon-tmon.png" />
                           ) : (
                             <img src="/resources/icon-tmon-gray.png" />
@@ -833,15 +837,15 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             {dashboard.countInfo.order.countB956}
@@ -853,8 +857,8 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         ></Grid>
                       </Grid>
@@ -871,11 +875,11 @@ export const Dashboard = observer(() => {
                   >
                     <Box
                       sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "space-between",
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                       }}
                     >
                       <Grid
@@ -890,7 +894,7 @@ export const Dashboard = observer(() => {
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             주간유입수
@@ -902,25 +906,25 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            textAlign: "right",
+                            textAlign: 'right',
                           }}
                         >
-                          {inflow.dataCounts.total === "-" ? (
+                          {inflow.dataCounts.total === '-' ? (
                             <CircularProgress disableShrink size="1.5rem" />
                           ) : (
                             <Typography
                               noWrap
                               sx={{
-                                cursor: "pointer",
+                                cursor: 'pointer',
                                 fontSize: 18,
-                                fontWeight: "bold",
-                                textDecoration: "underline",
+                                fontWeight: 'bold',
+                                textDecoration: 'underline',
                               }}
                               onClick={() => {
-                                window.location.href = "/inflow.html";
+                                window.location.href = '/inflow.html';
                               }}
                             >
-                              {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.total : "-"}
+                              {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.total : '-'}
                             </Typography>
                           )}
                         </Grid>
@@ -938,11 +942,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A077" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A077' && v.connected) ? (
                             <img src="/resources/icon-smartstore.png" />
                           ) : (
                             <img src="/resources/icon-smartstore-gray.png" />
@@ -954,18 +958,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a077 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a077 : '-'}
                           </Typography>
                         </Grid>
 
@@ -974,11 +978,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "B378" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'B378' && v.connected) ? (
                             <img src="/resources/icon-coupang.png" />
                           ) : (
                             <img src="/resources/icon-coupang-gray.png" />
@@ -990,18 +994,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.b378 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.b378 : '-'}
                           </Typography>
                         </Grid>
 
@@ -1010,11 +1014,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A112" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A112' && v.connected) ? (
                             <img src="/resources/icon-street-global.png" />
                           ) : (
                             <img src="/resources/icon-street-global-gray.png" />
@@ -1026,18 +1030,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a112 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a112 : '-'}
                           </Typography>
                         </Grid>
 
@@ -1046,11 +1050,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A113" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A113' && v.connected) ? (
                             <img src="/resources/icon-street-normal.png" />
                           ) : (
                             <img src="/resources/icon-street-normal-gray.png" />
@@ -1062,18 +1066,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a113 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a113 : '-'}
                           </Typography>
                         </Grid>
 
@@ -1082,11 +1086,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A006" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A006' && v.connected) ? (
                             <img src="/resources/icon-gmarket.png" />
                           ) : (
                             <img src="/resources/icon-gmarket-gray.png" />
@@ -1098,18 +1102,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a006 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a006 : '-'}
                           </Typography>
                         </Grid>
 
@@ -1118,11 +1122,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A001" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A001' && v.connected) ? (
                             <img src="/resources/icon-auction.png" />
                           ) : (
                             <img src="/resources/icon-auction-gray.png" />
@@ -1134,18 +1138,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a001 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a001 : '-'}
                           </Typography>
                         </Grid>
 
@@ -1154,11 +1158,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A027" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A027' && v.connected) ? (
                             <img src="/resources/icon-interpark.png" />
                           ) : (
                             <img src="/resources/icon-interpark-gray.png" />
@@ -1170,18 +1174,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a027 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a027 : '-'}
                           </Typography>
                         </Grid>
 
@@ -1190,11 +1194,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "B719" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'B719' && v.connected) ? (
                             <img src="/resources/icon-wemakeprice.png" />
                           ) : (
                             <img src="/resources/icon-wemakeprice-gray.png" />
@@ -1206,18 +1210,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.b719 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.b719 : '-'}
                           </Typography>
                         </Grid>
 
@@ -1226,11 +1230,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A524" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A524' && v.connected) ? (
                             <img src="/resources/icon-lotteon-global.png" />
                           ) : (
                             <img src="/resources/icon-lotteon-global-gray.png" />
@@ -1242,18 +1246,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a524 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a524 : '-'}
                           </Typography>
                         </Grid>
 
@@ -1262,11 +1266,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A525" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A525' && v.connected) ? (
                             <img src="/resources/icon-lotteon-normal.png" />
                           ) : (
                             <img src="/resources/icon-lotteon-normal-gray.png" />
@@ -1278,18 +1282,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a525 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a525 : '-'}
                           </Typography>
                         </Grid>
 
@@ -1298,11 +1302,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "B956" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'B956' && v.connected) ? (
                             <img src="/resources/icon-tmon.png" />
                           ) : (
                             <img src="/resources/icon-tmon-gray.png" />
@@ -1314,18 +1318,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.b956 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.b956 : '-'}
                           </Typography>
                         </Grid>
 
@@ -1334,8 +1338,8 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         ></Grid>
 
@@ -1344,11 +1348,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A523" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A523' && v.connected) ? (
                             <Tooltip title="ESM2.0">
                               <img src="/resources/icon-gmarket.png" />
                             </Tooltip>
@@ -1364,18 +1368,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a523 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a523 : '-'}
                           </Typography>
                         </Grid>
 
@@ -1384,11 +1388,11 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
-                          {common.uploadInfo.markets.find((v: any) => v.code === "A522" && v.connected) ? (
+                          {common.uploadInfo.markets.find((v: any) => v.code === 'A522' && v.connected) ? (
                             <Tooltip title="ESM2.0">
                               <img src="/resources/icon-auction.png" />
                             </Tooltip>
@@ -1404,18 +1408,18 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={2}
                           sx={{
-                            m: "auto",
-                            textAlign: "center",
+                            m: 'auto',
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 18,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
-                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a522 : "-"}
+                            {common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.a522 : '-'}
                           </Typography>
                         </Grid>
                       </Grid>
@@ -1432,11 +1436,11 @@ export const Dashboard = observer(() => {
                   >
                     <Box
                       sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}
                     >
                       <Grid
@@ -1451,14 +1455,14 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={12}
                           sx={{
-                            textAlign: "center",
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 16,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             특정 키워드를 금지하거나 치환할 수 있나요?
@@ -1470,7 +1474,7 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={12}
                           sx={{
-                            textAlign: "center",
+                            textAlign: 'center',
                           }}
                         >
                           <Button
@@ -1478,10 +1482,10 @@ export const Dashboard = observer(() => {
                             variant="contained"
                             color="info"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             onClick={() => {
-                              window.location.href = "/banwords.html";
+                              window.location.href = '/banwords.html';
                             }}
                           >
                             금지어/치환어설정 바로가기
@@ -1501,11 +1505,11 @@ export const Dashboard = observer(() => {
                   >
                     <Box
                       sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}
                     >
                       <Grid
@@ -1520,14 +1524,14 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={12}
                           sx={{
-                            textAlign: "center",
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 16,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             어떤 키워드를 선택해야할 지 궁금하신가요?
@@ -1539,7 +1543,7 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={12}
                           sx={{
-                            textAlign: "center",
+                            textAlign: 'center',
                           }}
                         >
                           <Button
@@ -1547,10 +1551,10 @@ export const Dashboard = observer(() => {
                             variant="contained"
                             color="info"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             onClick={() => {
-                              window.location.href = "/keyword/analysis.html";
+                              window.location.href = '/keyword/analysis.html';
                             }}
                           >
                             키워드분석 바로가기
@@ -1570,11 +1574,11 @@ export const Dashboard = observer(() => {
                   >
                     <Box
                       sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}
                     >
                       <Grid
@@ -1589,14 +1593,14 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={12}
                           sx={{
-                            textAlign: "center",
+                            textAlign: 'center',
                           }}
                         >
                           <Typography
                             noWrap
                             sx={{
                               fontSize: 16,
-                              fontWeight: "bold",
+                              fontWeight: 'bold',
                             }}
                           >
                             판매중인 다른 상품들의 정보가 궁금하신가요?
@@ -1608,7 +1612,7 @@ export const Dashboard = observer(() => {
                           xs={6}
                           md={12}
                           sx={{
-                            textAlign: "center",
+                            textAlign: 'center',
                           }}
                         >
                           <Button
@@ -1616,10 +1620,10 @@ export const Dashboard = observer(() => {
                             variant="contained"
                             color="info"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             onClick={() => {
-                              window.location.href = "/sourcing.html";
+                              window.location.href = '/sourcing.html';
                             }}
                           >
                             소싱기 바로가기
@@ -1642,11 +1646,11 @@ export const Dashboard = observer(() => {
               >
                 <Box
                   sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "space-between",
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
                   }}
                 >
                   <Grid
@@ -1661,7 +1665,7 @@ export const Dashboard = observer(() => {
                         noWrap
                         sx={{
                           fontSize: 18,
-                          fontWeight: "bold",
+                          fontWeight: 'bold',
                         }}
                       >
                         광고베너
@@ -1699,9 +1703,9 @@ export const Dashboard = observer(() => {
                         <Typography
                           noWrap
                           sx={{
-                            cursor: "pointer",
+                            cursor: 'pointer',
                             fontSize: 16,
-                            fontWeight: "bold",
+                            fontWeight: 'bold',
                           }}
                           onClick={() => {
                             dashboard.setCurrentNotice(v);
@@ -1717,17 +1721,17 @@ export const Dashboard = observer(() => {
                         xs={6}
                         md={5}
                         sx={{
-                          textAlign: "right",
+                          textAlign: 'right',
                         }}
                       >
                         <Typography
                           noWrap
                           sx={{
                             fontSize: 16,
-                            fontWeight: "bold",
+                            fontWeight: 'bold',
                           }}
                         >
-                          {format(new Date(v.createdAt), "yyyy-MM-dd")}
+                          {format(new Date(v.createdAt), 'yyyy-MM-dd')}
                         </Typography>
                       </Grid>
                     </>

@@ -1,16 +1,16 @@
 // 자주사용하는 유용한 함수 모음
 
-import MUTATIONS from "../Main/GraphQL/Mutations";
-import gql from "../Main/GraphQL/Requests";
+import MUTATIONS from '../Main/GraphQL/Mutations';
+import gql from '../Main/GraphQL/Requests';
 
-const XLSX = require("xlsx");
-const xml2js = require("xml2js");
+const XLSX = require('xlsx');
+const xml2js = require('xml2js');
 
 // 문자열의 바이트 길이 계산
 function byteLength(str: string) {
   let strLen = str.length;
   let cnt = 0;
-  let oneChar = "";
+  let oneChar = '';
 
   for (let ii = 0; ii < strLen; ii++) {
     oneChar = str.charAt(ii);
@@ -62,7 +62,7 @@ async function checkIndividualCustomUniqueCode(data: any, loop: boolean) {
     phone: loop ? data.receiverTelNo1 : data.orderMemberTelNo,
   };
 
-  icuc.phone = icuc.phone.replaceAll("-", "");
+  icuc.phone = icuc.phone.replaceAll('-', '');
 
   const icucResp = await fetch(
     `https://unipass.customs.go.kr:38010/ext/rest/persEcmQry/retrievePersEcm?crkyCn=j260j221x046z292y040z030n0&persEcm=${icuc.code}&pltxNm=${icuc.name}&cralTelno=${icuc.phone}`
@@ -79,58 +79,72 @@ async function checkIndividualCustomUniqueCode(data: any, loop: boolean) {
     });
   });
 
-  if (response.persEcmQryRtnVo.tCnt[0] === "1") {
+  if (response.persEcmQryRtnVo.tCnt[0] === '1') {
     if (loop) {
       return {
         code: 1,
-        message: "통관가능(모두일치)",
+        message: '통관가능(모두일치)',
       };
     } else {
       return {
         code: 2,
-        message: "수취인불일치(구매자일치)",
+        message: '수취인불일치(구매자일치)',
       };
     }
   } else {
     if (loop) {
       if (
-        response.persEcmQryRtnVo.tCnt[0] === "0" &&
-        response.persEcmQryRtnVo.persEcmQryRtnErrInfoVo[0].errMsgCn[0].includes("납세의무자 휴대전화번호가 일치하지 않습니다.")
+        response.persEcmQryRtnVo.tCnt[0] === '0' &&
+        response.persEcmQryRtnVo.persEcmQryRtnErrInfoVo[0].errMsgCn[0].includes(
+          '납세의무자 휴대전화번호가 일치하지 않습니다.'
+        )
       ) {
         return {
           code: 1,
-          message: "수취인일치(전화번호불일치)",
+          message: '수취인일치(전화번호불일치)',
         };
       }
 
       return await checkIndividualCustomUniqueCode(data, false);
     } else {
-      if (response.persEcmQryRtnVo.tCnt[0] === "0") {
-        if (response.persEcmQryRtnVo.persEcmQryRtnErrInfoVo[0].errMsgCn[0].includes("납세의무자 휴대전화번호가 일치하지 않습니다.")) {
+      if (response.persEcmQryRtnVo.tCnt[0] === '0') {
+        if (
+          response.persEcmQryRtnVo.persEcmQryRtnErrInfoVo[0].errMsgCn[0].includes(
+            '납세의무자 휴대전화번호가 일치하지 않습니다.'
+          )
+        ) {
           return {
             code: 2,
-            message: "구매자일치(전화번호불일치)",
+            message: '구매자일치(전화번호불일치)',
           };
-        } else if (response.persEcmQryRtnVo.persEcmQryRtnErrInfoVo[0].errMsgCn[0].includes("개인통관고유부호의 성명과 일치하지 않습니다.")) {
+        } else if (
+          response.persEcmQryRtnVo.persEcmQryRtnErrInfoVo[0].errMsgCn[0].includes(
+            '개인통관고유부호의 성명과 일치하지 않습니다.'
+          )
+        ) {
           return {
             code: 0,
-            message: "통관불가(모두불일치)",
+            message: '통관불가(모두불일치)',
           };
-        } else if (response.persEcmQryRtnVo.persEcmQryRtnErrInfoVo[0].errMsgCn[0].includes("납세의무자 개인통관고유부호가 존재하지 않습니다.")) {
+        } else if (
+          response.persEcmQryRtnVo.persEcmQryRtnErrInfoVo[0].errMsgCn[0].includes(
+            '납세의무자 개인통관고유부호가 존재하지 않습니다.'
+          )
+        ) {
           return {
             code: 0,
-            message: "통관불가(통관부호오류)",
+            message: '통관불가(통관부호오류)',
           };
         } else {
           return {
             code: 0,
-            message: "통관불가(기타오류)",
+            message: '통관불가(기타오류)',
           };
         }
       } else {
         return {
           code: 0,
-          message: "통관불가(기타오류)",
+          message: '통관불가(기타오류)',
         };
       }
     }
@@ -144,14 +158,14 @@ function convertWebpToJpg(base64: any) {
 
     image.src = base64;
     image.onload = async () => {
-      let canvas: any = document.createElement("canvas");
+      let canvas: any = document.createElement('canvas');
 
       canvas.width = image.naturalWidth;
       canvas.height = image.naturalHeight;
 
-      canvas.getContext("2d").drawImage(image, 0, 0);
+      canvas.getContext('2d').drawImage(image, 0, 0);
 
-      let fixed_base64 = canvas.toDataURL("image/jpeg");
+      let fixed_base64 = canvas.toDataURL('image/jpeg');
       let fixed_resp = await fetch(fixed_base64);
       let fixed_blob = await fixed_resp.blob();
 
@@ -165,7 +179,13 @@ function convertWebpToJpg(base64: any) {
 }
 
 // JSON Object to XLSX 변환 후 다운로드
-async function downloadExcel(result_array: any, sheetName: string, fileName: string, saveAs: boolean, extension: string) {
+async function downloadExcel(
+  result_array: any,
+  sheetName: string,
+  fileName: string,
+  saveAs: boolean,
+  extension: string
+) {
   let t = getClock();
 
   let workbook = XLSX.utils.book_new();
@@ -175,28 +195,28 @@ async function downloadExcel(result_array: any, sheetName: string, fileName: str
 
   let workdata = null;
 
-  if (extension === "xlsx") {
-    workdata = XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
+  if (extension === 'xlsx') {
+    workdata = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
   } else {
-    workdata = XLSX.write(workbook, { bookType: "biff8", type: "binary" });
+    workdata = XLSX.write(workbook, { bookType: 'biff8', type: 'binary' });
   }
 
   let workurl = URL.createObjectURL(
     new Blob([stringToArrayBuffer(workdata)], {
-      type: "application/octet-stream",
+      type: 'application/octet-stream',
     })
   );
 
   chrome.downloads.download({
     url: workurl,
-    filename: `${fileName}${saveAs ? "" : "(자동저장)"}_${t.YY}-${t.MM}-${t.DD}.${extension}`,
+    filename: `${fileName}${saveAs ? '' : '(자동저장)'}_${t.YY}-${t.MM}-${t.DD}.${extension}`,
     saveAs: saveAs,
   });
 }
 
 // HTML 문자열에서 텍스트만 추출
 function extractContent(s: String) {
-  let span: any = document.createElement("div");
+  let span: any = document.createElement('div');
 
   span.innerHTML = s;
 
@@ -205,13 +225,13 @@ function extractContent(s: String) {
 
 // 티몬 주문번호 데이터 가공
 function extractTmonContent(s: String) {
-  return s.replace(/\^.+/g, "");
+  return s.replace(/\^.+/g, '');
 }
 
 // 우측 하단 상태 관련 플로팅 메시지 (~일괄 설정되었습니다.)
 async function floatingToast(message: any, type: any) {
-  let toast = document.createElement("div");
-  let toastContainer: any = document.getElementById("toastContainer");
+  let toast = document.createElement('div');
+  let toastContainer: any = document.getElementById('toastContainer');
 
   toast.className = `toast ${type}`;
   toast.innerHTML = `
@@ -228,8 +248,8 @@ async function floatingToast(message: any, type: any) {
 
   await sleep(1000 * 3);
 
-  toast.style.setProperty("-webkit-animation", "fadeout 1s");
-  toast.style.setProperty("animation", "fadeout 1s");
+  toast.style.setProperty('-webkit-animation', 'fadeout 1s');
+  toast.style.setProperty('animation', 'fadeout 1s');
 
   await sleep(1000 * 0.8);
 
@@ -238,14 +258,16 @@ async function floatingToast(message: any, type: any) {
 
 // 한글인명 로마자 변환
 async function getAirportName(name) {
-  let res = await fetch("https://dict.naver.com/name-to-roman/translation/?query=" + name);
+  let res = await fetch('https://dict.naver.com/name-to-roman/translation/?query=' + name);
   let text: string = await res.text();
 
   const parser = new DOMParser();
-  const htmlDocument = parser.parseFromString(text, "text/html");
-  const section = htmlDocument.documentElement.querySelector("#container > div > table > tbody > tr:nth-child(1) > td.cell_engname > a");
+  const htmlDocument = parser.parseFromString(text, 'text/html');
+  const section = htmlDocument.documentElement.querySelector(
+    '#container > div > table > tbody > tr:nth-child(1) > td.cell_engname > a'
+  );
 
-  return section?.textContent?.replace(" ", "").toUpperCase();
+  return section?.textContent?.replace(' ', '').toUpperCase();
 }
 
 // 현재 시간 객체로 가져오기
@@ -254,11 +276,11 @@ function getClock() {
 
   return {
     YY: date.getFullYear().toString(),
-    MM: (date.getMonth() + 1).toString().padStart(2, "0"),
-    DD: date.getDate().toString().padStart(2, "0"),
-    hh: date.getHours().toString().padStart(2, "0"),
-    mm: date.getMinutes().toString().padStart(2, "0"),
-    ss: date.getSeconds().toString().padStart(2, "0"),
+    MM: (date.getMonth() + 1).toString().padStart(2, '0'),
+    DD: date.getDate().toString().padStart(2, '0'),
+    hh: date.getHours().toString().padStart(2, '0'),
+    mm: date.getMinutes().toString().padStart(2, '0'),
+    ss: date.getSeconds().toString().padStart(2, '0'),
   };
 }
 
@@ -275,23 +297,23 @@ function getClockOffset(H: number, M: number, D: number, h: number, m: number, s
 
   return {
     YY: date.getFullYear().toString(),
-    MM: (date.getMonth() + 1).toString().padStart(2, "0"),
-    DD: date.getDate().toString().padStart(2, "0"),
-    hh: date.getHours().toString().padStart(2, "0"),
-    mm: date.getMinutes().toString().padStart(2, "0"),
-    ss: date.getSeconds().toString().padStart(2, "0"),
+    MM: (date.getMonth() + 1).toString().padStart(2, '0'),
+    DD: date.getDate().toString().padStart(2, '0'),
+    hh: date.getHours().toString().padStart(2, '0'),
+    mm: date.getMinutes().toString().padStart(2, '0'),
+    ss: date.getSeconds().toString().padStart(2, '0'),
   };
 }
 
 // 쿠키 정보 가져오기
 function getCookie(cookieName: string) {
-  let cookieValue = "";
+  let cookieValue = '';
 
   if (document.cookie) {
-    let array = document.cookie.split(escape(cookieName) + "=");
+    let array = document.cookie.split(escape(cookieName) + '=');
 
     if (array.length >= 2) {
-      let arraySub = array[1].split(";");
+      let arraySub = array[1].split(';');
 
       cookieValue = unescape(arraySub[0]);
     }
@@ -310,7 +332,7 @@ async function getImageMeta(src: string) {
     };
 
     image.onerror = function () {
-      console.log("error");
+      console.log('error');
     };
     // image.onerror = reject;
     image.src = src;
@@ -333,14 +355,14 @@ async function getImageSize(url: string): Promise<number | string> {
     return blob.size;
   } catch (error) {
     console.log(error);
-    if (url.startsWith("https://")) {
+    if (url.startsWith('https://')) {
       throw error;
     } else {
-      const httpsImageUrl = "https://images.weserv.nl/?url=" + encodeURIComponent(url);
+      const httpsImageUrl = 'https://images.weserv.nl/?url=' + encodeURIComponent(url);
       try {
-        const response = await fetch(httpsImageUrl, { method: "HEAD" });
-        const contentLength = response.headers.get("content-length");
-        return contentLength ? parseInt(contentLength, 10) : "";
+        const response = await fetch(httpsImageUrl, { method: 'HEAD' });
+        const contentLength = response.headers.get('content-length');
+        return contentLength ? parseInt(contentLength, 10) : '';
       } catch (e) {
         console.error(e);
         throw e;
@@ -353,9 +375,9 @@ async function getImageSize(url: string): Promise<number | string> {
 //보안 이슈가 생기므로 https://images.weserv.nl 서비스를 사용함. 이 서비스는 입력받은 이미지 URL을 HTTP나 HTTPS 상관없이 HTTPS 프로토콜로 반환해주는 서비스입니다.
 
 async function getTaobaoImageSize(url: any) {
-  const httpsImageUrl = "https://images.weserv.nl/?url=" + encodeURIComponent(url);
-  return fetch(httpsImageUrl, { method: "HEAD" })
-    .then((response) => response.headers.get("content-length"))
+  const httpsImageUrl = 'https://images.weserv.nl/?url=' + encodeURIComponent(url);
+  return fetch(httpsImageUrl, { method: 'HEAD' })
+    .then((response) => response.headers.get('content-length'))
     .catch((error) => {
       console.error(error);
     });
@@ -364,47 +386,47 @@ async function getTaobaoImageSize(url: any) {
 // 오픈마켓 등록상품URL 가져오기
 function getStoreUrl(commonStore: any, marketCode: string, productId: any) {
   switch (marketCode) {
-    case "A077": {
+    case 'A077': {
       return `${commonStore.user.userInfo.naverStoreUrl}/products/${productId}`;
     }
 
-    case "B378": {
+    case 'B378': {
       return `https://www.coupang.com/vp/products/${productId}`;
     }
 
-    case "A112": {
+    case 'A112': {
       return `https://www.11st.co.kr/products/${productId}`;
     }
 
-    case "A113": {
+    case 'A113': {
       return `https://www.11st.co.kr/products/${productId}`;
     }
 
-    case "A001": {
+    case 'A001': {
       return `http://itempage3.auction.co.kr/DetailView.aspx?ItemNo=${productId}&frm3=V2`;
     }
 
-    case "A006": {
+    case 'A006': {
       return `http://item.gmarket.co.kr/Item?goodscode=${productId}`;
     }
 
-    case "A027": {
+    case 'A027': {
       return `https://shopping.interpark.com/product/productInfo.do?prdNo=${productId}`;
     }
 
-    case "B719": {
+    case 'B719': {
       return `https://front.wemakeprice.com/product/${productId}`;
     }
 
-    case "A524": {
+    case 'A524': {
       return `https://www.lotteon.com/p/product/${productId}`;
     }
 
-    case "A525": {
+    case 'A525': {
       return `https://www.lotteon.com/p/product/${productId}`;
     }
 
-    case "B956": {
+    case 'B956': {
       return `https://www.tmon.co.kr/deal/${productId}`;
     }
   }
@@ -504,10 +526,10 @@ function matchesCharacter(string1: string, string2: string) {
   }
 
   if (longestSubstringLength === 0) {
-    return "";
+    return '';
   }
 
-  let longestSubstring = "";
+  let longestSubstring = '';
 
   while (substringMatrix[longestSubstringRow][longestSubstringColumn] > 0) {
     longestSubstring = s1[longestSubstringColumn - 1] + longestSubstring;
@@ -520,7 +542,7 @@ function matchesCharacter(string1: string, string2: string) {
 
 // 원래 우측하단에 윈도우 알림으로 뜨던 기능인데 너무 번잡해서 없애고 플로팅 메시팅만 띄우게 변경됨
 function notificationByEveryTime(message: string) {
-  floatingToast(message, "warning");
+  floatingToast(message, 'warning');
 
   // chrome.notifications.create('sellforyou-' + new Date().getTime(), {
   //     type: 'basic',
@@ -542,7 +564,7 @@ function parseDecode(blob) {
       resolve(text);
     };
 
-    reader.readAsText(blob, "GBK");
+    reader.readAsText(blob, 'GBK');
   });
 }
 
@@ -567,7 +589,7 @@ function request(url: any, opts: any) {
       reject({
         status: this.status,
         statusText: xhr.statusText,
-        data: "rejected",
+        data: 'rejected',
       });
     };
 
@@ -624,35 +646,35 @@ async function sendCallback(commonStore: any, data: any, code: string, seq: numb
   commonStore.setProgressValue(data.DShopInfo.site_code, progressValue);
 
   const callbackData = JSON.stringify({
-    job_id: "KOOZA",
-    title: "KOOZA",
+    job_id: 'KOOZA',
+    title: 'KOOZA',
     results: {
-      "config.json": {
-        sol_code: "KOOZA",
+      'config.json': {
+        sol_code: 'KOOZA',
       },
 
-      "result.json": [
+      'result.json': [
         {
           state: state,
           site_code: data.DShopInfo.site_code,
-          site_id: "",
+          site_id: '',
           code: code,
           sku_code: null,
           single_yn: null,
           groupkey: null,
-          slave_reg_code: data.DShopInfo.site_code !== "B378" && state === 1 ? message : "0",
-          slave_reg_code_sub: data.DShopInfo.site_code === "B378" && state === 1 ? message : "",
-          reg_type: "",
+          slave_reg_code: data.DShopInfo.site_code !== 'B378' && state === 1 ? message : '0',
+          slave_reg_code_sub: data.DShopInfo.site_code === 'B378' && state === 1 ? message : '',
+          reg_type: '',
           reg_sell_term: 0,
           reg_fee: 0,
-          reg_premium: "",
-          slave_wdate: "",
-          slave_edate: "",
-          msg: state === 1 ? "" : message,
+          reg_premium: '',
+          slave_wdate: '',
+          slave_edate: '',
+          msg: state === 1 ? '' : message,
           err_code: null,
-          setdata: "",
+          setdata: '',
           setName: data.DShopInfo.site_name,
-          toState: "",
+          toState: '',
           fromWork: 0,
           gmp_sale_no: null,
           isSavedToDB: false,
@@ -693,32 +715,32 @@ function toISO(date: any) {
   function pad(num: any) {
     let norm = Math.floor(Math.abs(num));
 
-    return (norm < 10 ? "0" : "") + norm;
+    return (norm < 10 ? '0' : '') + norm;
   }
 
   return (
     date.getFullYear() +
-    "-" +
+    '-' +
     pad(date.getMonth() + 1) +
-    "-" +
+    '-' +
     pad(date.getDate()) +
-    "T" +
+    'T' +
     pad(date.getHours()) +
-    ":" +
+    ':' +
     pad(date.getMinutes()) +
-    ":" +
+    ':' +
     pad(date.getSeconds())
   );
 }
 
 // 이미지 좌우 폭을 자동으로 조정하고 <p> 태그에 감싸서 오픈마켓 상세페이지 호환성을 맞춤
 function transformContent(content: any) {
-  const descHtml = new DOMParser().parseFromString(content, "text/html");
-  const chunks = descHtml.querySelectorAll("p");
+  const descHtml = new DOMParser().parseFromString(content, 'text/html');
+  const chunks = descHtml.querySelectorAll('p');
 
   for (let i in chunks) {
     try {
-      chunks[i].style.margin = "0 auto";
+      chunks[i].style.margin = '0 auto';
     } catch (e) {
       continue;
     }
@@ -729,12 +751,12 @@ function transformContent(content: any) {
 
 // URL의 쿼리스트링(key)를 특정값(value)로 변경
 function updateQueryStringParameter(uri, key, value) {
-  var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
-  var separator = uri.indexOf("?") !== -1 ? "&" : "?";
+  var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+  var separator = uri.indexOf('?') !== -1 ? '&' : '?';
   if (uri.match(re)) {
-    return uri.replace(re, "$1" + key + "=" + value + "$2");
+    return uri.replace(re, '$1' + key + '=' + value + '$2');
   } else {
-    return uri + separator + key + "=" + value;
+    return uri + separator + key + '=' + value;
   }
 }
 
@@ -746,10 +768,10 @@ function urlEncodedObject(urlEncodedData: any) {
     let encodedKey = encodeURIComponent(property);
     let encodedValue = encodeURIComponent(urlEncodedData[property]);
 
-    urlEncodedContent.push(encodedKey + "=" + encodedValue);
+    urlEncodedContent.push(encodedKey + '=' + encodedValue);
   }
 
-  return urlEncodedContent.join("&");
+  return urlEncodedContent.join('&');
 }
 
 export {

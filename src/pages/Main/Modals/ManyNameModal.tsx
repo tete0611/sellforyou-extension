@@ -1,9 +1,20 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, FormControl, FormControlLabel, Grid, Modal, Paper, Radio, RadioGroup, TextField, Typography } from "@mui/material";
-import { MyButton } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import {
+  Box,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  Modal,
+  Paper,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { MyButton } from '../Common/UI';
 
 // 상품명 일괄설정 모달 뷰
 export const ManyNameModal = observer(() => {
@@ -20,9 +31,9 @@ export const ManyNameModal = observer(() => {
       >
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
             mb: 3,
           }}
         >
@@ -36,34 +47,36 @@ export const ManyNameModal = observer(() => {
               }}
               onClick={async () => {
                 switch (product.manyNameInfo.type) {
-                  case "1": {
+                  case '1': {
                     product.updateManyName(common, {
-                      head: "",
+                      head: '',
                       body: product.manyNameInfo.body,
-                      tail: "",
+                      tail: '',
                     });
 
                     break;
                   }
 
-                  case "2": {
+                  case '2': {
                     product.updateManyName(common, {
                       head: product.manyNameInfo.head,
-                      body: "",
+                      body: '',
                       tail: product.manyNameInfo.tail,
                     });
 
                     break;
                   }
 
-                  case "3": {
+                  case '3': {
                     const data = await Promise.all(
                       product.itemInfo.items.map((v: any, i: number) => {
                         if (!v.checked) {
                           return null;
                         }
 
-                        const name = v.name.replaceAll(product.manyNameInfo.find, product.manyNameInfo.replace).replace(/  +/g, " ");
+                        const name = v.name
+                          .replaceAll(product.manyNameInfo.find, product.manyNameInfo.replace)
+                          .replace(/  +/g, ' ');
 
                         return {
                           productIds: v.id,
@@ -77,7 +90,7 @@ export const ManyNameModal = observer(() => {
                     break;
                   }
 
-                  case "4": {
+                  case '4': {
                     const data = await Promise.all(
                       product.itemInfo.items.map(async (v: any, i: number) => {
                         if (!v.checked) {
@@ -85,13 +98,13 @@ export const ManyNameModal = observer(() => {
                         }
                         let type1Name: any;
 
-                        product.manyNameInfo.findMany.split(",").map((w: any, i: number) => {
-                          let pattern = new RegExp(w, "g");
+                        product.manyNameInfo.findMany.split(',').map((w: any, i: number) => {
+                          let pattern = new RegExp(w, 'g');
 
                           type1Name =
                             i === 0
-                              ? v.name.replaceAll(w, product.manyNameInfo.replaceMany).replace(/  +/g, " ")
-                              : type1Name.replace(pattern, product.manyNameInfo.replaceMany).replace(/  +/g, " ");
+                              ? v.name.replaceAll(w, product.manyNameInfo.replaceMany).replace(/  +/g, ' ')
+                              : type1Name.replace(pattern, product.manyNameInfo.replaceMany).replace(/  +/g, ' ');
                         });
 
                         return {
@@ -105,7 +118,7 @@ export const ManyNameModal = observer(() => {
 
                     break;
                   }
-                  case "5": {
+                  case '5': {
                     function shuffle(array: any) {
                       var m = array.length,
                         t,
@@ -129,8 +142,8 @@ export const ManyNameModal = observer(() => {
                         }
                         let type1Name: any;
 
-                        let data2 = shuffle(product.manyNameInfo.keward.split(","));
-                        type1Name = data2.slice(0, 10).join(" ");
+                        let data2 = shuffle(product.manyNameInfo.keward.split(','));
+                        type1Name = data2.slice(0, 10).join(' ');
                         return {
                           productIds: v.id,
                           name: type1Name,
@@ -185,27 +198,47 @@ export const ManyNameModal = observer(() => {
                 }}
                 value={product.manyNameInfo.type}
               >
-                <FormControlLabel value="1" control={<Radio size="small" />} label={<Typography fontSize={14}>일괄설정</Typography>} />
+                <FormControlLabel
+                  value="1"
+                  control={<Radio size="small" />}
+                  label={<Typography fontSize={14}>일괄설정</Typography>}
+                />
 
-                <FormControlLabel value="2" control={<Radio size="small" />} label={<Typography fontSize={14}>키워드추가</Typography>} />
+                <FormControlLabel
+                  value="2"
+                  control={<Radio size="small" />}
+                  label={<Typography fontSize={14}>키워드추가</Typography>}
+                />
 
-                <FormControlLabel value="3" control={<Radio size="small" />} label={<Typography fontSize={14}>단일키워드변경</Typography>} />
+                <FormControlLabel
+                  value="3"
+                  control={<Radio size="small" />}
+                  label={<Typography fontSize={14}>단일키워드변경</Typography>}
+                />
 
-                <FormControlLabel value="4" control={<Radio size="small" />} label={<Typography fontSize={14}>복수키워드변경</Typography>} />
+                <FormControlLabel
+                  value="4"
+                  control={<Radio size="small" />}
+                  label={<Typography fontSize={14}>복수키워드변경</Typography>}
+                />
 
-                <FormControlLabel value="5" control={<Radio size="small" />} label={<Typography fontSize={14}>키워드조합</Typography>} />
+                <FormControlLabel
+                  value="5"
+                  control={<Radio size="small" />}
+                  label={<Typography fontSize={14}>키워드조합</Typography>}
+                />
               </RadioGroup>
             </FormControl>
 
             <Grid container spacing={1}>
-              {product.manyNameInfo.type === "1" ? (
+              {product.manyNameInfo.type === '1' ? (
                 <>
                   <Grid
                     item
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={14}>상품명</Typography>
@@ -216,15 +249,15 @@ export const ManyNameModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <TextField
                       id={`modal_many_name_body`}
                       variant="outlined"
                       sx={{
-                        width: "100%",
+                        width: '100%',
                       }}
                       inputProps={{
                         style: {
@@ -245,14 +278,14 @@ export const ManyNameModal = observer(() => {
                 </>
               ) : null}
 
-              {product.manyNameInfo.type === "2" ? (
+              {product.manyNameInfo.type === '2' ? (
                 <>
                   <Grid
                     item
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={14}>키워드추가(앞)</Typography>
@@ -263,15 +296,15 @@ export const ManyNameModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <TextField
                       id={`modal_many_name_head`}
                       variant="outlined"
                       sx={{
-                        width: "100%",
+                        width: '100%',
                       }}
                       inputProps={{
                         style: {
@@ -295,7 +328,7 @@ export const ManyNameModal = observer(() => {
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={14}>키워드추가(뒤)</Typography>
@@ -306,15 +339,15 @@ export const ManyNameModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <TextField
                       id={`modal_many_name_tail`}
                       variant="outlined"
                       sx={{
-                        width: "100%",
+                        width: '100%',
                       }}
                       inputProps={{
                         style: {
@@ -335,14 +368,14 @@ export const ManyNameModal = observer(() => {
                 </>
               ) : null}
 
-              {product.manyNameInfo.type === "3" ? (
+              {product.manyNameInfo.type === '3' ? (
                 <>
                   <Grid
                     item
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={14}>검색할 키워드</Typography>
@@ -353,15 +386,15 @@ export const ManyNameModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <TextField
                       id={`modal_many_name_find`}
                       variant="outlined"
                       sx={{
-                        width: "100%",
+                        width: '100%',
                       }}
                       inputProps={{
                         style: {
@@ -385,7 +418,7 @@ export const ManyNameModal = observer(() => {
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={14}>변경할 키워드</Typography>
@@ -396,15 +429,15 @@ export const ManyNameModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <TextField
                       id={`modal_many_name_replace`}
                       variant="outlined"
                       sx={{
-                        width: "100%",
+                        width: '100%',
                       }}
                       inputProps={{
                         style: {
@@ -425,14 +458,14 @@ export const ManyNameModal = observer(() => {
                 </>
               ) : null}
 
-              {product.manyNameInfo.type === "4" ? (
+              {product.manyNameInfo.type === '4' ? (
                 <>
                   <Grid
                     item
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={14}>검색할 키워드</Typography>
@@ -443,16 +476,16 @@ export const ManyNameModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <TextField
                       id={`modal_many_name_findMany`}
-                      placeholder={"콤마(,)로 구분하여 입력"}
+                      placeholder={'콤마(,)로 구분하여 입력'}
                       variant="outlined"
                       sx={{
-                        width: "100%",
+                        width: '100%',
                       }}
                       inputProps={{
                         style: {
@@ -476,7 +509,7 @@ export const ManyNameModal = observer(() => {
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={14}>변경할 키워드</Typography>
@@ -487,15 +520,15 @@ export const ManyNameModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <TextField
                       id={`modal_many_name_replace`}
                       variant="outlined"
                       sx={{
-                        width: "100%",
+                        width: '100%',
                       }}
                       inputProps={{
                         style: {
@@ -515,14 +548,14 @@ export const ManyNameModal = observer(() => {
                   </Grid>
                 </>
               ) : null}
-              {product.manyNameInfo.type === "5" ? (
+              {product.manyNameInfo.type === '5' ? (
                 <>
                   <Grid
                     item
                     xs={6}
                     md={4}
                     sx={{
-                      m: "auto",
+                      m: 'auto',
                     }}
                   >
                     <Typography fontSize={14}>키워드</Typography>
@@ -533,16 +566,16 @@ export const ManyNameModal = observer(() => {
                     xs={6}
                     md={8}
                     sx={{
-                      m: "auto",
-                      textAlign: "right",
+                      m: 'auto',
+                      textAlign: 'right',
                     }}
                   >
                     <TextField
                       id={`keward`}
-                      placeholder={"콤마(,)로 구분하여 입력"}
+                      placeholder={'콤마(,)로 구분하여 입력'}
                       variant="outlined"
                       sx={{
-                        width: "100%",
+                        width: '100%',
                       }}
                       inputProps={{
                         style: {

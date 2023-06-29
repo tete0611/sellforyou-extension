@@ -1,17 +1,17 @@
-import React from "react";
-import ErrorIcon from "@mui/icons-material/Error";
-import WarningIcon from "@mui/icons-material/Warning";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import React from 'react';
+import ErrorIcon from '@mui/icons-material/Error';
+import WarningIcon from '@mui/icons-material/Warning';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../../containers/AppContext";
-import { styled, Box, Chip, Grid, IconButton, TableCell, TableRow, Typography, Checkbox } from "@mui/material";
-import { Input, MyButton } from "../../Common/UI";
-import { getStoreUrl } from "../../../Tools/Common";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../../containers/AppContext';
+import { styled, Box, Chip, Grid, IconButton, TableCell, TableRow, Typography, Checkbox } from '@mui/material';
+import { Input, MyButton } from '../../Common/UI';
+import { getStoreUrl } from '../../../Tools/Common';
 
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
-  borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+  textAlign: 'center',
+  borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
   padding: 0,
   fontSize: 13,
 });
@@ -35,16 +35,16 @@ export const OrderSummary = observer((props: any) => {
         <StyledTableCell>
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
             }}
           >
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
-                width: "100%",
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
                 height: 40,
               }}
             >
@@ -54,13 +54,13 @@ export const OrderSummary = observer((props: any) => {
                   xs={6}
                   md={1.8}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                     }}
                   >
                     <IconButton
@@ -70,27 +70,27 @@ export const OrderSummary = observer((props: any) => {
                         window.open(url);
                       }}
                     >
-                      {props.item.marketCode === "A077" ? (
+                      {props.item.marketCode === 'A077' ? (
                         <img src="/resources/icon-smartstore.png" />
-                      ) : props.item.marketCode === "B378" ? (
+                      ) : props.item.marketCode === 'B378' ? (
                         <img src="/resources/icon-coupang.png" />
-                      ) : props.item.marketCode === "A112" ? (
+                      ) : props.item.marketCode === 'A112' ? (
                         <img src="/resources/icon-street-global.png" />
-                      ) : props.item.marketCode === "A113" ? (
+                      ) : props.item.marketCode === 'A113' ? (
                         <img src="/resources/icon-street-normal.png" />
-                      ) : props.item.marketCode === "A006" ? (
+                      ) : props.item.marketCode === 'A006' ? (
                         <img src="/resources/icon-gmarket.png" />
-                      ) : props.item.marketCode === "A001" ? (
+                      ) : props.item.marketCode === 'A001' ? (
                         <img src="/resources/icon-auction.png" />
-                      ) : props.item.marketCode === "A027" ? (
+                      ) : props.item.marketCode === 'A027' ? (
                         <img src="/resources/icon-interpark.png" />
-                      ) : props.item.marketCode === "B719" ? (
+                      ) : props.item.marketCode === 'B719' ? (
                         <img src="/resources/icon-wemakeprice.png" />
-                      ) : props.item.marketCode === "A524" ? (
+                      ) : props.item.marketCode === 'A524' ? (
                         <img src="/resources/icon-lotteon-global.png" />
-                      ) : props.item.marketCode === "A525" ? (
+                      ) : props.item.marketCode === 'A525' ? (
                         <img src="/resources/icon-lotteon-normal.png" />
-                      ) : props.item.marketCode === "B956" ? (
+                      ) : props.item.marketCode === 'B956' ? (
                         <img src="/resources/icon-tmon.png" />
                       ) : null}
                     </IconButton>
@@ -99,7 +99,7 @@ export const OrderSummary = observer((props: any) => {
                       noWrap
                       fontSize={13}
                       sx={{
-                        color: "#1565c0",
+                        color: '#1565c0',
                       }}
                     >
                       {props.item.productName}
@@ -112,8 +112,8 @@ export const OrderSummary = observer((props: any) => {
                   xs={6}
                   md={1.2}
                   sx={{
-                    m: "auto",
-                    textAlign: "left",
+                    m: 'auto',
+                    textAlign: 'left',
                   }}
                 >
                   <Input readOnly value={props.item.productOptionContents} />
@@ -124,7 +124,7 @@ export const OrderSummary = observer((props: any) => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   {props.item.product ? (
@@ -133,15 +133,15 @@ export const OrderSummary = observer((props: any) => {
                         window.open(props.item.product.activeTaobaoProduct.url);
                       }}
                     >
-                      {props.item.product.activeTaobaoProduct.shopName === "taobao" ? (
+                      {props.item.product.activeTaobaoProduct.shopName === 'taobao' ? (
                         <img src="/resources/icon-taobao.png" />
-                      ) : props.item.product.activeTaobaoProduct.shopName === "tmall" ? (
+                      ) : props.item.product.activeTaobaoProduct.shopName === 'tmall' ? (
                         <img src="/resources/icon-tmall.png" />
-                      ) : props.item.product.activeTaobaoProduct.shopName === "express" ? (
+                      ) : props.item.product.activeTaobaoProduct.shopName === 'express' ? (
                         <img src="/resources/icon-express.png" />
-                      ) : props.item.product.activeTaobaoProduct.shopName === "alibaba" ? (
+                      ) : props.item.product.activeTaobaoProduct.shopName === 'alibaba' ? (
                         <img src="/resources/icon-1688.png" />
-                      ) : props.item.product.activeTaobaoProduct.shopName === "vvic" ? (
+                      ) : props.item.product.activeTaobaoProduct.shopName === 'vvic' ? (
                         <img src="/resources/icon-vvic.png" />
                       ) : null}
                     </IconButton>
@@ -160,8 +160,8 @@ export const OrderSummary = observer((props: any) => {
                   xs={6}
                   md={1.8}
                   sx={{
-                    margin: "auto",
-                    textAlign: "left",
+                    margin: 'auto',
+                    textAlign: 'left',
                   }}
                 >
                   <Grid container spacing={0.5}>
@@ -170,7 +170,7 @@ export const OrderSummary = observer((props: any) => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Typography noWrap fontSize={11}>
@@ -187,7 +187,7 @@ export const OrderSummary = observer((props: any) => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Typography noWrap fontSize={11}>
@@ -206,8 +206,8 @@ export const OrderSummary = observer((props: any) => {
                   xs={6}
                   md={2.4}
                   sx={{
-                    margin: "auto",
-                    textAlign: "left",
+                    margin: 'auto',
+                    textAlign: 'left',
                   }}
                 >
                   <Grid container spacing={0.5}>
@@ -216,7 +216,7 @@ export const OrderSummary = observer((props: any) => {
                       xs={6}
                       md={3}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Input readOnly value={props.item.receiverZipCode} />
@@ -227,7 +227,7 @@ export const OrderSummary = observer((props: any) => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Input readOnly value={props.item.receiverIntegratedAddress} />
@@ -238,7 +238,7 @@ export const OrderSummary = observer((props: any) => {
                       xs={6}
                       md={3}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Input readOnly value={props.item.productOrderMemo} />
@@ -251,14 +251,14 @@ export const OrderSummary = observer((props: any) => {
                   xs={6}
                   md={1.4}
                   sx={{
-                    m: "auto",
-                    textAlign: "left",
+                    m: 'auto',
+                    textAlign: 'left',
                   }}
                 >
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
+                      display: 'flex',
+                      alignItems: 'center',
                     }}
                   >
                     {props.item.icucResult?.code === 0 ? (
@@ -275,7 +275,7 @@ export const OrderSummary = observer((props: any) => {
                           noWrap
                           fontSize={13}
                           sx={{
-                            color: "#d32f2f",
+                            color: '#d32f2f',
                           }}
                         >
                           {props.item.icucResult?.message}
@@ -295,7 +295,7 @@ export const OrderSummary = observer((props: any) => {
                           noWrap
                           fontSize={13}
                           sx={{
-                            color: "#2e7d32",
+                            color: '#2e7d32',
                           }}
                         >
                           {props.item.icucResult?.message}
@@ -315,7 +315,7 @@ export const OrderSummary = observer((props: any) => {
                           noWrap
                           fontSize={13}
                           sx={{
-                            color: "#ed6c02",
+                            color: '#ed6c02',
                           }}
                         >
                           {props.item.icucResult?.message}
@@ -330,8 +330,8 @@ export const OrderSummary = observer((props: any) => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <Chip
@@ -345,7 +345,7 @@ export const OrderSummary = observer((props: any) => {
                       </Typography>
                     }
                     size="small"
-                    color={props.item.orderQuantity > 1 ? "error" : "default"}
+                    color={props.item.orderQuantity > 1 ? 'error' : 'default'}
                   />
                 </Grid>
 
@@ -354,18 +354,18 @@ export const OrderSummary = observer((props: any) => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <Typography
                     noWrap
                     fontSize={13}
                     sx={{
-                      color: "#1565c0",
+                      color: '#1565c0',
                     }}
                   >
-                    {parseInt(props.item.productPayAmt).toLocaleString("ko-KR")}원
+                    {parseInt(props.item.productPayAmt).toLocaleString('ko-KR')}원
                   </Typography>
                 </Grid>
 
@@ -374,22 +374,22 @@ export const OrderSummary = observer((props: any) => {
                   xs={6}
                   md={0.6}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <Typography
                     noWrap
                     fontSize={13}
                     sx={{
-                      color: "#d32f2f",
+                      color: '#d32f2f',
                     }}
                   >
                     {isNaN(props.item.deliveryFeeAmt)
-                      ? ""
+                      ? ''
                       : props.item.deliveryFeeAmt === 0
-                      ? "무료"
-                      : `${props.item.deliveryFeeAmt.toLocaleString("ko-KR")}원`}
+                      ? '무료'
+                      : `${props.item.deliveryFeeAmt.toLocaleString('ko-KR')}원`}
                   </Typography>
                 </Grid>
 
@@ -398,14 +398,14 @@ export const OrderSummary = observer((props: any) => {
                   xs={6}
                   md={1}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <Box
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "right",
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'right',
                       mr: 1,
                     }}
                   >

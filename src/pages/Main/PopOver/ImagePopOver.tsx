@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Popover, Paper } from "@mui/material";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Popover, Paper } from '@mui/material';
 
 // 이미지를 클릭했을 때 확대되어 나타나는 팝업
 export const ImagePopOver = observer(() => {
@@ -22,8 +22,8 @@ export const ImagePopOver = observer(() => {
         });
       }}
       anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left",
+        vertical: 'bottom',
+        horizontal: 'left',
       }}
     >
       <Paper>
@@ -37,7 +37,7 @@ export const ImagePopOver = observer(() => {
             width={600}
             height={600}
             style={{
-              objectFit: "contain",
+              objectFit: 'contain',
             }}
           />
         </Box>

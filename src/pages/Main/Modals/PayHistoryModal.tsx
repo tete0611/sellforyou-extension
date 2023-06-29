@@ -1,13 +1,25 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { styled, Box, Chip, Modal, Paper, Table, TableHead, TableBody, TableRow, TableCell, Typography } from "@mui/material";
-import { format } from "date-fns";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import {
+  styled,
+  Box,
+  Chip,
+  Modal,
+  Paper,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Typography,
+} from '@mui/material';
+import { format } from 'date-fns';
 
 // 커스텀 테이블 열 스타일 설정
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
+  textAlign: 'center',
   padding: 8,
   fontSize: 13,
 });
@@ -53,9 +65,9 @@ export const PayHistoryModal = observer(() => {
 
         <Box
           sx={{
-            borderTop: "1px solid rgba(224, 224, 224, 1)",
-            borderLeft: "1px solid rgba(224, 224, 224, 1)",
-            borderRight: "1px solid rgba(224, 224, 224, 1)",
+            borderTop: '1px solid rgba(224, 224, 224, 1)',
+            borderLeft: '1px solid rgba(224, 224, 224, 1)',
+            borderRight: '1px solid rgba(224, 224, 224, 1)',
           }}
         >
           <Table>
@@ -65,7 +77,7 @@ export const PayHistoryModal = observer(() => {
 
                 <StyledTableCell
                   sx={{
-                    borderLeft: "1px solid rgba(224, 224, 224, 1)",
+                    borderLeft: '1px solid rgba(224, 224, 224, 1)',
                   }}
                 >
                   플랜
@@ -73,7 +85,7 @@ export const PayHistoryModal = observer(() => {
 
                 <StyledTableCell
                   sx={{
-                    borderLeft: "1px solid rgba(224, 224, 224, 1)",
+                    borderLeft: '1px solid rgba(224, 224, 224, 1)',
                   }}
                 >
                   유효기간
@@ -81,7 +93,7 @@ export const PayHistoryModal = observer(() => {
 
                 <StyledTableCell
                   sx={{
-                    borderLeft: "1px solid rgba(224, 224, 224, 1)",
+                    borderLeft: '1px solid rgba(224, 224, 224, 1)',
                   }}
                 >
                   비고
@@ -94,16 +106,16 @@ export const PayHistoryModal = observer(() => {
                 <TableRow>
                   <StyledTableCell
                     sx={{
-                      bgcolor: i === 0 ? "rgb(255, 255, 204)" : "unset",
+                      bgcolor: i === 0 ? 'rgb(255, 255, 204)' : 'unset',
                     }}
                   >
-                    {format(new Date(v.purchasedAt), "yyyy년 MM월 dd일")}
+                    {format(new Date(v.purchasedAt), 'yyyy년 MM월 dd일')}
                   </StyledTableCell>
 
                   <StyledTableCell
                     sx={{
-                      bgcolor: i === 0 ? "rgb(255, 255, 204)" : "unset",
-                      borderLeft: "1px solid rgba(224, 224, 224, 1)",
+                      bgcolor: i === 0 ? 'rgb(255, 255, 204)' : 'unset',
+                      borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     }}
                   >
                     {v.planInfo.planLevel === 1 ? (
@@ -121,20 +133,20 @@ export const PayHistoryModal = observer(() => {
 
                   <StyledTableCell
                     sx={{
-                      bgcolor: i === 0 ? "rgb(255, 255, 204)" : "unset",
-                      borderLeft: "1px solid rgba(224, 224, 224, 1)",
+                      bgcolor: i === 0 ? 'rgb(255, 255, 204)' : 'unset',
+                      borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     }}
                   >
-                    ~ {format(new Date(v.expiredAt), "yyyy년 MM월 dd일까지 사용가능")}
+                    ~ {format(new Date(v.expiredAt), 'yyyy년 MM월 dd일까지 사용가능')}
                   </StyledTableCell>
 
                   <StyledTableCell
                     sx={{
-                      bgcolor: i === 0 ? "rgb(255, 255, 204)" : "unset",
-                      borderLeft: "1px solid rgba(224, 224, 224, 1)",
+                      bgcolor: i === 0 ? 'rgb(255, 255, 204)' : 'unset',
+                      borderLeft: '1px solid rgba(224, 224, 224, 1)',
                     }}
                   >
-                    {i === 0 ? "사용중" : ""}
+                    {i === 0 ? '사용중' : ''}
                   </StyledTableCell>
                 </TableRow>
               ))}

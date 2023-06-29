@@ -1,23 +1,23 @@
-import React from "react";
-import AddIcon from "@mui/icons-material/Add";
-import ClearIcon from "@mui/icons-material/Clear";
-import ErrorIcon from "@mui/icons-material/Error";
+import React from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import ClearIcon from '@mui/icons-material/Clear';
+import ErrorIcon from '@mui/icons-material/Error';
 
-import { observer } from "mobx-react";
-import { readFileDataURL } from "../../../../Tools/Common";
-import { AppContext } from "../../../../../containers/AppContext";
-import { Box, CircularProgress, IconButton, ImageList, ImageListItem, Typography, Button, Paper } from "@mui/material";
-import { Image, Title } from "../../../Common/UI";
-import { makeStyles } from "@material-ui/core/styles";
+import { observer } from 'mobx-react';
+import { readFileDataURL } from '../../../../Tools/Common';
+import { AppContext } from '../../../../../containers/AppContext';
+import { Box, CircularProgress, IconButton, ImageList, ImageListItem, Typography, Button, Paper } from '@mui/material';
+import { Image, Title } from '../../../Common/UI';
+import { makeStyles } from '@material-ui/core/styles';
 
 // MUI Box 사용자 지정 스타일
 const useStyles = makeStyles((theme) => ({
   defaultBox: {
-    background: "#d1e8ff",
+    background: '#d1e8ff',
   },
 
   errorBox: {
-    background: "#ffd1d1",
+    background: '#ffd1d1',
   },
 }));
 
@@ -31,8 +31,8 @@ export const TabOptionImages = observer((props: any) => {
     <div className="inform">
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         <div className="loading" />
@@ -49,8 +49,8 @@ export const TabOptionImages = observer((props: any) => {
         <Title subTitle dark={common.darkTheme} error={props.item.optionImageError}>
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             이미지목록 &nbsp;
@@ -58,14 +58,14 @@ export const TabOptionImages = observer((props: any) => {
               <>
                 <Paper
                   sx={{
-                    color: common.darkTheme ? "error.light" : "error.main",
+                    color: common.darkTheme ? 'error.light' : 'error.main',
 
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
 
                     p: 0.5,
 
-                    textAlign: "left",
+                    textAlign: 'left',
                   }}
                 >
                   <ErrorIcon
@@ -83,8 +83,8 @@ export const TabOptionImages = observer((props: any) => {
 
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             <Button
@@ -98,7 +98,7 @@ export const TabOptionImages = observer((props: any) => {
               }}
               onClick={() => {
                 if (common.user.purchaseInfo2.level < 3) {
-                  alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                  alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                   return;
                 }
@@ -126,7 +126,7 @@ export const TabOptionImages = observer((props: any) => {
               }}
               onClick={() => {
                 if (common.user.purchaseInfo2.level < 3) {
-                  alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                  alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                   return;
                 }
@@ -158,7 +158,7 @@ export const TabOptionImages = observer((props: any) => {
         <Box
           sx={{
             height: 388,
-            overflowY: "auto",
+            overflowY: 'auto',
             p: 0.5,
           }}
         >
@@ -175,8 +175,8 @@ export const TabOptionImages = observer((props: any) => {
 
               <Box
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
+                  display: 'flex',
+                  justifyContent: 'center',
                   p: 1,
                 }}
               >
@@ -190,18 +190,22 @@ export const TabOptionImages = observer((props: any) => {
                   {v.productOptionValue.map((w: any, valueIndex: number) => (
                     <ImageListItem key={`image-${nameIndex}-${valueIndex}`}>
                       <Paper variant="outlined">
-                        <Title subTitle dark={common.darkTheme} error={props.item.imageCheckList && props.item.imageCheckList[w.image]}>
+                        <Title
+                          subTitle
+                          dark={common.darkTheme}
+                          error={props.item.imageCheckList && props.item.imageCheckList[w.image]}
+                        >
                           <Box
                             sx={{
-                              display: "flex",
-                              alignItems: "center",
+                              display: 'flex',
+                              alignItems: 'center',
                             }}
                           >
                             <Typography
                               noWrap
                               fontSize={13}
                               sx={{
-                                textAlign: "left",
+                                textAlign: 'left',
                                 width: 190,
                               }}
                             >
@@ -230,12 +234,12 @@ export const TabOptionImages = observer((props: any) => {
                                 {
                                   ...w,
 
-                                  image: "",
+                                  image: '',
                                 },
                                 props.index,
                                 nameIndex,
                                 valueIndex,
-                                ""
+                                ''
                               );
                             }}
                           >
@@ -256,7 +260,7 @@ export const TabOptionImages = observer((props: any) => {
                               width={215}
                               height={215}
                               style={{
-                                objectFit: "contain",
+                                objectFit: 'contain',
                               }}
                               onClick={(e) => {
                                 product.setImagePopOver({
@@ -273,7 +277,7 @@ export const TabOptionImages = observer((props: any) => {
                                 id={`addOptionImage-${nameIndex}-${valueIndex}`}
                                 type="file"
                                 style={{
-                                  display: "none",
+                                  display: 'none',
                                 }}
                                 onChange={async (e) => {
                                   const fileList = e.target.files ?? [];
@@ -307,7 +311,11 @@ export const TabOptionImages = observer((props: any) => {
                           )}
                         </Box>
 
-                        <Title subTitle dark={common.darkTheme} error={props.item.imageCheckList && props.item.imageCheckList[w.image]}>
+                        <Title
+                          subTitle
+                          dark={common.darkTheme}
+                          error={props.item.imageCheckList && props.item.imageCheckList[w.image]}
+                        >
                           <Button
                             disabled={!w.image}
                             disableElevation
@@ -315,11 +323,15 @@ export const TabOptionImages = observer((props: any) => {
                             color="info"
                             sx={{
                               fontSize: 13,
-                              width: "100%",
+                              width: '100%',
                               height: 26,
                             }}
                             onClick={() => {
-                              window.open(chrome.runtime.getURL(`/trangers_single.html?id=${props.item.id}&type=2&index=${valueIndex}`));
+                              window.open(
+                                chrome.runtime.getURL(
+                                  `/trangers_single.html?id=${props.item.id}&type=2&index=${valueIndex}`
+                                )
+                              );
                             }}
                           >
                             이미지 편집/번역

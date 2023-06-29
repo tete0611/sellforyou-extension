@@ -1,11 +1,11 @@
-import * as React from "react";
+import * as React from 'react';
 
-import { observer } from "mobx-react";
-import { Footer } from "../Main/Common/Footer";
-import { AppContext } from "../../containers/AppContext";
-import { AppBar, Box, Button, Container, Toolbar } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+import { observer } from 'mobx-react';
+import { Footer } from '../Main/Common/Footer';
+import { AppContext } from '../../containers/AppContext';
+import { AppBar, Box, Button, Container, Toolbar } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 // 랜딩페이지 뷰 (미사용)
 export const App = observer(() => {

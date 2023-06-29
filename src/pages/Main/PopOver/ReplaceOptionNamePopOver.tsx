@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Button, Grid, MenuItem, Popover, Select, TextField, Typography } from "@mui/material";
-import { ComboBox, MyButton } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Button, Grid, MenuItem, Popover, Select, TextField, Typography } from '@mui/material';
+import { ComboBox, MyButton } from '../Common/UI';
 
 // 옵션명 치환 팝업
 export const ReplaceOptionNamePopOver = observer(() => {
@@ -21,8 +21,8 @@ export const ReplaceOptionNamePopOver = observer(() => {
 
       data: {
         index: -1,
-        find: "",
-        replace: "",
+        find: '',
+        replace: '',
       },
     });
   };
@@ -33,8 +33,8 @@ export const ReplaceOptionNamePopOver = observer(() => {
       anchorEl={product.popOverInfo.replaceOptionName.element}
       onClose={onClose}
       anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left",
+        vertical: 'bottom',
+        horizontal: 'left',
       }}
     >
       <Box
@@ -50,7 +50,7 @@ export const ReplaceOptionNamePopOver = observer(() => {
               xs={6}
               md={6}
               sx={{
-                m: "auto",
+                m: 'auto',
               }}
             >
               <Typography fontSize={14}>적용할 옵션명</Typography>
@@ -61,12 +61,12 @@ export const ReplaceOptionNamePopOver = observer(() => {
               xs={6}
               md={6}
               sx={{
-                m: "auto",
+                m: 'auto',
               }}
             >
               <ComboBox
                 sx={{
-                  width: "100%",
+                  width: '100%',
                 }}
                 value={product.popOverInfo.replaceOptionName.data.index}
                 onChange={(e) => {
@@ -81,12 +81,12 @@ export const ReplaceOptionNamePopOver = observer(() => {
                   });
                 }}
               >
-                <MenuItem value={-1}>{"<모든 옵션명>"}</MenuItem>
+                <MenuItem value={-1}>{'<모든 옵션명>'}</MenuItem>
 
                 {product.popOverInfo.replaceOptionName.index > -1
-                  ? product.itemInfo.items[product.popOverInfo.replaceOptionName.index].productOptionName.map((v: any, i: number) => (
-                      <MenuItem value={i}>{v.name}</MenuItem>
-                    ))
+                  ? product.itemInfo.items[product.popOverInfo.replaceOptionName.index].productOptionName.map(
+                      (v: any, i: number) => <MenuItem value={i}>{v.name}</MenuItem>
+                    )
                   : null}
               </ComboBox>
             </Grid>
@@ -96,7 +96,7 @@ export const ReplaceOptionNamePopOver = observer(() => {
               xs={6}
               md={6}
               sx={{
-                m: "auto",
+                m: 'auto',
               }}
             >
               <Typography fontSize={14}>검색할 키워드</Typography>
@@ -107,15 +107,15 @@ export const ReplaceOptionNamePopOver = observer(() => {
               xs={6}
               md={6}
               sx={{
-                m: "auto",
+                m: 'auto',
               }}
             >
               <TextField
-                id={"replace_option_name_find"}
-                placeholder={"콤마(,)입력 시 구분자적용"}
+                id={'replace_option_name_find'}
+                placeholder={'콤마(,)입력 시 구분자적용'}
                 variant="outlined"
                 sx={{
-                  width: "100%",
+                  width: '100%',
                 }}
                 inputProps={{
                   style: {
@@ -142,7 +142,7 @@ export const ReplaceOptionNamePopOver = observer(() => {
               xs={6}
               md={6}
               sx={{
-                m: "auto",
+                m: 'auto',
               }}
             >
               <Typography fontSize={14}>변경할 키워드</Typography>
@@ -153,14 +153,14 @@ export const ReplaceOptionNamePopOver = observer(() => {
               xs={6}
               md={6}
               sx={{
-                m: "auto",
+                m: 'auto',
               }}
             >
               <TextField
-                id={"replace_option_name_replace"}
+                id={'replace_option_name_replace'}
                 variant="outlined"
                 sx={{
-                  width: "100%",
+                  width: '100%',
                 }}
                 inputProps={{
                   style: {
@@ -186,9 +186,9 @@ export const ReplaceOptionNamePopOver = observer(() => {
 
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             mt: 3,
           }}
         >
@@ -200,10 +200,12 @@ export const ReplaceOptionNamePopOver = observer(() => {
             onClick={async () => {
               const index = product.popOverInfo.replaceOptionName.index;
               const find = product.popOverInfo.replaceOptionName.data.find;
-              const replace = product.popOverInfo.replaceOptionName.data.replace ? product.popOverInfo.replaceOptionName.data.replace : "";
+              const replace = product.popOverInfo.replaceOptionName.data.replace
+                ? product.popOverInfo.replaceOptionName.data.replace
+                : '';
 
               if (!find) {
-                alert("검색할 키워드를 입력해주세요.");
+                alert('검색할 키워드를 입력해주세요.');
 
                 return;
               }
@@ -211,7 +213,10 @@ export const ReplaceOptionNamePopOver = observer(() => {
               const productOptionName = product.itemInfo.items[index].productOptionName;
 
               for (let i = 0; i < productOptionName.length; i++) {
-                if (product.popOverInfo.replaceOptionName.data.index !== -1 && product.popOverInfo.replaceOptionName.data.index !== i) {
+                if (
+                  product.popOverInfo.replaceOptionName.data.index !== -1 &&
+                  product.popOverInfo.replaceOptionName.data.index !== i
+                ) {
                   continue;
                 }
 
@@ -228,14 +233,14 @@ export const ReplaceOptionNamePopOver = observer(() => {
                   productOptionName[i].productOptionValue.map((v: any) => {
                     //작업중
                     let name = v.name;
-                    if (find.includes(",")) {
-                      find.split(",").map((w: any) => {
-                        let pattern = new RegExp(w, "g");
-                        name = name.replace(pattern, replace).replace(/  +/g, " ");
-                        console.log("name", name);
+                    if (find.includes(',')) {
+                      find.split(',').map((w: any) => {
+                        let pattern = new RegExp(w, 'g');
+                        name = name.replace(pattern, replace).replace(/  +/g, ' ');
+                        console.log('name', name);
                       });
                     } else {
-                      name = name.replaceAll(find, replace).replace(/  +/g, " ");
+                      name = name.replaceAll(find, replace).replace(/  +/g, ' ');
                     }
                     //까지
                     return {

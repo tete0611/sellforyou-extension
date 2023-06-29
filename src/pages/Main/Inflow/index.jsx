@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import { render } from "react-dom";
-import { Inflow } from "./Inflow";
+import { render } from 'react-dom';
+import { Inflow } from './Inflow';
 
-import "./index.css";
+import './index.css';
 
 render(
   <Inflow />,
 
-  window.document.querySelector("#app-container")
+  window.document.querySelector('#app-container')
 );

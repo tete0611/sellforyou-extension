@@ -1,36 +1,36 @@
-import React from "react";
-import SyncIcon from "@mui/icons-material/Sync";
-import SearchIcon from "@mui/icons-material/Search";
+import React from 'react';
+import SyncIcon from '@mui/icons-material/Sync';
+import SearchIcon from '@mui/icons-material/Search';
 
-import { observer } from "mobx-react";
-import { Header } from "../../Common/Header";
-import { ProductTables } from "../Components/ProductTables";
-import { UploadModal } from "../../Modals/UploadModal";
-import { AppContext } from "../../../../containers/AppContext";
-import { ManyCategoryModal } from "../../Modals/ManyCategoryModal";
-import { ManyNameModal } from "../../Modals/ManyNameModal";
-import { ManyPriceModal } from "../../Modals/ManyPriceModal";
-import { MyKeywardModal } from "../../Modals/MyKeywardModal";
-import { ManyTagModal } from "../../Modals/ManyTagModal";
-import { SearchFilterModal } from "../../Modals/SearchFilterModal";
-import { Box, Container, IconButton, MenuItem, Pagination, Paper, Tooltip, Typography } from "@mui/material";
-import { DescriptionModal } from "../../Modals/DescriptionModal";
-import { ImagePopOver } from "../../PopOver/ImagePopOver";
-import { AddOptionNamePopOver } from "../../PopOver/AddOptionNamePopOver";
-import { UploadFailedModal } from "../../Modals/UploadFailedModal";
-import { AddOptionPricePopOver } from "../../PopOver/AddOptionPricePopOver";
-import { SetOptionPricePopOver } from "../../PopOver/SetOptionPricePopOver";
-import { SetOptionStockPopOver } from "../../PopOver/SetOptionStockPopOver";
-import { SubtractOptionPricePopOver } from "../../PopOver/SubtractOptionPricePopOver";
-import { ManyFeeModal } from "../../Modals/ManyFeeModal";
-import { ComboBox, Frame, Input, MyButton, Title } from "../../Common/UI";
-import { CollectExcelModal } from "../../Modals/CollectExcelModal";
-import { ManyAttributeModal } from "../../Modals/ManyAttributeModal";
-import { SetProductSillDataPopOver } from "../../PopOver/SetProductSillDataPopOver";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { UpdateManyProductPopOver } from "../../PopOver/UpdateManyProductPopOver";
-import { ReplaceOptionNamePopOver } from "../../PopOver/ReplaceOptionNamePopOver";
-import { Esm2UploadModal } from "../../Modals/Esm2UploadModal";
+import { observer } from 'mobx-react';
+import { Header } from '../../Common/Header';
+import { ProductTables } from '../Components/ProductTables';
+import { UploadModal } from '../../Modals/UploadModal';
+import { AppContext } from '../../../../containers/AppContext';
+import { ManyCategoryModal } from '../../Modals/ManyCategoryModal';
+import { ManyNameModal } from '../../Modals/ManyNameModal';
+import { ManyPriceModal } from '../../Modals/ManyPriceModal';
+import { MyKeywardModal } from '../../Modals/MyKeywardModal';
+import { ManyTagModal } from '../../Modals/ManyTagModal';
+import { SearchFilterModal } from '../../Modals/SearchFilterModal';
+import { Box, Container, IconButton, MenuItem, Pagination, Paper, Tooltip, Typography } from '@mui/material';
+import { DescriptionModal } from '../../Modals/DescriptionModal';
+import { ImagePopOver } from '../../PopOver/ImagePopOver';
+import { AddOptionNamePopOver } from '../../PopOver/AddOptionNamePopOver';
+import { UploadFailedModal } from '../../Modals/UploadFailedModal';
+import { AddOptionPricePopOver } from '../../PopOver/AddOptionPricePopOver';
+import { SetOptionPricePopOver } from '../../PopOver/SetOptionPricePopOver';
+import { SetOptionStockPopOver } from '../../PopOver/SetOptionStockPopOver';
+import { SubtractOptionPricePopOver } from '../../PopOver/SubtractOptionPricePopOver';
+import { ManyFeeModal } from '../../Modals/ManyFeeModal';
+import { ComboBox, Frame, Input, MyButton, Title } from '../../Common/UI';
+import { CollectExcelModal } from '../../Modals/CollectExcelModal';
+import { ManyAttributeModal } from '../../Modals/ManyAttributeModal';
+import { SetProductSillDataPopOver } from '../../PopOver/SetProductSillDataPopOver';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { UpdateManyProductPopOver } from '../../PopOver/UpdateManyProductPopOver';
+import { ReplaceOptionNamePopOver } from '../../PopOver/ReplaceOptionNamePopOver';
+import { Esm2UploadModal } from '../../Modals/Esm2UploadModal';
 
 // 상품수집관리 목록 테이블 뷰
 export const Collected = observer(() => {
@@ -52,14 +52,14 @@ export const Collected = observer(() => {
     // 메시지 이벤트 설정 (이미지번역, 새로고침 등의 메시지를 받을 경우 처리)
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       switch (request.action) {
-        case "refresh": {
+        case 'refresh': {
           product.refreshProduct(common);
           sendResponse(true);
 
           break;
         }
 
-        case "trangers": {
+        case 'trangers': {
           product.updateImageTranslatedData(request.source);
           sendResponse(true);
 
@@ -77,7 +77,7 @@ export const Collected = observer(() => {
     () =>
       createTheme({
         palette: {
-          mode: common.darkTheme ? "dark" : "light",
+          mode: common.darkTheme ? 'dark' : 'light',
         },
       }),
     [common.darkTheme]
@@ -88,13 +88,13 @@ export const Collected = observer(() => {
       <Frame dark={common.darkTheme}>
         <Header />
 
-        <Container maxWidth={"xl"}>
+        <Container maxWidth={'xl'}>
           <Paper variant="outlined">
             <Title dark={common.darkTheme}>
               <Box
                 sx={{
-                  alignItems: "center",
-                  display: "flex",
+                  alignItems: 'center',
+                  display: 'flex',
                 }}
               >
                 <Typography color="text.primary">수집상품목록 ({product.count})</Typography>
@@ -102,8 +102,8 @@ export const Collected = observer(() => {
 
               <Box
                 sx={{
-                  alignItems: "center",
-                  display: "flex",
+                  alignItems: 'center',
+                  display: 'flex',
                 }}
               >
                 <MyButton
@@ -136,10 +136,10 @@ export const Collected = observer(() => {
                     let pageSize = 10;
 
                     if (e.target.value === 0) {
-                      const input = prompt("페이지 당 조회할 상품 수를 입력해주세요. (최대 50개까지 입력 가능)");
+                      const input = prompt('페이지 당 조회할 상품 수를 입력해주세요. (최대 50개까지 입력 가능)');
 
                       if (!input) {
-                        alert("조회할 상품 수 입력이 잘못되었습니다.");
+                        alert('조회할 상품 수 입력이 잘못되었습니다.');
 
                         return;
                       }
@@ -147,13 +147,13 @@ export const Collected = observer(() => {
                       pageSize = parseInt(input);
 
                       if (isNaN(pageSize)) {
-                        alert("조회할 상품 수는 숫자만 입력 가능합니다.");
+                        alert('조회할 상품 수는 숫자만 입력 가능합니다.');
 
                         return;
                       }
 
                       if (pageSize < 1) {
-                        alert("조회할 상품 수는 1개 이상으로 입력해주세요.");
+                        alert('조회할 상품 수는 1개 이상으로 입력해주세요.');
 
                         return;
                       }
@@ -186,7 +186,11 @@ export const Collected = observer(() => {
 
                   <MenuItem>-----------</MenuItem>
 
-                  {product.etcPageSize ? <MenuItem value={0}>{product.pageSize}개 보기</MenuItem> : <MenuItem value={0}>직접 입력</MenuItem>}
+                  {product.etcPageSize ? (
+                    <MenuItem value={0}>{product.pageSize}개 보기</MenuItem>
+                  ) : (
+                    <MenuItem value={0}>직접 입력</MenuItem>
+                  )}
                 </ComboBox>
                 &nbsp;
                 <Tooltip title="페이지새로고침">
@@ -218,7 +222,7 @@ export const Collected = observer(() => {
                     product.setPageTemp(page);
                   }}
                   onKeyPress={(e: any) => {
-                    if (e.key !== "Enter") {
+                    if (e.key !== 'Enter') {
                       return;
                     }
 

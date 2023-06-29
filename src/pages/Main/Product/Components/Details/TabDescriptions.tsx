@@ -1,23 +1,23 @@
-import React from "react";
-import ReactQuill from "react-quill";
-import ClearIcon from "@mui/icons-material/Clear";
-import ErrorIcon from "@mui/icons-material/Error";
+import React from 'react';
+import ReactQuill from 'react-quill';
+import ClearIcon from '@mui/icons-material/Clear';
+import ErrorIcon from '@mui/icons-material/Error';
 
-import { observer } from "mobx-react";
-import { ListManager } from "react-beautiful-dnd-grid";
-import { AppContext } from "../../../../../containers/AppContext";
-import { Box, Button, CircularProgress, Grid, IconButton, Paper, Typography } from "@mui/material";
-import { Image, Title } from "../../../Common/UI";
-import { makeStyles } from "@material-ui/core/styles";
+import { observer } from 'mobx-react';
+import { ListManager } from 'react-beautiful-dnd-grid';
+import { AppContext } from '../../../../../containers/AppContext';
+import { Box, Button, CircularProgress, Grid, IconButton, Paper, Typography } from '@mui/material';
+import { Image, Title } from '../../../Common/UI';
+import { makeStyles } from '@material-ui/core/styles';
 
 // MUI Box 사용자 지정 스타일
 const useStyles = makeStyles((theme) => ({
   defaultBox: {
-    background: "#d1e8ff",
+    background: '#d1e8ff',
   },
 
   errorBox: {
-    background: "#ffd1d1",
+    background: '#ffd1d1',
   },
 }));
 
@@ -39,8 +39,8 @@ export const TabDescriptions = observer((props: any) => {
     <div className="inform">
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         <div className="loading" />
@@ -53,9 +53,9 @@ export const TabDescriptions = observer((props: any) => {
     <>
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          margin: "auto",
+          display: 'flex',
+          justifyContent: 'space-between',
+          margin: 'auto',
         }}
       >
         <Grid container spacing={0.5}>
@@ -66,8 +66,8 @@ export const TabDescriptions = observer((props: any) => {
               <Title subTitle dark={common.darkTheme} error={props.item.descriptionImageError}>
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
                   이미지목록&nbsp;
@@ -75,14 +75,14 @@ export const TabDescriptions = observer((props: any) => {
                     <>
                       <Paper
                         sx={{
-                          color: common.darkTheme ? "error.light" : "error.main",
+                          color: common.darkTheme ? 'error.light' : 'error.main',
 
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center',
 
                           p: 0.5,
 
-                          textAlign: "left",
+                          textAlign: 'left',
                         }}
                       >
                         <ErrorIcon
@@ -100,8 +100,8 @@ export const TabDescriptions = observer((props: any) => {
 
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
                   <Button
@@ -115,7 +115,7 @@ export const TabDescriptions = observer((props: any) => {
                     }}
                     onClick={() => {
                       if (common.user.purchaseInfo2.level < 3) {
-                        alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                        alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                         return;
                       }
@@ -143,7 +143,7 @@ export const TabDescriptions = observer((props: any) => {
                     }}
                     onClick={() => {
                       if (common.user.purchaseInfo2.level < 3) {
-                        alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                        alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                         return;
                       }
@@ -158,12 +158,12 @@ export const TabDescriptions = observer((props: any) => {
 
               <Box
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
+                  display: 'flex',
+                  justifyContent: 'center',
                   p: 1,
 
                   height: 379,
-                  overflowY: "auto",
+                  overflowY: 'auto',
                 }}
               >
                 <Box>
@@ -178,10 +178,10 @@ export const TabDescriptions = observer((props: any) => {
                             return;
                           }
 
-                          let fixed = elem.parentNode.getAttribute("fixed");
+                          let fixed = elem.parentNode.getAttribute('fixed');
 
                           if (!fixed) {
-                            elem.parentNode.setAttribute("fixed", "false");
+                            elem.parentNode.setAttribute('fixed', 'false');
 
                             return;
                           }
@@ -190,24 +190,26 @@ export const TabDescriptions = observer((props: any) => {
                           let top = parseFloat(elem.parentNode.style.top);
 
                           if (isNaN(left) || isNaN(top)) {
-                            elem.parentNode.setAttribute("fixed", "false");
+                            elem.parentNode.setAttribute('fixed', 'false');
 
                             return;
                           }
 
-                          if (fixed === "false") {
-                            const frame = document.getElementsByClassName("ReactVirtualized__Grid ReactVirtualized__List")[0];
+                          if (fixed === 'false') {
+                            const frame = document.getElementsByClassName(
+                              'ReactVirtualized__Grid ReactVirtualized__List'
+                            )[0];
                             const framePos = frame.getBoundingClientRect();
 
                             const fixedWidth = (common.innerSize.width - framePos.width) / 2;
 
-                            elem.parentNode.style.setProperty("left", `${left - fixedWidth}px`, "important");
-                            elem.parentNode.style.setProperty("top", `${frame.scrollTop + top - 177}px`, "important");
-                            elem.parentNode.setAttribute("fixed", "true");
+                            elem.parentNode.style.setProperty('left', `${left - fixedWidth}px`, 'important');
+                            elem.parentNode.style.setProperty('top', `${frame.scrollTop + top - 177}px`, 'important');
+                            elem.parentNode.setAttribute('fixed', 'true');
                           }
                         }}
                         sx={{
-                          m: "2px",
+                          m: '2px',
                         }}
                         variant="outlined"
                       >
@@ -218,15 +220,19 @@ export const TabDescriptions = observer((props: any) => {
 
                           return (
                             <>
-                              <Title subTitle dark={common.darkTheme} error={props.item.imageCheckList && props.item.imageCheckList[img]}>
+                              <Title
+                                subTitle
+                                dark={common.darkTheme}
+                                error={props.item.imageCheckList && props.item.imageCheckList[img]}
+                              >
                                 <Box
                                   sx={{
-                                    display: "flex",
-                                    alignItems: "center",
+                                    display: 'flex',
+                                    alignItems: 'center',
                                   }}
                                 >
                                   <Typography noWrap fontSize={13}>
-                                    {`상세이미지 ${(i + 1).toString().padStart(2, "0")} `}
+                                    {`상세이미지 ${(i + 1).toString().padStart(2, '0')} `}
                                   </Typography>
 
                                   {props.item.imageCheckList && props.item.imageCheckList[img] ? (
@@ -259,7 +265,7 @@ export const TabDescriptions = observer((props: any) => {
                                 width={140}
                                 height={140}
                                 style={{
-                                  objectFit: "contain",
+                                  objectFit: 'contain',
                                 }}
                                 onClick={(e) => {
                                   product.setImagePopOver({
@@ -270,18 +276,26 @@ export const TabDescriptions = observer((props: any) => {
                                 }}
                               />
 
-                              <Title subTitle dark={common.darkTheme} error={props.item.imageCheckList && props.item.imageCheckList[img]}>
+                              <Title
+                                subTitle
+                                dark={common.darkTheme}
+                                error={props.item.imageCheckList && props.item.imageCheckList[img]}
+                              >
                                 <Button
                                   disableElevation
                                   variant="contained"
                                   color="info"
                                   sx={{
                                     fontSize: 13,
-                                    width: "100%",
+                                    width: '100%',
                                     height: 26,
                                   }}
                                   onClick={() => {
-                                    window.open(chrome.runtime.getURL(`/trangers_single.html?id=${props.item.id}&type=3&index=${i}`));
+                                    window.open(
+                                      chrome.runtime.getURL(
+                                        `/trangers_single.html?id=${props.item.id}&type=3&index=${i}`
+                                      )
+                                    );
                                   }}
                                 >
                                   이미지 편집/번역
@@ -307,8 +321,8 @@ export const TabDescriptions = observer((props: any) => {
                 미리보기
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
                   <Button
@@ -349,7 +363,7 @@ export const TabDescriptions = observer((props: any) => {
                 sx={{
                   p: 1,
                   height: 380,
-                  overflowY: "auto",
+                  overflowY: 'auto',
                 }}
               >
                 <ReactQuill readOnly value={product.itemInfo.items[props.index]?.description} modules={modules} />

@@ -1,13 +1,13 @@
-import html2canvas from "html2canvas";
-import CryptoJS from "crypto-js";
+import html2canvas from 'html2canvas';
+import CryptoJS from 'crypto-js';
 
-import { checkLogin } from "./common/auth";
-import { form } from "./common/data";
-import { injectScript } from "./common/utils";
-import { sleep, getImageSize, getCookie, request } from "../../Tools/Common";
-import { Buffer } from "buffer";
+import { checkLogin } from './common/auth';
+import { form } from './common/data';
+import { injectScript } from './common/utils';
+import { sleep, getImageSize, getCookie, request } from '../../Tools/Common';
+import { Buffer } from 'buffer';
 
-const iconv = require("iconv-lite");
+const iconv = require('iconv-lite');
 
 // 타오바오 상품정보 크롤링
 async function scrape(items: any, user: any) {
@@ -16,7 +16,7 @@ async function scrape(items: any, user: any) {
   result.user = user;
 
   // 상품속성
-  let attributes: any = document.getElementsByClassName("attributes-list")[0].querySelectorAll("li");
+  let attributes: any = document.getElementsByClassName('attributes-list')[0].querySelectorAll('li');
 
   for (let i in attributes) {
     try {
@@ -26,7 +26,7 @@ async function scrape(items: any, user: any) {
         continue;
       }
 
-      result["item"]["attr"].push(text);
+      result['item']['attr'].push(text);
     } catch (e) {
       continue;
     }
@@ -42,15 +42,15 @@ async function scrape(items: any, user: any) {
 
   // 판매가
   try {
-    if (details.promotion.promoData.def[0].price.includes("-")) {
-      price = details.promotion.promoData.def[0].price.split("-")[0];
+    if (details.promotion.promoData.def[0].price.includes('-')) {
+      price = details.promotion.promoData.def[0].price.split('-')[0];
     } else {
       price = details.promotion.promoData.def[0].price;
     }
   } catch (e) {
-    console.log("알림: 프로모션 가격 정보를 가져오지 못했습니다. 기본 가격으로 수집됩니다. (", e, ")");
-    if (details.price.includes("-")) {
-      price = details.price.split("-")[0];
+    console.log('알림: 프로모션 가격 정보를 가져오지 못했습니다. 기본 가격으로 수집됩니다. (', e, ')');
+    if (details.price.includes('-')) {
+      price = details.price.split('-')[0];
     } else {
       price = details.price;
     }
@@ -58,42 +58,44 @@ async function scrape(items: any, user: any) {
 
   // 배송비
   let shipping_info = details.deliveryFee
-    ? details.deliveryFee.data.serviceInfo.hasOwnProperty("sku")
+    ? details.deliveryFee.data.serviceInfo.hasOwnProperty('sku')
       ? details.deliveryFee.data.serviceInfo.sku.default[0].info
       : details.deliveryFee.data.serviceInfo.list[0].info
-    : "0.0";
-  let shipping_fee = parseFloat(shipping_info.replace(/[^\.0-9]/g, ""));
+    : '0.0';
+  let shipping_fee = parseFloat(shipping_info.replace(/[^\.0-9]/g, ''));
 
   // 상품 기본정보
-  result["item"]["shopName"] = "taobao";
-  result["item"]["url"] = `https://item.taobao.com/item.htm?id=${configs.idata.item.id}`;
-  result["item"]["num_iid"] = configs.idata.item.id;
-  result["item"]["title"] = configs.idata.item.title;
-  result["item"]["price"] = shipping_fee > 0 ? (parseFloat(price) + shipping_fee).toString() : price;
-  result["item"]["pic_url"] = /^https?:/.test(configs.idata.item.pic) ? configs.idata.item.pic : "http:" + configs.idata.item.pic;
+  result['item']['shopName'] = 'taobao';
+  result['item']['url'] = `https://item.taobao.com/item.htm?id=${configs.idata.item.id}`;
+  result['item']['num_iid'] = configs.idata.item.id;
+  result['item']['title'] = configs.idata.item.title;
+  result['item']['price'] = shipping_fee > 0 ? (parseFloat(price) + shipping_fee).toString() : price;
+  result['item']['pic_url'] = /^https?:/.test(configs.idata.item.pic)
+    ? configs.idata.item.pic
+    : 'http:' + configs.idata.item.pic;
   // result['item']['brand'] = "";
-  result["item"]["post_fee"] = shipping_fee;
-  result["item"]["shop_id"] = "taobao";
+  result['item']['post_fee'] = shipping_fee;
+  result['item']['shop_id'] = 'taobao';
 
   // 상세페이지
-  let desc_html: any = new DOMParser().parseFromString(items.desc, "text/html");
-  let desc: any = desc_html.querySelectorAll("html > body img");
+  let desc_html: any = new DOMParser().parseFromString(items.desc, 'text/html');
+  let desc: any = desc_html.querySelectorAll('html > body img');
   let desc_imgs: any = [];
 
-  let descTable = desc_html.querySelectorAll("html > body table");
-  let descText = "";
+  let descTable = desc_html.querySelectorAll('html > body table');
+  let descText = '';
 
   // 상세페이지 <table> 하위요소 캡쳐
   for (let i = 0; i < descTable.length; i++) {
     try {
-      const images = descTable[i].querySelectorAll("img");
+      const images = descTable[i].querySelectorAll('img');
 
       if (images.length > 0) {
         continue;
       }
 
       if (descTable[i].outerHTML) {
-        descTable[i].style.width = "750px";
+        descTable[i].style.width = '750px';
 
         descText += descTable[i].outerHTML;
       }
@@ -103,11 +105,11 @@ async function scrape(items: any, user: any) {
   }
 
   if (descText) {
-    let test = document.createElement("div");
+    let test = document.createElement('div');
 
-    test.id = "capture";
+    test.id = 'capture';
     test.innerHTML = descText;
-    test.style.display = "inline-block";
+    test.style.display = 'inline-block';
 
     document.body.appendChild(test);
 
@@ -116,7 +118,7 @@ async function scrape(items: any, user: any) {
       width: 750,
     });
 
-    let canvas_output = canvas.toDataURL("image/png");
+    let canvas_output = canvas.toDataURL('image/png');
 
     test.remove();
 
@@ -126,21 +128,21 @@ async function scrape(items: any, user: any) {
   //html domparse는 이렇게 배열처럼 할수있음 .
   for (let i in desc) {
     try {
-      if (desc[i].getAttribute("data-ks-lazyload")) {
-        desc[i].src = desc[i].getAttribute("data-ks-lazyload");
+      if (desc[i].getAttribute('data-ks-lazyload')) {
+        desc[i].src = desc[i].getAttribute('data-ks-lazyload');
       }
 
-      if (desc[i].getAttribute("data-src")) {
-        desc[i].src = desc[i].getAttribute("data-src");
+      if (desc[i].getAttribute('data-src')) {
+        desc[i].src = desc[i].getAttribute('data-src');
       }
 
       if (desc[i].src) {
-        if (desc[i].src.includes(".gif")) {
+        if (desc[i].src.includes('.gif')) {
           desc[i].parentNode.removeChild(desc[i]);
         } else {
           const image: any = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
           if (image < 1000) {
-            console.log("흰색 이미지", desc[i]);
+            console.log('흰색 이미지', desc[i]);
             desc[i].parentNode.removeChild(desc[i]);
           } else {
             desc[i].src = desc[i].src;
@@ -155,7 +157,7 @@ async function scrape(items: any, user: any) {
     }
   }
 
-  let desc_href: any = desc_html.querySelectorAll("a");
+  let desc_href: any = desc_html.querySelectorAll('a');
 
   for (let i in desc_href) {
     try {
@@ -165,31 +167,36 @@ async function scrape(items: any, user: any) {
     }
   }
 
-  let desc_output = desc_html.querySelector("html > body").innerHTML;
+  let desc_output = desc_html.querySelector('html > body').innerHTML;
 
   // 상세페이지 텍스트 추출
-  let iterator = document.createNodeIterator(desc_html.querySelector("html > body"), NodeFilter.SHOW_TEXT);
+  let iterator = document.createNodeIterator(desc_html.querySelector('html > body'), NodeFilter.SHOW_TEXT);
   let textnode;
 
   while ((textnode = iterator.nextNode())) {
     const texts = textnode.textContent
-      .split("\n")
+      .split('\n')
       .map((v: any) => v.trim())
       .filter((v: any) => v);
 
     texts.map((v: any) => {
-      result["item"]["desc_text"].push(v);
+      result['item']['desc_text'].push(v);
     });
   }
 
-  result["item"]["desc"] = desc_output;
-  result["item"]["desc_img"] = desc_imgs; //trangers에서 쓸거고
+  result['item']['desc'] = desc_output;
+  result['item']['desc_img'] = desc_imgs; //trangers에서 쓸거고
 
   // 동영상
   try {
-    result["item"]["video"] = "https://cloud.video.taobao.com/play/u/" + script_video.videoOwnerId + "/p/1/e/6/t/1/" + script_video.videoId + ".mp4";
+    result['item']['video'] =
+      'https://cloud.video.taobao.com/play/u/' +
+      script_video.videoOwnerId +
+      '/p/1/e/6/t/1/' +
+      script_video.videoId +
+      '.mp4';
   } catch (e) {
-    console.log("알림: 동영상이 없는 상품입니다. (", e, ")");
+    console.log('알림: 동영상이 없는 상품입니다. (', e, ')');
   }
 
   // 썸네일이미지
@@ -210,46 +217,50 @@ async function scrape(items: any, user: any) {
         //     url: /^https?:/.test(configs.idata.item.auctionImages[i]) ? configs.idata.item.auctionImages[i] : "http:" + configs.idata.item.auctionImages[i],
         //   });
         // }
-        result["item"]["item_imgs"].push({
-          url: /^https?:/.test(configs.idata.item.auctionImages[i]) ? configs.idata.item.auctionImages[i] : "http:" + configs.idata.item.auctionImages[i],
+        result['item']['item_imgs'].push({
+          url: /^https?:/.test(configs.idata.item.auctionImages[i])
+            ? configs.idata.item.auctionImages[i]
+            : 'http:' + configs.idata.item.auctionImages[i],
         });
       } catch (e) {
         continue;
       }
     }
   } catch (e) {
-    console.log("에러: 대표 이미지를 찾을 수 없습니다. (", e, ")");
+    console.log('에러: 대표 이미지를 찾을 수 없습니다. (', e, ')');
 
-    return { error: "대표 이미지를 찾을 수 없습니다." };
+    return { error: '대표 이미지를 찾을 수 없습니다.' };
   }
 
   // 옵션정보
-  let options = document.querySelectorAll("#J_isku > div ul");
+  let options = document.querySelectorAll('#J_isku > div ul');
 
   for (let i in options) {
     try {
-      let id = options[i].querySelectorAll("li");
-      let name = options[i].getAttribute("data-property");
+      let id = options[i].querySelectorAll('li');
+      let name = options[i].getAttribute('data-property');
 
       for (let j in id) {
         try {
-          let img: any = id[j].querySelector("a");
-          let num: any = id[j].getAttribute("data-value");
+          let img: any = id[j].querySelector('a');
+          let num: any = id[j].getAttribute('data-value');
 
           let val = img.textContent;
-          let url = img.style.backgroundImage.length ? img.style.backgroundImage.match(/(\/\/.*)"/)[1].replace(/_\d{2}x\d{2}.[a-zA-Z]{3}/, "") : "";
+          let url = img.style.backgroundImage.length
+            ? img.style.backgroundImage.match(/(\/\/.*)"/)[1].replace(/_\d{2}x\d{2}.[a-zA-Z]{3}/, '')
+            : '';
 
-          if (url !== "") {
-            result["item"]["prop_imgs"]["prop_img"].push({
+          if (url !== '') {
+            result['item']['prop_imgs']['prop_img'].push({
               properties: num,
-              url: /^https?:/.test(url) ? url : "http:" + url,
+              url: /^https?:/.test(url) ? url : 'http:' + url,
             });
           }
 
           if (val !== null) {
             let value = val.trim() ?? items.sku.valItemInfo.propertyMemoMap[num];
 
-            result["item"]["props_list"][num] = name + ":" + value;
+            result['item']['props_list'][num] = name + ':' + value;
           }
         } catch (e) {
           continue;
@@ -262,37 +273,44 @@ async function scrape(items: any, user: any) {
 
   try {
     for (let i in script_option) {
-      let properties = i.split(";");
+      let properties = i.split(';');
 
-      let properties_id = "";
-      let properties_name = "";
+      let properties_id = '';
+      let properties_name = '';
 
       for (let j = 1; j < properties.length; j++) {
         if (j < properties.length - 1) {
           properties_id += properties[j];
-          properties_name += properties[j] + ":" + result["item"]["props_list"][properties[j]];
+          properties_name += properties[j] + ':' + result['item']['props_list'][properties[j]];
         }
 
         if (j < properties.length - 2) {
-          properties_id += ";";
-          properties_name += ";";
+          properties_id += ';';
+          properties_name += ';';
         }
       }
 
-      if (result["item"]["props_list"][properties[1]] !== undefined) {
+      if (result['item']['props_list'][properties[1]] !== undefined) {
         if (details.dynStock.sku.hasOwnProperty(i)) {
           let quantity = details.dynStock.sku[i].stock.toString();
 
-          if (quantity !== "0") {
-            let promotion_price = details.promotion.promoData[i] ? details.promotion.promoData[i][0].price : details.originalPrice[i].price;
+          if (quantity !== '0') {
+            let promotion_price = details.promotion.promoData[i]
+              ? details.promotion.promoData[i][0].price
+              : details.originalPrice[i].price;
 
-            result["item"]["skus"]["sku"].push({
+            result['item']['skus']['sku'].push({
               price: shipping_fee > 0 ? (parseFloat(promotion_price) + shipping_fee).toString() : promotion_price,
               total_price: 0,
-              original_price: details.originalPrice.hasOwnProperty(i) ? details.originalPrice[i].price : "",
+              original_price: details.originalPrice.hasOwnProperty(i) ? details.originalPrice[i].price : '',
               properties: properties_id,
               properties_name: properties_name,
-              quantity: user.userInfo.collectStock === 0 ? (quantity > 99999 ? "99999" : quantity.toString()) : user.userInfo.collectStock.toString(),
+              quantity:
+                user.userInfo.collectStock === 0
+                  ? quantity > 99999
+                    ? '99999'
+                    : quantity.toString()
+                  : user.userInfo.collectStock.toString(),
               sku_id: script_option[i].skuId,
             });
           }
@@ -302,27 +320,27 @@ async function scrape(items: any, user: any) {
       }
     }
   } catch (e) {
-    console.log("에러: 옵션 세부정보를 가져오지 못했습니다. (", e, ")");
+    console.log('에러: 옵션 세부정보를 가져오지 못했습니다. (', e, ')');
 
-    return { error: "옵션 세부정보를 가져오지 못했습니다." };
+    return { error: '옵션 세부정보를 가져오지 못했습니다.' };
   }
 
   // 판매가와 옵션최저가 비교해서 작은 값 할당
-  let min_price = parseFloat(result["item"]["price"]);
+  let min_price = parseFloat(result['item']['price']);
 
   try {
     if (Object.keys(script_option).length > 0) {
-      let priceList = result["item"]["skus"]["sku"].map((v: any) => {
+      let priceList = result['item']['skus']['sku'].map((v: any) => {
         return v.price;
       });
 
       min_price = Math.min(...priceList);
 
-      for (let i in result["item"]["props_list"]) {
+      for (let i in result['item']['props_list']) {
         let matched = false;
 
-        for (let j in result["item"]["skus"]["sku"]) {
-          if (result["item"]["skus"]["sku"][j]["properties"].includes(i)) {
+        for (let j in result['item']['skus']['sku']) {
+          if (result['item']['skus']['sku'][j]['properties'].includes(i)) {
             matched = true;
 
             break;
@@ -333,21 +351,21 @@ async function scrape(items: any, user: any) {
           continue;
         }
 
-        delete result["item"]["props_list"][i];
+        delete result['item']['props_list'][i];
       }
     }
   } catch (e) {
-    console.log("에러: 옵션 가격정보를 가져오지 못했습니다. (", e, ")");
+    console.log('에러: 옵션 가격정보를 가져오지 못했습니다. (', e, ')');
   }
 
-  if (parseFloat(result["item"]["price"]) !== min_price) {
-    result["item"]["price"] = min_price.toString();
+  if (parseFloat(result['item']['price']) !== min_price) {
+    result['item']['price'] = min_price.toString();
   }
 
   if (Object.keys(result.item.props_list).length > 0 && result.item.skus.sku.length === 0) {
-    console.log("에러: 해당 상품은 일시적으로 품절되었습니다.");
+    console.log('에러: 해당 상품은 일시적으로 품절되었습니다.');
 
-    return { error: "해당 상품은 일시적으로 품절되었습니다." };
+    return { error: '해당 상품은 일시적으로 품절되었습니다.' };
   }
 
   return result;
@@ -355,7 +373,7 @@ async function scrape(items: any, user: any) {
 
 export class taobao {
   constructor() {
-    checkLogin("taobao").then((auth) => {
+    checkLogin('taobao').then((auth) => {
       if (!auth) {
         return null;
       }
@@ -364,20 +382,20 @@ export class taobao {
 
   // 수집하기 눌렀을 때
   async get(user: any) {
-    sessionStorage.removeItem("sfy-taobao-item");
+    sessionStorage.removeItem('sfy-taobao-item');
 
-    injectScript("taobao");
+    injectScript('taobao');
 
     let timeout = 0;
 
     while (true) {
       if (timeout === user.userInfo.collectTimeout) {
         return {
-          error: "타오바오 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.",
+          error: '타오바오 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
         };
       }
 
-      let data = sessionStorage.getItem("sfy-taobao-item");
+      let data = sessionStorage.getItem('sfy-taobao-item');
 
       if (data) {
         let originalData = JSON.parse(data);
@@ -386,7 +404,7 @@ export class taobao {
           // 상세페이지 파싱
           let descResp = await fetch(originalData.descUrl);
           let descBuffer = await descResp.arrayBuffer();
-          let descText = iconv.decode(Buffer.from(descBuffer), "gbk").toString();
+          let descText = iconv.decode(Buffer.from(descBuffer), 'gbk').toString();
 
           originalData = {
             ...originalData,
@@ -412,7 +430,7 @@ export class taobao {
 
   // 페이지별 대량수집 체크버튼 활성화
   async bulkTypeOne(user) {
-    document.addEventListener("DOMNodeInserted", async (e: any) => {
+    document.addEventListener('DOMNodeInserted', async (e: any) => {
       //콘솔테스트 예시
       //아래 항목의 products 항목만 좀 바꿔서 하면 됨 a태그 찾아서
       // console.log("DomNode", e.target);
@@ -421,34 +439,34 @@ export class taobao {
       // );
       // console.log("products", products);
       try {
-        if (e.target.getAttribute("class") === "m-feedback") {
+        if (e.target.getAttribute('class') === 'm-feedback') {
           //DomNode콘솔찍으면서 products에 상품 리스트가 모두 들어오고난 다음 e.target에 뜨는 고유의 class나 id를 해당 조건에 넣어서
           //배열이 다 모였을때 체크박스 뜨도록 하기위함
-          let products: any = document.querySelectorAll("#main > div:nth-child(3) > div.grid-left a");
+          let products: any = document.querySelectorAll('#main > div:nth-child(3) > div.grid-left a');
           // console.log("콘솔테스트", products);
           for (let i in products) {
             try {
-              if (products[i].getAttribute("id").includes("J_Itemlist_PLink")) {
+              if (products[i].getAttribute('id').includes('J_Itemlist_PLink')) {
                 // console.log("콘솔테스트2", products[i]);
 
-                let input: any = document.createElement("input");
-                let picker: any = document.getElementById("sfyPicker");
+                let input: any = document.createElement('input');
+                let picker: any = document.getElementById('sfyPicker');
 
-                input.id = products[i].getAttribute("href");
-                input.className = "SELLFORYOU-CHECKBOX";
-                input.checked = picker?.value === "false" ? false : true;
-                input.type = "checkbox";
+                input.id = products[i].getAttribute('href');
+                input.className = 'SELLFORYOU-CHECKBOX';
+                input.checked = picker?.value === 'false' ? false : true;
+                input.type = 'checkbox';
 
-                if (user.userInfo.collectCheckPosition === "L") {
-                  input.setAttribute("style", "left: 0px !important");
+                if (user.userInfo.collectCheckPosition === 'L') {
+                  input.setAttribute('style', 'left: 0px !important');
                 } else {
-                  input.setAttribute("style", "right: 0px !important");
+                  input.setAttribute('style', 'right: 0px !important');
                 }
 
                 const root = products[i].parentNode.parentNode.parentNode.parentNode;
-                const medal = root.getElementsByClassName("icon-service-jinpaimaijia");
+                const medal = root.getElementsByClassName('icon-service-jinpaimaijia');
 
-                input.setAttribute("medal", medal.length);
+                input.setAttribute('medal', medal.length);
                 // console.log("input", input);
 
                 products[i].parentNode.insertBefore(input, products[i].nextSibling);
@@ -460,7 +478,7 @@ export class taobao {
 
           return;
         }
-        if (e.target.getAttribute("class") === "container") {
+        if (e.target.getAttribute('class') === 'container') {
           //todo 2023-05-15
           // const params = new Proxy(new URLSearchParams(window.location.search), {
           //   get: (searchParams: any, prop) => searchParams.get(prop),
@@ -491,34 +509,34 @@ export class taobao {
           // console.log(dataUrl);
 
           let products: any = document.querySelectorAll(
-            "#root > div > div:nth-child(2) > div.PageContent--contentWrap--mep7AEm > div.LeftLay--leftWrap--xBQipVc a"
+            '#root > div > div:nth-child(2) > div.PageContent--contentWrap--mep7AEm > div.LeftLay--leftWrap--xBQipVc a'
           );
           // console.log("products", products);
           for (let i in products) {
             try {
-              if (products[i].getAttribute("class").includes("Card--doubleCardWrapper--L2XFE73")) {
+              if (products[i].getAttribute('class').includes('Card--doubleCardWrapper--L2XFE73')) {
                 // console.log("product[i]", products[i]);
                 //넣으려는 herf의 input 태그의 id를 가지고 있는 컴포넌트가 있는지 확인
-                if (document.getElementById(products[i].getAttribute("href")) !== null) {
-                  console.log("Element with the same ID already exists.");
+                if (document.getElementById(products[i].getAttribute('href')) !== null) {
+                  console.log('Element with the same ID already exists.');
                   // 이미 존재하는게 있을경우에는 추가안함
                 } else {
-                  let input: any = document.createElement("input");
-                  let picker: any = document.getElementById("sfyPicker");
-                  input.id = products[i].getAttribute("href");
-                  input.className = "SELLFORYOU-CHECKBOX";
-                  input.checked = picker?.value === "false" ? false : true;
-                  input.type = "checkbox";
+                  let input: any = document.createElement('input');
+                  let picker: any = document.getElementById('sfyPicker');
+                  input.id = products[i].getAttribute('href');
+                  input.className = 'SELLFORYOU-CHECKBOX';
+                  input.checked = picker?.value === 'false' ? false : true;
+                  input.type = 'checkbox';
                   // input.setAttribute("style", "left: 0px !important");
-                  if (user.userInfo.collectCheckPosition === "L") {
-                    input.setAttribute("style", "left: 0px !important");
+                  if (user.userInfo.collectCheckPosition === 'L') {
+                    input.setAttribute('style', 'left: 0px !important');
                   } else {
-                    input.setAttribute("style", "right: 0px !important");
+                    input.setAttribute('style', 'right: 0px !important');
                   }
                   // const root = products[i].parentNode.parentNode.parentNode.parentNode;
                   // const medal = root.getElementsByClassName("icon-service-jinpaimaijia");
                   // input.setAttribute("medal", medal.length);
-                  products[i].parentNode.style.position = "relative";
+                  products[i].parentNode.style.position = 'relative';
                   products[i].parentNode.insertBefore(input, products[i].nextSibling);
                 }
               }
@@ -543,35 +561,35 @@ export class taobao {
       }
 
       let count = 0;
-      let lines = document.querySelectorAll("div");
+      let lines = document.querySelectorAll('div');
       let test: any = [];
 
       for (let i = 0; i < lines.length - 1; i++) {
-        if (/item[2-9]line[0-9]/.test(lines[i]?.getAttribute("class") ?? "")) {
-          let links: any = lines[i].querySelectorAll("a");
+        if (/item[2-9]line[0-9]/.test(lines[i]?.getAttribute('class') ?? '')) {
+          let links: any = lines[i].querySelectorAll('a');
 
           for (let j = 0; j < links.length - 1; j++) {
-            let image = links[j].querySelector("img");
+            let image = links[j].querySelector('img');
 
             if (!image) {
               continue;
             }
 
-            let input: any = document.createElement("input");
-            let picker: any = document.getElementById("sfyPicker");
+            let input: any = document.createElement('input');
+            let picker: any = document.getElementById('sfyPicker');
 
-            input.id = links[j].getAttribute("href");
-            input.className = "SELLFORYOU-CHECKBOX";
-            input.checked = picker?.value === "false" ? false : true;
-            input.type = "checkbox";
+            input.id = links[j].getAttribute('href');
+            input.className = 'SELLFORYOU-CHECKBOX';
+            input.checked = picker?.value === 'false' ? false : true;
+            input.type = 'checkbox';
 
-            if (user.userInfo.collectCheckPosition === "L") {
-              input.setAttribute("style", "left: 0px !important");
+            if (user.userInfo.collectCheckPosition === 'L') {
+              input.setAttribute('style', 'left: 0px !important');
             } else {
-              input.setAttribute("style", "right: 0px !important");
+              input.setAttribute('style', 'right: 0px !important');
             }
 
-            links[j].parentNode.style.position = "relative";
+            links[j].parentNode.style.position = 'relative';
             links[j].parentNode.insertBefore(input, links[j].nextSibling);
 
             count++;
@@ -592,32 +610,32 @@ export class taobao {
   }
 
   async bulkTypeThree(user) {
-    document.addEventListener("DOMNodeInserted", (e: any) => {
+    document.addEventListener('DOMNodeInserted', (e: any) => {
       // console.log("DomNode", e.target);
       try {
-        if (e.target.getAttribute("class") === "rax-view-v2 filterItem--filterContainer--387kpkc") {
+        if (e.target.getAttribute('class') === 'rax-view-v2 filterItem--filterContainer--387kpkc') {
           //이거 이제알았음 e.target 콘솔찍어서 노드리스트 100개 다불러오고 마지막에 호출되는 class명을 조건일때 마지막 루프 들고오는거였음
           let products: any = document.querySelectorAll(
-            "#root > div > div.rax-view-v2.Home--listContainer--1NDEj3u > div.rax-view-v2.list--listWrap--1xUV9qB a"
+            '#root > div > div.rax-view-v2.Home--listContainer--1NDEj3u > div.rax-view-v2.list--listWrap--1xUV9qB a'
           );
-          console.log("콘솔테스트", products);
+          console.log('콘솔테스트', products);
           for (let i in products) {
             try {
-              if (products[i].getAttribute("class").includes("mobile--class-1--2Vz4bM4")) {
-                console.log("콘솔테스트2", products[i]);
+              if (products[i].getAttribute('class').includes('mobile--class-1--2Vz4bM4')) {
+                console.log('콘솔테스트2', products[i]);
 
-                let input: any = document.createElement("input");
-                let picker: any = document.getElementById("sfyPicker");
+                let input: any = document.createElement('input');
+                let picker: any = document.getElementById('sfyPicker');
 
-                input.id = products[i].getAttribute("href");
-                input.className = "SELLFORYOU-CHECKBOX";
-                input.checked = picker?.value === "false" ? false : true;
-                input.type = "checkbox";
+                input.id = products[i].getAttribute('href');
+                input.className = 'SELLFORYOU-CHECKBOX';
+                input.checked = picker?.value === 'false' ? false : true;
+                input.type = 'checkbox';
 
-                if (user.userInfo.collectCheckPosition === "L") {
-                  input.setAttribute("style", "left: 0px !important");
+                if (user.userInfo.collectCheckPosition === 'L') {
+                  input.setAttribute('style', 'left: 0px !important');
                 } else {
-                  input.setAttribute("style", "right: 0px !important");
+                  input.setAttribute('style', 'right: 0px !important');
                 }
 
                 // const root = products[i].parentNode.parentNode.parentNode.parentNode;
@@ -626,7 +644,7 @@ export class taobao {
                 // input.setAttribute("medal", medal.length);
                 // console.log("input", input);
 
-                products[i].parentNode.parentNode.style.position = "relative";
+                products[i].parentNode.parentNode.style.position = 'relative';
                 products[i].parentNode.parentNode.insertBefore(input, products[i].nextSibling);
                 // e.target.appendChild(input);
               }

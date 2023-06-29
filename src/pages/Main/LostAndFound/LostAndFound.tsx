@@ -1,13 +1,13 @@
-import React from "react";
-import MUTATIONS from "../GraphQL/Mutations";
-import gql from "../GraphQL/Requests";
-import LoadingButton from "@mui/lab/LoadingButton";
+import React from 'react';
+import MUTATIONS from '../GraphQL/Mutations';
+import gql from '../GraphQL/Requests';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Button, Container, FormControlLabel, Grid, Radio, RadioGroup, TextField, Typography } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Frame, SignPaper } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Button, Container, FormControlLabel, Grid, Radio, RadioGroup, TextField, Typography } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Frame, SignPaper } from '../Common/UI';
 
 type SignInfo = {
   email: string;
@@ -36,15 +36,15 @@ export const LostAndFound = observer(() => {
 
   // 입력정보 초기화
   const initSignInfo: SignInfo = {
-    email: "",
-    password: "",
-    passwordConfirm: "",
+    email: '',
+    password: '',
+    passwordConfirm: '',
 
-    phone: "",
+    phone: '',
 
-    verifyCode: "",
+    verifyCode: '',
 
-    infoType: "USER_ID",
+    infoType: 'USER_ID',
 
     loading: false,
   };
@@ -61,8 +61,8 @@ export const LostAndFound = observer(() => {
 
   // 엔터 키를 누르면 아이디 찾기/비밀번호 변경
   const keyHandler = (e: any) => {
-    if (e.key === "Enter") {
-      signInfo.infoType === "USER_ID" ? findEmail() : changePassword();
+    if (e.key === 'Enter') {
+      signInfo.infoType === 'USER_ID' ? findEmail() : changePassword();
     }
   };
 
@@ -70,7 +70,7 @@ export const LostAndFound = observer(() => {
   const phoneVerify = async () => {
     let response: any = null;
 
-    if (signInfo.infoType === "USER_ID") {
+    if (signInfo.infoType === 'USER_ID') {
       response = await gql(
         MUTATIONS.FIND_EMAIL_CREATE_VERIFICATION,
         {
@@ -99,7 +99,7 @@ export const LostAndFound = observer(() => {
       return;
     }
 
-    alert("인증번호가 발송되었습니다.");
+    alert('인증번호가 발송되었습니다.');
 
     setVerifyInfo({ ...verifyInfo, process: 1 });
 
@@ -130,13 +130,13 @@ export const LostAndFound = observer(() => {
   // 인증번호 기반 이메일 찾기
   const findEmail = async () => {
     if (!signInfo.phone) {
-      alert("연락처를 입력해주세요.");
+      alert('연락처를 입력해주세요.');
 
       return;
     }
 
     if (!signInfo.verifyCode) {
-      alert("인증번호를 입력해주세요.");
+      alert('인증번호를 입력해주세요.');
 
       return;
     }
@@ -164,37 +164,37 @@ export const LostAndFound = observer(() => {
 
     const test = JSON.parse(response.data.findEmail);
 
-    alert(`해당 번호로 가입된 아이디 목록입니다.\n\n${test.join("\n")}`);
+    alert(`해당 번호로 가입된 아이디 목록입니다.\n\n${test.join('\n')}`);
   };
 
   // 인증번호 기반 비밀번호 변경
   const changePassword = async () => {
     if (!signInfo.email) {
-      alert("이메일 주소를 입력해주세요.");
+      alert('이메일 주소를 입력해주세요.');
 
       return;
     }
 
     if (!signInfo.phone) {
-      alert("연락처를 입력해주세요.");
+      alert('연락처를 입력해주세요.');
 
       return;
     }
 
     if (!signInfo.verifyCode) {
-      alert("인증번호를 입력해주세요.");
+      alert('인증번호를 입력해주세요.');
 
       return;
     }
 
     if (!signInfo.password) {
-      alert("비밀번호를 입력해주세요.");
+      alert('비밀번호를 입력해주세요.');
 
       return;
     }
 
     if (signInfo.password !== signInfo.passwordConfirm) {
-      alert("비밀번호가 일치하지 않습니다.");
+      alert('비밀번호가 일치하지 않습니다.');
 
       return;
     }
@@ -222,14 +222,14 @@ export const LostAndFound = observer(() => {
 
     setSignInfo(initSignInfo);
 
-    alert("비밀번호 변경이 완료되었습니다.\n변경하신 비밀번호로 다시 로그인해주시기 바랍니다.");
+    alert('비밀번호 변경이 완료되었습니다.\n변경하신 비밀번호로 다시 로그인해주시기 바랍니다.');
 
-    window.location.href = "/signin.html";
+    window.location.href = '/signin.html';
   };
 
   // 로그인 페이지로 이동
   const signIn = () => {
-    window.location.href = "/signin.html";
+    window.location.href = '/signin.html';
   };
 
   // 다크모드 지원 설정
@@ -237,7 +237,7 @@ export const LostAndFound = observer(() => {
     () =>
       createTheme({
         palette: {
-          mode: common.darkTheme ? "dark" : "light",
+          mode: common.darkTheme ? 'dark' : 'light',
         },
       }),
     [common.darkTheme]
@@ -268,8 +268,16 @@ export const LostAndFound = observer(() => {
               }}
               value={signInfo.infoType}
             >
-              <FormControlLabel value="USER_ID" control={<Radio size="small" />} label={<Typography fontSize={14}>아이디찾기</Typography>} />
-              <FormControlLabel value="USER_PASSWORD" control={<Radio size="small" />} label={<Typography fontSize={14}>비밀번호변경</Typography>} />
+              <FormControlLabel
+                value="USER_ID"
+                control={<Radio size="small" />}
+                label={<Typography fontSize={14}>아이디찾기</Typography>}
+              />
+              <FormControlLabel
+                value="USER_PASSWORD"
+                control={<Radio size="small" />}
+                label={<Typography fontSize={14}>비밀번호변경</Typography>}
+              />
             </RadioGroup>
 
             <Grid
@@ -279,14 +287,14 @@ export const LostAndFound = observer(() => {
                 marginBottom: 30,
               }}
             >
-              {signInfo.infoType === "USER_ID" ? null : (
+              {signInfo.infoType === 'USER_ID' ? null : (
                 <>
                   <Grid
                     item
                     xs={6}
                     md={12}
                     sx={{
-                      margin: "auto",
+                      margin: 'auto',
                     }}
                   >
                     <TextField
@@ -294,7 +302,7 @@ export const LostAndFound = observer(() => {
                       variant="outlined"
                       size="small"
                       style={{
-                        width: "100%",
+                        width: '100%',
                       }}
                       label="아이디"
                       value={signInfo.email}
@@ -310,7 +318,7 @@ export const LostAndFound = observer(() => {
                 xs={6}
                 md={7}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <TextField
@@ -318,7 +326,7 @@ export const LostAndFound = observer(() => {
                   variant="outlined"
                   size="small"
                   style={{
-                    width: "100%",
+                    width: '100%',
                   }}
                   label="연락처"
                   value={signInfo.phone}
@@ -332,19 +340,21 @@ export const LostAndFound = observer(() => {
                 xs={6}
                 md={5}
                 sx={{
-                  textAlign: "center",
-                  margin: "auto",
+                  textAlign: 'center',
+                  margin: 'auto',
                 }}
               >
                 <LoadingButton
                   color="info"
                   disableElevation
                   loading={verifyInfo.process > 0 ? true : false}
-                  loadingIndicator={verifyInfo.process > 1 ? `인증완료` : `00:${verifyInfo.timer.toString().padStart(2, "0")}`}
+                  loadingIndicator={
+                    verifyInfo.process > 1 ? `인증완료` : `00:${verifyInfo.timer.toString().padStart(2, '0')}`
+                  }
                   variant="contained"
                   size="large"
                   style={{
-                    width: "100%",
+                    width: '100%',
                   }}
                   onClick={phoneVerify}
                 >
@@ -353,14 +363,14 @@ export const LostAndFound = observer(() => {
               </Grid>
             </Grid>
 
-            {signInfo.infoType === "USER_ID" ? (
+            {signInfo.infoType === 'USER_ID' ? (
               <>
                 <TextField
                   id="appPhone"
                   variant="outlined"
                   size="small"
                   style={{
-                    width: "100%",
+                    width: '100%',
                     marginBottom: 10,
                   }}
                   label="인증번호"
@@ -376,7 +386,7 @@ export const LostAndFound = observer(() => {
                   variant="contained"
                   size="large"
                   style={{
-                    width: "100%",
+                    width: '100%',
                     marginBottom: 10,
                   }}
                   onClick={findEmail}
@@ -391,7 +401,7 @@ export const LostAndFound = observer(() => {
                   variant="outlined"
                   size="small"
                   style={{
-                    width: "100%",
+                    width: '100%',
                     marginBottom: 10,
                   }}
                   label="인증번호"
@@ -406,7 +416,7 @@ export const LostAndFound = observer(() => {
                   variant="outlined"
                   size="small"
                   style={{
-                    width: "100%",
+                    width: '100%',
                     marginBottom: 10,
                   }}
                   label="새 비밀번호"
@@ -421,7 +431,7 @@ export const LostAndFound = observer(() => {
                   variant="outlined"
                   size="small"
                   style={{
-                    width: "100%",
+                    width: '100%',
                     marginBottom: 30,
                   }}
                   label="새 비밀번호 확인"
@@ -442,7 +452,7 @@ export const LostAndFound = observer(() => {
                   variant="contained"
                   size="large"
                   style={{
-                    width: "100%",
+                    width: '100%',
                     marginBottom: 10,
                   }}
                   onClick={changePassword}
@@ -456,7 +466,7 @@ export const LostAndFound = observer(() => {
               variant="outlined"
               size="large"
               style={{
-                width: "100%",
+                width: '100%',
               }}
               onClick={signIn}
             >

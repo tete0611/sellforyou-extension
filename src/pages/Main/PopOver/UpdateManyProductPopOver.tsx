@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Popover } from "@mui/material";
-import { MyButton } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Popover } from '@mui/material';
+import { MyButton } from '../Common/UI';
 
 // 일괄설정 선택메뉴 팝업
 export const UpdateManyProductPopOver = observer(() => {
@@ -25,14 +25,14 @@ export const UpdateManyProductPopOver = observer(() => {
       anchorEl={product.popOverInfo.updateManyProduct.element}
       onClose={onClose}
       anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "right",
+        vertical: 'bottom',
+        horizontal: 'right',
       }}
     >
       <Box
         sx={{
-          alignItems: "center",
-          display: "flex",
+          alignItems: 'center',
+          display: 'flex',
           p: 1,
         }}
       >
@@ -127,7 +127,7 @@ export const UpdateManyProductPopOver = observer(() => {
           }}
           onClick={() => {
             if (common.user.purchaseInfo2.level < 3) {
-              alert("[프로] 등급부터 사용 가능한 기능입니다.");
+              alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
               return;
             }
@@ -148,7 +148,7 @@ export const UpdateManyProductPopOver = observer(() => {
             }}
             onClick={() => {
               if (common.user.purchaseInfo2.level < 3) {
-                alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                 return;
               }
@@ -170,7 +170,7 @@ export const UpdateManyProductPopOver = observer(() => {
             }}
             onClick={() => {
               if (common.user.purchaseInfo2.level < 3) {
-                alert("[프로] 등급부터 사용 가능한 기능입니다.");
+                alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
                 return;
               }

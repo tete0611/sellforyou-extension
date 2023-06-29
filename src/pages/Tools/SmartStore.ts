@@ -1,9 +1,18 @@
-import gql from "../Main/GraphQL/Requests";
-import QUERIES from "../Main/GraphQL/Queries";
-import MUTATIONS from "../Main/GraphQL/Mutations";
+import gql from '../Main/GraphQL/Requests';
+import QUERIES from '../Main/GraphQL/Queries';
+import MUTATIONS from '../Main/GraphQL/Mutations';
 
-import { convertWebpToJpg, getStoreTraceCodeV1, notificationByEveryTime, readFileDataURL, request, sendCallback, sleep, transformContent } from "./Common";
-import { createTabCompletely, sendTabMessage } from "./ChromeAsync";
+import {
+  convertWebpToJpg,
+  getStoreTraceCodeV1,
+  notificationByEveryTime,
+  readFileDataURL,
+  request,
+  sendCallback,
+  sleep,
+  transformContent,
+} from './Common';
+import { createTabCompletely, sendTabMessage } from './ChromeAsync';
 
 // 스마트스토어 이미지업로드
 async function uploadA077Images(image_list: any) {
@@ -22,35 +31,35 @@ async function uploadA077Images(image_list: any) {
 
     // 이미지 확장자별 예외처리
     switch (blob.type) {
-      case "image/jpeg": {
-        formData.append("files[" + i.toString() + "]", blob, "image.jpg");
+      case 'image/jpeg': {
+        formData.append('files[' + i.toString() + ']', blob, 'image.jpg');
 
         break;
       }
 
-      case "image/gif": {
-        formData.append("files[" + i.toString() + "]", blob, "image.gif");
+      case 'image/gif': {
+        formData.append('files[' + i.toString() + ']', blob, 'image.gif');
 
         break;
       }
 
-      case "image/png": {
-        formData.append("files[" + i.toString() + "]", blob, "image.png");
+      case 'image/png': {
+        formData.append('files[' + i.toString() + ']', blob, 'image.png');
 
         break;
       }
 
-      case "image/bmp": {
-        formData.append("files[" + i.toString() + "]", blob, "image.bmp");
+      case 'image/bmp': {
+        formData.append('files[' + i.toString() + ']', blob, 'image.bmp');
 
         break;
       }
 
-      case "image/webp": {
+      case 'image/webp': {
         let base64: any = await readFileDataURL(blob);
         let blob2: any = await convertWebpToJpg(base64);
 
-        formData.append("files[" + i.toString() + "]", blob2, "image.jpg");
+        formData.append('files[' + i.toString() + ']', blob2, 'image.jpg');
 
         break;
       }
@@ -62,9 +71,9 @@ async function uploadA077Images(image_list: any) {
 
     // 업로드 API
     let image_resp: any = await request(
-      "https://sell.smartstore.naver.com/api/file/photoinfra/uploads?acceptedPatterns=image%2Fjpeg,image%2Fgif,image%2Fpng,image%2Fbmp",
+      'https://sell.smartstore.naver.com/api/file/photoinfra/uploads?acceptedPatterns=image%2Fjpeg,image%2Fgif,image%2Fpng,image%2Fbmp',
       {
-        method: "POST",
+        method: 'POST',
         body: formData,
       }
     );
@@ -86,10 +95,10 @@ async function uploadA077Resources(input: any) {
     let image_list: any = [];
 
     for (let i in input) {
-      if (i.match(/img[0-9]/) && !i.includes("blob")) {
-        if (input[i] !== "") {
+      if (i.match(/img[0-9]/) && !i.includes('blob')) {
+        if (input[i] !== '') {
           try {
-            let img: any = input[i].includes("http://") ? input[i].replaceAll("http://", "https://") : input[i];
+            let img: any = input[i].includes('http://') ? input[i].replaceAll('http://', 'https://') : input[i];
 
             image_list.push(img);
           } catch {
@@ -108,10 +117,10 @@ async function uploadA077Resources(input: any) {
     let image_output: any = [];
 
     for (let i in image_sort) {
-      image_output.push(image_sort[i]["data"][0]);
+      image_output.push(image_sort[i]['data'][0]);
     }
 
-    if (input.misc1 === "") {
+    if (input.misc1 === '') {
       return {
         image: image_output,
         video: null,
@@ -122,7 +131,7 @@ async function uploadA077Resources(input: any) {
         let video_resp = await fetch(input.misc1);
         let video_blob: any = await video_resp.blob();
         let video_chunks: any = [];
-        let video_filename = "video.mp4";
+        let video_filename = 'video.mp4';
 
         // 고정값
         let chunk_size = 5242880;
@@ -142,9 +151,12 @@ async function uploadA077Resources(input: any) {
         }
 
         // 업로드 토큰 생성
-        let token_resp: any = await request("https://sell.smartstore.naver.com/api/videoinfra/SELLER/bypass/token?durationLimit=900&fileSizeLimit=1073741824", {
-          method: "GET",
-        });
+        let token_resp: any = await request(
+          'https://sell.smartstore.naver.com/api/videoinfra/SELLER/bypass/token?durationLimit=900&fileSizeLimit=1073741824',
+          {
+            method: 'GET',
+          }
+        );
 
         let token_json = await JSON.parse(token_resp);
 
@@ -156,18 +168,18 @@ async function uploadA077Resources(input: any) {
           fileName: video_filename,
           fileSize: video_blob.size,
           chunkUpload: true,
-          delayIngestion: "additional",
+          delayIngestion: 'additional',
         };
 
         // 업로드 세션 생성
-        let session_resp: any = await request("https://warp.vod.naver.com/upload/v2/sessions", {
-          method: "POST",
+        let session_resp: any = await request('https://warp.vod.naver.com/upload/v2/sessions', {
+          method: 'POST',
           body: JSON.stringify(session_body),
         });
 
         let session_json = await JSON.parse(session_resp);
 
-        if (!session_json.hasOwnProperty("key")) {
+        if (!session_json.hasOwnProperty('key')) {
           return {
             image: image_output,
             video: null,
@@ -178,24 +190,24 @@ async function uploadA077Resources(input: any) {
         for (let i = 0; i < video_chunks.length; i++) {
           let formData = new FormData();
 
-          formData.append("key", session_json.key);
-          formData.append("fileName", video_filename);
-          formData.append("fileSize", video_blob.size);
-          formData.append("chunkIndex", `${i + 1}`);
-          formData.append("chunkSize", `${chunk_size}`);
-          formData.append("currentChunkSize", video_chunks[i].size);
-          formData.append("chunkUpload", `${true}`);
-          formData.append("file", video_chunks[i], video_filename);
+          formData.append('key', session_json.key);
+          formData.append('fileName', video_filename);
+          formData.append('fileSize', video_blob.size);
+          formData.append('chunkIndex', `${i + 1}`);
+          formData.append('chunkSize', `${chunk_size}`);
+          formData.append('currentChunkSize', video_chunks[i].size);
+          formData.append('chunkUpload', `${true}`);
+          formData.append('file', video_chunks[i], video_filename);
 
           // 동영상 업로드 API
-          await request("https://warp-cr1.vod.naver.com/upload/v2/files", {
-            method: "POST",
+          await request('https://warp-cr1.vod.naver.com/upload/v2/files', {
+            method: 'POST',
             body: formData,
           });
         }
 
         let addinfo_body = {
-          encodeType: "normal",
+          encodeType: 'normal',
           previewStartTime: 0,
           previewEndTime: 0,
           previewTime: 0,
@@ -207,8 +219,8 @@ async function uploadA077Resources(input: any) {
         };
 
         // 업로드 부가정보
-        await request("https://warp.vod.naver.com/upload/v2/files/" + session_json.key + "/additionalInfo", {
-          method: "POST",
+        await request('https://warp.vod.naver.com/upload/v2/files/' + session_json.key + '/additionalInfo', {
+          method: 'POST',
           body: JSON.stringify(addinfo_body),
         });
 
@@ -224,8 +236,8 @@ async function uploadA077Resources(input: any) {
           }
 
           // 동영상 업로드 진행상태 조회 API
-          let vid_resp: any = await request("https://nexus.vod.naver.com/api/v1/files", {
-            method: "POST",
+          let vid_resp: any = await request('https://nexus.vod.naver.com/api/v1/files', {
+            method: 'POST',
             body: JSON.stringify({
               query:
                 '{\n  _0_0: video(id: "' +
@@ -242,8 +254,8 @@ async function uploadA077Resources(input: any) {
             }
           }
 
-          let vinfo_resp: any = await request("https://nexus.vod.naver.com/api/v1/files", {
-            method: "POST",
+          let vinfo_resp: any = await request('https://nexus.vod.naver.com/api/v1/files', {
+            method: 'POST',
             body: JSON.stringify({
               query:
                 '{\n  _0_0: video(id: "' +
@@ -261,39 +273,39 @@ async function uploadA077Resources(input: any) {
           }
 
           if (
-            video_output.hasOwnProperty("Ingest") &&
-            video_output.hasOwnProperty("VideoHeader") &&
-            video_output.hasOwnProperty("VideoHashCode") &&
-            video_output.hasOwnProperty("Thumbnails")
+            video_output.hasOwnProperty('Ingest') &&
+            video_output.hasOwnProperty('VideoHeader') &&
+            video_output.hasOwnProperty('VideoHashCode') &&
+            video_output.hasOwnProperty('Thumbnails')
           ) {
-            let vthum_resp = await fetch("https://sell.smartstore.naver.com/api/file/photoinfra/uploadUrl", {
+            let vthum_resp = await fetch('https://sell.smartstore.naver.com/api/file/photoinfra/uploadUrl', {
               headers: {
-                accept: "*/*",
-                "accept-language": "ko,ko-KR;q=0.9,en-US;q=0.8,en;q=0.7",
-                "cache-control": "no-cache",
-                "content-type": "application/json;charset=UTF-8",
-                pragma: "no-cache",
-                "sec-ch-ua": '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
-                "sec-ch-ua-mobile": "?0",
-                "sec-fetch-dest": "empty",
-                "sec-fetch-mode": "cors",
-                "sec-fetch-site": "same-origin",
-                "x-current-state": "https://sell.smartstore.naver.com/#/products/edit/5824657518",
-                "x-current-statename": "main.product.edit",
-                "x-to-statename": "main.product.edit",
+                accept: '*/*',
+                'accept-language': 'ko,ko-KR;q=0.9,en-US;q=0.8,en;q=0.7',
+                'cache-control': 'no-cache',
+                'content-type': 'application/json;charset=UTF-8',
+                pragma: 'no-cache',
+                'sec-ch-ua': '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-fetch-dest': 'empty',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-site': 'same-origin',
+                'x-current-state': 'https://sell.smartstore.naver.com/#/products/edit/5824657518',
+                'x-current-statename': 'main.product.edit',
+                'x-to-statename': 'main.product.edit',
               },
 
-              referrer: "https://sell.smartstore.naver.com/",
-              referrerPolicy: "strict-origin-when-cross-origin",
+              referrer: 'https://sell.smartstore.naver.com/',
+              referrerPolicy: 'strict-origin-when-cross-origin',
               body: '{"url":"' + video_output.Thumbnails[0].path + '"}',
-              method: "POST",
-              mode: "cors",
-              credentials: "include",
+              method: 'POST',
+              mode: 'cors',
+              credentials: 'include',
             });
 
             let vthum_json = await vthum_resp.json();
 
-            video_output["Picture"] = vthum_json;
+            video_output['Picture'] = vthum_json;
 
             break;
           }
@@ -314,22 +326,30 @@ async function uploadA077Resources(input: any) {
           }
 
           // 인코딩 결과 조회 API
-          let encode_resp: any = await request("https://sell.smartstore.naver.com/api/videoinfra/SELLER/" + video_output.Ingest[0].videoId + "/encoding", {
-            method: "GET",
-          });
+          let encode_resp: any = await request(
+            'https://sell.smartstore.naver.com/api/videoinfra/SELLER/' + video_output.Ingest[0].videoId + '/encoding',
+            {
+              method: 'GET',
+            }
+          );
 
           let encode_json = JSON.parse(encode_resp);
 
           // 동영상 썸네일 API
-          let gif_resp: any = await request("https://sell.smartstore.naver.com/api/videoinfra/SELLER/" + video_output.Ingest[0].videoId + "/animated-gif", {
-            method: "GET",
-          });
+          let gif_resp: any = await request(
+            'https://sell.smartstore.naver.com/api/videoinfra/SELLER/' +
+              video_output.Ingest[0].videoId +
+              '/animated-gif',
+            {
+              method: 'GET',
+            }
+          );
 
           let gif_json = JSON.parse(gif_resp);
 
-          if (encode_json.result && gif_json.hasOwnProperty("imageUrl")) {
-            video_output["Complete"] = encode_json;
-            video_output["GIF"] = gif_json;
+          if (encode_json.result && gif_json.hasOwnProperty('imageUrl')) {
+            video_output['Complete'] = encode_json;
+            video_output['GIF'] = gif_json;
 
             break;
           }
@@ -364,16 +384,16 @@ async function uploadA077Resources(input: any) {
 
 // 스마트스토어 상품등록
 async function uploadA077Products(data: any) {
-  const resp_text: any = await request("https://sell.smartstore.naver.com/api/products", {
+  const resp_text: any = await request('https://sell.smartstore.naver.com/api/products', {
     headers: {
-      "content-type": "application/json;charset=UTF-8",
-      "x-current-state": "https://sell.smartstore.naver.com/#/products/create",
-      "x-current-statename": "main.product.create",
-      "x-to-statename": "main.product.create",
+      'content-type': 'application/json;charset=UTF-8',
+      'x-current-state': 'https://sell.smartstore.naver.com/#/products/create',
+      'x-current-statename': 'main.product.create',
+      'x-to-statename': 'main.product.create',
     },
 
     body: data,
-    method: "POST",
+    method: 'POST',
   });
 
   const resp_json = JSON.parse(resp_text);
@@ -383,16 +403,16 @@ async function uploadA077Products(data: any) {
 
 // 스마트스토어 상품수정
 async function editedA077Products(data: any) {
-  const resp_text: any = await request("https://sell.smartstore.naver.com/api/products", {
+  const resp_text: any = await request('https://sell.smartstore.naver.com/api/products', {
     headers: {
-      "content-type": "application/json;charset=UTF-8",
-      "x-current-state": "https://sell.smartstore.naver.com/#/products/edit",
-      "x-current-statename": "main.product.edit",
-      "x-to-statename": "main.product.edit",
+      'content-type': 'application/json;charset=UTF-8',
+      'x-current-state': 'https://sell.smartstore.naver.com/#/products/edit',
+      'x-current-statename': 'main.product.edit',
+      'x-to-statename': 'main.product.edit',
     },
 
     body: data,
-    method: "PATCH",
+    method: 'PATCH',
   });
 
   const resp_json = JSON.parse(resp_text);
@@ -402,16 +422,16 @@ async function editedA077Products(data: any) {
 
 // 스마트스토어 상품조회
 async function searchA077Products(data: any) {
-  const resp_text: any = await request("https://sell.smartstore.naver.com/api/products/list/search", {
+  const resp_text: any = await request('https://sell.smartstore.naver.com/api/products/list/search', {
     headers: {
-      "content-type": "application/json;charset=UTF-8",
-      "x-current-state": "https://sell.smartstore.naver.com/#/products/origin-list",
-      "x-current-statename": "main.product.origin-list",
-      "x-to-statename": "main.product.origin-list",
+      'content-type': 'application/json;charset=UTF-8',
+      'x-current-state': 'https://sell.smartstore.naver.com/#/products/origin-list',
+      'x-current-statename': 'main.product.origin-list',
+      'x-to-statename': 'main.product.origin-list',
     },
 
     body: data,
-    method: "POST",
+    method: 'POST',
   });
 
   const resp_json = JSON.parse(resp_text);
@@ -421,17 +441,20 @@ async function searchA077Products(data: any) {
 
 // 스마트스토어 상품삭제
 async function deleteA077Products(data: any) {
-  const resp_text: any = await request("https://sell.smartstore.naver.com/api/products/bulk-update?_action=updateProductStatusType", {
-    headers: {
-      "content-type": "application/json;charset=UTF-8",
-      "x-current-state": "https://sell.smartstore.naver.com/#/products/origin-list",
-      "x-current-statename": "main.product.origin-list",
-      "x-to-statename": "main.product.origin-list",
-    },
+  const resp_text: any = await request(
+    'https://sell.smartstore.naver.com/api/products/bulk-update?_action=updateProductStatusType',
+    {
+      headers: {
+        'content-type': 'application/json;charset=UTF-8',
+        'x-current-state': 'https://sell.smartstore.naver.com/#/products/origin-list',
+        'x-current-statename': 'main.product.origin-list',
+        'x-to-statename': 'main.product.origin-list',
+      },
 
-    body: data,
-    method: "PATCH",
-  });
+      body: data,
+      method: 'PATCH',
+    }
+  );
 
   const resp_json = JSON.parse(resp_text);
 
@@ -450,7 +473,7 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
   console.log(`(${shopName}) 등록정보:`, data);
 
   try {
-    let user_resp = await fetch("https://sell.smartstore.naver.com/api/products?_action=create");
+    let user_resp = await fetch('https://sell.smartstore.naver.com/api/products?_action=create');
     let user_json = await user_resp.json();
 
     if (user_json.error) {
@@ -460,7 +483,7 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
       return false;
     }
 
-    newTab = await createTabCompletely({ active: false, url: "https://sell.smartstore.naver.com/" }, 10);
+    newTab = await createTabCompletely({ active: false, url: 'https://sell.smartstore.naver.com/' }, 10);
 
     if (!newTab.id) {
       productStore.addConsoleText(`(${shopName}) 스마트스토어센터 접속 실패`);
@@ -469,10 +492,10 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
       return false;
     }
 
-    let store_resp = await fetch("https://sell.smartstore.naver.com/api/clone-accounts?_action=init");
+    let store_resp = await fetch('https://sell.smartstore.naver.com/api/clone-accounts?_action=init');
     let store_json = await store_resp.json();
 
-    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty("STOREFARM")) {
+    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty('STOREFARM')) {
       productStore.addConsoleText(`(${shopName}) 스토어팜 정보 확인 실패`);
       notificationByEveryTime(`(${shopName}) 스토어 정보를 확인할 수 없습니다. 개설상태를 확인해주세요.`);
 
@@ -483,7 +506,7 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
 
     let store_id = store_json.simpleAccountInfo.creatableChannelInfoListMap.STOREFARM[0].url;
 
-    if (commonStore.user.userInfo.naverStoreUrl !== "https://smartstore.naver.com/" + store_id) {
+    if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
       productStore.addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
       notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
@@ -510,7 +533,7 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
           if (!commonStore.uploadInfo.editable) {
             productStore.addRegisteredFailed(
               Object.assign(market_item, {
-                error: "스토어에 이미 등록된 상품입니다.",
+                error: '스토어에 이미 등록된 상품입니다.',
               })
             );
             productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
@@ -521,7 +544,7 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
           if (commonStore.uploadInfo.editable) {
             productStore.addRegisteredFailed(
               Object.assign(market_item, {
-                error: "상품 신규등록을 먼저 진행해주세요.",
+                error: '상품 신규등록을 먼저 진행해주세요.',
               })
             );
             productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
@@ -530,13 +553,13 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
           }
         }
 
-        let desc_resp = await fetch("https://sell.smartstore.naver.com/api/v2/editor/convert?editorType=NONE", {
+        let desc_resp = await fetch('https://sell.smartstore.naver.com/api/v2/editor/convert?editorType=NONE', {
           body: `${getStoreTraceCodeV1(market_item.id, data.DShopInfo.site_code)}${market_item.content2}${
-            commonStore.user.userInfo.descriptionShowTitle === "Y"
+            commonStore.user.userInfo.descriptionShowTitle === 'Y'
               ? `<br /><br /><div style="text-align: center;">${market_item.name3}</div><br /><br />`
               : `<br /><br />`
           }${transformContent(market_item.content1)}${market_item.content3}`,
-          method: "POST",
+          method: 'POST',
         });
 
         let desc_json = await desc_resp.json();
@@ -565,7 +588,7 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
         for (let i in words_list) {
           if (words_list[i].findWord && !words_list[i].replaceWord) {
             if (market_item.name3.includes(words_list[i].findWord)) {
-              words_restrict["상품명"] = words_list[i].findWord;
+              words_restrict['상품명'] = words_list[i].findWord;
             }
           }
         }
@@ -573,15 +596,15 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
         for (let i in market_optn) {
           if (market_optn[i].code === market_code) {
             for (let j in market_optn[i]) {
-              if (j.includes("misc") && market_optn[i][j] !== "") {
-                group[market_optn[i][j]] = "";
+              if (j.includes('misc') && market_optn[i][j] !== '') {
+                group[market_optn[i][j]] = '';
               }
 
-              if (j.includes("opt") && j !== "optimg" && market_optn[i][j] !== "") {
+              if (j.includes('opt') && j !== 'optimg' && market_optn[i][j] !== '') {
                 for (let k in words_list) {
                   if (words_list[k].findWord && !words_list[k].replaceWord) {
                     if (market_optn[i][j].includes(words_list[k].findWord)) {
-                      words_restrict["옵션명"] = words_list[k].findWord;
+                      words_restrict['옵션명'] = words_list[k].findWord;
                     }
                   }
                 }
@@ -591,10 +614,10 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
         }
 
         if (Object.keys(words_restrict).length > 0) {
-          let message = "";
+          let message = '';
 
           for (let i in words_restrict) {
-            message += i + "에서 금지어(" + words_restrict[i] + ")가 발견되었습니다. ";
+            message += i + '에서 금지어(' + words_restrict[i] + ')가 발견되었습니다. ';
           }
 
           productStore.addRegisteredFailed(Object.assign(market_item, { error: message }));
@@ -610,14 +633,14 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
         if (option_count > 0) {
           stock = 0;
 
-          optn_json["optionUsable"] = true;
+          optn_json['optionUsable'] = true;
 
           for (let i in group) {
-            optn_json["options"].push({
+            optn_json['options'].push({
               groupName: i,
               usable: true,
-              optionType: "COMBINATION",
-              sortType: "CREATE",
+              optionType: 'COMBINATION',
+              sortType: 'CREATE',
             });
           }
 
@@ -627,29 +650,29 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
 
               stock += market_optn[i].stock;
 
-              option_detail["price"] = market_optn[i].price.toString();
-              option_detail["stockQuantity"] = market_optn[i].stock.toString();
-              option_detail["sellerManagerCode"] = "";
-              option_detail["usable"] = true;
-              option_detail["optionType"] = "COMBINATION";
-              option_detail["sortType"] = "CREATE";
+              option_detail['price'] = market_optn[i].price.toString();
+              option_detail['stockQuantity'] = market_optn[i].stock.toString();
+              option_detail['sellerManagerCode'] = '';
+              option_detail['usable'] = true;
+              option_detail['optionType'] = 'COMBINATION';
+              option_detail['sortType'] = 'CREATE';
 
               if (option_count === 1) {
-                option_detail["optionName1"] = market_optn[i].opt1 ? market_optn[i].opt1 : "ERROR";
+                option_detail['optionName1'] = market_optn[i].opt1 ? market_optn[i].opt1 : 'ERROR';
               }
 
               if (option_count === 2) {
-                option_detail["optionName1"] = market_optn[i].opt1 ? market_optn[i].opt1 : "ERROR";
-                option_detail["optionName2"] = market_optn[i].opt2 ? market_optn[i].opt2 : "ERROR";
+                option_detail['optionName1'] = market_optn[i].opt1 ? market_optn[i].opt1 : 'ERROR';
+                option_detail['optionName2'] = market_optn[i].opt2 ? market_optn[i].opt2 : 'ERROR';
               }
 
               if (option_count === 3) {
-                option_detail["optionName1"] = market_optn[i].opt1 ? market_optn[i].opt1 : "ERROR";
-                option_detail["optionName2"] = market_optn[i].opt2 ? market_optn[i].opt2 : "ERROR";
-                option_detail["optionName3"] = market_optn[i].opt3 ? market_optn[i].opt3 : "ERROR";
+                option_detail['optionName1'] = market_optn[i].opt1 ? market_optn[i].opt1 : 'ERROR';
+                option_detail['optionName2'] = market_optn[i].opt2 ? market_optn[i].opt2 : 'ERROR';
+                option_detail['optionName3'] = market_optn[i].opt3 ? market_optn[i].opt3 : 'ERROR';
               }
 
-              optn_json["optionCombinations"].push(option_detail);
+              optn_json['optionCombinations'].push(option_detail);
             }
           }
         } else {
@@ -669,11 +692,11 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
         let images: any = [];
 
         if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code).video) {
-          market_item.misc1 = "";
+          market_item.misc1 = '';
         }
 
         const uploaded_naver: any = await sendTabMessage(newTab.id, {
-          action: "upload-A077",
+          action: 'upload-A077',
           source: market_item,
         });
 
@@ -688,19 +711,26 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
         if (!uploaded_naver || !uploaded_naver.image || uploaded_naver.image.length < 1) {
           productStore.addRegisteredFailed(
             Object.assign(market_item, {
-              error: "이미지 업로드 도중 오류가 발생하였습니다.",
+              error: '이미지 업로드 도중 오류가 발생하였습니다.',
             })
           );
           productStore.addConsoleText(`(${shopName}) [${market_code}] 이미지 업로드 실패`);
 
-          await sendCallback(commonStore, data, market_code, parseInt(product), 2, "이미지 업로드 도중 오류가 발생하였습니다.");
+          await sendCallback(
+            commonStore,
+            data,
+            market_code,
+            parseInt(product),
+            2,
+            '이미지 업로드 도중 오류가 발생하였습니다.'
+          );
 
           continue;
         }
 
         productStore.addConsoleText(`(${shopName}) [${market_code}] 이미지 업로드 완료`);
 
-        if (market_item.misc1 !== "") {
+        if (market_item.misc1 !== '') {
           if (!uploaded_naver.video) {
             productStore.addConsoleText(`(${shopName}) [${market_code}] 동영상 업로드 실패`);
           } else {
@@ -712,13 +742,13 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
           let temp: any = {};
 
           if (i === 0) {
-            temp["imageType"] = "REPRESENTATIVE";
+            temp['imageType'] = 'REPRESENTATIVE';
           } else {
-            temp["imageType"] = "OPTIONAL";
+            temp['imageType'] = 'OPTIONAL';
           }
 
-          temp["imageUrl"] = uploaded_naver.image[i].imageUrl;
-          temp["order"] = 1;
+          temp['imageUrl'] = uploaded_naver.image[i].imageUrl;
+          temp['order'] = 1;
 
           images.push(temp);
         }
@@ -726,26 +756,28 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
         let delivery_fee: any = {};
 
         if (market_item.deliv_fee > 0) {
-          delivery_fee["deliveryFeeType"] = "PAID";
-          delivery_fee["baseFee"] = market_item.deliv_fee.toString();
-          delivery_fee["deliveryFeePayType"] = "PREPAID";
+          delivery_fee['deliveryFeeType'] = 'PAID';
+          delivery_fee['baseFee'] = market_item.deliv_fee.toString();
+          delivery_fee['deliveryFeePayType'] = 'PREPAID';
         } else {
-          delivery_fee["deliveryFeeType"] = "FREE";
+          delivery_fee['deliveryFeeType'] = 'FREE';
         }
 
-        delivery_fee["deliveryFeeByArea"] = {
-          deliveryAreaType: "AREA_2",
-          area2extraFee: commonStore.user.userInfo.additionalShippingFeeJeju ? commonStore.user.userInfo.additionalShippingFeeJeju : 5000,
+        delivery_fee['deliveryFeeByArea'] = {
+          deliveryAreaType: 'AREA_2',
+          area2extraFee: commonStore.user.userInfo.additionalShippingFeeJeju
+            ? commonStore.user.userInfo.additionalShippingFeeJeju
+            : 5000,
         };
 
         let search_tags: any = [];
 
-        if (market_item.keyword2 !== "") {
-          let tags = market_item.keyword2.split(",");
+        if (market_item.keyword2 !== '') {
+          let tags = market_item.keyword2.split(',');
 
           for (let i in tags) {
             search_tags.push({
-              code: "1",
+              code: '1',
               text: tags[i].trim(),
             });
           }
@@ -755,37 +787,43 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
 
         const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
 
-        const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`] ? itemInfo[`sillCode${data.DShopInfo.site_code}`] : "ETC";
+        const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
+          ? itemInfo[`sillCode${data.DShopInfo.site_code}`]
+          : 'ETC';
         const sillData = itemInfo[`sillData${data.DShopInfo.site_code}`]
           ? JSON.parse(itemInfo[`sillData${data.DShopInfo.site_code}`])
           : [
-              { code: "itemName", name: "품명", type: "input" },
-              { code: "modelName", name: "모델명", type: "input" },
-              { code: "certificateDetails", name: "법에 의한 인증, 허가 등을 받았음을 확인할 수 있는 경우 그에 대한 사항.", type: "input" },
-              { code: "manufacturer", name: "제조자(사)", type: "input" },
-              { code: "afterServiceDirector", name: "A/S 책임자 또는 소비자상담 관련 전화번호", type: "input" },
+              { code: 'itemName', name: '품명', type: 'input' },
+              { code: 'modelName', name: '모델명', type: 'input' },
+              {
+                code: 'certificateDetails',
+                name: '법에 의한 인증, 허가 등을 받았음을 확인할 수 있는 경우 그에 대한 사항.',
+                type: 'input',
+              },
+              { code: 'manufacturer', name: '제조자(사)', type: 'input' },
+              { code: 'afterServiceDirector', name: 'A/S 책임자 또는 소비자상담 관련 전화번호', type: 'input' },
             ];
 
         const sillResult = {
           productInfoProvidedNoticeType: sillCode,
           productInfoProvidedNoticeContent: {
-            templateType: "PRODUCT_INFO_PROVIDED_NOTICE",
+            templateType: 'PRODUCT_INFO_PROVIDED_NOTICE',
             productInfoProvidedNoticeType: sillCode,
-            returnCostReason: "상세설명참조",
-            noRefundReason: "상세설명참조",
-            qualityAssuranceStandard: "상세설명참조",
-            compensationProcedure: "상세설명참조",
-            troubleShootingContents: "상세설명참조",
+            returnCostReason: '상세설명참조',
+            noRefundReason: '상세설명참조',
+            qualityAssuranceStandard: '상세설명참조',
+            compensationProcedure: '상세설명참조',
+            troubleShootingContents: '상세설명참조',
           },
         };
 
         sillData.map((v) => {
-          sillResult.productInfoProvidedNoticeContent[v.code] = v.value ?? "상세설명참조";
+          sillResult.productInfoProvidedNoticeContent[v.code] = v.value ?? '상세설명참조';
         });
 
         let body = {
           product: {
-            saleType: "NEW",
+            saleType: 'NEW',
             excludeAdminDiscount: false,
             excludeGivePresent: false,
             payExposure: true,
@@ -807,11 +845,11 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
                       ...uploaded_naver.video.VideoHeader[0],
                     },
 
-                    encodeStatusType: "COMPLETE",
+                    encodeStatusType: 'COMPLETE',
                     order: 1,
 
                     gifThumbnailInfo: {
-                      gifThumbnailStatusType: "COMPLETE",
+                      gifThumbnailStatusType: 'COMPLETE',
                       gifThumbnailUrl: uploaded_naver.video.GIF.imageUrl,
                       gifThumbnailWidth: uploaded_naver.video.GIF.width,
                       gifThumbnailHeight: uploaded_naver.video.GIF.height,
@@ -830,46 +868,50 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
               },
 
               afterServiceInfo: {
-                afterServiceTelephoneNumber: commonStore.user.userInfo.asTel ? commonStore.user.userInfo.asTel : "000-0000-0000",
+                afterServiceTelephoneNumber: commonStore.user.userInfo.asTel
+                  ? commonStore.user.userInfo.asTel
+                  : '000-0000-0000',
                 afterServiceGuideContent: commonStore.user.userInfo.asInformation
                   ? commonStore.user.userInfo.asInformation
-                  : "해외구매대행 상품은 국내에서 A/S가 불가능합니다.",
+                  : '해외구매대행 상품은 국내에서 A/S가 불가능합니다.',
               },
 
               originAreaInfo: {
-                type: "IMPORT",
+                type: 'IMPORT',
                 originArea: {
-                  code: commonStore.user.userInfo.naverOriginCode ? commonStore.user.userInfo.naverOriginCode : "0200037",
+                  code: commonStore.user.userInfo.naverOriginCode
+                    ? commonStore.user.userInfo.naverOriginCode
+                    : '0200037',
                 },
                 plural: false,
-                importer: commonStore.user.userInfo.naverOrigin ? commonStore.user.userInfo.naverOrigin : "수입산",
+                importer: commonStore.user.userInfo.naverOrigin ? commonStore.user.userInfo.naverOrigin : '수입산',
               },
 
               sellerCodeInfo: {
                 sellerManagementCode: market_code,
-                sellerBarcode: "",
-                sellerCustomCode1: "",
-                sellerCustomCode2: "",
+                sellerBarcode: '',
+                sellerCustomCode1: '',
+                sellerCustomCode2: '',
               },
 
               seoInfo: {
                 sellerTags: search_tags,
-                pageTitle: "",
-                metaDescription: "",
+                pageTitle: '',
+                metaDescription: '',
               },
 
               optionInfo: optn_json,
 
               supplementProductInfo: {
                 count: 0,
-                sortType: "CREATE",
+                sortType: 'CREATE',
                 supplementProducts: [],
                 usable: false,
               },
 
               purchaseReviewInfo: {
                 purchaseReviewExposure: true,
-                reviewUnExposeReason: "",
+                reviewUnExposeReason: '',
               },
 
               customMadeInfo: {
@@ -878,31 +920,31 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
 
               minorPurchasable: true,
               productCertificationInfos: [],
-              taxType: "TAX",
+              taxType: 'TAX',
 
               productInfoProvidedNotice: sillResult,
 
               certificationTargetExcludeContent: {
-                kcYn: "KC_EXEMPTION_OBJECT",
-                kcExemption: "OVERSEAS",
+                kcYn: 'KC_EXEMPTION_OBJECT',
+                kcExemption: 'OVERSEAS',
                 childYn: true,
               },
 
-              consumptionTax: "TEN",
+              consumptionTax: 'TEN',
               productAttributes: [],
               useReturnCancelNotification: false,
             },
 
             detailContent: {
-              editorType: "SEONE",
-              editorTypeForEditor: "SEONE",
+              editorType: 'SEONE',
+              editorTypeForEditor: 'SEONE',
               existsRemoveTags: false,
               productDetailInfoContent: JSON.stringify(json),
             },
 
             deliveryInfo: {
-              deliveryType: "DELIVERY",
-              deliveryAttributeType: "NORMAL",
+              deliveryType: 'DELIVERY',
+              deliveryAttributeType: 'NORMAL',
               deliveryFee: delivery_fee,
 
               claimDeliveryInfo: {
@@ -919,15 +961,15 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
 
               installationFee: false,
               accountNo: user_json.deliveryBaseInfoVO.baseDeliveryBundleGroup.accountNo,
-              cloneDeliveryAttributeType: "NORMAL",
+              cloneDeliveryAttributeType: 'NORMAL',
               customMadeDirectInputYn: false,
-              expectedDeliveryPeriodType: "",
-              expectedDeliveryPeriodDirectInput: "",
+              expectedDeliveryPeriodType: '',
+              expectedDeliveryPeriodDirectInput: '',
               deliveryCompany: {
-                id: "CJGLS",
-                name: "CJ대한통운",
+                id: 'CJGLS',
+                name: 'CJ대한통운',
               },
-              deliveryCompanyId: "CJGLS",
+              deliveryCompanyId: 'CJGLS',
             },
 
             customerBenefit:
@@ -935,11 +977,11 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
                 ? {
                     immediateDiscountPolicy: {
                       discountMethod: {
-                        discountUnitType: "WON",
+                        discountUnitType: 'WON',
                         value: market_item.nprice,
                       },
                       mobileDiscountMethod: {
-                        discountUnitType: "WON",
+                        discountUnitType: 'WON',
                         value: market_item.nprice,
                       },
                     },
@@ -959,7 +1001,7 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
                   }
                 : {},
             productStats: {},
-            representImageUrl: "",
+            representImageUrl: '',
             useSalePeriod: false,
 
             category: {
@@ -973,7 +1015,7 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
               $resolved: true,
               $order: 21,
 
-              exceptionalCategoryTypes: ["REGULAR_SUBSCRIPTION", "FREE_RETURN_INSURANCE"],
+              exceptionalCategoryTypes: ['REGULAR_SUBSCRIPTION', 'FREE_RETURN_INSURANCE'],
 
               exceptionalCategoryAttributes: [],
             },
@@ -987,12 +1029,12 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
 
           singleChannelProductMap: {
             STOREFARM: {
-              id: "",
-              selfProductNameUsable: commonStore.user.userInfo.naverStoreOnly === "Y" ? true : false,
-              channelProductName: commonStore.user.userInfo.naverStoreOnly === "Y" ? name : "",
-              channelServiceType: "STOREFARM",
-              channelProductType: "SINGLE",
-              channelProductSupplyType: "OWNER",
+              id: '',
+              selfProductNameUsable: commonStore.user.userInfo.naverStoreOnly === 'Y' ? true : false,
+              channelProductName: commonStore.user.userInfo.naverStoreOnly === 'Y' ? name : '',
+              channelServiceType: 'STOREFARM',
+              channelProductType: 'SINGLE',
+              channelProductSupplyType: 'OWNER',
               channel: null,
 
               epInfo: {
@@ -1005,8 +1047,8 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
                 disabledAll: false,
               },
 
-              channelProductDisplayStatusType: "ON",
-              channelProductStatusType: "NORMAL",
+              channelProductDisplayStatusType: 'ON',
+              channelProductStatusType: 'NORMAL',
               storeKeepExclusiveProduct: false,
               orderRequestUsable: false,
               best: false,
@@ -1036,43 +1078,43 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
           let productId = market_item.name2;
 
           if (!productId) {
-            productStore.addRegisteredFailed(Object.assign(market_item, { error: "상품 ID를 찾을 수 없습니다." }));
+            productStore.addRegisteredFailed(Object.assign(market_item, { error: '상품 ID를 찾을 수 없습니다.' }));
             productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 실패`);
 
-            await sendCallback(commonStore, data, market_code, parseInt(product), 2, "상품 ID를 찾을 수 없습니다.");
+            await sendCallback(commonStore, data, market_code, parseInt(product), 2, '상품 ID를 찾을 수 없습니다.');
 
             continue;
           }
 
           let search_body = {
-            searchKeywordType: "CHANNEL_PRODUCT_NO",
+            searchKeywordType: 'CHANNEL_PRODUCT_NO',
             searchKeyword: productId,
-            productName: "",
-            modelName: "",
-            manufacturerName: "",
-            brandName: "",
-            searchPaymentType: "ALL",
-            searchPeriodType: "PROD_REG_DAY",
-            deliveryAttributeType: "",
-            productKindType: "",
-            etcCondition: "",
-            subscriptionType: "",
-            fromDate: "",
-            toDate: "",
+            productName: '',
+            modelName: '',
+            manufacturerName: '',
+            brandName: '',
+            searchPaymentType: 'ALL',
+            searchPeriodType: 'PROD_REG_DAY',
+            deliveryAttributeType: '',
+            productKindType: '',
+            etcCondition: '',
+            subscriptionType: '',
+            fromDate: '',
+            toDate: '',
 
             viewData: {
-              productStatusTypes: ["SALE"],
+              productStatusTypes: ['SALE'],
 
-              channelServiceTypes: ["STOREFARM", "WINDOW", "AFFILIATE", ""],
+              channelServiceTypes: ['STOREFARM', 'WINDOW', 'AFFILIATE', ''],
 
               pageSize: 100,
             },
 
-            searchOrderType: "REG_DATE",
+            searchOrderType: 'REG_DATE',
 
-            productStatusTypes: ["SALE"],
+            productStatusTypes: ['SALE'],
 
-            channelServiceTypes: ["STOREFARM", "WINDOW", "AFFILIATE"],
+            channelServiceTypes: ['STOREFARM', 'WINDOW', 'AFFILIATE'],
 
             page: 0,
             size: 100,
@@ -1080,25 +1122,28 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
           };
 
           let search_json: any = await sendTabMessage(newTab.id, {
-            action: "search-A077-products",
+            action: 'search-A077-products',
             source: JSON.stringify(search_body),
           });
 
           // 스마트스토어 수정 등록 모듈 (2021-12-22)
-          let view_resp = await fetch(`https://sell.smartstore.naver.com/api/products/${search_json.content[0].id.toString()}`, {
-            headers: {
-              "x-current-state": `https://sell.smartstore.naver.com/#/products/edit/${search_json.content[0].id.toString()}`,
-              "x-current-statename": "",
-              "x-to-statename": "main.product.edit",
-            },
+          let view_resp = await fetch(
+            `https://sell.smartstore.naver.com/api/products/${search_json.content[0].id.toString()}`,
+            {
+              headers: {
+                'x-current-state': `https://sell.smartstore.naver.com/#/products/edit/${search_json.content[0].id.toString()}`,
+                'x-current-statename': '',
+                'x-to-statename': 'main.product.edit',
+              },
 
-            referrer: "https://sell.smartstore.naver.com/",
-            referrerPolicy: "strict-origin-when-cross-origin",
-            body: null,
-            method: "GET",
-            mode: "cors",
-            credentials: "include",
-          });
+              referrer: 'https://sell.smartstore.naver.com/',
+              referrerPolicy: 'strict-origin-when-cross-origin',
+              body: null,
+              method: 'GET',
+              mode: 'cors',
+              credentials: 'include',
+            }
+          );
 
           let view_json = await view_resp.json();
 
@@ -1107,8 +1152,8 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
               ...view_json.product,
 
               deliveryInfo: {
-                deliveryType: "DELIVERY",
-                deliveryAttributeType: "NORMAL",
+                deliveryType: 'DELIVERY',
+                deliveryAttributeType: 'NORMAL',
                 deliveryFee: delivery_fee,
 
                 claimDeliveryInfo: {
@@ -1125,15 +1170,15 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
 
                 installationFee: false,
                 accountNo: user_json.deliveryBaseInfoVO.baseDeliveryBundleGroup.accountNo,
-                cloneDeliveryAttributeType: "NORMAL",
+                cloneDeliveryAttributeType: 'NORMAL',
                 customMadeDirectInputYn: false,
-                expectedDeliveryPeriodType: "",
-                expectedDeliveryPeriodDirectInput: "",
+                expectedDeliveryPeriodType: '',
+                expectedDeliveryPeriodDirectInput: '',
                 deliveryCompany: {
-                  id: "CJGLS",
-                  name: "CJ대한통운",
+                  id: 'CJGLS',
+                  name: 'CJ대한통운',
                 },
-                deliveryCompanyId: "CJGLS",
+                deliveryCompanyId: 'CJGLS',
               },
 
               images: images,
@@ -1153,11 +1198,11 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
                         ...uploaded_naver.video.VideoHeader[0],
                       },
 
-                      encodeStatusType: "COMPLETE",
+                      encodeStatusType: 'COMPLETE',
                       order: 1,
 
                       gifThumbnailInfo: {
-                        gifThumbnailStatusType: "COMPLETE",
+                        gifThumbnailStatusType: 'COMPLETE',
                         gifThumbnailUrl: uploaded_naver.video.GIF.imageUrl,
                         gifThumbnailWidth: uploaded_naver.video.GIF.width,
                         gifThumbnailHeight: uploaded_naver.video.GIF.height,
@@ -1176,46 +1221,50 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
                 },
 
                 afterServiceInfo: {
-                  afterServiceTelephoneNumber: commonStore.user.userInfo.asTel ? commonStore.user.userInfo.asTel : "000-0000-0000",
+                  afterServiceTelephoneNumber: commonStore.user.userInfo.asTel
+                    ? commonStore.user.userInfo.asTel
+                    : '000-0000-0000',
                   afterServiceGuideContent: commonStore.user.userInfo.asInformation
                     ? commonStore.user.userInfo.asInformation
-                    : "해외구매대행 상품은 국내에서 A/S가 불가능합니다.",
+                    : '해외구매대행 상품은 국내에서 A/S가 불가능합니다.',
                 },
 
                 originAreaInfo: {
-                  type: "IMPORT",
+                  type: 'IMPORT',
                   originArea: {
-                    code: commonStore.user.userInfo.naverOriginCode ? commonStore.user.userInfo.naverOriginCode : "0200037", // 원산지: 수입산 (중국)
+                    code: commonStore.user.userInfo.naverOriginCode
+                      ? commonStore.user.userInfo.naverOriginCode
+                      : '0200037', // 원산지: 수입산 (중국)
                   },
                   plural: false,
-                  importer: commonStore.user.userInfo.naverOrigin ? commonStore.user.userInfo.naverOrigin : "수입산",
+                  importer: commonStore.user.userInfo.naverOrigin ? commonStore.user.userInfo.naverOrigin : '수입산',
                 },
 
                 sellerCodeInfo: {
                   sellerManagementCode: market_code,
-                  sellerBarcode: "",
-                  sellerCustomCode1: "",
-                  sellerCustomCode2: "",
+                  sellerBarcode: '',
+                  sellerCustomCode1: '',
+                  sellerCustomCode2: '',
                 },
 
                 seoInfo: {
                   sellerTags: search_tags,
-                  pageTitle: "",
-                  metaDescription: "",
+                  pageTitle: '',
+                  metaDescription: '',
                 },
 
                 optionInfo: optn_json,
 
                 supplementProductInfo: {
                   count: 0,
-                  sortType: "CREATE",
+                  sortType: 'CREATE',
                   supplementProducts: [],
                   usable: false,
                 },
 
                 purchaseReviewInfo: {
                   purchaseReviewExposure: true,
-                  reviewUnExposeReason: "",
+                  reviewUnExposeReason: '',
                 },
 
                 customMadeInfo: {
@@ -1224,24 +1273,24 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
 
                 minorPurchasable: true,
                 productCertificationInfos: [],
-                taxType: "TAX",
+                taxType: 'TAX',
 
                 productInfoProvidedNotice: sillResult,
 
                 certificationTargetExcludeContent: {
-                  kcYn: "KC_EXEMPTION_OBJECT",
-                  kcExemption: "OVERSEAS",
+                  kcYn: 'KC_EXEMPTION_OBJECT',
+                  kcExemption: 'OVERSEAS',
                   childYn: true,
                 },
 
-                consumptionTax: "TEN",
+                consumptionTax: 'TEN',
                 productAttributes: [],
                 useReturnCancelNotification: false,
               },
 
               detailContent: {
-                editorType: "SEONE",
-                editorTypeForEditor: "SEONE",
+                editorType: 'SEONE',
+                editorTypeForEditor: 'SEONE',
                 existsRemoveTags: false,
                 productDetailInfoContent: JSON.stringify(json),
               },
@@ -1251,11 +1300,11 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
                   ? {
                       immediateDiscountPolicy: {
                         discountMethod: {
-                          discountUnitType: "WON",
+                          discountUnitType: 'WON',
                           value: market_item.nprice, // PC 할인가격
                         },
                         mobileDiscountMethod: {
-                          discountUnitType: "WON",
+                          discountUnitType: 'WON',
                           value: market_item.nprice, // 모바일 할인가격
                         },
                       },
@@ -1294,18 +1343,18 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
           productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 중...`);
 
           let edit_json: any = await sendTabMessage(newTab.id, {
-            action: "edited-A077-products",
+            action: 'edited-A077-products',
             source: JSON.stringify(body2),
           });
 
           if (edit_json.productId === undefined) {
-            let messagebox = "";
+            let messagebox = '';
 
             for (let i = 0; i < edit_json.invalidInputs.length; i++) {
               if (i < edit_json.invalidInputs.length - 1) {
-                messagebox += i + 1 + ". " + edit_json.invalidInputs[i].message + " // ";
+                messagebox += i + 1 + '. ' + edit_json.invalidInputs[i].message + ' // ';
               } else {
-                messagebox += i + 1 + ". " + edit_json.invalidInputs[i].message;
+                messagebox += i + 1 + '. ' + edit_json.invalidInputs[i].message;
               }
             }
 
@@ -1326,19 +1375,19 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
           productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 중...`);
 
           let resp_json: any = await sendTabMessage(newTab.id, {
-            action: "upload-A077-products",
+            action: 'upload-A077-products',
             source: JSON.stringify(body),
           });
 
           try {
             if (resp_json.productId === undefined) {
-              let messagebox = "";
+              let messagebox = '';
 
               for (let i = 0; i < resp_json.invalidInputs.length; i++) {
                 if (i < resp_json.invalidInputs.length - 1) {
-                  messagebox += i + 1 + ". " + resp_json.invalidInputs[i].message + " // ";
+                  messagebox += i + 1 + '. ' + resp_json.invalidInputs[i].message + ' // ';
                 } else {
-                  messagebox += i + 1 + ". " + resp_json.invalidInputs[i].message;
+                  messagebox += i + 1 + '. ' + resp_json.invalidInputs[i].message;
                 }
               }
 
@@ -1394,7 +1443,7 @@ async function deleteSmartStore(productStore: any, commonStore: any, data: any) 
   console.log(`(${shopName}) 등록정보:`, data);
 
   try {
-    let user_resp = await fetch("https://sell.smartstore.naver.com/api/products?_action=create");
+    let user_resp = await fetch('https://sell.smartstore.naver.com/api/products?_action=create');
     let user_json = await user_resp.json();
 
     if (user_json.error) {
@@ -1404,10 +1453,10 @@ async function deleteSmartStore(productStore: any, commonStore: any, data: any) 
       return false;
     }
 
-    let store_resp = await fetch("https://sell.smartstore.naver.com/api/clone-accounts?_action=init");
+    let store_resp = await fetch('https://sell.smartstore.naver.com/api/clone-accounts?_action=init');
     let store_json = await store_resp.json();
 
-    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty("STOREFARM")) {
+    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty('STOREFARM')) {
       productStore.addConsoleText(`(${shopName}) 스토어팜 정보 확인 실패`);
       notificationByEveryTime(`(${shopName}) 스토어 정보를 확인할 수 없습니다. 개설상태를 확인해주세요.`);
 
@@ -1416,14 +1465,14 @@ async function deleteSmartStore(productStore: any, commonStore: any, data: any) 
 
     let store_id = store_json.simpleAccountInfo.creatableChannelInfoListMap.STOREFARM[0].url;
 
-    if (commonStore.user.userInfo.naverStoreUrl !== "https://smartstore.naver.com/" + store_id) {
+    if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
       productStore.addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
       notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
       return false;
     }
 
-    newTab = await createTabCompletely({ active: false, url: "https://sell.smartstore.naver.com/" }, 10);
+    newTab = await createTabCompletely({ active: false, url: 'https://sell.smartstore.naver.com/' }, 10);
 
     for (let product in data.DShopInfo.prod_codes) {
       try {
@@ -1441,34 +1490,34 @@ async function deleteSmartStore(productStore: any, commonStore: any, data: any) 
         }
 
         let searchBody = {
-          searchKeywordType: "CHANNEL_PRODUCT_NO",
+          searchKeywordType: 'CHANNEL_PRODUCT_NO',
           searchKeyword: productId,
-          productName: "",
-          modelName: "",
-          manufacturerName: "",
-          brandName: "",
-          searchPaymentType: "ALL",
-          searchPeriodType: "PROD_REG_DAY",
-          deliveryAttributeType: "",
-          productKindType: "",
-          etcCondition: "",
-          subscriptionType: "",
-          fromDate: "",
-          toDate: "",
+          productName: '',
+          modelName: '',
+          manufacturerName: '',
+          brandName: '',
+          searchPaymentType: 'ALL',
+          searchPeriodType: 'PROD_REG_DAY',
+          deliveryAttributeType: '',
+          productKindType: '',
+          etcCondition: '',
+          subscriptionType: '',
+          fromDate: '',
+          toDate: '',
 
           viewData: {
-            productStatusTypes: ["SALE"],
+            productStatusTypes: ['SALE'],
 
-            channelServiceTypes: ["STOREFARM", "WINDOW", "AFFILIATE", ""],
+            channelServiceTypes: ['STOREFARM', 'WINDOW', 'AFFILIATE', ''],
 
             pageSize: 100,
           },
 
-          searchOrderType: "REG_DATE",
+          searchOrderType: 'REG_DATE',
 
-          productStatusTypes: ["SALE"],
+          productStatusTypes: ['SALE'],
 
-          channelServiceTypes: ["STOREFARM", "WINDOW", "AFFILIATE"],
+          channelServiceTypes: ['STOREFARM', 'WINDOW', 'AFFILIATE'],
 
           page: 0,
           size: 100,
@@ -1476,7 +1525,7 @@ async function deleteSmartStore(productStore: any, commonStore: any, data: any) 
         };
 
         let searchJson: any = await sendTabMessage(newTab.id, {
-          action: "search-A077-products",
+          action: 'search-A077-products',
           source: JSON.stringify(searchBody),
         });
 
@@ -1495,18 +1544,18 @@ async function deleteSmartStore(productStore: any, commonStore: any, data: any) 
 
         const deleteBody = {
           productNos: [searchJson.content[0].id],
-          productStatusType: "DELETE",
-          productBulkUpdateType: "DELETE",
+          productStatusType: 'DELETE',
+          productBulkUpdateType: 'DELETE',
         };
 
         productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록해제 중...`);
 
         let deleteJson: any = await sendTabMessage(newTab.id, {
-          action: "delete-A077-products",
+          action: 'delete-A077-products',
           source: JSON.stringify(deleteBody),
         });
 
-        if (deleteJson.status === "STARTED") {
+        if (deleteJson.status === 'STARTED') {
           const progressValue = Math.round(((parseInt(product) + 1) * 100) / data.DShopInfo.prod_codes.length);
 
           commonStore.setDisabledProgressValue(data.DShopInfo.site_code, progressValue);
@@ -1547,7 +1596,7 @@ async function newOrderSmartStore(commonStore: any, shopInfo: any) {
   }
 
   try {
-    let user_resp = await fetch("https://sell.smartstore.naver.com/api/products?_action=create");
+    let user_resp = await fetch('https://sell.smartstore.naver.com/api/products?_action=create');
     let user_json = await user_resp.json();
 
     if (user_json.error) {
@@ -1556,10 +1605,10 @@ async function newOrderSmartStore(commonStore: any, shopInfo: any) {
       return [];
     }
 
-    let store_resp = await fetch("https://sell.smartstore.naver.com/api/clone-accounts?_action=init");
+    let store_resp = await fetch('https://sell.smartstore.naver.com/api/clone-accounts?_action=init');
     let store_json = await store_resp.json();
 
-    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty("STOREFARM")) {
+    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty('STOREFARM')) {
       notificationByEveryTime(`(${shopName}) 스토어 정보를 확인할 수 없습니다. 개설상태를 확인해주세요.`);
 
       return [];
@@ -1567,23 +1616,23 @@ async function newOrderSmartStore(commonStore: any, shopInfo: any) {
 
     let store_id = store_json.simpleAccountInfo.creatableChannelInfoListMap.STOREFARM[0].url;
 
-    if (commonStore.user.userInfo.naverStoreUrl !== "https://smartstore.naver.com/" + store_id) {
+    if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
       notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
       return [];
     }
 
     const orderData = {
-      operationName: "smartstoreFindDeliveriesBySummaryInfoType_ForSaleDelivery",
+      operationName: 'smartstoreFindDeliveriesBySummaryInfoType_ForSaleDelivery',
       variables: {
         merchantNo: store_json.simpleAccountInfo.sellerNo.toString(),
-        serviceType: "MP",
+        serviceType: 'MP',
         paging_page: 1,
         paging_size: 100,
-        sort_type: "RECENTLY_ORDER_YMDT",
-        sort_direction: "DESC",
-        summaryInfoType: "NEW_ORDERS_DELIVERY_OPERATED_BEFORE",
-        sellerOrderSearchTypes: ["NORMAL_ORDER", "TODAY_DISPATCH", "PRE_ORDER", "SUBSCRIPTION", "RENTAL"],
+        sort_type: 'RECENTLY_ORDER_YMDT',
+        sort_direction: 'DESC',
+        summaryInfoType: 'NEW_ORDERS_DELIVERY_OPERATED_BEFORE',
+        sellerOrderSearchTypes: ['NORMAL_ORDER', 'TODAY_DISPATCH', 'PRE_ORDER', 'SUBSCRIPTION', 'RENTAL'],
       },
 
       query: `query smartstoreFindDeliveriesBySummaryInfoType_ForSaleDelivery($merchantNo: String!, $paging_page: Int, $paging_size: Int, $serviceType: ServiceType!, $sort_direction: SortDirectionType, $sort_type: SortType, $summaryInfoType: SummaryInfoType!, $sellerOrderSearchTypes: [String]!) {
@@ -1693,24 +1742,24 @@ async function newOrderSmartStore(commonStore: any, shopInfo: any) {
       `,
     };
 
-    const orderResp = await fetch("https://sell.smartstore.naver.com/o/v3/graphql", {
+    const orderResp = await fetch('https://sell.smartstore.naver.com/o/v3/graphql', {
       headers: {
-        accept: "*/*",
-        "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-        "content-type": "application/json",
-        "sec-ch-ua": '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-origin",
+        accept: '*/*',
+        'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+        'content-type': 'application/json',
+        'sec-ch-ua': '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
       },
-      referrer: "https://sell.smartstore.naver.com/o/v3/n/sale/delivery",
-      referrerPolicy: "strict-origin-when-cross-origin",
+      referrer: 'https://sell.smartstore.naver.com/o/v3/n/sale/delivery',
+      referrerPolicy: 'strict-origin-when-cross-origin',
       body: JSON.stringify(orderData),
-      method: "POST",
-      mode: "cors",
-      credentials: "include",
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
     });
 
     const orderJson = await orderResp.json();
@@ -1751,7 +1800,7 @@ async function newOrderSmartStore(commonStore: any, shopInfo: any) {
 async function productPreparedSmartStore(commonStore: any, shopInfo: any, props: any) {
   let productOrderIds: any = [];
   console.log(props);
-  if (props !== "" && props.item.marketCode === "A077") {
+  if (props !== '' && props.item.marketCode === 'A077') {
     productOrderIds.push(props.item.orderNo.toString());
   } else {
     return;
@@ -1763,7 +1812,7 @@ async function productPreparedSmartStore(commonStore: any, shopInfo: any, props:
   }
 
   try {
-    let user_resp = await fetch("https://sell.smartstore.naver.com/api/products?_action=create");
+    let user_resp = await fetch('https://sell.smartstore.naver.com/api/products?_action=create');
     let user_json = await user_resp.json();
 
     if (user_json.error) {
@@ -1772,10 +1821,10 @@ async function productPreparedSmartStore(commonStore: any, shopInfo: any, props:
       return [];
     }
 
-    let store_resp = await fetch("https://sell.smartstore.naver.com/api/clone-accounts?_action=init");
+    let store_resp = await fetch('https://sell.smartstore.naver.com/api/clone-accounts?_action=init');
     let store_json = await store_resp.json();
 
-    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty("STOREFARM")) {
+    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty('STOREFARM')) {
       notificationByEveryTime(`(${shopName}) 스토어 정보를 확인할 수 없습니다. 개설상태를 확인해주세요.`);
 
       return [];
@@ -1783,7 +1832,7 @@ async function productPreparedSmartStore(commonStore: any, shopInfo: any, props:
 
     let store_id = store_json.simpleAccountInfo.creatableChannelInfoListMap.STOREFARM[0].url;
 
-    if (commonStore.user.userInfo.naverStoreUrl !== "https://smartstore.naver.com/" + store_id) {
+    if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
       notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
       return [];
@@ -1792,28 +1841,28 @@ async function productPreparedSmartStore(commonStore: any, shopInfo: any, props:
     const test = {
       productOrderIds: props.item.orderNo.toString(),
       onlyValidation: true,
-      patch: "placeOrder",
+      patch: 'placeOrder',
       validationSuccess: true,
     };
 
-    const test2 = await fetch("https://sell.smartstore.naver.com/o/v3/oa/delivery/placeOrder", {
+    const test2 = await fetch('https://sell.smartstore.naver.com/o/v3/oa/delivery/placeOrder', {
       headers: {
-        accept: "application/json, text/plain, */*",
-        "accept-language": "ko,en-US;q=0.9,en;q=0.8,ko-KR;q=0.7",
-        "content-type": "application/json;charset=UTF-8",
-        "sec-ch-ua": '"Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-origin",
+        accept: 'application/json, text/plain, */*',
+        'accept-language': 'ko,en-US;q=0.9,en;q=0.8,ko-KR;q=0.7',
+        'content-type': 'application/json;charset=UTF-8',
+        'sec-ch-ua': '"Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
       },
-      referrer: "https://sell.smartstore.naver.com/o/v3/n/sale/delivery",
-      referrerPolicy: "strict-origin-when-cross-origin",
+      referrer: 'https://sell.smartstore.naver.com/o/v3/n/sale/delivery',
+      referrerPolicy: 'strict-origin-when-cross-origin',
       body: JSON.stringify(test),
-      method: "POST",
-      mode: "cors",
-      credentials: "include",
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
     });
 
     console.log(await test2.json());
@@ -1833,7 +1882,7 @@ async function deliveryOrderSmartStore(commonStore: any, shopInfo: any) {
   }
 
   try {
-    let user_resp = await fetch("https://sell.smartstore.naver.com/api/products?_action=create");
+    let user_resp = await fetch('https://sell.smartstore.naver.com/api/products?_action=create');
     let user_json = await user_resp.json();
 
     if (user_json.error) {
@@ -1842,10 +1891,10 @@ async function deliveryOrderSmartStore(commonStore: any, shopInfo: any) {
       return [];
     }
 
-    let store_resp = await fetch("https://sell.smartstore.naver.com/api/clone-accounts?_action=init");
+    let store_resp = await fetch('https://sell.smartstore.naver.com/api/clone-accounts?_action=init');
     let store_json = await store_resp.json();
 
-    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty("STOREFARM")) {
+    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty('STOREFARM')) {
       notificationByEveryTime(`(${shopName}) 스토어 정보를 확인할 수 없습니다. 개설상태를 확인해주세요.`);
 
       return [];
@@ -1853,22 +1902,22 @@ async function deliveryOrderSmartStore(commonStore: any, shopInfo: any) {
 
     let store_id = store_json.simpleAccountInfo.creatableChannelInfoListMap.STOREFARM[0].url;
 
-    if (commonStore.user.userInfo.naverStoreUrl !== "https://smartstore.naver.com/" + store_id) {
+    if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
       notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
       return [];
     }
 
     const orderData = {
-      operationName: "smartstoreFindDeliveriesBySummaryInfoType_ForSaleDelivery",
+      operationName: 'smartstoreFindDeliveriesBySummaryInfoType_ForSaleDelivery',
       variables: {
         merchantNo: store_json.simpleAccountInfo.sellerNo.toString(),
-        serviceType: "MP",
+        serviceType: 'MP',
         paging_page: 1,
         paging_size: 100,
-        sort_type: "RECENTLY_ORDER_YMDT",
-        sort_direction: "DESC",
-        summaryInfoType: "DELIVERY_READY",
+        sort_type: 'RECENTLY_ORDER_YMDT',
+        sort_direction: 'DESC',
+        summaryInfoType: 'DELIVERY_READY',
       },
 
       query: `query smartstoreFindDeliveriesBySummaryInfoType_ForSaleDelivery($merchantNo: String!, $paging_page: Int, $paging_size: Int, $serviceType: ServiceType!, $sort_direction: SortDirectionType, $sort_type: SortType, $summaryInfoType: SummaryInfoType!, $sellerOrderSearchTypes: [String]!) {
@@ -1978,24 +2027,24 @@ async function deliveryOrderSmartStore(commonStore: any, shopInfo: any) {
       `,
     };
 
-    const orderResp = await fetch("https://sell.smartstore.naver.com/o/v3/graphql", {
+    const orderResp = await fetch('https://sell.smartstore.naver.com/o/v3/graphql', {
       headers: {
-        accept: "*/*",
-        "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-        "content-type": "application/json",
-        "sec-ch-ua": '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
-        "sec-ch-ua-mobile": "?0",
-        "sec-ch-ua-platform": '"Windows"',
-        "sec-fetch-dest": "empty",
-        "sec-fetch-mode": "cors",
-        "sec-fetch-site": "same-origin",
+        accept: '*/*',
+        'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+        'content-type': 'application/json',
+        'sec-ch-ua': '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
       },
-      referrer: "https://sell.smartstore.naver.com/o/v3/n/sale/delivery",
-      referrerPolicy: "strict-origin-when-cross-origin",
+      referrer: 'https://sell.smartstore.naver.com/o/v3/n/sale/delivery',
+      referrerPolicy: 'strict-origin-when-cross-origin',
       body: JSON.stringify(orderData),
-      method: "POST",
-      mode: "cors",
-      credentials: "include",
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
     });
 
     const orderJson = await orderResp.json();

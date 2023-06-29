@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Header } from "../Common/Header";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Header } from '../Common/Header';
 import {
   styled,
   Box,
@@ -23,14 +23,14 @@ import {
   TableRow,
   TableCell,
   Typography,
-} from "@mui/material";
-import { Frame, Image, Input, Search, Title } from "../Common/UI";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+} from '@mui/material';
+import { Frame, Image, Input, Search, Title } from '../Common/UI';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // 커스텀 테이블 컬럼 스타일
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
-  padding: "4px",
+  textAlign: 'center',
+  padding: '4px',
   fontSize: 11,
 });
 
@@ -44,7 +44,7 @@ export const Sourcing = observer(() => {
     () =>
       createTheme({
         palette: {
-          mode: common.darkTheme ? "dark" : "light",
+          mode: common.darkTheme ? 'dark' : 'light',
         },
       }),
     [common.darkTheme]
@@ -56,9 +56,9 @@ export const Sourcing = observer(() => {
         <Header />
 
         <Container
-          maxWidth={"xl"}
+          maxWidth={'xl'}
           sx={{
-            py: "10px",
+            py: '10px',
           }}
         >
           <Paper
@@ -73,9 +73,9 @@ export const Sourcing = observer(() => {
               소싱 설정
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "right",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'right',
                 }}
               >
                 {sourcing.searchInfo.progress > 0 ? (
@@ -114,7 +114,7 @@ export const Sourcing = observer(() => {
               container
               spacing={1}
               sx={{
-                textAlign: "center",
+                textAlign: 'center',
                 p: 1,
               }}
             >
@@ -123,7 +123,7 @@ export const Sourcing = observer(() => {
                 xs={6}
                 md={4.5}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -139,14 +139,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={3.3}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>카테고리명</Typography>
@@ -158,7 +158,7 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={8.7}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Search
@@ -167,20 +167,20 @@ export const Sourcing = observer(() => {
                           sourcing.setCategoryInfo(value);
                         }}
                         onInputChange={(e: any, value: any, reason: any) => {
-                          if (reason !== "input") {
+                          if (reason !== 'input') {
                             return;
                           }
 
                           sourcing.setCategoryInput(value);
                         }}
                         options={sourcing.categoryInfo.input ? sourcing.categoryInfo.data : []}
-                        getOptionLabel={(option: any) => option.name ?? ""}
+                        getOptionLabel={(option: any) => option.name ?? ''}
                         isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
                         onOpen={() => {
                           sourcing.getCategoryList();
                         }}
                         onClose={() => {
-                          sourcing.setCategoryInput("");
+                          sourcing.setCategoryInput('');
                         }}
                         loading={sourcing.categoryInfo.loading}
                       />
@@ -194,7 +194,7 @@ export const Sourcing = observer(() => {
                 xs={6}
                 md={4.5}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -210,14 +210,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={3.3}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>상품명</Typography>
@@ -229,7 +229,7 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={8.7}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Input
@@ -253,7 +253,7 @@ export const Sourcing = observer(() => {
                 xs={6}
                 md={3}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -269,14 +269,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>최대상품수</Typography>
@@ -288,21 +288,21 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Input
                           id="sourcing_maxCount"
                           inputProps={{
                             style: {
-                              textAlign: "right",
+                              textAlign: 'right',
                             },
                           }}
                           defaultValue={sourcing.searchInfo.maxLimits}
@@ -325,7 +325,7 @@ export const Sourcing = observer(() => {
                 xs={6}
                 md={3}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -341,14 +341,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={5}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>등록일</Typography>
@@ -360,7 +360,7 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={3}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Input
@@ -382,7 +382,7 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={1}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       ~
@@ -393,7 +393,7 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={3}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Input
@@ -418,7 +418,7 @@ export const Sourcing = observer(() => {
                 xs={6}
                 md={3}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -434,14 +434,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>최소구매수</Typography>
@@ -453,14 +453,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Input
                         id="sourcing_buyCount"
                         inputProps={{
                           style: {
-                            textAlign: "right",
+                            textAlign: 'right',
                           },
                         }}
                         defaultValue={sourcing.searchInfo.purchaseCnt}
@@ -482,7 +482,7 @@ export const Sourcing = observer(() => {
                 xs={6}
                 md={3}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -498,14 +498,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>최소리뷰수</Typography>
@@ -517,14 +517,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Input
                         id="sourcing_reviewCount"
                         inputProps={{
                           style: {
-                            textAlign: "right",
+                            textAlign: 'right',
                           },
                         }}
                         defaultValue={sourcing.searchInfo.reviewCount}
@@ -546,7 +546,7 @@ export const Sourcing = observer(() => {
                 xs={6}
                 md={3}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -562,14 +562,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>최소찜수</Typography>
@@ -581,14 +581,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Input
                         id="sourcing_favCount"
                         inputProps={{
                           style: {
-                            textAlign: "right",
+                            textAlign: 'right',
                           },
                         }}
                         defaultValue={sourcing.searchInfo.keepCnt}
@@ -610,7 +610,7 @@ export const Sourcing = observer(() => {
                 xs={6}
                 md={3}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -626,14 +626,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>구분</Typography>
@@ -645,18 +645,18 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center',
                           height: 60,
                         }}
                       >
                         <RadioGroup
-                          defaultValue={"total"}
+                          defaultValue={'total'}
                           onChange={(e) => {
                             sourcing.setSearchInfo({
                               ...sourcing.searchInfo,
@@ -674,7 +674,7 @@ export const Sourcing = observer(() => {
                                   fontSize: 14,
                                 }}
                               >
-                                전체(해외 {"&"} 국내)
+                                전체(해외 {'&'} 국내)
                               </Typography>
                             }
                           />
@@ -704,7 +704,7 @@ export const Sourcing = observer(() => {
                 xs={6}
                 md={3}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -720,14 +720,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>정렬</Typography>
@@ -739,18 +739,18 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={6}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center',
                           height: 60,
                         }}
                       >
                         <RadioGroup
-                          defaultValue={"review"}
+                          defaultValue={'review'}
                           onChange={(e) => {
                             sourcing.setSearchInfo({
                               ...sourcing.searchInfo,
@@ -798,7 +798,7 @@ export const Sourcing = observer(() => {
                 xs={6}
                 md={3}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -814,14 +814,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={5}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>쇼핑몰등급</Typography>
@@ -833,13 +833,13 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={7}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center',
                           height: 60,
                         }}
                       >
@@ -1019,7 +1019,7 @@ export const Sourcing = observer(() => {
                 xs={6}
                 md={3}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <Paper
@@ -1035,14 +1035,14 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={5}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
                         }}
                       >
                         <Typography fontSize={14}>제외쇼핑몰</Typography>
@@ -1054,13 +1054,13 @@ export const Sourcing = observer(() => {
                       xs={6}
                       md={7}
                       sx={{
-                        margin: "auto",
+                        margin: 'auto',
                       }}
                     >
                       <Box
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
+                          display: 'flex',
+                          alignItems: 'center',
                           height: 60,
                         }}
                       >
@@ -1159,9 +1159,9 @@ export const Sourcing = observer(() => {
               소싱 결과
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "right",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'right',
                 }}
               >
                 <Button
@@ -1185,7 +1185,7 @@ export const Sourcing = observer(() => {
             <Box
               sx={{
                 height: common.innerSize.height - 383,
-                overflowY: "auto",
+                overflowY: 'auto',
               }}
             >
               <Table size="small" stickyHeader>
@@ -1196,7 +1196,7 @@ export const Sourcing = observer(() => {
                     <StyledTableCell
                       width={50}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       이미지
@@ -1204,7 +1204,7 @@ export const Sourcing = observer(() => {
 
                     <StyledTableCell
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       상품명
@@ -1213,7 +1213,7 @@ export const Sourcing = observer(() => {
                     <StyledTableCell
                       width={300}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       카테고리
@@ -1222,7 +1222,7 @@ export const Sourcing = observer(() => {
                     <StyledTableCell
                       width={100}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       등록일
@@ -1231,7 +1231,7 @@ export const Sourcing = observer(() => {
                     <StyledTableCell
                       width={50}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       구매
@@ -1240,7 +1240,7 @@ export const Sourcing = observer(() => {
                     <StyledTableCell
                       width={50}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       리뷰
@@ -1249,7 +1249,7 @@ export const Sourcing = observer(() => {
                     <StyledTableCell
                       width={50}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       찜
@@ -1258,7 +1258,7 @@ export const Sourcing = observer(() => {
                     <StyledTableCell
                       width={75}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       가격
@@ -1267,7 +1267,7 @@ export const Sourcing = observer(() => {
                     <StyledTableCell
                       width={100}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       판매처
@@ -1276,7 +1276,7 @@ export const Sourcing = observer(() => {
                     <StyledTableCell
                       width={75}
                       sx={{
-                        borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                        borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                       }}
                     >
                       등급
@@ -1292,14 +1292,14 @@ export const Sourcing = observer(() => {
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                           }}
                         >
                           <Box
                             sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
                             }}
                           >
                             <Image
@@ -1315,8 +1315,8 @@ export const Sourcing = observer(() => {
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "left",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'left',
                           }}
                         >
                           <Box
@@ -1327,8 +1327,8 @@ export const Sourcing = observer(() => {
                             <Typography
                               noWrap
                               sx={{
-                                color: "gray",
-                                cursor: "pointer",
+                                color: 'gray',
+                                cursor: 'pointer',
                                 fontSize: 13,
                               }}
                               onClick={() => {
@@ -1342,8 +1342,8 @@ export const Sourcing = observer(() => {
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "left",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'left',
                           }}
                         >
                           <Box
@@ -1354,8 +1354,8 @@ export const Sourcing = observer(() => {
                             <Typography
                               noWrap
                               sx={{
-                                color: "cornflowerblue",
-                                cursor: "pointer",
+                                color: 'cornflowerblue',
+                                cursor: 'pointer',
                                 fontSize: 13,
                               }}
                               onClick={() => {
@@ -1369,7 +1369,7 @@ export const Sourcing = observer(() => {
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                           }}
                         >
                           {v.time}
@@ -1377,43 +1377,43 @@ export const Sourcing = observer(() => {
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {v.purchaseCnt?.toLocaleString("ko-KR")}
+                          {v.purchaseCnt?.toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {v.reviewCount?.toLocaleString("ko-KR")}
+                          {v.reviewCount?.toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {v.keepCnt?.toLocaleString("ko-KR")}
+                          {v.keepCnt?.toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-                            textAlign: "right",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                            textAlign: 'right',
                           }}
                         >
-                          {parseInt(v.price)?.toLocaleString("ko-KR")}
+                          {parseInt(v.price)?.toLocaleString('ko-KR')}
                         </StyledTableCell>
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                           }}
                         >
                           {v.mallName}
@@ -1421,7 +1421,7 @@ export const Sourcing = observer(() => {
 
                         <StyledTableCell
                           sx={{
-                            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+                            borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
                           }}
                         >
                           {v.mallGrade}

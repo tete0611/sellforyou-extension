@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Grid, Modal, Paper, TextField, Typography } from "@mui/material";
-import { MyButton } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Grid, Modal, Paper, TextField, Typography } from '@mui/material';
+import { MyButton } from '../Common/UI';
 
 // 오픈마켓수수료 일괄설정 모달 뷰
 export const ManyFeeModal = observer(() => {
@@ -43,9 +43,9 @@ export const ManyFeeModal = observer(() => {
         >
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
               mb: 3,
             }}
           >
@@ -90,7 +90,7 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <img src="/resources/icon-smartstore.png" />
@@ -101,21 +101,21 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_fee_naver`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyFeeInfo.naverFee}
@@ -134,7 +134,7 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <img src="/resources/icon-coupang.png" />
@@ -145,21 +145,21 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_fee_coupang`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyFeeInfo.coupangFee}
@@ -178,7 +178,7 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <img src="/resources/icon-street-global.png" />
@@ -189,21 +189,21 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_fee_street`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyFeeInfo.streetFee}
@@ -222,7 +222,7 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <img src="/resources/icon-street-normal.png" />
@@ -233,21 +233,21 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_fee_streetNormal`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyFeeInfo.streetNormalFee}
@@ -266,7 +266,7 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <img src="/resources/icon-gmarket.png" />
@@ -277,21 +277,21 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_fee_gmarket`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyFeeInfo.gmarketFee}
@@ -310,7 +310,7 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <img src="/resources/icon-auction.png" />
@@ -321,21 +321,21 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_fee_auction`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyFeeInfo.auctionFee}
@@ -354,7 +354,7 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <img src="/resources/icon-interpark.png" />
@@ -365,21 +365,21 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_fee_interpark`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyFeeInfo.interparkFee}
@@ -398,7 +398,7 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <img src="/resources/icon-wemakeprice.png" />
@@ -409,21 +409,21 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_fee_wemakepriceFee`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyFeeInfo.wemakepriceFee}
@@ -442,7 +442,7 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <img src="/resources/icon-lotteon-global.png" />
@@ -453,21 +453,21 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_fee_lotteon`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyFeeInfo.lotteonFee}
@@ -486,7 +486,7 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <img src="/resources/icon-lotteon-normal.png" />
@@ -497,21 +497,21 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_fee_lotteonNormal`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyFeeInfo.lotteonNormalFee}
@@ -530,7 +530,7 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={4}
                   sx={{
-                    m: "auto",
+                    m: 'auto',
                   }}
                 >
                   <img src="/resources/icon-tmon.png" />
@@ -541,21 +541,21 @@ export const ManyFeeModal = observer(() => {
                   xs={6}
                   md={8}
                   sx={{
-                    m: "auto",
-                    textAlign: "right",
+                    m: 'auto',
+                    textAlign: 'right',
                   }}
                 >
                   <TextField
                     id={`modal_many_fee_tmon`}
                     variant="outlined"
                     sx={{
-                      width: "100%",
+                      width: '100%',
                     }}
                     inputProps={{
                       style: {
                         fontSize: 14,
                         padding: 5,
-                        textAlign: "right",
+                        textAlign: 'right',
                       },
                     }}
                     defaultValue={product.manyFeeInfo.tmonFee}

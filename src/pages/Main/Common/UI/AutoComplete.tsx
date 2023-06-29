@@ -1,21 +1,21 @@
-import React from "react";
-import parse from "autosuggest-highlight/parse";
-import match from "autosuggest-highlight/match";
+import React from 'react';
+import parse from 'autosuggest-highlight/parse';
+import match from 'autosuggest-highlight/match';
 
-import { Autocomplete, TextField, Paper, Popper } from "@mui/material";
+import { Autocomplete, TextField, Paper, Popper } from '@mui/material';
 
 // 자동완성 리스트 스타일 설정
 const searchStyles = {
-  width: "100%",
+  width: '100%',
 };
 
 // 리스트 입력창 스타일 설정
 const inputStyles = {
   fontSize: 13,
-  width: "100%",
+  width: '100%',
 
   input: {
-    padding: "0px !important",
+    padding: '0px !important',
     fontSize: 13,
   },
 };

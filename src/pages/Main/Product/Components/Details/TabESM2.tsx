@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../../../containers/AppContext";
-import { Box, Button, Paper, CircularProgress } from "@mui/material";
-import { Title } from "../../../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../../../containers/AppContext';
+import { Box, Button, Paper, CircularProgress } from '@mui/material';
+import { Title } from '../../../Common/UI';
 
 // 옵션 탭 하위 컴포넌트
 export const TabESM2 = observer((props: any) => {
@@ -15,8 +15,8 @@ export const TabESM2 = observer((props: any) => {
     <div className="inform">
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
         <div className="loading" />
@@ -34,8 +34,8 @@ export const TabESM2 = observer((props: any) => {
           ESM2.0 등록상품 관리
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             <Button
@@ -84,7 +84,7 @@ export const TabESM2 = observer((props: any) => {
               }}
               onClick={() => {
                 if (props.item.myLock === 2) {
-                  alert("잠금 상품은 등록해제 불가능 합니다");
+                  alert('잠금 상품은 등록해제 불가능 합니다');
                   return;
                 }
                 product.toggleEsm2UploadDisabledModal(props.index, true, common);
@@ -95,7 +95,7 @@ export const TabESM2 = observer((props: any) => {
                   <CircularProgress size="1rem" />
                 </>
               ) : (
-                "ESM2.0 등록해제"
+                'ESM2.0 등록해제'
               )}
             </Button>
           </Box>
@@ -105,9 +105,9 @@ export const TabESM2 = observer((props: any) => {
           sx={{
             width: 1205,
             height: 388,
-            overflowY: "auto",
-            alignItems: "center",
-            display: "flex",
+            overflowY: 'auto',
+            alignItems: 'center',
+            display: 'flex',
             p: 0.5,
           }}
         ></Box>

@@ -10,4 +10,3 @@ render(
 
   window.document.querySelector('#app-container')
 );
-

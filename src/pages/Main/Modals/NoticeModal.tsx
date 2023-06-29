@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Modal, Paper } from "@mui/material";
-import { ModalFrame, Title } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Box, Modal, Paper } from '@mui/material';
+import { ModalFrame, Title } from '../Common/UI';
 
 // 공지사항 모달 뷰
 export const NoticeModal = observer(() => {
@@ -26,7 +26,7 @@ export const NoticeModal = observer(() => {
 
         <Box
           sx={{
-            fontSize: "1.2em",
+            fontSize: '1.2em',
             p: 1,
           }}
         >

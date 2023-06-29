@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 
-import { format } from "date-fns";
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { styled, Box, Modal, Paper, Table, TableBody, TableRow, TableCell, Typography } from "@mui/material";
-import { Title } from "../Common/UI";
+import { format } from 'date-fns';
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { styled, Box, Modal, Paper, Table, TableBody, TableRow, TableCell, Typography } from '@mui/material';
+import { Title } from '../Common/UI';
 
 // 커스텀 테이블 열 스타일 설정
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
-  borderBottom: "1px solid ghostwhite",
+  textAlign: 'center',
+  borderBottom: '1px solid ghostwhite',
   padding: 5,
   fontSize: 12,
 });
@@ -51,33 +51,33 @@ export const UploadFailedModal = observer(() => {
             >
               <Title subTitle dark={common.darkTheme}>
                 <Typography fontSize={14}>
-                  {v.siteCode === "A077"
-                    ? "스마트스토어"
-                    : v.siteCode === "B378"
-                    ? "쿠팡"
-                    : v.siteCode === "A112"
-                    ? "11번가 글로벌"
-                    : v.siteCode === "A113"
-                    ? "11번가 일반"
-                    : v.siteCode === "A006"
-                    ? "지마켓 1.0"
-                    : v.siteCode === "A001"
-                    ? "옥션 1.0"
-                    : v.siteCode === "A523"
-                    ? "지마켓2.0"
-                    : v.siteCode === "A522"
-                    ? "옥션2.0"
-                    : v.siteCode === "A027"
-                    ? "인터파크"
-                    : v.siteCode === "B719"
-                    ? "위메프 2.0"
-                    : v.siteCode === "A524"
-                    ? "롯데온 글로벌"
-                    : v.siteCode === "A525"
-                    ? "롯데온 일반"
-                    : v.siteCode === "B956"
-                    ? "티몬"
-                    : ""}
+                  {v.siteCode === 'A077'
+                    ? '스마트스토어'
+                    : v.siteCode === 'B378'
+                    ? '쿠팡'
+                    : v.siteCode === 'A112'
+                    ? '11번가 글로벌'
+                    : v.siteCode === 'A113'
+                    ? '11번가 일반'
+                    : v.siteCode === 'A006'
+                    ? '지마켓 1.0'
+                    : v.siteCode === 'A001'
+                    ? '옥션 1.0'
+                    : v.siteCode === 'A523'
+                    ? '지마켓2.0'
+                    : v.siteCode === 'A522'
+                    ? '옥션2.0'
+                    : v.siteCode === 'A027'
+                    ? '인터파크'
+                    : v.siteCode === 'B719'
+                    ? '위메프 2.0'
+                    : v.siteCode === 'A524'
+                    ? '롯데온 글로벌'
+                    : v.siteCode === 'A525'
+                    ? '롯데온 일반'
+                    : v.siteCode === 'B956'
+                    ? '티몬'
+                    : ''}
                 </Typography>
               </Title>
 
@@ -89,7 +89,7 @@ export const UploadFailedModal = observer(() => {
                         <StyledTableCell
                           width="75%"
                           style={{
-                            textAlign: "left",
+                            textAlign: 'left',
                           }}
                         >
                           {w.errorMessage}
@@ -98,10 +98,10 @@ export const UploadFailedModal = observer(() => {
                         <StyledTableCell
                           width="25%"
                           style={{
-                            textAlign: "right",
+                            textAlign: 'right',
                           }}
                         >
-                          {format(new Date(w.createdAt), "yyyy-MM-dd HH:mm:ss")}
+                          {format(new Date(w.createdAt), 'yyyy-MM-dd HH:mm:ss')}
                         </StyledTableCell>
                       </TableRow>
                     );

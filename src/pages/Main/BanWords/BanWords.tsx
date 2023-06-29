@@ -1,17 +1,32 @@
-import React from "react";
+import React from 'react';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Header } from "../Common/Header";
-import { styled, Box, Button, Container, Checkbox, Grid, Table, TableHead, TableBody, TableRow, TableCell, Paper, TextField, Typography } from "@mui/material";
-import { readFileDataURL } from "../../Tools/Common";
-import { Frame, Title } from "../Common/UI";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import { Header } from '../Common/Header';
+import {
+  styled,
+  Box,
+  Button,
+  Container,
+  Checkbox,
+  Grid,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { readFileDataURL } from '../../Tools/Common';
+import { Frame, Title } from '../Common/UI';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // 커스텀 테이블 컬럼 생성
 const StyledTableCell = styled(TableCell)({
-  textAlign: "center",
-  borderBottom: "1px solid ghostwhite",
+  textAlign: 'center',
+  borderBottom: '1px solid ghostwhite',
   padding: 0,
   fontSize: 14,
 });
@@ -31,7 +46,7 @@ export const BanWords = observer(() => {
     () =>
       createTheme({
         palette: {
-          mode: common.darkTheme ? "dark" : "light",
+          mode: common.darkTheme ? 'dark' : 'light',
         },
       }),
     [common.darkTheme]
@@ -44,7 +59,7 @@ export const BanWords = observer(() => {
 
         {restrict.restrictWordInfo.loading ? (
           <>
-            <Container maxWidth={"lg"}>
+            <Container maxWidth={'lg'}>
               <Grid
                 container
                 spacing={1}
@@ -57,7 +72,7 @@ export const BanWords = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Paper variant="outlined">
@@ -81,7 +96,7 @@ export const BanWords = observer(() => {
                       sx={{
                         p: 0,
                         height: common.innerSize.height - 257,
-                        overflowY: "auto",
+                        overflowY: 'auto',
                       }}
                     >
                       <Table size="small" stickyHeader>
@@ -90,7 +105,7 @@ export const BanWords = observer(() => {
                             <StyledTableCell
                               width={100}
                               style={{
-                                background: common.darkTheme ? "#303030" : "#ebebeb",
+                                background: common.darkTheme ? '#303030' : '#ebebeb',
                               }}
                             >
                               <Checkbox
@@ -102,7 +117,7 @@ export const BanWords = observer(() => {
 
                             <StyledTableCell
                               style={{
-                                background: common.darkTheme ? "#303030" : "#ebebeb",
+                                background: common.darkTheme ? '#303030' : '#ebebeb',
                               }}
                             >
                               금지어명
@@ -148,7 +163,7 @@ export const BanWords = observer(() => {
                           xs={6}
                           md={8}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <TextField
@@ -156,7 +171,7 @@ export const BanWords = observer(() => {
                             variant="outlined"
                             size="small"
                             style={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -178,7 +193,7 @@ export const BanWords = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Button
@@ -186,7 +201,7 @@ export const BanWords = observer(() => {
                             variant="contained"
                             color="info"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             onClick={restrict.addBanWordTable}
                           >
@@ -199,7 +214,7 @@ export const BanWords = observer(() => {
                           xs={6}
                           md={12}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Button
@@ -208,7 +223,7 @@ export const BanWords = observer(() => {
                             component="label"
                             color="info"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                           >
                             금지어 대량등록
@@ -236,7 +251,7 @@ export const BanWords = observer(() => {
                           xs={6}
                           md={12}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Button
@@ -244,7 +259,7 @@ export const BanWords = observer(() => {
                             variant="contained"
                             color="info"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             onClick={() => {
                               window.open(`${process.env.SELLFORYOU_MINIO_HTTPS}/data/셀포유 금지어 양식.xlsx`);
@@ -263,7 +278,7 @@ export const BanWords = observer(() => {
                   xs={6}
                   md={6}
                   sx={{
-                    margin: "auto",
+                    margin: 'auto',
                   }}
                 >
                   <Paper variant="outlined">
@@ -287,7 +302,7 @@ export const BanWords = observer(() => {
                       sx={{
                         p: 0,
                         height: common.innerSize.height - 257,
-                        overflowY: "auto",
+                        overflowY: 'auto',
                       }}
                     >
                       <Table size="small" stickyHeader>
@@ -296,7 +311,7 @@ export const BanWords = observer(() => {
                             <StyledTableCell
                               width={100}
                               style={{
-                                background: common.darkTheme ? "#303030" : "#ebebeb",
+                                background: common.darkTheme ? '#303030' : '#ebebeb',
                               }}
                             >
                               <Checkbox
@@ -308,7 +323,7 @@ export const BanWords = observer(() => {
 
                             <StyledTableCell
                               style={{
-                                background: common.darkTheme ? "#303030" : "#ebebeb",
+                                background: common.darkTheme ? '#303030' : '#ebebeb',
                               }}
                             >
                               검색어명
@@ -316,7 +331,7 @@ export const BanWords = observer(() => {
 
                             <StyledTableCell
                               style={{
-                                background: common.darkTheme ? "#303030" : "#ebebeb",
+                                background: common.darkTheme ? '#303030' : '#ebebeb',
                               }}
                             >
                               치환어명
@@ -366,7 +381,7 @@ export const BanWords = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <TextField
@@ -374,7 +389,7 @@ export const BanWords = observer(() => {
                             variant="outlined"
                             size="small"
                             style={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -396,7 +411,7 @@ export const BanWords = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <TextField
@@ -404,7 +419,7 @@ export const BanWords = observer(() => {
                             variant="outlined"
                             size="small"
                             style={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             inputProps={{
                               style: {
@@ -415,7 +430,7 @@ export const BanWords = observer(() => {
                               restrict.setRestrictWordInfo({
                                 ...restrict.restrictWordInfo,
 
-                                replaceWordInput: e.target.value ?? "",
+                                replaceWordInput: e.target.value ?? '',
                               });
                             }}
                           />
@@ -426,7 +441,7 @@ export const BanWords = observer(() => {
                           xs={6}
                           md={4}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Button
@@ -434,7 +449,7 @@ export const BanWords = observer(() => {
                             variant="contained"
                             color="info"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             onClick={restrict.addReplaceWordTable}
                           >
@@ -447,7 +462,7 @@ export const BanWords = observer(() => {
                           xs={6}
                           md={12}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Button
@@ -456,7 +471,7 @@ export const BanWords = observer(() => {
                             component="label"
                             color="info"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                           >
                             치환어 대량등록
@@ -484,7 +499,7 @@ export const BanWords = observer(() => {
                           xs={6}
                           md={12}
                           sx={{
-                            margin: "auto",
+                            margin: 'auto',
                           }}
                         >
                           <Button
@@ -492,7 +507,7 @@ export const BanWords = observer(() => {
                             variant="contained"
                             color="info"
                             sx={{
-                              width: "100%",
+                              width: '100%',
                             }}
                             onClick={() => {
                               window.open(`${process.env.SELLFORYOU_MINIO_HTTPS}/data/셀포유 치환 양식.xlsx`);

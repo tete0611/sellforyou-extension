@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import { render } from "react-dom";
-import { Tax } from "./Tax";
+import { render } from 'react-dom';
+import { Tax } from './Tax';
 
-import "./index.css";
+import './index.css';
 
 render(
   <Tax />,
 
-  window.document.querySelector("#app-container")
+  window.document.querySelector('#app-container')
 );

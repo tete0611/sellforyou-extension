@@ -1,14 +1,25 @@
-import React from "react";
-import QUERIES from "../GraphQL/Queries";
-import MUTATIONS from "../GraphQL/Mutations";
-import gql from "../GraphQL/Requests";
-import LoadingButton from "@mui/lab/LoadingButton";
+import React from 'react';
+import QUERIES from '../GraphQL/Queries';
+import MUTATIONS from '../GraphQL/Mutations';
+import gql from '../GraphQL/Requests';
+import LoadingButton from '@mui/lab/LoadingButton';
 
-import { observer } from "mobx-react";
-import { AppContext } from "../../../containers/AppContext";
-import { Box, Button, Checkbox, Container, FormGroup, FormControlLabel, Grid, Link, Paper, TextField } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Frame, SignPaper } from "../Common/UI";
+import { observer } from 'mobx-react';
+import { AppContext } from '../../../containers/AppContext';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  FormGroup,
+  FormControlLabel,
+  Grid,
+  Link,
+  Paper,
+  TextField,
+} from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Frame, SignPaper } from '../Common/UI';
 
 type SignInfo = {
   email: string;
@@ -39,17 +50,17 @@ export const SignUp = observer(() => {
   const { common } = React.useContext(AppContext);
 
   const initSignInfo: SignInfo = {
-    email: "",
-    password: "",
-    passwordConfirm: "",
+    email: '',
+    password: '',
+    passwordConfirm: '',
 
-    name: "",
-    phone: "",
+    name: '',
+    phone: '',
 
-    refCode: "",
+    refCode: '',
     refCodeVerified: false,
 
-    verifyCode: "",
+    verifyCode: '',
 
     serviceAgreed: false,
 
@@ -69,7 +80,7 @@ export const SignUp = observer(() => {
   // 사용자의 결제내역을 가져옴
   const getUserPurchaseInfo = async (id: string) => {
     if (!id) {
-      alert("공백은 입력하실 수 없습니다.");
+      alert('공백은 입력하실 수 없습니다.');
 
       return;
     }
@@ -87,7 +98,7 @@ export const SignUp = observer(() => {
 
   // 엔터 키를 누르면 회원가입 기능 동작
   const keyHandler = (e: any) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       signUp();
     }
   };
@@ -108,7 +119,7 @@ export const SignUp = observer(() => {
       return;
     }
 
-    alert("인증번호가 발송되었습니다.");
+    alert('인증번호가 발송되었습니다.');
 
     setVerifyInfo({ ...verifyInfo, process: 1 });
 
@@ -119,7 +130,7 @@ export const SignUp = observer(() => {
         }
 
         if (state.timer === 0) {
-          alert("입력 시간이 초과되었습니다.");
+          alert('입력 시간이 초과되었습니다.');
 
           setVerifyInfo(initVerifyInfo);
 
@@ -160,37 +171,37 @@ export const SignUp = observer(() => {
   // 회원가입 버튼을 눌렀을 때
   const signUp = async () => {
     if (!signInfo.email) {
-      alert("이메일 주소를 입력해주세요.");
+      alert('이메일 주소를 입력해주세요.');
 
       return;
     }
 
     if (!signInfo.password) {
-      alert("비밀번호를 입력해주세요.");
+      alert('비밀번호를 입력해주세요.');
 
       return;
     }
 
     if (signInfo.password !== signInfo.passwordConfirm) {
-      alert("비밀번호가 일치하지 않습니다.");
+      alert('비밀번호가 일치하지 않습니다.');
 
       return;
     }
 
     if (!signInfo.phone) {
-      alert("연락처를 입력해주세요.");
+      alert('연락처를 입력해주세요.');
 
       return;
     }
 
     if (verifyInfo.process < 2) {
-      alert("연락처 인증을 완료해주세요.");
+      alert('연락처 인증을 완료해주세요.');
 
       return;
     }
 
     if (!signInfo.serviceAgreed) {
-      alert("서비스 이용약관에 동의해주세요.");
+      alert('서비스 이용약관에 동의해주세요.');
 
       return;
     }
@@ -198,7 +209,7 @@ export const SignUp = observer(() => {
     let refSkip = false;
 
     if (!signInfo.refCode) {
-      let accept = confirm("추천인코드가 입력되지 않았습니다. 가입을 계속 진행하시겠습니까?");
+      let accept = confirm('추천인코드가 입력되지 않았습니다. 가입을 계속 진행하시겠습니까?');
 
       if (!accept) {
         return;
@@ -208,7 +219,7 @@ export const SignUp = observer(() => {
     }
 
     if (!refSkip && !signInfo.refCodeVerified) {
-      alert("추천인 코드를 등록해주세요.");
+      alert('추천인 코드를 등록해주세요.');
 
       return;
     }
@@ -222,7 +233,7 @@ export const SignUp = observer(() => {
         password: signInfo.password,
         phone: signInfo.phone,
         verificationId: 0,
-        refCode: signInfo.refCode ?? "",
+        refCode: signInfo.refCode ?? '',
       },
       false
     );
@@ -237,14 +248,14 @@ export const SignUp = observer(() => {
 
     setSignInfo(initSignInfo);
 
-    alert("회원가입이 완료되었습니다.\n가입하신 아이디로 다시 로그인해주시기 바랍니다.");
+    alert('회원가입이 완료되었습니다.\n가입하신 아이디로 다시 로그인해주시기 바랍니다.');
 
-    window.location.href = "/signin.html";
+    window.location.href = '/signin.html';
   };
 
   // 로그인으로 돌아가기 버튼을 클릭했을 때
   const signIn = () => {
-    window.location.href = "/signin.html";
+    window.location.href = '/signin.html';
   };
 
   // 다크모드 지원 설정
@@ -252,7 +263,7 @@ export const SignUp = observer(() => {
     () =>
       createTheme({
         palette: {
-          mode: common.darkTheme ? "dark" : "light",
+          mode: common.darkTheme ? 'dark' : 'light',
         },
       }),
     [common.darkTheme]
@@ -276,7 +287,7 @@ export const SignUp = observer(() => {
               variant="outlined"
               size="small"
               style={{
-                width: "100%",
+                width: '100%',
                 marginBottom: 10,
               }}
               label="이메일"
@@ -291,7 +302,7 @@ export const SignUp = observer(() => {
               variant="outlined"
               size="small"
               style={{
-                width: "100%",
+                width: '100%',
                 marginBottom: 10,
               }}
               label="비밀번호"
@@ -306,7 +317,7 @@ export const SignUp = observer(() => {
               variant="outlined"
               size="small"
               style={{
-                width: "100%",
+                width: '100%',
                 marginBottom: 30,
               }}
               label="비밀번호 확인"
@@ -341,7 +352,7 @@ export const SignUp = observer(() => {
                 xs={6}
                 md={7}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <TextField
@@ -349,7 +360,7 @@ export const SignUp = observer(() => {
                   variant="outlined"
                   size="small"
                   style={{
-                    width: "100%",
+                    width: '100%',
                   }}
                   label="연락처"
                   value={signInfo.phone}
@@ -363,19 +374,21 @@ export const SignUp = observer(() => {
                 xs={6}
                 md={5}
                 sx={{
-                  textAlign: "center",
-                  margin: "auto",
+                  textAlign: 'center',
+                  margin: 'auto',
                 }}
               >
                 <LoadingButton
                   color="info"
                   disableElevation
                   loading={verifyInfo.process > 0 ? true : false}
-                  loadingIndicator={verifyInfo.process > 1 ? `인증완료` : `00:${verifyInfo.timer.toString().padStart(2, "0")}`}
+                  loadingIndicator={
+                    verifyInfo.process > 1 ? `인증완료` : `00:${verifyInfo.timer.toString().padStart(2, '0')}`
+                  }
                   variant="contained"
                   size="large"
                   style={{
-                    width: "100%",
+                    width: '100%',
                   }}
                   onClick={phoneVerify}
                 >
@@ -390,7 +403,7 @@ export const SignUp = observer(() => {
                     xs={6}
                     md={7}
                     sx={{
-                      margin: "auto",
+                      margin: 'auto',
                     }}
                   >
                     <TextField
@@ -398,7 +411,7 @@ export const SignUp = observer(() => {
                       variant="outlined"
                       size="small"
                       style={{
-                        width: "100%",
+                        width: '100%',
                       }}
                       label="인증번호"
                       value={signInfo.verifyCode}
@@ -412,8 +425,8 @@ export const SignUp = observer(() => {
                     xs={6}
                     md={5}
                     sx={{
-                      textAlign: "center",
-                      margin: "auto",
+                      textAlign: 'center',
+                      margin: 'auto',
                     }}
                   >
                     <Button
@@ -422,7 +435,7 @@ export const SignUp = observer(() => {
                       variant="contained"
                       size="large"
                       style={{
-                        width: "100%",
+                        width: '100%',
                       }}
                       onClick={verifyNumber}
                     >
@@ -445,7 +458,7 @@ export const SignUp = observer(() => {
                 xs={6}
                 md={7}
                 sx={{
-                  margin: "auto",
+                  margin: 'auto',
                 }}
               >
                 <TextField
@@ -454,7 +467,7 @@ export const SignUp = observer(() => {
                   variant="outlined"
                   size="small"
                   style={{
-                    width: "100%",
+                    width: '100%',
                   }}
                   label="추천인코드"
                   value={signInfo.refCode}
@@ -468,8 +481,8 @@ export const SignUp = observer(() => {
                 xs={6}
                 md={5}
                 sx={{
-                  textAlign: "center",
-                  margin: "auto",
+                  textAlign: 'center',
+                  margin: 'auto',
                 }}
               >
                 <Button
@@ -479,13 +492,13 @@ export const SignUp = observer(() => {
                   variant="contained"
                   size="large"
                   style={{
-                    width: "100%",
+                    width: '100%',
                   }}
                   onClick={() => {
                     getUserPurchaseInfo(signInfo.refCode);
                   }}
                 >
-                  {signInfo.refCodeVerified ? "등록완료" : "등록"}
+                  {signInfo.refCodeVerified ? '등록완료' : '등록'}
                 </Button>
               </Grid>
             </Grid>
@@ -513,7 +526,10 @@ export const SignUp = observer(() => {
                     }}
                   >
                     가입 내용을 확인하였으며, &nbsp;
-                    <Link href="https://panoramic-butternut-291.notion.site/5090b4282d88479f8608cd7f60bce6c2">서비스 이용약관</Link>에 동의합니다.
+                    <Link href="https://panoramic-butternut-291.notion.site/5090b4282d88479f8608cd7f60bce6c2">
+                      서비스 이용약관
+                    </Link>
+                    에 동의합니다.
                   </span>
                 }
               />
@@ -526,7 +542,7 @@ export const SignUp = observer(() => {
               variant="contained"
               size="large"
               style={{
-                width: "100%",
+                width: '100%',
                 marginBottom: 10,
               }}
               onClick={signUp}
@@ -538,7 +554,7 @@ export const SignUp = observer(() => {
               variant="outlined"
               size="large"
               style={{
-                width: "100%",
+                width: '100%',
               }}
               onClick={signIn}
             >
