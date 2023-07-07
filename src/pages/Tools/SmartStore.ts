@@ -495,7 +495,7 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
     let store_resp = await fetch('https://sell.smartstore.naver.com/api/clone-accounts?_action=init');
     let store_json = await store_resp.json();
 
-    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty('STOREFARM')) {
+    if (!store_json.simpleAccountInfo?.creatableChannelInfoListMap?.hasOwnProperty('STOREFARM')) {
       productStore.addConsoleText(`(${shopName}) 스토어팜 정보 확인 실패`);
       notificationByEveryTime(`(${shopName}) 스토어 정보를 확인할 수 없습니다. 개설상태를 확인해주세요.`);
 
@@ -504,7 +504,7 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
       return false;
     }
 
-    let store_id = store_json.simpleAccountInfo.creatableChannelInfoListMap.STOREFARM[0].url;
+    let store_id = store_json.simpleAccountInfo?.creatableChannelInfoListMap?.STOREFARM[0].url;
 
     if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
       productStore.addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
@@ -1456,14 +1456,14 @@ async function deleteSmartStore(productStore: any, commonStore: any, data: any) 
     let store_resp = await fetch('https://sell.smartstore.naver.com/api/clone-accounts?_action=init');
     let store_json = await store_resp.json();
 
-    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty('STOREFARM')) {
+    if (!store_json.simpleAccountInfo?.creatableChannelInfoListMap?.hasOwnProperty('STOREFARM')) {
       productStore.addConsoleText(`(${shopName}) 스토어팜 정보 확인 실패`);
       notificationByEveryTime(`(${shopName}) 스토어 정보를 확인할 수 없습니다. 개설상태를 확인해주세요.`);
 
       return false;
     }
 
-    let store_id = store_json.simpleAccountInfo.creatableChannelInfoListMap.STOREFARM[0].url;
+    let store_id = store_json.simpleAccountInfo?.creatableChannelInfoListMap?.STOREFARM[0].url;
 
     if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
       productStore.addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
@@ -1608,13 +1608,13 @@ async function newOrderSmartStore(commonStore: any, shopInfo: any) {
     let store_resp = await fetch('https://sell.smartstore.naver.com/api/clone-accounts?_action=init');
     let store_json = await store_resp.json();
 
-    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty('STOREFARM')) {
+    if (!store_json.simpleAccountInfo?.creatableChannelInfoListMap?.hasOwnProperty('STOREFARM')) {
       notificationByEveryTime(`(${shopName}) 스토어 정보를 확인할 수 없습니다. 개설상태를 확인해주세요.`);
 
       return [];
     }
 
-    let store_id = store_json.simpleAccountInfo.creatableChannelInfoListMap.STOREFARM[0].url;
+    let store_id = store_json.simpleAccountInfo?.creatableChannelInfoListMap?.STOREFARM[0].url;
 
     if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
       notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
@@ -1824,13 +1824,13 @@ async function productPreparedSmartStore(commonStore: any, shopInfo: any, props:
     let store_resp = await fetch('https://sell.smartstore.naver.com/api/clone-accounts?_action=init');
     let store_json = await store_resp.json();
 
-    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty('STOREFARM')) {
+    if (!store_json.simpleAccountInfo?.creatableChannelInfoListMap?.hasOwnProperty('STOREFARM')) {
       notificationByEveryTime(`(${shopName}) 스토어 정보를 확인할 수 없습니다. 개설상태를 확인해주세요.`);
 
       return [];
     }
 
-    let store_id = store_json.simpleAccountInfo.creatableChannelInfoListMap.STOREFARM[0].url;
+    let store_id = store_json.simpleAccountInfo?.creatableChannelInfoListMap?.STOREFARM[0].url;
 
     if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
       notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
@@ -1894,13 +1894,13 @@ async function deliveryOrderSmartStore(commonStore: any, shopInfo: any) {
     let store_resp = await fetch('https://sell.smartstore.naver.com/api/clone-accounts?_action=init');
     let store_json = await store_resp.json();
 
-    if (!store_json.simpleAccountInfo.creatableChannelInfoListMap.hasOwnProperty('STOREFARM')) {
+    if (!store_json.simpleAccountInfo?.creatableChannelInfoListMap?.hasOwnProperty('STOREFARM')) {
       notificationByEveryTime(`(${shopName}) 스토어 정보를 확인할 수 없습니다. 개설상태를 확인해주세요.`);
 
       return [];
     }
 
-    let store_id = store_json.simpleAccountInfo.creatableChannelInfoListMap.STOREFARM[0].url;
+    let store_id = store_json.simpleAccountInfo?.creatableChannelInfoListMap?.STOREFARM[0].url;
 
     if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
       notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
