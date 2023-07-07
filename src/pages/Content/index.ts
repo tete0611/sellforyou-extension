@@ -18,7 +18,7 @@ import {
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
 const iconv = require('iconv-lite');
 
-async function pageRefresh(shop, page) {
+const pageRefresh = async (shop, page) => {
   let url: string | null = null;
   //페이지 검색 필터(검색필터) 문제
   switch (shop) {
@@ -79,9 +79,9 @@ async function pageRefresh(shop, page) {
   }
 
   window.location.href = url.replaceAll('#', '');
-}
+};
 
-async function bulkCollect(useChecked: boolean, useMedal: boolean) {
+const bulkCollect = async (useChecked: boolean, useMedal: boolean) => {
   let inputs: any = [];
 
   let timeout = 0;
@@ -130,9 +130,9 @@ async function bulkCollect(useChecked: boolean, useMedal: boolean) {
   }
 
   return inputs;
-}
+};
 
-async function bulkPage(info, shop) {
+const bulkPage = async (info, shop) => {
   let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
   let collect = collectInfo.find((v: any) => v.sender.tab.id === info.tabInfo.tab.id);
 
@@ -195,13 +195,13 @@ async function bulkPage(info, shop) {
 
     await setLocalStorage({ collectInfo });
   }
-}
+};
 
-async function skip() {
+const skip = () => {
   sendRuntimeMessage({ action: 'collect-finish' });
-}
+};
 
-async function floatingButton(info: any, shop: any, result: any, bulk: boolean) {
+const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) => {
   if (!result) {
     return;
   }
@@ -1112,9 +1112,9 @@ async function floatingButton(info: any, shop: any, result: any, bulk: boolean) 
   if (info.isBulk && !bulk) {
     buttonCollect.click();
   }
-}
+};
 
-async function resultDetails(data: any) {
+const resultDetails = async (data: any) => {
   let paper: any = document.getElementById('sfyPaper');
 
   if (!paper) {
@@ -1325,9 +1325,9 @@ async function resultDetails(data: any) {
   await setLocalStorage({ collectInfo });
 
   return true;
-}
+};
 
-async function addExcelInfo(request) {
+const addExcelInfo = async (request) => {
   const tabInfo: any = await sendRuntimeMessage({ action: 'tab-info' });
   const tabs: any = await sendRuntimeMessage({ action: 'tab-info-all' });
 
@@ -1368,9 +1368,9 @@ async function addExcelInfo(request) {
   window.location.href = request.source.data[0].url;
 
   return true;
-}
+};
 
-async function initInfo(display: boolean) {
+const initInfo = async (display: boolean) => {
   const user = await sendRuntimeMessage({ action: 'user' });
   const isBulk = await sendRuntimeMessage({ action: 'is-bulk' });
   const tabInfo = await sendRuntimeMessage({ action: 'tab-info' });
@@ -1470,9 +1470,9 @@ async function initInfo(display: boolean) {
   }
 
   return { user, isBulk, tabInfo };
-}
+};
 
-async function cardPay(info: any) {
+const cardPay = async (info: any) => {
   sessionStorage.removeItem(`sfy-iamport`);
 
   let script = document.createElement('script');
@@ -1499,7 +1499,7 @@ async function cardPay(info: any) {
       return false;
     }
   }
-}
+};
 
 // const getsetPage = async (body: any) => {
 
@@ -1570,7 +1570,7 @@ const getsetPage = async (body) => {
   }
 };
 
-async function main() {
+const main = async () => {
   let link = document.createElement('link');
 
   link.href = chrome.runtime.getURL('ui/css/uicons-regular-straight.css');
@@ -1939,6 +1939,6 @@ async function main() {
 
     floatingButton(info, 'amazon2', true, true);
   }
-}
+};
 
 main();
