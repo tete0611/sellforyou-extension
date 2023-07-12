@@ -1,6 +1,6 @@
 // 1688 페이지 삽입 스크립트
 
-async function main() {
+const  main = () => {
   // 데이터가 로드될 때까지 루프를 반복함
   while (true) {
     try {

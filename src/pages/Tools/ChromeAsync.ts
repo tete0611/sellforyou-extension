@@ -9,7 +9,7 @@ import { sleep } from './Common';
 const getLocalStorage = (key: any) => {
   return new Promise((resolve, reject) => {
     try {
-      chrome.storage.local.get(key, function (value) {
+      chrome.storage.local.get(key, (value) => {
         if (!key) {
           resolve(value);
         } else {
@@ -26,7 +26,7 @@ const getLocalStorage = (key: any) => {
 const setLocalStorage = (obj: any) => {
   return new Promise((resolve, reject) => {
     try {
-      chrome.storage.local.set(obj, function () {
+      chrome.storage.local.set(obj, () => {
         resolve(true);
       });
     } catch (e) {
@@ -39,7 +39,7 @@ const setLocalStorage = (obj: any) => {
 const deleteLocalStorage = (keys: any) => {
   return new Promise((resolve, reject) => {
     try {
-      chrome.storage.local.remove(keys, function () {
+      chrome.storage.local.remove(keys, () => {
         resolve(true);
       });
     } catch (e) {
@@ -53,7 +53,7 @@ const sendRuntimeMessage = (obj: any) => {
   console.log('runtime', obj);
 
   return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(obj, function (response) {
+    chrome.runtime.sendMessage(obj, (response) => {
       let lastError = chrome.runtime.lastError;
 
       if (lastError) {
@@ -76,7 +76,7 @@ const sendTabMessage = (tabid: number, obj: any) => {
   console.log(tabid, obj);
 
   return new Promise((resolve, reject) => {
-    chrome.tabs.sendMessage(tabid, obj, function (response) {
+    chrome.tabs.sendMessage(tabid, obj, (response) => {
       let lastError = chrome.runtime.lastError;
 
       if (lastError) {
@@ -98,7 +98,7 @@ const sendTabMessage = (tabid: number, obj: any) => {
 const queryWindow = (options: any) => {
   return new Promise((resolve, reject) => {
     try {
-      chrome.windows.getAll(options, function (windows) {
+      chrome.windows.getAll(options, (windows) => {
         resolve(windows);
       });
     } catch (e) {
@@ -111,7 +111,7 @@ const queryWindow = (options: any) => {
 const queryTabs = (options: any) => {
   return new Promise((resolve, reject) => {
     try {
-      chrome.tabs.query(options, function (tabs) {
+      chrome.tabs.query(options, (tabs) => {
         resolve(tabs);
       });
     } catch (e) {
@@ -124,7 +124,7 @@ const queryTabs = (options: any) => {
 const createTab = (options: any) => {
   return new Promise((resolve, reject) => {
     try {
-      chrome.tabs.create(options, function (tab) {
+      chrome.tabs.create(options, (tab) => {
         resolve(tab);
       });
     } catch (e) {

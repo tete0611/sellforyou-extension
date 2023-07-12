@@ -7,7 +7,7 @@ const XLSX = require('xlsx');
 const xml2js = require('xml2js');
 
 // 문자열의 바이트 길이 계산
-function byteLength(str: string) {
+export function byteLength(str: string) {
   let strLen = str.length;
   let cnt = 0;
   let oneChar = '';
@@ -24,7 +24,7 @@ function byteLength(str: string) {
 }
 
 // 문자열을 바이트만큼 잘라냄
-function byteSlice(str: string, limit: number) {
+export function byteSlice(str: string, limit: number) {
   while (true) {
     let blen;
 
@@ -39,7 +39,7 @@ function byteSlice(str: string, limit: number) {
 }
 
 // 카티션 프로덕트
-function cartesian(...args: any) {
+export function cartesian(...args: any) {
   var r: any = [],
     max = args.length - 1;
   function helper(arr: any, i: any) {
@@ -55,7 +55,7 @@ function cartesian(...args: any) {
 }
 
 // 통관부호 체크
-async function checkIndividualCustomUniqueCode(data: any, loop: boolean) {
+export async function checkIndividualCustomUniqueCode(data: any, loop: boolean) {
   let icuc = {
     code: data.individualCustomUniqueCode,
     name: loop ? data.receiverName : data.orderMemberName,
@@ -152,7 +152,7 @@ async function checkIndividualCustomUniqueCode(data: any, loop: boolean) {
 }
 
 // 이미지 WEBP 확장자를 JPG 확장자로 변환
-function convertWebpToJpg(base64: any) {
+export function convertWebpToJpg(base64: any) {
   return new Promise((resolve, reject) => {
     let image = new Image();
 
@@ -179,7 +179,7 @@ function convertWebpToJpg(base64: any) {
 }
 
 // JSON Object to XLSX 변환 후 다운로드
-async function downloadExcel(
+export async function downloadExcel(
   result_array: any,
   sheetName: string,
   fileName: string,
@@ -215,7 +215,7 @@ async function downloadExcel(
 }
 
 // HTML 문자열에서 텍스트만 추출
-function extractContent(s: String) {
+export function extractContent(s: String) {
   let span: any = document.createElement('div');
 
   span.innerHTML = s;
@@ -224,12 +224,12 @@ function extractContent(s: String) {
 }
 
 // 티몬 주문번호 데이터 가공
-function extractTmonContent(s: String) {
+export function extractTmonContent(s: String) {
   return s.replace(/\^.+/g, '');
 }
 
 // 우측 하단 상태 관련 플로팅 메시지 (~일괄 설정되었습니다.)
-async function floatingToast(message: any, type: any) {
+export async function floatingToast(message: any, type: any) {
   let toast = document.createElement('div');
   let toastContainer: any = document.getElementById('toastContainer');
 
@@ -257,7 +257,7 @@ async function floatingToast(message: any, type: any) {
 }
 
 // 한글인명 로마자 변환
-async function getAirportName(name) {
+export async function getAirportName(name) {
   let res = await fetch('https://dict.naver.com/name-to-roman/translation/?query=' + name);
   let text: string = await res.text();
 
@@ -271,7 +271,7 @@ async function getAirportName(name) {
 }
 
 // 현재 시간 객체로 가져오기
-function getClock() {
+export function getClock() {
   let date = new Date();
 
   return {
@@ -285,7 +285,7 @@ function getClock() {
 }
 
 // 현재 시간 기준 오프셋이 적용된 시간 객체로 가져오기
-function getClockOffset(H: number, M: number, D: number, h: number, m: number, s: number) {
+export function getClockOffset(H: number, M: number, D: number, h: number, m: number, s: number) {
   let date = new Date();
 
   date.setFullYear(date.getFullYear() + H);
@@ -306,7 +306,7 @@ function getClockOffset(H: number, M: number, D: number, h: number, m: number, s
 }
 
 // 쿠키 정보 가져오기
-function getCookie(cookieName: string) {
+export function getCookie(cookieName: string) {
   let cookieValue = '';
 
   if (document.cookie) {
@@ -323,7 +323,7 @@ function getCookie(cookieName: string) {
 }
 
 // 이미지 URL로 이미지 사이즈 가져오기
-async function getImageMeta(src: string) {
+export async function getImageMeta(src: string) {
   return new Promise(function (resolve, reject) {
     let image: any = new Image();
 
@@ -348,7 +348,7 @@ async function getImageMeta(src: string) {
 //       console.log(e);
 //     });
 // }
-async function getImageSize(url: string): Promise<number | string> {
+export async function getImageSize(url: string): Promise<number | string> {
   try {
     const response = await fetch(url);
     const blob = await response.blob();
@@ -374,7 +374,7 @@ async function getImageSize(url: string): Promise<number | string> {
 //타오바오 이미지는 로드하면 aliexpress의 이미지로 넘어가는데 해당 이미지의 프로토콜 문제로
 //보안 이슈가 생기므로 https://images.weserv.nl 서비스를 사용함. 이 서비스는 입력받은 이미지 URL을 HTTP나 HTTPS 상관없이 HTTPS 프로토콜로 반환해주는 서비스입니다.
 
-async function getTaobaoImageSize(url: any) {
+export async function getTaobaoImageSize(url: any) {
   const httpsImageUrl = 'https://images.weserv.nl/?url=' + encodeURIComponent(url);
   return fetch(httpsImageUrl, { method: 'HEAD' })
     .then((response) => response.headers.get('content-length'))
@@ -384,7 +384,7 @@ async function getTaobaoImageSize(url: any) {
 }
 
 // 오픈마켓 등록상품URL 가져오기
-function getStoreUrl(commonStore: any, marketCode: string, productId: any) {
+export function getStoreUrl(commonStore: any, marketCode: string, productId: any) {
   switch (marketCode) {
     case 'A077': {
       return `${commonStore.user.userInfo.naverStoreUrl}/products/${productId}`;
@@ -467,18 +467,18 @@ function getStoreUrl(commonStore: any, marketCode: string, productId: any) {
 // }
 
 // 셀포유 추적코드 (스마트스토어, 11번가(글로벌/일반), 지마켓, 옥션, 인터파크, 위메프)
-function getStoreTraceCodeV1(productId: number, siteCode: string) {
+export function getStoreTraceCodeV1(productId: number, siteCode: string) {
   // return `<img src="https://api.sellforyou.co.kr/api/dataProvider?productId=${productId}&siteCode=${siteCode}" style="display: none;">`;
   return `<img src="https://api.sellforyou.co.kr/api/dataProvider?productId=${productId}&siteCode=${siteCode}" width="1px" height="1px">`;
 }
 
 // 셀포유 추적코드 (쿠팡, 롯데온(글로벌/일반), 티몬)
-function getStoreTraceCodeV2(productId: number, siteCode: string) {
+export function getStoreTraceCodeV2(productId: number, siteCode: string) {
   return `<iframe src="https://api.sellforyou.co.kr/api/dataProvider?youtube.com&productId=${productId}&siteCode=${siteCode}" style="display:none;visibility:hidden"></iframe>`;
 }
 
 // 난수 생성기 (이미지 스왑용으로 사용 중)
-function getRandomIntInclusive(min, max) {
+export function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
 
@@ -487,7 +487,7 @@ function getRandomIntInclusive(min, max) {
 
 // 두개의 문자열을 비교해서 겹치는 부분만 반환하는 함수
 // (예: string1 (수집때옵션이름), string2(카테고리에 따른 권장 옵션이름의 배열) => string2의 배열에서 string1과 매칭되는 걸 찾아,권장 옵션 이름을 옵션 이름으로 지정)
-function matchesCharacter(string1: string, string2: string) {
+export function matchesCharacter(string1: string, string2: string) {
   const s1 = [...string1];
   const s2 = [...string2];
 
@@ -541,7 +541,7 @@ function matchesCharacter(string1: string, string2: string) {
 }
 
 // 원래 우측하단에 윈도우 알림으로 뜨던 기능인데 너무 번잡해서 없애고 플로팅 메시팅만 띄우게 변경됨
-function notificationByEveryTime(message: string) {
+export function notificationByEveryTime(message: string) {
   floatingToast(message, 'warning');
 
   // chrome.notifications.create('sellforyou-' + new Date().getTime(), {
@@ -554,7 +554,7 @@ function notificationByEveryTime(message: string) {
 }
 
 // 타오바오 API 사용 시 응답 데이터에서 텍스트 부분이 깨져서 나오는 현상이 있는데 이 경우 블롭형식으로 응답을 받아와서 이 함수를 쓰면 깔끔하게 변환됨
-function parseDecode(blob) {
+export function parseDecode(blob) {
   return new Promise((resolve, reject) => {
     var reader = new FileReader();
 
@@ -569,7 +569,7 @@ function parseDecode(blob) {
 }
 
 // XHR Request 비동기 구현
-function request(url: any, opts: any) {
+export function request(url: any, opts: any) {
   return new Promise(function (resolve, reject) {
     let xhr = new XMLHttpRequest();
 
@@ -598,7 +598,7 @@ function request(url: any, opts: any) {
 }
 
 // 파일 업로드 등으로 파일을 읽었을 때 바이너리 스트링으로 가져와야 할 경우 사용 (예: XLSX 라이브러리에서 read할 때)
-function readFileBinary(blob: any) {
+export function readFileBinary(blob: any) {
   return new Promise((resolve, reject) => {
     let reader = new FileReader();
 
@@ -612,7 +612,7 @@ function readFileBinary(blob: any) {
 }
 
 // 보통 이미지 파일을 업로드했을 때 base64 형식으로 변환해야할 경우 사용
-function readFileDataURL(blob: any) {
+export function readFileDataURL(blob: any) {
   return new Promise((resolve, reject) => {
     let reader = new FileReader();
 
@@ -626,7 +626,7 @@ function readFileDataURL(blob: any) {
 }
 
 // 블롭 데이터 만들 때 사용 (예: XLSX write에서 URL.createObjectUrl로 파일 다운로드 시킬 때 사용)
-function stringToArrayBuffer(s: any) {
+export function stringToArrayBuffer(s: any) {
   let buf = new ArrayBuffer(s.length);
   let view = new Uint8Array(buf);
 
@@ -638,7 +638,14 @@ function stringToArrayBuffer(s: any) {
 }
 
 // 상품 등록/수정 시 작업 성공/실패 여부를 백엔드에 전달하는 함수
-async function sendCallback(commonStore: any, data: any, code: string, seq: number, state: number, message: string) {
+export async function sendCallback(
+  commonStore: any,
+  data: any,
+  code: string,
+  seq: number,
+  state: number,
+  message: string
+) {
   const today = getClock();
 
   const progressValue = Math.round(((seq + 1) * 100) / data.DShopInfo.prod_codes.length);
@@ -689,12 +696,12 @@ async function sendCallback(commonStore: any, data: any, code: string, seq: numb
 }
 
 // 대기 시간 설정
-function sleep(ms: number) {
+export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 // Object의 특정 key의 value 값을 기준으로 정렬하는 함수
-function sortBy(array: any, key: string, asc: boolean) {
+export function sortBy(array: any, key: string, asc: boolean) {
   let sorted = array.sort(function (a: any, b: any) {
     if (a[key] < b[key]) {
       return asc ? -1 : 1;
@@ -711,7 +718,7 @@ function sortBy(array: any, key: string, asc: boolean) {
 }
 
 // Date 날짜객체를 ISO 시간대 문자열로 변환
-function toISO(date: any) {
+export function toISO(date: any) {
   function pad(num: any) {
     let norm = Math.floor(Math.abs(num));
 
@@ -734,7 +741,7 @@ function toISO(date: any) {
 }
 
 // 이미지 좌우 폭을 자동으로 조정하고 <p> 태그에 감싸서 오픈마켓 상세페이지 호환성을 맞춤
-function transformContent(content: any) {
+export function transformContent(content: any) {
   const descHtml = new DOMParser().parseFromString(content, 'text/html');
   const chunks = descHtml.querySelectorAll('p');
 
@@ -750,7 +757,7 @@ function transformContent(content: any) {
 }
 
 // URL의 쿼리스트링(key)를 특정값(value)로 변경
-function updateQueryStringParameter(uri, key, value) {
+export function updateQueryStringParameter(uri, key, value) {
   var re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
   var separator = uri.indexOf('?') !== -1 ? '&' : '?';
   if (uri.match(re)) {
@@ -761,7 +768,7 @@ function updateQueryStringParameter(uri, key, value) {
 }
 
 // AJAX Content-Type가 application/x-www-form-urlencoded인 경우, JSON Object를 Encode하는 과정이 필요함
-function urlEncodedObject(urlEncodedData: any) {
+export function urlEncodedObject(urlEncodedData: any) {
   let urlEncodedContent: any = [];
 
   for (let property in urlEncodedData) {
@@ -773,41 +780,3 @@ function urlEncodedObject(urlEncodedData: any) {
 
   return urlEncodedContent.join('&');
 }
-
-export {
-  byteLength,
-  byteSlice,
-  cartesian,
-  checkIndividualCustomUniqueCode,
-  convertWebpToJpg,
-  downloadExcel,
-  extractContent,
-  extractTmonContent,
-  floatingToast,
-  getAirportName,
-  getClock,
-  getClockOffset,
-  getCookie,
-  getImageMeta,
-  getImageSize,
-  getTaobaoImageSize,
-  getStoreUrl,
-  // getStoreTraceCode,
-  getStoreTraceCodeV1,
-  getStoreTraceCodeV2,
-  getRandomIntInclusive,
-  matchesCharacter,
-  notificationByEveryTime,
-  parseDecode,
-  request,
-  readFileBinary,
-  readFileDataURL,
-  sendCallback,
-  sleep,
-  sortBy,
-  stringToArrayBuffer,
-  toISO,
-  transformContent,
-  updateQueryStringParameter,
-  urlEncodedObject,
-};

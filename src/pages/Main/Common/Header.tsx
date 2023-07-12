@@ -52,7 +52,7 @@ import './Styles.css';
 import { MyButton } from './UI';
 
 // 헤더 뷰
-export const Header = observer(function () {
+export const Header = observer(() => {
   // MobX 스토리지 로드
   const { common } = React.useContext(AppContext);
 
@@ -148,8 +148,7 @@ export const Header = observer(function () {
     <Box
       sx={{
         width: 250,
-      }}
-    >
+      }}>
       <List>
         {['대시보드'].map((text) => (
           <ListItem key={text} disablePadding>
@@ -159,8 +158,7 @@ export const Header = observer(function () {
                   name: '대시보드',
                   url: '/dashboard.html',
                 })
-              }
-            >
+              }>
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
@@ -182,8 +180,7 @@ export const Header = observer(function () {
                   name: '수집상품관리',
                   url: '/product/collected.html',
                 })
-              }
-            >
+              }>
               <ListItemIcon>
                 <InventoryIcon />
               </ListItemIcon>
@@ -201,8 +198,7 @@ export const Header = observer(function () {
                   name: '등록상품관리',
                   url: '/product/registered.html',
                 })
-              }
-            >
+              }>
               <ListItemIcon>
                 <SellIcon />
               </ListItemIcon>
@@ -222,8 +218,7 @@ export const Header = observer(function () {
                       name: '잠금상품관리',
                       url: '/product/locked.html',
                     })
-              }
-            >
+              }>
               <ListItemIcon>
                 <LockIcon />
               </ListItemIcon>
@@ -245,8 +240,7 @@ export const Header = observer(function () {
                   name: '신규주문관리',
                   url: '/order/new.html',
                 })
-              }
-            >
+              }>
               <ListItemIcon>
                 <ShoppingCartIcon />
               </ListItemIcon>
@@ -306,8 +300,7 @@ export const Header = observer(function () {
                   name: '유입수분석',
                   url: '/inflow.html',
                 })
-              }
-            >
+              }>
               <ListItemIcon>
                 <BarChartIcon />
               </ListItemIcon>
@@ -325,8 +318,7 @@ export const Header = observer(function () {
                   name: '키워드분석',
                   url: '/keyword/analysis.html',
                 })
-              }
-            >
+              }>
               <ListItemIcon>
                 <BarChartIcon />
               </ListItemIcon>
@@ -359,8 +351,7 @@ export const Header = observer(function () {
                   name: '소싱기',
                   url: '/sourcing.html',
                 })
-              }
-            >
+              }>
               <ListItemIcon>
                 <BarChartIcon />
               </ListItemIcon>
@@ -382,8 +373,7 @@ export const Header = observer(function () {
                   name: '기본설정',
                   url: '/settings.html',
                 })
-              }
-            >
+              }>
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
@@ -401,8 +391,7 @@ export const Header = observer(function () {
                   name: '오픈마켓연동',
                   url: '/connects.html',
                 })
-              }
-            >
+              }>
               <ListItemIcon>
                 <StoreIcon />
               </ListItemIcon>
@@ -420,8 +409,7 @@ export const Header = observer(function () {
                   name: '금지어/치환어설정',
                   url: '/banwords.html',
                 })
-              }
-            >
+              }>
               <ListItemIcon>
                 <PublishedWithChangesIcon />
               </ListItemIcon>
@@ -470,13 +458,11 @@ export const Header = observer(function () {
         style={{
           background: common.darkTheme ? '#303030' : '#ebebeb',
           color: common.darkTheme ? 'white' : 'black',
-        }}
-      >
+        }}>
         <Toolbar
           style={{
             minHeight: 50,
-          }}
-        >
+          }}>
           <IconButton
             size="large"
             color="inherit"
@@ -484,8 +470,7 @@ export const Header = observer(function () {
             sx={{
               mr: 1,
             }}
-            onClick={common.toggleSideBar}
-          >
+            onClick={common.toggleSideBar}>
             <MenuIcon />
           </IconButton>
 
@@ -525,8 +510,7 @@ export const Header = observer(function () {
             sx={{
               display: 'flex',
               alignItems: 'center',
-            }}
-          >
+            }}>
             <MyButton
               color="info"
               sx={{
@@ -534,8 +518,7 @@ export const Header = observer(function () {
               }}
               onClick={() => {
                 window.open(`${common.banner01Url}`);
-              }}
-            >
+              }}>
               무료수입대행
             </MyButton>
             <Divider sx={{ height: 28, mr: 1, ml: 1 }} orientation="vertical" />
@@ -548,8 +531,7 @@ export const Header = observer(function () {
               }}
               onClick={() => {
                 window.open('https://sellforyou.channel.io/lounge', '팝업', 'width=400px,height=700px,scrollbars=yes');
-              }}
-            >
+              }}>
               실시간상담
             </MyButton>
             <MyButton
@@ -560,8 +542,7 @@ export const Header = observer(function () {
               }}
               onClick={() => {
                 window.open('https://open.kakao.com/o/gfCffF3e');
-              }}
-            >
+              }}>
               오픈채팅방
             </MyButton>
             <MyButton
@@ -572,8 +553,7 @@ export const Header = observer(function () {
               }}
               onClick={() => {
                 window.open('https://cafe.naver.com/sellfor');
-              }}
-            >
+              }}>
               네이버카페
             </MyButton>
             <MyButton
@@ -584,8 +564,7 @@ export const Header = observer(function () {
               }}
               onClick={() => {
                 window.open('https://panoramic-butternut-291.notion.site/2619a31e8a93438fa308dcfaae76666a');
-              }}
-            >
+              }}>
               이용가이드
             </MyButton>
             &nbsp; &nbsp;
@@ -595,8 +574,7 @@ export const Header = observer(function () {
                 color="inherit"
                 onClick={(e) => {
                   common.toggleTheme();
-                }}
-              >
+                }}>
                 {common.darkTheme ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
             </Tooltip>
@@ -607,8 +585,7 @@ export const Header = observer(function () {
                 color="inherit"
                 onClick={(e) => {
                   common.setPopOverAnchor(e.currentTarget);
-                }}
-              >
+                }}>
                 <AccountCircle />
               </IconButton>
             </Tooltip>
@@ -621,34 +598,29 @@ export const Header = observer(function () {
               anchorOrigin={{
                 vertical: 'bottom',
                 horizontal: 'left',
-              }}
-            >
+              }}>
               <Paper
                 sx={{
                   p: 3,
 
                   width: 250,
-                }}
-              >
+                }}>
                 {common.user.userInfo ? (
                   <>
                     <Box
                       sx={{
                         mb: 2,
-                      }}
-                    >
+                      }}>
                       <Accordion
                         defaultExpanded
                         sx={{
                           width: '100%',
-                        }}
-                      >
+                        }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                           <Typography
                             sx={{
                               fontSize: 13,
-                            }}
-                          >
+                            }}>
                             내 정보
                           </Typography>
                         </AccordionSummary>
@@ -659,8 +631,7 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             {common.user.purchaseInfo2?.level === 1 ? (
                               <Chip size="small" label="체험판" color="warning" sx={{ width: 65 }} />
                             ) : common.user.purchaseInfo2?.level === 2 ? (
@@ -676,8 +647,7 @@ export const Header = observer(function () {
                             <Typography
                               sx={{
                                 fontSize: 13,
-                              }}
-                            >
+                              }}>
                               {common.user.email}
                             </Typography>
                           </Box>
@@ -688,13 +658,11 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             <Typography
                               sx={{
                                 fontSize: 13,
-                              }}
-                            >
+                              }}>
                               관리상품수
                             </Typography>
 
@@ -702,8 +670,7 @@ export const Header = observer(function () {
                               sx={{
                                 color: '#1976d2',
                                 fontSize: 13,
-                              }}
-                            >
+                              }}>
                               {common.user.productCount} 개
                             </Typography>
                           </Box>
@@ -714,13 +681,11 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 3,
-                            }}
-                          >
+                            }}>
                             <Typography
                               sx={{
                                 fontSize: 13,
-                              }}
-                            >
+                              }}>
                               보유적립금
                             </Typography>
 
@@ -728,8 +693,7 @@ export const Header = observer(function () {
                               sx={{
                                 color: '#ed6c02',
                                 fontSize: 13,
-                              }}
-                            >
+                              }}>
                               {common.user.credit.toLocaleString('ko-KR')} P
                             </Typography>
                           </Box>
@@ -740,8 +704,7 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 0.5,
-                            }}
-                          >
+                            }}>
                             <MyButton
                               color="info"
                               variant="outlined"
@@ -750,8 +713,7 @@ export const Header = observer(function () {
                               }}
                               onClick={() => {
                                 common.togglePayHistoryModal(common.user.id, true);
-                              }}
-                            >
+                              }}>
                               결제내역
                             </MyButton>
                             &nbsp;
@@ -761,8 +723,7 @@ export const Header = observer(function () {
                               sx={{
                                 width: '100%',
                               }}
-                              onClick={payment}
-                            >
+                              onClick={payment}>
                               결제하기
                             </MyButton>
                           </Box>
@@ -773,15 +734,13 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 0.5,
-                            }}
-                          >
+                            }}>
                             <MyButton
                               color="info"
                               sx={{
                                 width: '100%',
                               }}
-                              onClick={changePassword}
-                            >
+                              onClick={changePassword}>
                               비밀번호 변경
                             </MyButton>
                           </Box>
@@ -791,15 +750,13 @@ export const Header = observer(function () {
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'space-between',
-                            }}
-                          >
+                            }}>
                             <MyButton
                               color="error"
                               sx={{
                                 width: '100%',
                               }}
-                              onClick={signOut}
-                            >
+                              onClick={signOut}>
                               로그아웃
                             </MyButton>
                           </Box>
@@ -809,14 +766,12 @@ export const Header = observer(function () {
                       <Accordion
                         sx={{
                           width: '100%',
-                        }}
-                      >
+                        }}>
                         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                           <Typography
                             sx={{
                               fontSize: 13,
-                            }}
-                          >
+                            }}>
                             오픈마켓 사용설정
                           </Typography>
                         </AccordionSummary>
@@ -824,16 +779,14 @@ export const Header = observer(function () {
                           sx={{
                             height: 100,
                             overflowY: 'auto',
-                          }}
-                        >
+                          }}>
                           <Box
                             sx={{
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             {common.uploadInfo.markets.find((v: any) => v.code === 'A077' && v.connected) ? (
                               <img src="/resources/icon-smartstore.png" />
                             ) : (
@@ -868,8 +821,7 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             {common.uploadInfo.markets.find((v: any) => v.code === 'B378' && v.connected) ? (
                               <img src="/resources/icon-coupang.png" />
                             ) : (
@@ -904,8 +856,7 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             {common.uploadInfo.markets.find((v: any) => v.code === 'A112' && v.connected) ? (
                               <img src="/resources/icon-street-global.png" />
                             ) : (
@@ -940,8 +891,7 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             {common.uploadInfo.markets.find((v: any) => v.code === 'A113' && v.connected) ? (
                               <img src="/resources/icon-street-normal.png" />
                             ) : (
@@ -978,8 +928,7 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             {common.uploadInfo.markets.find((v: any) => v.code === 'A006' && v.connected) ? (
                               <img src="/resources/icon-gmarket.png" />
                             ) : (
@@ -1014,8 +963,7 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             {common.uploadInfo.markets.find((v: any) => v.code === 'A001' && v.connected) ? (
                               <img src="/resources/icon-auction.png" />
                             ) : (
@@ -1050,8 +998,7 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             {common.uploadInfo.markets.find((v: any) => v.code === 'A027' && v.connected) ? (
                               <img src="/resources/icon-interpark.png" />
                             ) : (
@@ -1086,8 +1033,7 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             {common.uploadInfo.markets.find((v: any) => v.code === 'B719' && v.connected) ? (
                               <img src="/resources/icon-wemakeprice.png" />
                             ) : (
@@ -1124,8 +1070,7 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             {common.uploadInfo.markets.find((v: any) => v.code === 'A524' && v.connected) ? (
                               <img src="/resources/icon-lotteon-global.png" />
                             ) : (
@@ -1176,8 +1121,7 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             {common.uploadInfo.markets.find((v: any) => v.code === 'A525' && v.connected) ? (
                               <img src="/resources/icon-lotteon-normal.png" />
                             ) : (
@@ -1228,8 +1172,7 @@ export const Header = observer(function () {
                               alignItems: 'center',
                               justifyContent: 'space-between',
                               mb: 1,
-                            }}
-                          >
+                            }}>
                             {common.uploadInfo.markets.find((v: any) => v.code === 'B956' && v.connected) ? (
                               <img src="/resources/icon-tmon.png" />
                             ) : (
@@ -1270,8 +1213,7 @@ export const Header = observer(function () {
                           justifyContent: 'space-between',
                           mb: 2,
                           p: 1,
-                        }}
-                      >
+                        }}>
                         {common.notionPage ? <NotionRenderer blockMap={common.notionPage} /> : null}
                       </Paper>
                     ) : null}
@@ -1281,13 +1223,11 @@ export const Header = observer(function () {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'space-between',
-                      }}
-                    >
+                      }}>
                       <Typography
                         sx={{
                           fontSize: 13,
-                        }}
-                      >
+                        }}>
                         셀포유 버전정보: {chrome.runtime.getManifest().version}
                       </Typography>
 
@@ -1300,8 +1240,7 @@ export const Header = observer(function () {
                           window.open(
                             'https://chrome.google.com/webstore/detail/%EC%85%80%ED%8F%AC%EC%9C%A0/cdghhijdbghkgklajgahabkbbpijddlo?hl=ko'
                           );
-                        }}
-                      >
+                        }}>
                         최신버전 확인
                       </Button>
                     </Box>
@@ -1312,8 +1251,7 @@ export const Header = observer(function () {
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
-                      }}
-                    >
+                      }}>
                       <CircularProgress
                         size="1rem"
                         style={{
@@ -1324,8 +1262,7 @@ export const Header = observer(function () {
                       <Typography
                         sx={{
                           fontSize: 13,
-                        }}
-                      >
+                        }}>
                         사용자 정보를 가져오는 중...
                       </Typography>
                     </Box>

@@ -69,84 +69,72 @@ export class common {
         progress: 0,
         upload: false,
       },
-
       {
         code: 'B378',
         disabled: true,
         progress: 0,
         upload: false,
       },
-
       {
         code: 'A112',
         disabled: true,
         progress: 0,
         upload: false,
       },
-
       {
         code: 'A113',
         disabled: true,
         progress: 0,
         upload: false,
       },
-
       {
         code: 'A523',
         disabled: true,
         progress: 0,
         upload: false,
       },
-
       {
         code: 'A522',
         disabled: true,
         progress: 0,
         upload: false,
       },
-
       {
         code: 'A006',
         disabled: true,
         progress: 0,
         upload: false,
       },
-
       {
         code: 'A001',
         disabled: true,
         progress: 0,
         upload: false,
       },
-
       {
         code: 'A027',
         disabled: true,
         progress: 0,
         upload: false,
       },
-
       {
         code: 'B719',
         disabled: true,
         progress: 0,
         upload: false,
       },
-
       {
         code: 'A524',
         disabled: true,
         progress: 0,
         upload: false,
       },
-
       {
         code: 'A525',
         disabled: true,
         progress: 0,
         upload: false,
       },
-
       {
         code: 'B956',
         disabled: true,

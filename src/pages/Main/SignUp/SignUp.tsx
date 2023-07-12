@@ -277,8 +277,7 @@ export const SignUp = observer(() => {
             <h1
               style={{
                 marginBottom: 50,
-              }}
-            >
+              }}>
               회원가입
             </h1>
 
@@ -345,16 +344,14 @@ export const SignUp = observer(() => {
               spacing={1}
               style={{
                 marginBottom: 30,
-              }}
-            >
+              }}>
               <Grid
                 item
                 xs={6}
                 md={7}
                 sx={{
                   margin: 'auto',
-                }}
-              >
+                }}>
                 <TextField
                   id="appPhone"
                   variant="outlined"
@@ -376,8 +373,7 @@ export const SignUp = observer(() => {
                 sx={{
                   textAlign: 'center',
                   margin: 'auto',
-                }}
-              >
+                }}>
                 <LoadingButton
                   color="info"
                   disableElevation
@@ -390,8 +386,7 @@ export const SignUp = observer(() => {
                   style={{
                     width: '100%',
                   }}
-                  onClick={phoneVerify}
-                >
+                  onClick={phoneVerify}>
                   인증
                 </LoadingButton>
               </Grid>
@@ -404,8 +399,7 @@ export const SignUp = observer(() => {
                     md={7}
                     sx={{
                       margin: 'auto',
-                    }}
-                  >
+                    }}>
                     <TextField
                       id="appPhone"
                       variant="outlined"
@@ -427,8 +421,7 @@ export const SignUp = observer(() => {
                     sx={{
                       textAlign: 'center',
                       margin: 'auto',
-                    }}
-                  >
+                    }}>
                     <Button
                       color="info"
                       disableElevation
@@ -437,8 +430,7 @@ export const SignUp = observer(() => {
                       style={{
                         width: '100%',
                       }}
-                      onClick={verifyNumber}
-                    >
+                      onClick={verifyNumber}>
                       확인
                     </Button>
                   </Grid>
@@ -451,16 +443,14 @@ export const SignUp = observer(() => {
               spacing={1}
               style={{
                 marginBottom: 30,
-              }}
-            >
+              }}>
               <Grid
                 item
                 xs={6}
                 md={7}
                 sx={{
                   margin: 'auto',
-                }}
-              >
+                }}>
                 <TextField
                   disabled={signInfo.refCodeVerified}
                   id="appRef"
@@ -483,8 +473,7 @@ export const SignUp = observer(() => {
                 sx={{
                   textAlign: 'center',
                   margin: 'auto',
-                }}
-              >
+                }}>
                 <Button
                   disabled={signInfo.refCodeVerified}
                   color="info"
@@ -496,8 +485,7 @@ export const SignUp = observer(() => {
                   }}
                   onClick={() => {
                     getUserPurchaseInfo(signInfo.refCode);
-                  }}
-                >
+                  }}>
                   {signInfo.refCodeVerified ? '등록완료' : '등록'}
                 </Button>
               </Grid>
@@ -506,8 +494,7 @@ export const SignUp = observer(() => {
             <FormGroup
               style={{
                 marginBottom: 30,
-              }}
-            >
+              }}>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -523,8 +510,7 @@ export const SignUp = observer(() => {
                   <span
                     style={{
                       fontSize: 11,
-                    }}
-                  >
+                    }}>
                     가입 내용을 확인하였으며, &nbsp;
                     <Link href="https://panoramic-butternut-291.notion.site/5090b4282d88479f8608cd7f60bce6c2">
                       서비스 이용약관
@@ -545,8 +531,7 @@ export const SignUp = observer(() => {
                 width: '100%',
                 marginBottom: 10,
               }}
-              onClick={signUp}
-            >
+              onClick={signUp}>
               가입하기
             </LoadingButton>
 
@@ -556,8 +541,7 @@ export const SignUp = observer(() => {
               style={{
                 width: '100%',
               }}
-              onClick={signIn}
-            >
+              onClick={signIn}>
               로그인으로 돌아가기
             </Button>
           </SignPaper>
