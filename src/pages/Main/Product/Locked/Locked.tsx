@@ -32,6 +32,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ReplaceOptionNamePopOver } from '../../PopOver/ReplaceOptionNamePopOver';
 import { Esm2UploadModal } from '../../Modals/Esm2UploadModal';
 import { Esm2UploadDisabledModal } from '../../Modals/Esm2UploadDisabledModal';
+// import { PreviewModal } from '../../Modals/PreviewModal';
 
 // 상품등록관리 목록 테이블 뷰
 export const Locked = observer(() => {
@@ -98,8 +99,7 @@ export const Locked = observer(() => {
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
-                }}
-              >
+                }}>
                 <Typography color="text.primary">잠금상품목록 ({product.count})</Typography>
               </Box>
 
@@ -107,8 +107,7 @@ export const Locked = observer(() => {
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
-                }}
-              >
+                }}>
                 <MyButton
                   color="info"
                   sx={{
@@ -116,8 +115,7 @@ export const Locked = observer(() => {
                   }}
                   onClick={() => {
                     product.itemToExcel();
-                  }}
-                >
+                  }}>
                   상품정보저장
                 </MyButton>
                 &nbsp;
@@ -166,8 +164,7 @@ export const Locked = observer(() => {
 
                     await product.setPageSize(pageSize);
                     await product.getProduct(common, 1);
-                  }}
-                >
+                  }}>
                   <MenuItem value={10}>10개 보기</MenuItem>
                   <MenuItem value={20}>20개 보기</MenuItem>
                   <MenuItem value={50}>50개 보기</MenuItem>
@@ -191,8 +188,7 @@ export const Locked = observer(() => {
                     size="small"
                     onClick={() => {
                       product.refreshProduct(common);
-                    }}
-                  >
+                    }}>
                     <SyncIcon />
                   </IconButton>
                 </Tooltip>
@@ -236,8 +232,7 @@ export const Locked = observer(() => {
                     size="small"
                     onClick={() => {
                       product.getProduct(common, product.pageTemp);
-                    }}
-                  >
+                    }}>
                     <SearchIcon />
                   </IconButton>
                 </Tooltip>
@@ -270,6 +265,7 @@ export const Locked = observer(() => {
         <UpdateManyProductPopOver />
 
         <DescriptionModal />
+        {/* <PreviewModal /> */}
         <ManyPriceModal />
         <ManyFeeModal />
         <ManyCategoryModal />

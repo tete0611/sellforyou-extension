@@ -31,6 +31,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { UpdateManyProductPopOver } from '../../PopOver/UpdateManyProductPopOver';
 import { ReplaceOptionNamePopOver } from '../../PopOver/ReplaceOptionNamePopOver';
 import { Esm2UploadModal } from '../../Modals/Esm2UploadModal';
+// import { PreviewModal } from '../../Modals/PreviewModal';
 
 // 상품수집관리 목록 테이블 뷰
 export const Collected = observer(() => {
@@ -95,8 +96,7 @@ export const Collected = observer(() => {
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
-                }}
-              >
+                }}>
                 <Typography color="text.primary">수집상품목록 ({product.count})</Typography>
               </Box>
 
@@ -104,8 +104,7 @@ export const Collected = observer(() => {
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
-                }}
-              >
+                }}>
                 <MyButton
                   color="info"
                   sx={{
@@ -113,8 +112,7 @@ export const Collected = observer(() => {
                   }}
                   onClick={() => {
                     product.toggleCollectExcelModal(true);
-                  }}
-                >
+                  }}>
                   엑셀대량수집
                 </MyButton>
                 <MyButton
@@ -125,8 +123,7 @@ export const Collected = observer(() => {
                   }}
                   onClick={() => {
                     product.itemToExcel();
-                  }}
-                >
+                  }}>
                   상품정보저장
                 </MyButton>
                 &nbsp;
@@ -175,8 +172,7 @@ export const Collected = observer(() => {
 
                     await product.setPageSize(pageSize);
                     await product.getProduct(common, 1);
-                  }}
-                >
+                  }}>
                   <MenuItem value={10}>10개 보기</MenuItem>
                   <MenuItem value={20}>20개 보기</MenuItem>
                   <MenuItem value={50}>50개 보기</MenuItem>
@@ -198,8 +194,7 @@ export const Collected = observer(() => {
                     size="small"
                     onClick={() => {
                       product.refreshProduct(common);
-                    }}
-                  >
+                    }}>
                     <SyncIcon />
                   </IconButton>
                 </Tooltip>
@@ -242,8 +237,7 @@ export const Collected = observer(() => {
                     size="small"
                     onClick={() => {
                       product.getProduct(common, product.pageTemp);
-                    }}
-                  >
+                    }}>
                     <SearchIcon />
                   </IconButton>
                 </Tooltip>
@@ -288,6 +282,7 @@ export const Collected = observer(() => {
         <UploadModal />
         <Esm2UploadModal />
         <UploadFailedModal />
+        {/* <PreviewModal /> */}
       </Frame>
     </ThemeProvider>
   );

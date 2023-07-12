@@ -185,6 +185,7 @@ export class product {
     Esm2uploadTabIndex: 0,
     Esm2uploadDisabled: false,
     Esm2uploadFailed: false,
+    // preview: false,
   };
 
   searchInfo: any = {
@@ -239,70 +240,60 @@ export class product {
         loading: false,
         input: '',
       },
-
       {
         code: 'B378',
         data: [],
         loading: false,
         input: '',
       },
-
       {
         code: 'A112',
         data: [],
         loading: false,
         input: '',
       },
-
       {
         code: 'A113',
         data: [],
         loading: false,
         input: '',
       },
-
       {
         code: 'A006',
         data: [],
         loading: false,
         input: '',
       },
-
       {
         code: 'A001',
         data: [],
         loading: false,
         input: '',
       },
-
       {
         code: 'A027',
         data: [],
         loading: false,
         input: '',
       },
-
       {
         code: 'B719',
         data: [],
         loading: false,
         input: '',
       },
-
       {
         code: 'A524',
         data: [],
         loading: false,
         input: '',
       },
-
       {
         code: 'A525',
         data: [],
         loading: false,
         input: '',
       },
-
       {
         code: 'B956',
         data: [],
@@ -426,6 +417,7 @@ export class product {
 
   manyDescriptionInfo: any = {
     html: null,
+    previewHtml: 'Empty Value',
   };
 
   constructor() {
@@ -3532,8 +3524,12 @@ export class product {
   };
 
   // 검색조건 설정 (OR)
-  setSearchWhereOrInput = (where: any) => {
-    this.searchInfo.whereInput.OR = where;
+  setSearchWhereOrInput = (where: any) => (this.searchInfo.whereInput.OR = where);
+
+  // 상페 미리보기 모달
+  togglePreviewModal = (value: boolean, index: number) => {
+    this.modalInfo.preview = value;
+    this.itemInfo.current = index;
   };
 
   // 검색결과 조회
@@ -4121,7 +4117,6 @@ export class product {
   // 상품 등록
   uploadItems = async (commonStore: any, edit: boolean) => {
     let productIds: any = [];
-
     if (this.uploadIndex > -1) {
       productIds.push(this.itemInfo.items[this.uploadIndex].id);
     } else {
@@ -4172,6 +4167,8 @@ export class product {
     this.clearUploadResults();
 
     commonStore.setStopped(false);
+
+    console.log({ data });
 
     await Promise.all([
       uploadSmartStore(
@@ -5507,6 +5504,20 @@ export class product {
           return 0;
         });
       }
+    });
+  };
+
+  /** 상세페이지 미리보기 */
+  getPreview = async (productId: number, market: string) => {
+    const response = await gql(QUERIES.GET_REGISTER_PRODUCTS_DATA_BY_USER, {
+      productIds: [productId],
+      siteCode: [market],
+    });
+
+    runInAction(() => {
+      this.manyDescriptionInfo.previewHtml = JSON.parse(
+        response.data.getRegisterProductsDataByUser
+      )[0]?.DShopInfo?.DataDataSet?.data[0]?.content;
     });
   };
 }
