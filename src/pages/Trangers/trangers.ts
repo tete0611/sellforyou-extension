@@ -426,7 +426,8 @@ async function translationPapago(input_string: string, source: string, target: s
   let url = 'https://papago.naver.com/apis/n2mt/translate';
   let time = new Date().getTime();
 
-  let hash = CryptoJS.HmacMD5(`${deviceid}\n${url}\n${time}`, 'v1.7.5_9b3c4db4fc').toString(CryptoJS.enc.Base64);
+  // v1.7.5_9b3c4db4fc
+  let hash = CryptoJS.HmacMD5(`${deviceid}\n${url}\n${time}`, 'v1.7.6_fa52a4d6c8').toString(CryptoJS.enc.Base64);
   let encoded = encodeURI(input_string);
   encoded = encoded.replaceAll(';', '%2B');
   encoded = encoded.replaceAll('/', '%2F');

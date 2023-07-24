@@ -374,7 +374,7 @@ async function scrape(items: any, user: any) {
         // return 키워드는 해당 함수 또는 반복문을 즉시 종료하고, 반환 값을 지정할 수 있습니다. 반면, continue 키워드는 현재 반복을 중지하고, 다음 반복으로 건너뛰도록 합니다.
         if (!url.includes('http')) url = 'https:' + url;
         const image = await getImageSize(url);
-        if (image <= 1000) continue;
+        if (typeof image === 'number' && image <= 1000) continue;
         desc_output += `<img align="absmiddle" src="${url}">`;
         desc_imgs.push(url);
       }

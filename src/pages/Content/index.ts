@@ -1751,38 +1751,45 @@ const main = async () => {
       }
     }
   });
-
+  /** 상품수집하는 방법 : 3가지
+   * 1. 리스트 페이지에서 대량수집
+   * 2. 단일 상품에서 단일수집
+   * 3. 판매자 페이지에서 대량수집
+   */
   const currentUrl = window.location.href;
-
+  /** 타오바오 단일상품 페이지 */
   if (/item.taobao.com\/item.htm/.test(currentUrl)) {
     const info = await initInfo(true);
     const result = await new taobao().get(info.user);
-
     floatingButton(info, null, result, false);
+
+    /** 타오바오 리스트 페이지 */
   } else if (/s.taobao.com\/search/.test(currentUrl)) {
     const info = await initInfo(false);
-
     await new taobao().bulkTypeOne(info.user);
-
     floatingButton(info, 'taobao1', true, true);
+
+    /**  */
   } else if (/world.taobao.com\/wow/.test(currentUrl)) {
     const info = await initInfo(false);
-
     await new taobao().bulkTypeThree(info.user);
-
     floatingButton(info, 'taobao1', true, true);
+
+    /** 타오바오 상점 페이지 */
   } else if (
     /world.taobao.com\/search/.test(currentUrl) ||
     /taobao.com\/search/.test(currentUrl) ||
     /taobao.com\/category/.test(currentUrl)
   ) {
     const info = await initInfo(false);
-
     await new taobao().bulkTypeTwo(info.user);
-
     floatingButton(info, 'taobao2', true, true);
+
+    /**  */
   } else if (/guang.taobao.com/.test(currentUrl)) {
     skip();
+
+    /** */
   } else if (
     /detail.tmall.com/.test(currentUrl) ||
     /chaoshi.detail.tmall.com/.test(currentUrl) ||
@@ -1790,25 +1797,26 @@ const main = async () => {
   ) {
     const info = await initInfo(true);
     const result = await new tmall().get(info.user);
-
     floatingButton(info, null, result, false);
+
+    /**  */
   } else if (/tmall.com/.test(currentUrl)) {
     const info = await initInfo(false);
-
     if (/list.tmall.com/.test(currentUrl)) {
       await new tmall().bulkTypeOne(info.user);
-
       floatingButton(info, 'tmall1', true, true);
     } else {
       await new tmall().bulkTypeTwo(info.user);
-
       floatingButton(info, 'tmall2', true, true);
     }
+
+    /** */
   } else if (/aliexpress.com\/item/.test(currentUrl)) {
     const info = await initInfo(true);
     const result = await new express().get(info.user);
-
     floatingButton(info, 'express', result, false);
+
+    /** */
   } else if (
     /aliexpress.com\/af/.test(currentUrl) ||
     /aliexpress.com\/af\/category/.test(currentUrl) ||
@@ -1819,125 +1827,132 @@ const main = async () => {
     /aliexpress.com\/wholesale/.test(currentUrl)
   ) {
     const info = await initInfo(false);
-
     await new express().bulkTypeOne(info.user);
     await new express().bulkTypeTwo(info.user);
-
     floatingButton(info, 'express', true, true);
+
+    /** */
   } else if (/aliexpress.com\/store/.test(currentUrl)) {
     const info = await initInfo(false);
-
     await new express().bulkTypeThree(info.user);
-
     floatingButton(info, 'express', true, true);
+
+    /** */
   } else if (/detail.1688.com/.test(currentUrl)) {
     const info = await initInfo(true);
     const result = await new alibaba().get(info.user);
-
     floatingButton(info, 'alibaba', result, false);
+
+    /** */
   } else if (
     /s.1688.com\/selloffer\/offer_search.htm/.test(currentUrl) ||
     /1688.com\/page\/offerlist/.test(currentUrl) ||
     /s.1688.com\/youyuan\/index.htm/.test(currentUrl)
   ) {
     const info = await initInfo(false);
-
     await new alibaba().bulkTypeOne(info.user);
     await new alibaba().bulkTypeTwo(info.user);
-
     floatingButton(info, 'alibaba', true, true);
+
+    /** */
   } else if (/show.1688.com\/pinlei\/industry\/pllist.html/.test(currentUrl)) {
     const info = await initInfo(false);
-
     await new alibaba().bulkTypeOne(info.user);
-
     floatingButton(info, 'alibaba', true, true);
+
+    /** */
   } else if (/www.vvic.com\/item/.test(currentUrl)) {
     const info = await initInfo(true);
     const result = await new vvic().get(info.user);
-
     floatingButton(info, 'vvic', result, false);
+
+    /** */
   } else if (/www.vvic.com\/.+\/search/.test(currentUrl) || /www.vvic.com\/.+\/topic/.test(currentUrl)) {
     const info = await initInfo(false);
-
     await new vvic().bulkTypeOne(info.user, 2);
-
     floatingButton(info, 'vvic', true, true);
+
+    /** */
   } else if (/www.vvic.com\/shop/.test(currentUrl)) {
     const info = await initInfo(false);
-
     await new vvic().bulkTypeOne(info.user, 3);
-
     floatingButton(info, 'vvic', true, true);
+
+    /** */
   } else if (/www.vvic.com\/.+\/list/.test(currentUrl)) {
     const info = await initInfo(false);
-
     await new vvic().bulkTypeOne(info.user, 4);
-
     floatingButton(info, 'vvic', true, true);
+
+    /** */
   } else if (/www.amazon.com\/.+\/dp\//.test(currentUrl) || /www.amazon.com\/dp/.test(currentUrl)) {
     const info = await initInfo(true);
     const result = await new amazon().get(info.user, 'us');
-
     floatingButton(info, 'amazon', result, false);
+
+    /** */
   } else if (/www.amazon.co.jp\/.+\/dp\//.test(currentUrl) || /www.amazon.co.jp\/dp/.test(currentUrl)) {
     const info = await initInfo(true);
     const result = await new amazon().get(info.user, 'jp');
-
     floatingButton(info, 'amazon', result, false);
+
+    /** */
   } else if (/www.amazon.de\/.+\/dp\//.test(currentUrl) || /www.amazon.de\/dp/.test(currentUrl)) {
     const info = await initInfo(true);
     const result = await new amazon().get(info.user, 'de');
-
     floatingButton(info, 'amazon', result, false);
+
+    /** */
   } else if (
     /www.amazon.com\/s\?/.test(currentUrl) ||
     /www.amazon.com\/s\//.test(currentUrl) ||
     /www.amazon.com\/b\//.test(currentUrl)
   ) {
     const info = await initInfo(false);
-
     await new amazon().bulkTypeOne(info.user, 'amazon.com');
-
     floatingButton(info, 'amazon1', true, true);
+
+    /** */
   } else if (/www.amazon.com\/stores/.test(currentUrl)) {
     const info = await initInfo(false);
-
     await new amazon().bulkTypeTwo(info.user, 'amazon.com');
-
     floatingButton(info, 'amazon2', true, true);
+
+    /** */
   } else if (
     /www.amazon.co.jp\/s\?/.test(currentUrl) ||
     /www.amazon.co.jp\/s\//.test(currentUrl) ||
     /www.amazon.co.jp\/b\//.test(currentUrl)
   ) {
     const info = await initInfo(false);
-
     await new amazon().bulkTypeOne(info.user, 'amazon.co.jp');
-
     floatingButton(info, 'amazon1', true, true);
+
+    /** */
   } else if (/www.amazon.co.jp\/stores/.test(currentUrl)) {
     const info = await initInfo(false);
-
     await new amazon().bulkTypeTwo(info.user, 'amazon.co.jp');
-
     floatingButton(info, 'amazon2', true, true);
+
+    /** */
   } else if (
     /www.amazon.de\/s\?/.test(currentUrl) ||
     /www.amazon.de\/s\//.test(currentUrl) ||
     /www.amazon.de\/b\//.test(currentUrl)
   ) {
     const info = await initInfo(false);
-
     await new amazon().bulkTypeOne(info.user, 'amazon.de');
-
     floatingButton(info, 'amazon1', true, true);
+
+    /** */
   } else if (/www.amazon.de\/stores/.test(currentUrl)) {
     const info = await initInfo(false);
-
     await new amazon().bulkTypeTwo(info.user, 'amazon.de');
-
     floatingButton(info, 'amazon2', true, true);
+
+    /** 테무 리스트 페이지 */
+  } else if (/.temu.com\/kr-en\/.*opt_level/.test(currentUrl)) {
+    alert('테무 리스트 페이지 진입');
   }
 };
 
