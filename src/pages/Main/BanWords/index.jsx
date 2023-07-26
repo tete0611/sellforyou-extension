@@ -6,7 +6,7 @@ import { BanWords } from './BanWords';
 import './index.css';
 
 render(
-  <BanWords />,
+	<BanWords />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

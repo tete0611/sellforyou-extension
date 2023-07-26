@@ -7,163 +7,163 @@ import { sleep } from './Common';
 
 // 크롬 스토리지 데이터 가져오기
 const getLocalStorage = (key: any) => {
-  return new Promise((resolve, reject) => {
-    try {
-      chrome.storage.local.get(key, (value) => {
-        if (!key) {
-          resolve(value);
-        } else {
-          resolve(value[key]);
-        }
-      });
-    } catch (e) {
-      reject(e);
-    }
-  });
+	return new Promise((resolve, reject) => {
+		try {
+			chrome.storage.local.get(key, (value) => {
+				if (!key) {
+					resolve(value);
+				} else {
+					resolve(value[key]);
+				}
+			});
+		} catch (e) {
+			reject(e);
+		}
+	});
 };
 
 // 크롬 스토리지 데이터 저장하기
 const setLocalStorage = (obj: any) => {
-  return new Promise((resolve, reject) => {
-    try {
-      chrome.storage.local.set(obj, () => {
-        resolve(true);
-      });
-    } catch (e) {
-      reject(e);
-    }
-  });
+	return new Promise((resolve, reject) => {
+		try {
+			chrome.storage.local.set(obj, () => {
+				resolve(true);
+			});
+		} catch (e) {
+			reject(e);
+		}
+	});
 };
 
 // 크롬 스토리지 데이터 삭제하기
 const deleteLocalStorage = (keys: any) => {
-  return new Promise((resolve, reject) => {
-    try {
-      chrome.storage.local.remove(keys, () => {
-        resolve(true);
-      });
-    } catch (e) {
-      reject(e);
-    }
-  });
+	return new Promise((resolve, reject) => {
+		try {
+			chrome.storage.local.remove(keys, () => {
+				resolve(true);
+			});
+		} catch (e) {
+			reject(e);
+		}
+	});
 };
 
 // 메시지 전송 (콘텐츠스크립트 -> 확장프로그램)
 const sendRuntimeMessage = (obj: any) => {
-  console.log('runtime', obj);
+	console.log('runtime', obj);
 
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage(obj, (response) => {
-      let lastError = chrome.runtime.lastError;
+	return new Promise((resolve, reject) => {
+		chrome.runtime.sendMessage(obj, (response) => {
+			let lastError = chrome.runtime.lastError;
 
-      if (lastError) {
-        console.log('runtime rejected', obj, lastError.message);
+			if (lastError) {
+				console.log('runtime rejected', obj, lastError.message);
 
-        resolve(null);
+				resolve(null);
 
-        return;
-      }
+				return;
+			}
 
-      console.log('runtime resolved', obj, response);
+			console.log('runtime resolved', obj, response);
 
-      resolve(response);
-    });
-  });
+			resolve(response);
+		});
+	});
 };
 
 // 메시지 전송 (확장프로그램 -> 콘텐츠스크립트)
 const sendTabMessage = (tabid: number, obj: any) => {
-  console.log(tabid, obj);
+	console.log(tabid, obj);
 
-  return new Promise((resolve, reject) => {
-    chrome.tabs.sendMessage(tabid, obj, (response) => {
-      let lastError = chrome.runtime.lastError;
+	return new Promise((resolve, reject) => {
+		chrome.tabs.sendMessage(tabid, obj, (response) => {
+			let lastError = chrome.runtime.lastError;
 
-      if (lastError) {
-        console.log(`${tabid} rejected`, lastError.message);
+			if (lastError) {
+				console.log(`${tabid} rejected`, lastError.message);
 
-        resolve(null);
+				resolve(null);
 
-        return;
-      }
+				return;
+			}
 
-      console.log(`${tabid} resolved`, obj, response);
+			console.log(`${tabid} resolved`, obj, response);
 
-      resolve(response);
-    });
-  });
+			resolve(response);
+		});
+	});
 };
 
 // 열려있는 창 조회
 const queryWindow = (options: any) => {
-  return new Promise((resolve, reject) => {
-    try {
-      chrome.windows.getAll(options, (windows) => {
-        resolve(windows);
-      });
-    } catch (e) {
-      reject(e);
-    }
-  });
+	return new Promise((resolve, reject) => {
+		try {
+			chrome.windows.getAll(options, (windows) => {
+				resolve(windows);
+			});
+		} catch (e) {
+			reject(e);
+		}
+	});
 };
 
 // 열려있는 탭 조회
 const queryTabs = (options: any) => {
-  return new Promise((resolve, reject) => {
-    try {
-      chrome.tabs.query(options, (tabs) => {
-        resolve(tabs);
-      });
-    } catch (e) {
-      reject(e);
-    }
-  });
+	return new Promise((resolve, reject) => {
+		try {
+			chrome.tabs.query(options, (tabs) => {
+				resolve(tabs);
+			});
+		} catch (e) {
+			reject(e);
+		}
+	});
 };
 
 // 새로운 탭 생성 (생성 즉시 탭 정보 반환)
 const createTab = (options: any) => {
-  return new Promise((resolve, reject) => {
-    try {
-      chrome.tabs.create(options, (tab) => {
-        resolve(tab);
-      });
-    } catch (e) {
-      reject(e);
-    }
-  });
+	return new Promise((resolve, reject) => {
+		try {
+			chrome.tabs.create(options, (tab) => {
+				resolve(tab);
+			});
+		} catch (e) {
+			reject(e);
+		}
+	});
 };
 
 // 새로운 탭 생성 (생성 및 URL 요청 후 페이지가 완전히 로드되면 탭 정보 반환)
 const createTabCompletely = async (options: any, limit: number) => {
-  let timeout = 0;
-  let tab: any = await createTab(options);
+	let timeout = 0;
+	let tab: any = await createTab(options);
 
-  while (true) {
-    if (timeout === limit) {
-      return tab;
-    }
+	while (true) {
+		if (timeout === limit) {
+			return tab;
+		}
 
-    const tabs: any = await queryTabs({});
-    const result: any = tabs.find((v: any) => v.id === tab.id && v.status === 'complete');
+		const tabs: any = await queryTabs({});
+		const result: any = tabs.find((v: any) => v.id === tab.id && v.status === 'complete');
 
-    if (result) {
-      return result;
-    }
+		if (result) {
+			return result;
+		}
 
-    timeout += 1;
+		timeout += 1;
 
-    await sleep(1000 * 1);
-  }
+		await sleep(1000 * 1);
+	}
 };
 
 export {
-  getLocalStorage,
-  setLocalStorage,
-  deleteLocalStorage,
-  sendRuntimeMessage,
-  sendTabMessage,
-  queryWindow,
-  queryTabs,
-  createTab,
-  createTabCompletely,
+	getLocalStorage,
+	setLocalStorage,
+	deleteLocalStorage,
+	sendRuntimeMessage,
+	sendTabMessage,
+	queryWindow,
+	queryTabs,
+	createTab,
+	createTabCompletely,
 };

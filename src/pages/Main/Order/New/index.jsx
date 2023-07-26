@@ -6,7 +6,7 @@ import { New } from './New';
 import './index.css';
 
 render(
-  <New />,
+	<New />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

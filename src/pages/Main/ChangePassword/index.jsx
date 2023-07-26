@@ -6,7 +6,7 @@ import { ChangePassword } from './ChangePassword';
 import './index.css';
 
 render(
-  <ChangePassword />,
+	<ChangePassword />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

@@ -6,7 +6,7 @@ import { Reference } from './Reference';
 import './index.css';
 
 render(
-  <Reference />,
+	<Reference />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

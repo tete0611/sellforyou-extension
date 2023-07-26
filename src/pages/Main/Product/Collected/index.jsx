@@ -6,7 +6,7 @@ import { Collected } from './Collected';
 import './index.css';
 
 render(
-  <Collected />,
+	<Collected />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

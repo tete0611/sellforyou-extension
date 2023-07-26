@@ -6,7 +6,7 @@ import { Dashboard } from './Dashboard';
 import './index.css';
 
 render(
-  <Dashboard />,
+	<Dashboard />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

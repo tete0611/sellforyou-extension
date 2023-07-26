@@ -6,7 +6,7 @@ import { Delivery } from './Delivery';
 import './index.css';
 
 render(
-  <Delivery />,
+	<Delivery />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

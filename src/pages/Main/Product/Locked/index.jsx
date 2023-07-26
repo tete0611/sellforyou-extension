@@ -6,7 +6,7 @@ import { Locked } from './Locked';
 import './index.css';
 
 render(
-  <Locked />,
+	<Locked />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

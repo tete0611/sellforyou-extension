@@ -6,7 +6,7 @@ import { SignUp } from './SignUp';
 import './index.css';
 
 render(
-  <SignUp />,
+	<SignUp />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

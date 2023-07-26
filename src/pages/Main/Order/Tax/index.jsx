@@ -6,7 +6,7 @@ import { Tax } from './Tax';
 import './index.css';
 
 render(
-  <Tax />,
+	<Tax />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

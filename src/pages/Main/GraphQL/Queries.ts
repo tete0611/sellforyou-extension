@@ -1,5 +1,5 @@
 const QUERIES = {
-  SELECT_MY_INFO_BY_USER: `
+	SELECT_MY_INFO_BY_USER: `
         query {
             selectMyInfoByUser {
                 id
@@ -146,7 +146,7 @@ const QUERIES = {
         }
     `,
 
-  SELECT_MY_PRODUCT_IMAGES_BY_USER: `
+	SELECT_MY_PRODUCT_IMAGES_BY_USER: `
         query ($where: ProductWhereInput, $orderBy: [ProductOrderByWithRelationInput!], $take: Int, $skip: Int, $cursor: ProductWhereUniqueInput) {
             selectMyProductByUser(where: $where, orderBy: $orderBy, take: $take, skip: $skip, cursor: $cursor) {
                 id
@@ -156,7 +156,7 @@ const QUERIES = {
         }
     `,
 
-  SELECT_MY_SIMPLE_PRODUCT_BY_USER: `
+	SELECT_MY_SIMPLE_PRODUCT_BY_USER: `
         query ($where: ProductWhereInput, $orderBy: [ProductOrderByWithRelationInput!], $take: Int, $skip: Int, $cursor: ProductWhereUniqueInput) {
             selectMyProductByUser(where: $where, orderBy: $orderBy, take: $take, skip: $skip, cursor: $cursor) {
                 id
@@ -191,7 +191,7 @@ const QUERIES = {
         }
     `,
 
-  SELECT_MY_PRODUCT_BY_USER: `
+	SELECT_MY_PRODUCT_BY_USER: `
         query ($where: ProductWhereInput, $orderBy: [ProductOrderByWithRelationInput!], $take: Int, $skip: Int, $cursor: ProductWhereUniqueInput) {
             selectMyProductByUser(where: $where, orderBy: $orderBy, take: $take, skip: $skip, cursor: $cursor) {
                 id
@@ -526,13 +526,13 @@ const QUERIES = {
         }
     `,
 
-  SELECT_MY_PRODUCT_COUNT_BY_USER: `
+	SELECT_MY_PRODUCT_COUNT_BY_USER: `
         query ($where: ProductWhereInput) {
             selectMyProductsCountByUser(where: $where)
         }
     `,
 
-  SELECT_NOTICES_BY_EVERYONE: `
+	SELECT_NOTICES_BY_EVERYONE: `
         query ($where: NoticeWhereInput, $orderBy: [NoticeOrderByWithRelationInput!], $take: Int, $skip: Int, $cursor: NoticeWhereUniqueInput) {
             selectNoticesByEveryone(where: $where, orderBy: $orderBy, take: $take, skip: $skip, cursor: $cursor) {
                 id
@@ -543,13 +543,13 @@ const QUERIES = {
         }
     `,
 
-  GET_REGISTER_PRODUCTS_DATA_BY_USER: `
+	GET_REGISTER_PRODUCTS_DATA_BY_USER: `
         query ($productIds: [Int!]!, $siteCode: [String!]!) {
             getRegisterProductsDataByUser(productIds: $productIds, siteCode: $siteCode)
         }
     `,
 
-  SEARCH_CATEGORY_INFO_A077_BY_CODE: `
+	SEARCH_CATEGORY_INFO_A077_BY_CODE: `
         query ($code: String) {
             searchCategoryInfoA077BySomeone(code: $code) {
                 code
@@ -608,7 +608,7 @@ const QUERIES = {
         }
     `,
 
-  SEARCH_MANY_CATEGORY_INFO_A077_BY_SOMEONE: `
+	SEARCH_MANY_CATEGORY_INFO_A077_BY_SOMEONE: `
         query ($code: [String!]!) {
             searchManyCategoryInfoA077BySomeone(code: $code) {
                 code
@@ -617,7 +617,7 @@ const QUERIES = {
         }
     `,
 
-  SEARCH_CATEGORY_INFO_A077_BY_SOMEONE: `
+	SEARCH_CATEGORY_INFO_A077_BY_SOMEONE: `
         query ($code: String) {
             searchCategoryInfoA077BySomeone(code: $code) {
                 code
@@ -626,7 +626,7 @@ const QUERIES = {
         }
     `,
 
-  SEARCH_CATEGORY_INFO_B378_BY_SOMEONE: `
+	SEARCH_CATEGORY_INFO_B378_BY_SOMEONE: `
         query ($code: String) {
             searchCategoryInfoB378BySomeone(code: $code) {
                 code
@@ -635,7 +635,7 @@ const QUERIES = {
         }
     `,
 
-  SEARCH_CATEGORY_INFO_A112_BY_SOMEONE: `
+	SEARCH_CATEGORY_INFO_A112_BY_SOMEONE: `
         query ($code: String) {
             searchCategoryInfoA112BySomeone(code: $code) {
                 code
@@ -644,7 +644,7 @@ const QUERIES = {
         }
     `,
 
-  SEARCH_CATEGORY_INFO_A113_BY_SOMEONE: `
+	SEARCH_CATEGORY_INFO_A113_BY_SOMEONE: `
         query ($code: String) {
             searchCategoryInfoA113BySomeone(code: $code) {
                 code
@@ -653,7 +653,7 @@ const QUERIES = {
         }
     `,
 
-  SEARCH_CATEGORY_INFO_A006_BY_SOMEONE: `
+	SEARCH_CATEGORY_INFO_A006_BY_SOMEONE: `
         query ($code: String) {
             searchCategoryInfoA006BySomeone(code: $code) {
                 code
@@ -662,7 +662,7 @@ const QUERIES = {
         }
     `,
 
-  SEARCH_CATEGORY_INFO_A001_BY_SOMEONE: `
+	SEARCH_CATEGORY_INFO_A001_BY_SOMEONE: `
         query ($code: String) {
             searchCategoryInfoA001BySomeone(code: $code) {
                 code
@@ -671,7 +671,7 @@ const QUERIES = {
         }
     `,
 
-  SEARCH_CATEGORY_INFO_A027_BY_SOMEONE: `
+	SEARCH_CATEGORY_INFO_A027_BY_SOMEONE: `
         query ($code: String) {
             searchCategoryInfoA027BySomeone(code: $code) {
                 code
@@ -680,7 +680,7 @@ const QUERIES = {
         }
     `,
 
-  SEARCH_CATEGORY_INFO_B719_BY_SOMEONE: `
+	SEARCH_CATEGORY_INFO_B719_BY_SOMEONE: `
         query ($code: String) {
             searchCategoryInfoB719BySomeone(code: $code) {
                 code
@@ -689,7 +689,7 @@ const QUERIES = {
         }
     `,
 
-  SEARCH_CATEGORY_INFO_A524_BY_SOMEONE: `
+	SEARCH_CATEGORY_INFO_A524_BY_SOMEONE: `
         query ($code: String) {
             searchCategoryInfoA524BySomeone(code: $code) {
                 code
@@ -698,7 +698,7 @@ const QUERIES = {
         }
     `,
 
-  SEARCH_CATEGORY_INFO_A525_BY_SOMEONE: `
+	SEARCH_CATEGORY_INFO_A525_BY_SOMEONE: `
         query ($code: String) {
             searchCategoryInfoA525BySomeone(code: $code) {
                 code
@@ -707,7 +707,7 @@ const QUERIES = {
         }
     `,
 
-  SEARCH_CATEGORY_INFO_B956_BY_SOMEONE: `
+	SEARCH_CATEGORY_INFO_B956_BY_SOMEONE: `
         query ($code: String) {
             searchCategoryInfoB956BySomeone(code: $code) {
                 code
@@ -716,7 +716,7 @@ const QUERIES = {
         }
     `,
 
-  SELECT_WORD_TABLES_BY_SOMEONE: `
+	SELECT_WORD_TABLES_BY_SOMEONE: `
         query (
             $where: WordTableWhereInput,
             $orderBy: [WordTableOrderByWithRelationInput!],
@@ -738,7 +738,7 @@ const QUERIES = {
         }
     `,
 
-  SELECT_MY_ORDER_BY_USER: `
+	SELECT_MY_ORDER_BY_USER: `
         query (
             $where: orderWhereInput
             $orderBy: [orderOrderByWithRelationInput!]
@@ -775,7 +775,7 @@ const QUERIES = {
         }
     `,
 
-  SELECT_EXIST_PURCHASE_LOG: `
+	SELECT_EXIST_PURCHASE_LOG: `
         query (
             $email: String!
         ) {
@@ -785,7 +785,7 @@ const QUERIES = {
         }
     `,
 
-  SELECT_PRODUCT_VIEW_LOG_BY_USER: `
+	SELECT_PRODUCT_VIEW_LOG_BY_USER: `
         mutation (
             $timeStart: String!
             $timeEnd: String!
@@ -797,7 +797,7 @@ const QUERIES = {
         }
     `,
 
-  SELECT_PRODUCT_VIEW_LOG_DATE_FILTER_BY_USER: `
+	SELECT_PRODUCT_VIEW_LOG_DATE_FILTER_BY_USER: `
         mutation (
             $productId: Int
             $productName: String

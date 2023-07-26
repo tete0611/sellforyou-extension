@@ -6,7 +6,7 @@ import { Payments } from './Payments';
 import './index.css';
 
 render(
-  <Payments />,
+	<Payments />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

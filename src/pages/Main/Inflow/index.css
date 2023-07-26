@@ -1,12 +1,12 @@
 @font-face {
-  font-family: 'NNSQUAREROUNDR';
-  src: url('/src/assets/fonts/NanumSquareRoundR.ttf');
+	font-family: 'NNSQUAREROUNDR';
+	src: url('/src/assets/fonts/NanumSquareRoundR.ttf');
 }
 
 html * {
-  font-family: 'NNSQUAREROUNDR' !important;
+	font-family: 'NNSQUAREROUNDR' !important;
 }
 
 .ReactVirtualized__Grid::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera*/
+	display: none; /* Chrome, Safari, Opera*/
 }

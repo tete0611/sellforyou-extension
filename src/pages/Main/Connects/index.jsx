@@ -6,7 +6,7 @@ import { Connects } from './Connects';
 import './index.css';
 
 render(
-  <Connects />,
+	<Connects />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

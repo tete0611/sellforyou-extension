@@ -18,20 +18,20 @@ import { sourcing } from './stores/sourcing';
 // 1)
 
 export function createStores() {
-  return {
-    analysis: new analysis(),
-    common: new common(),
-    dashboard: new dashboard(),
-    delivery: new delivery(),
-    inflow: new inflow(),
-    order: new order(),
-    payments: new payments(),
-    product: new product(),
-    reference: new reference(),
-    restrict: new restrict(),
-    sourcing: new sourcing(),
-    // 2)
-  };
+	return {
+		analysis: new analysis(),
+		common: new common(),
+		dashboard: new dashboard(),
+		delivery: new delivery(),
+		inflow: new inflow(),
+		order: new order(),
+		payments: new payments(),
+		product: new product(),
+		reference: new reference(),
+		restrict: new restrict(),
+		sourcing: new sourcing(),
+		// 2)
+	};
 }
 
 // 스토리지 정보를 포함하는 객체 생성

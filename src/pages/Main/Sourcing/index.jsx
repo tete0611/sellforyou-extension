@@ -6,7 +6,7 @@ import { Sourcing } from './Sourcing';
 import './index.css';
 
 render(
-  <Sourcing />,
+	<Sourcing />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

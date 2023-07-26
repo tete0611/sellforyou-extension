@@ -9,238 +9,238 @@ import { getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../Tools/C
 import { getCookie, sleep, updateQueryStringParameter } from '../Tools/Common';
 import { getTaobaoData } from '../Tools/Taobao';
 import {
-  deleteA077Products,
-  editedA077Products,
-  searchA077Products,
-  uploadA077Products,
-  uploadA077Resources,
+	deleteA077Products,
+	editedA077Products,
+	searchA077Products,
+	uploadA077Products,
+	uploadA077Resources,
 } from '../Tools/SmartStore';
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
 const iconv = require('iconv-lite');
 
 const pageRefresh = async (shop, page) => {
-  let url: string | null = null;
-  //페이지 검색 필터(검색필터) 문제
-  switch (shop) {
-    case 'taobao1': {
-      url = updateQueryStringParameter(window.location.href, 's', `${44 * (page - 1)}`);
+	let url: string | null = null;
+	//페이지 검색 필터(검색필터) 문제
+	switch (shop) {
+		case 'taobao1': {
+			url = updateQueryStringParameter(window.location.href, 's', `${44 * (page - 1)}`);
 
-      break;
-    }
+			break;
+		}
 
-    case 'taobao2': {
-      url = updateQueryStringParameter(window.location.href, 'pageNo', `${page}`);
+		case 'taobao2': {
+			url = updateQueryStringParameter(window.location.href, 'pageNo', `${page}`);
 
-      break;
-    }
+			break;
+		}
 
-    case 'tmall1': {
-      url = updateQueryStringParameter(window.location.href, 's', `${60 * (page - 1)}`);
+		case 'tmall1': {
+			url = updateQueryStringParameter(window.location.href, 's', `${60 * (page - 1)}`);
 
-      break;
-    }
+			break;
+		}
 
-    case 'tmall2': {
-      url = updateQueryStringParameter(window.location.href, 'pageNo', `${page}`);
+		case 'tmall2': {
+			url = updateQueryStringParameter(window.location.href, 'pageNo', `${page}`);
 
-      break;
-    }
+			break;
+		}
 
-    case 'express': {
-      url = updateQueryStringParameter(window.location.href, 'page', `${page}`);
+		case 'express': {
+			url = updateQueryStringParameter(window.location.href, 'page', `${page}`);
 
-      break;
-    }
+			break;
+		}
 
-    case 'alibaba': {
-      url = updateQueryStringParameter(window.location.href, 'beginPage', `${page}`);
+		case 'alibaba': {
+			url = updateQueryStringParameter(window.location.href, 'beginPage', `${page}`);
 
-      break;
-    }
+			break;
+		}
 
-    case 'vvic': {
-      url = updateQueryStringParameter(window.location.href, 'currentPage', `${page}`);
+		case 'vvic': {
+			url = updateQueryStringParameter(window.location.href, 'currentPage', `${page}`);
 
-      break;
-    }
+			break;
+		}
 
-    case 'amazon1': {
-      url = updateQueryStringParameter(window.location.href, 'page', `${page}`);
+		case 'amazon1': {
+			url = updateQueryStringParameter(window.location.href, 'page', `${page}`);
 
-      break;
-    }
+			break;
+		}
 
-    default:
-      break;
-  }
+		default:
+			break;
+	}
 
-  if (!url) {
-    return;
-  }
+	if (!url) {
+		return;
+	}
 
-  window.location.href = url.replaceAll('#', '');
+	window.location.href = url.replaceAll('#', '');
 };
 
 const bulkCollect = async (useChecked: boolean, useMedal: boolean) => {
-  let inputs: any = [];
+	let inputs: any = [];
 
-  let timeout = 0;
+	let timeout = 0;
 
-  //타임아웃 필요
-  while (true) {
-    if (timeout === 15) {
-      break;
-    }
+	//타임아웃 필요
+	while (true) {
+		if (timeout === 15) {
+			break;
+		}
 
-    let list: any = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
+		let list: any = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
 
-    if (list.length > 0) {
-      for (let i = 0; i < list.length; i++) {
-        let toggle = false;
+		if (list.length > 0) {
+			for (let i = 0; i < list.length; i++) {
+				let toggle = false;
 
-        if (useChecked && !list[i].checked) {
-          continue;
-        }
+				if (useChecked && !list[i].checked) {
+					continue;
+				}
 
-        if (useMedal) {
-          if (list[i].getAttribute('medal') === '1') {
-            toggle = true;
-          }
-        } else {
-          toggle = true;
-        }
+				if (useMedal) {
+					if (list[i].getAttribute('medal') === '1') {
+						toggle = true;
+					}
+				} else {
+					toggle = true;
+				}
 
-        if (!toggle) {
-          continue;
-        }
+				if (!toggle) {
+					continue;
+				}
 
-        inputs.push({
-          url: list[i].id,
-          productName: '',
-          productTags: '',
-        });
-      }
+				inputs.push({
+					url: list[i].id,
+					productName: '',
+					productTags: '',
+				});
+			}
 
-      break;
-    }
+			break;
+		}
 
-    timeout += 1;
+		timeout += 1;
 
-    await sleep(1000 * 1);
-  }
+		await sleep(1000 * 1);
+	}
 
-  return inputs;
+	return inputs;
 };
 
 const bulkPage = async (info, shop) => {
-  let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
-  let collect = collectInfo.find((v: any) => v.sender.tab.id === info.tabInfo.tab.id);
+	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
+	let collect = collectInfo.find((v: any) => v.sender.tab.id === info.tabInfo.tab.id);
 
-  if (!collect) {
-    return;
-  }
+	if (!collect) {
+		return;
+	}
 
-  if (collect.currentPage <= collect.pageEnd) {
-    const inputs = await bulkCollect(false, collect.useMedal);
+	if (collect.currentPage <= collect.pageEnd) {
+		const inputs = await bulkCollect(false, collect.useMedal);
 
-    if (inputs.length === 0) {
-      collect.currentPage = collect.pageEnd;
-    }
+		if (inputs.length === 0) {
+			collect.currentPage = collect.pageEnd;
+		}
 
-    collect.inputs = collect.inputs.concat(inputs);
-    collect.currentPage += 1;
+		collect.inputs = collect.inputs.concat(inputs);
+		collect.currentPage += 1;
 
-    switch (collect.type) {
-      case 'page': {
-        if (collect.currentPage > collect.pageEnd) {
-          sendRuntimeMessage({
-            action: 'collect-bulk',
-            source: { data: collect.inputs, retry: false },
-          });
-        } else {
-          pageRefresh(shop, collect.currentPage);
-        }
+		switch (collect.type) {
+			case 'page': {
+				if (collect.currentPage > collect.pageEnd) {
+					sendRuntimeMessage({
+						action: 'collect-bulk',
+						source: { data: collect.inputs, retry: false },
+					});
+				} else {
+					pageRefresh(shop, collect.currentPage);
+				}
 
-        break;
-      }
+				break;
+			}
 
-      case 'amount': {
-        if (collect.inputs.length > collect.maxLimits) {
-          collect.inputs = collect.inputs.slice(0, collect.maxLimits);
+			case 'amount': {
+				if (collect.inputs.length > collect.maxLimits) {
+					collect.inputs = collect.inputs.slice(0, collect.maxLimits);
 
-          sendRuntimeMessage({
-            action: 'collect-bulk',
-            source: { data: collect.inputs, retry: false },
-          });
-        } else {
-          pageRefresh(shop, collect.currentPage);
-        }
+					sendRuntimeMessage({
+						action: 'collect-bulk',
+						source: { data: collect.inputs, retry: false },
+					});
+				} else {
+					pageRefresh(shop, collect.currentPage);
+				}
 
-        break;
-      }
+				break;
+			}
 
-      case 'excel-page': {
-        if (collect.currentPage > collect.pageEnd) {
-          sendRuntimeMessage({
-            action: 'collect-bulk',
-            source: { data: collect.inputs, retry: false },
-          });
-        } else {
-          window.location.href = collect.pageList[collect.currentPage - 1].url;
-        }
+			case 'excel-page': {
+				if (collect.currentPage > collect.pageEnd) {
+					sendRuntimeMessage({
+						action: 'collect-bulk',
+						source: { data: collect.inputs, retry: false },
+					});
+				} else {
+					window.location.href = collect.pageList[collect.currentPage - 1].url;
+				}
 
-        break;
-      }
-    }
+				break;
+			}
+		}
 
-    await setLocalStorage({ collectInfo });
-  }
+		await setLocalStorage({ collectInfo });
+	}
 };
 
 const skip = () => {
-  sendRuntimeMessage({ action: 'collect-finish' });
+	sendRuntimeMessage({ action: 'collect-finish' });
 };
 
 const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) => {
-  if (!result) {
-    return;
-  }
+	if (!result) {
+		return;
+	}
 
-  let isCollecting = false;
+	let isCollecting = false;
 
-  let container = document.createElement('table');
+	let container = document.createElement('table');
 
-  container.className = 'SELLFORYOU-FLOATING';
+	container.className = 'SELLFORYOU-FLOATING';
 
-  let buttonCollect = document.createElement('button');
-  let buttonCollectDefault = `<i class="fi fi-rs-inbox-in" style="display: flex; align-items: center; font-size: 32px;"></i>`;
+	let buttonCollect = document.createElement('button');
+	let buttonCollectDefault = `<i class="fi fi-rs-inbox-in" style="display: flex; align-items: center; font-size: 32px;"></i>`;
 
-  buttonCollect.className = 'SELLFORYOU-COLLECT';
-  buttonCollect.innerHTML = buttonCollectDefault;
-  buttonCollect.addEventListener('click', async () => {
-    if (!info.isBulk && result.error) {
-      const accept = confirm(`${result.error}\n[확인]을 누르시면 수집상품목록으로 이동합니다.`);
+	buttonCollect.className = 'SELLFORYOU-COLLECT';
+	buttonCollect.innerHTML = buttonCollectDefault;
+	buttonCollect.addEventListener('click', async () => {
+		if (!info.isBulk && result.error) {
+			const accept = confirm(`${result.error}\n[확인]을 누르시면 수집상품목록으로 이동합니다.`);
 
-      if (accept) {
-        window.open(chrome.runtime.getURL('product/collected.html'));
-      }
+			if (accept) {
+				window.open(chrome.runtime.getURL('product/collected.html'));
+			}
 
-      return;
-    }
+			return;
+		}
 
-    if (isCollecting) {
-      return;
-    }
+		if (isCollecting) {
+			return;
+		}
 
-    if (bulk) {
-      let categoryResp = await fetch(chrome.runtime.getURL('resources/category.json'));
-      let categoryJson = await categoryResp.json();
+		if (bulk) {
+			let categoryResp = await fetch(chrome.runtime.getURL('resources/category.json'));
+			let categoryJson = await categoryResp.json();
 
-      let paper = document.createElement('div');
+			let paper = document.createElement('div');
 
-      paper.id = 'sfyPaper';
-      paper.className = 'SELLFORYOU-INFORM';
-      paper.innerHTML = `
+			paper.id = 'sfyPaper';
+			paper.className = 'SELLFORYOU-INFORM';
+			paper.innerHTML = `
                 <div style="background: white; border: 1px solid black; color: black; font-size: 16px; padding: 10px; text-align: left; width: 700px;">
                     <div style="display: flex; align-items: center; justify-content: space-between; font-size: 20px; margin-bottom: 20px;">
                         현재페이지 대량수집
@@ -358,275 +358,275 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
                 </div>
             `;
 
-      document.documentElement.appendChild(paper);
+			document.documentElement.appendChild(paper);
 
-      const sfyGoldMedalEnabled: any = document.getElementById('sfyGoldMedalEnabled');
-      const sfyStandardShippingEnabled: any = document.getElementById('sfyStandardShippingEnabled');
+			const sfyGoldMedalEnabled: any = document.getElementById('sfyGoldMedalEnabled');
+			const sfyStandardShippingEnabled: any = document.getElementById('sfyStandardShippingEnabled');
 
-      const sfyCategoryEnabled: any = document.getElementById('sfyCategoryEnabled');
+			const sfyCategoryEnabled: any = document.getElementById('sfyCategoryEnabled');
 
-      const sfyMyKeywardEnabled: any = document.getElementById('sfyMyKeywardEnabled');
-      const sfyCategoryInput: any = document.getElementById('sfyCategoryInput');
-      const sfyMyKeywardInput: any = document.getElementById('sfyMyKeywardInput');
-      const sfyCategoryList = document.getElementById('sfyCategoryList');
+			const sfyMyKeywardEnabled: any = document.getElementById('sfyMyKeywardEnabled');
+			const sfyCategoryInput: any = document.getElementById('sfyCategoryInput');
+			const sfyMyKeywardInput: any = document.getElementById('sfyMyKeywardInput');
+			const sfyCategoryList = document.getElementById('sfyCategoryList');
 
-      const sfyStart = document.getElementById('sfyStart');
-      const sfyCancel = document.getElementById('sfyCancel');
+			const sfyStart = document.getElementById('sfyStart');
+			const sfyCancel = document.getElementById('sfyCancel');
 
-      if (
-        !sfyGoldMedalEnabled ||
-        !sfyStandardShippingEnabled ||
-        !sfyCategoryEnabled ||
-        !sfyCategoryInput ||
-        !sfyCategoryList ||
-        !sfyStart ||
-        !sfyCancel ||
-        !sfyMyKeywardEnabled
-      ) {
-        return;
-      }
+			if (
+				!sfyGoldMedalEnabled ||
+				!sfyStandardShippingEnabled ||
+				!sfyCategoryEnabled ||
+				!sfyCategoryInput ||
+				!sfyCategoryList ||
+				!sfyStart ||
+				!sfyCancel ||
+				!sfyMyKeywardEnabled
+			) {
+				return;
+			}
 
-      sfyCategoryEnabled.addEventListener('change', (e: any) => {
-        sfyCategoryInput.disabled = !e.target.checked;
-        sfyCategoryList.style.display = 'none';
-      });
+			sfyCategoryEnabled.addEventListener('change', (e: any) => {
+				sfyCategoryInput.disabled = !e.target.checked;
+				sfyCategoryList.style.display = 'none';
+			});
 
-      sfyMyKeywardEnabled.addEventListener('change', (e: any) => {
-        sfyMyKeywardInput.disabled = !e.target.checked;
-      });
+			sfyMyKeywardEnabled.addEventListener('change', (e: any) => {
+				sfyMyKeywardInput.disabled = !e.target.checked;
+			});
 
-      sfyCategoryInput.addEventListener('focus', (e: any) => {
-        sfyCategoryList.style.display = '';
-      });
+			sfyCategoryInput.addEventListener('focus', (e: any) => {
+				sfyCategoryList.style.display = '';
+			});
 
-      sfyMyKeywardInput.addEventListener('change', (e: any) => {
-        sfyMyKeywardInput.value = e.target.value.trim();
-        sfyMyKeywardInput.setAttribute('data-myKeyward-id', e.target.value.trim());
-      });
-      sfyCategoryInput.addEventListener('change', (e: any) => {
-        const input = e.target.value;
+			sfyMyKeywardInput.addEventListener('change', (e: any) => {
+				sfyMyKeywardInput.value = e.target.value.trim();
+				sfyMyKeywardInput.setAttribute('data-myKeyward-id', e.target.value.trim());
+			});
+			sfyCategoryInput.addEventListener('change', (e: any) => {
+				const input = e.target.value;
 
-        const filtered = categoryJson.filter(
-          (v: any) =>
-            v['대분류'].includes(input) ||
-            v['중분류'].includes(input) ||
-            v['소분류'].includes(input) ||
-            v['세분류'].includes(input)
-        );
+				const filtered = categoryJson.filter(
+					(v: any) =>
+						v['대분류'].includes(input) ||
+						v['중분류'].includes(input) ||
+						v['소분류'].includes(input) ||
+						v['세분류'].includes(input),
+				);
 
-        if (!filtered) {
-          return;
-        }
+				if (!filtered) {
+					return;
+				}
 
-        sfyCategoryList.innerHTML = ``;
+				sfyCategoryList.innerHTML = ``;
 
-        filtered.map((v: any) => {
-          let categoryName = ``;
+				filtered.map((v: any) => {
+					let categoryName = ``;
 
-          if (v['대분류']) {
-            categoryName += v['대분류'];
-          }
+					if (v['대분류']) {
+						categoryName += v['대분류'];
+					}
 
-          if (v['중분류']) {
-            categoryName += ' > ';
-            categoryName += v['중분류'];
-          }
+					if (v['중분류']) {
+						categoryName += ' > ';
+						categoryName += v['중분류'];
+					}
 
-          if (v['소분류']) {
-            categoryName += ' > ';
-            categoryName += v['소분류'];
-          }
+					if (v['소분류']) {
+						categoryName += ' > ';
+						categoryName += v['소분류'];
+					}
 
-          if (v['세분류']) {
-            categoryName += ' > ';
-            categoryName += v['세분류'];
-          }
+					if (v['세분류']) {
+						categoryName += ' > ';
+						categoryName += v['세분류'];
+					}
 
-          sfyCategoryList.innerHTML += `
+					sfyCategoryList.innerHTML += `
                             <div class="sfyCategory" data-category-id="${v['카테고리번호']}" style="cursor: pointer; padding: 5px; 0px;">
                                 ${categoryName}
                             </div>
                         `;
-        });
+				});
 
-        const categories = document.getElementsByClassName('sfyCategory');
+				const categories = document.getElementsByClassName('sfyCategory');
 
-        for (let i = 0; i < categories.length; i++) {
-          categories[i].addEventListener('click', (e: any) => {
-            sfyCategoryInput.value = e.target.textContent.trim();
-            sfyCategoryInput.setAttribute('data-category-id', e.target.getAttribute('data-category-id'));
+				for (let i = 0; i < categories.length; i++) {
+					categories[i].addEventListener('click', (e: any) => {
+						sfyCategoryInput.value = e.target.textContent.trim();
+						sfyCategoryInput.setAttribute('data-category-id', e.target.getAttribute('data-category-id'));
 
-            sfyCategoryList.style.display = 'none';
-          });
-        }
-      });
+						sfyCategoryList.style.display = 'none';
+					});
+				}
+			});
 
-      const startBulk = async () => {
-        const tabs: any = await sendRuntimeMessage({ action: 'tab-info-all' });
+			const startBulk = async () => {
+				const tabs: any = await sendRuntimeMessage({ action: 'tab-info-all' });
 
-        let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
+				let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
 
-        collectInfo = collectInfo.filter((v: any) => {
-          if (v.sender.tab.id === info.tabInfo.tab.id) {
-            return false;
-          }
+				collectInfo = collectInfo.filter((v: any) => {
+					if (v.sender.tab.id === info.tabInfo.tab.id) {
+						return false;
+					}
 
-          const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
+					const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
 
-          if (!matched) {
-            return false;
-          }
+					if (!matched) {
+						return false;
+					}
 
-          return true;
-        });
+					return true;
+				});
 
-        if (!sfyCategoryEnabled.checked) {
-          sfyCategoryInput.setAttribute('data-category-id', '');
-        }
-        if (!sfyMyKeywardEnabled.checked) {
-          sfyMyKeywardInput.setAttribute('data-myKeyward-id', '');
-        }
-        collectInfo.push({
-          categoryId: sfyCategoryInput.getAttribute('data-category-id'),
-          myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
-          sender: info.tabInfo,
+				if (!sfyCategoryEnabled.checked) {
+					sfyCategoryInput.setAttribute('data-category-id', '');
+				}
+				if (!sfyMyKeywardEnabled.checked) {
+					sfyMyKeywardInput.setAttribute('data-myKeyward-id', '');
+				}
+				collectInfo.push({
+					categoryId: sfyCategoryInput.getAttribute('data-category-id'),
+					myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
+					sender: info.tabInfo,
 
-          useMedal: sfyGoldMedalEnabled.checked,
-          useStandardShipping: sfyStandardShippingEnabled.checked,
-        });
+					useMedal: sfyGoldMedalEnabled.checked,
+					useStandardShipping: sfyStandardShippingEnabled.checked,
+				});
 
-        await setLocalStorage({ collectInfo });
+				await setLocalStorage({ collectInfo });
 
-        const inputs = await bulkCollect(true, sfyGoldMedalEnabled.checked);
+				const inputs = await bulkCollect(true, sfyGoldMedalEnabled.checked);
 
-        sendRuntimeMessage({
-          action: 'collect-bulk',
-          source: { data: inputs, retry: false },
-        });
-      };
+				sendRuntimeMessage({
+					action: 'collect-bulk',
+					source: { data: inputs, retry: false },
+				});
+			};
 
-      sfyStart.addEventListener('click', () => {
-        startBulk();
-      });
+			sfyStart.addEventListener('click', () => {
+				startBulk();
+			});
 
-      sfyCancel.addEventListener('click', () => {
-        paper.remove();
-      });
-    } else {
-      isCollecting = true;
+			sfyCancel.addEventListener('click', () => {
+				paper.remove();
+			});
+		} else {
+			isCollecting = true;
 
-      buttonCollect.innerHTML = `<div class="SELLFORYOU-LOADING" />`;
+			buttonCollect.innerHTML = `<div class="SELLFORYOU-LOADING" />`;
 
-      const response: any = await sendRuntimeMessage({
-        action: 'collect',
-        source: result,
-      });
+			const response: any = await sendRuntimeMessage({
+				action: 'collect',
+				source: result,
+			});
 
-      if (!response) {
-        return;
-      }
+			if (!response) {
+				return;
+			}
 
-      if (response.status === 'success') {
-        buttonCollect.innerHTML = `
+			if (response.status === 'success') {
+				buttonCollect.innerHTML = `
                     <img src=${chrome.runtime.getURL(
-                      'resources/icon-success.png'
-                    )} width="20px" height="20px" style="margin-bottom: 5px;" />
+											'resources/icon-success.png',
+										)} width="20px" height="20px" style="margin-bottom: 5px;" />
 
                     수집완료
                 `;
-      } else {
-        buttonCollect.innerHTML = `
+			} else {
+				buttonCollect.innerHTML = `
                     <img src=${chrome.runtime.getURL(
-                      'resources/icon-failed.png'
-                    )} width="20px" height="20px" style="margin-bottom: 5px;" />
+											'resources/icon-failed.png',
+										)} width="20px" height="20px" style="margin-bottom: 5px;" />
 
                     수집실패
                 `;
-      }
+			}
 
-      result.error = response.statusMessage;
+			result.error = response.statusMessage;
 
-      if (info.isBulk) {
-        sendRuntimeMessage({ action: 'collect-finish' });
-      }
-    }
-  });
+			if (info.isBulk) {
+				sendRuntimeMessage({ action: 'collect-finish' });
+			}
+		}
+	});
 
-  buttonCollect.addEventListener('mouseenter', () => {
-    if (isCollecting) {
-      return;
-    }
+	buttonCollect.addEventListener('mouseenter', () => {
+		if (isCollecting) {
+			return;
+		}
 
-    buttonCollect.innerHTML = `
+		buttonCollect.innerHTML = `
             <div style="font-size: 12px;">
                 ${
-                  bulk
-                    ? `
+									bulk
+										? `
                     현재페이지
 
                     <br/>
 
                     수집하기
                 `
-                    : `
+										: `
                     현재상품
 
                     <br/>
 
                     수집하기
                 `
-                }
+								}
             </div>
         `;
-  });
+	});
 
-  buttonCollect.addEventListener('mouseleave', () => {
-    if (isCollecting) {
-      return;
-    }
+	buttonCollect.addEventListener('mouseleave', () => {
+		if (isCollecting) {
+			return;
+		}
 
-    buttonCollect.innerHTML = buttonCollectDefault;
-  });
+		buttonCollect.innerHTML = buttonCollectDefault;
+	});
 
-  const buttonCollectCol = document.createElement('td');
-  const buttonCollectRow = document.createElement('tr');
+	const buttonCollectCol = document.createElement('td');
+	const buttonCollectRow = document.createElement('tr');
 
-  buttonCollectCol.className = 'SELLFORYOU-CELL';
-  buttonCollectCol.append(buttonCollect);
-  buttonCollectRow.append(buttonCollectCol);
+	buttonCollectCol.className = 'SELLFORYOU-CELL';
+	buttonCollectCol.append(buttonCollect);
+	buttonCollectRow.append(buttonCollectCol);
 
-  container.append(buttonCollectRow);
+	container.append(buttonCollectRow);
 
-  if (bulk) {
-    let buttonCheckAll: any = document.createElement('button');
-    let buttonCheckAllDefault = `<i class="fi fi-rs-list-check" style="display: flex; align-items: center; font-size: 32px;"></i>`;
+	if (bulk) {
+		let buttonCheckAll: any = document.createElement('button');
+		let buttonCheckAllDefault = `<i class="fi fi-rs-list-check" style="display: flex; align-items: center; font-size: 32px;"></i>`;
 
-    buttonCheckAll.id = 'sfyPicker';
-    buttonCheckAll.value = true;
-    buttonCheckAll.className = 'SELLFORYOU-COLLECT';
-    buttonCheckAll.innerHTML = buttonCheckAllDefault;
-    buttonCheckAll.addEventListener('click', () => {
-      let list: any = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
+		buttonCheckAll.id = 'sfyPicker';
+		buttonCheckAll.value = true;
+		buttonCheckAll.className = 'SELLFORYOU-COLLECT';
+		buttonCheckAll.innerHTML = buttonCheckAllDefault;
+		buttonCheckAll.addEventListener('click', () => {
+			let list: any = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
 
-      if (buttonCheckAll.value === 'true') {
-        buttonCheckAll.value = false;
-        buttonCheckAllDefault = `<i class="fi fi-rs-list" style="display: flex; align-items: center; font-size: 32px;"></i>`;
+			if (buttonCheckAll.value === 'true') {
+				buttonCheckAll.value = false;
+				buttonCheckAllDefault = `<i class="fi fi-rs-list" style="display: flex; align-items: center; font-size: 32px;"></i>`;
 
-        for (let i = 0; i < list.length; i++) {
-          list[i].checked = false;
-        }
-      } else {
-        buttonCheckAll.value = true;
-        buttonCheckAllDefault = `<i class="fi fi-rs-list-check" style="display: flex; align-items: center; font-size: 32px;"></i>`;
+				for (let i = 0; i < list.length; i++) {
+					list[i].checked = false;
+				}
+			} else {
+				buttonCheckAll.value = true;
+				buttonCheckAllDefault = `<i class="fi fi-rs-list-check" style="display: flex; align-items: center; font-size: 32px;"></i>`;
 
-        for (let i = 0; i < list.length; i++) {
-          list[i].checked = true;
-        }
-      }
-    });
+				for (let i = 0; i < list.length; i++) {
+					list[i].checked = true;
+				}
+			}
+		});
 
-    buttonCheckAll.addEventListener('mouseenter', () => {
-      buttonCheckAll.innerHTML = `
+		buttonCheckAll.addEventListener('mouseenter', () => {
+			buttonCheckAll.innerHTML = `
                 <div style="font-size: 12px;">
                     상품일괄
 
@@ -635,38 +635,38 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
                     선택/해제
                 </div>
             `;
-    });
+		});
 
-    buttonCheckAll.addEventListener('mouseleave', () => {
-      buttonCheckAll.innerHTML = buttonCheckAllDefault;
-    });
+		buttonCheckAll.addEventListener('mouseleave', () => {
+			buttonCheckAll.innerHTML = buttonCheckAllDefault;
+		});
 
-    const buttonCheckAllCol = document.createElement('td');
-    const buttonCheckAllRow = document.createElement('tr');
+		const buttonCheckAllCol = document.createElement('td');
+		const buttonCheckAllRow = document.createElement('tr');
 
-    buttonCheckAllCol.className = 'SELLFORYOU-CELL';
-    buttonCheckAllCol.append(buttonCheckAll);
-    buttonCheckAllRow.append(buttonCheckAllCol);
+		buttonCheckAllCol.className = 'SELLFORYOU-CELL';
+		buttonCheckAllCol.append(buttonCheckAll);
+		buttonCheckAllRow.append(buttonCheckAllCol);
 
-    container.append(buttonCheckAllRow);
+		container.append(buttonCheckAllRow);
 
-    if (shop != 'amazon2') {
-      let buttonPageConfig: any = document.createElement('button');
-      let buttonPageConfigDefault = `<i class="fi fi-rs-settings" style="display: flex; align-items: center; font-size: 32px;"></i>`;
+		if (shop != 'amazon2') {
+			let buttonPageConfig: any = document.createElement('button');
+			let buttonPageConfigDefault = `<i class="fi fi-rs-settings" style="display: flex; align-items: center; font-size: 32px;"></i>`;
 
-      buttonPageConfig.id = 'sfyPageConfig';
-      buttonPageConfig.value = true;
-      buttonPageConfig.className = 'SELLFORYOU-COLLECT';
-      buttonPageConfig.innerHTML = buttonPageConfigDefault;
-      buttonPageConfig.addEventListener('click', async () => {
-        let categoryResp = await fetch(chrome.runtime.getURL('resources/category.json'));
-        let categoryJson = await categoryResp.json();
+			buttonPageConfig.id = 'sfyPageConfig';
+			buttonPageConfig.value = true;
+			buttonPageConfig.className = 'SELLFORYOU-COLLECT';
+			buttonPageConfig.innerHTML = buttonPageConfigDefault;
+			buttonPageConfig.addEventListener('click', async () => {
+				let categoryResp = await fetch(chrome.runtime.getURL('resources/category.json'));
+				let categoryJson = await categoryResp.json();
 
-        let paper = document.createElement('div');
+				let paper = document.createElement('div');
 
-        paper.id = 'sfyPaper';
-        paper.className = 'SELLFORYOU-INFORM';
-        paper.innerHTML = `
+				paper.id = 'sfyPaper';
+				paper.className = 'SELLFORYOU-INFORM';
+				paper.innerHTML = `
                     <div style="background: white; border: 1px solid black; color: black; font-size: 16px; padding: 10px; text-align: left; width: 700px;">
                         <div style="display: flex; align-items: center; justify-content: space-between; font-size: 20px; margin-bottom: 20px;">
                             사용자정의 대량수집
@@ -845,218 +845,218 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
                     </div>
                 `;
 
-        document.documentElement.appendChild(paper);
+				document.documentElement.appendChild(paper);
 
-        const sfyGoldMedalEnabled: any = document.getElementById('sfyGoldMedalEnabled');
-        const sfyStandardShippingEnabled: any = document.getElementById('sfyStandardShippingEnabled');
+				const sfyGoldMedalEnabled: any = document.getElementById('sfyGoldMedalEnabled');
+				const sfyStandardShippingEnabled: any = document.getElementById('sfyStandardShippingEnabled');
 
-        const sfyCategoryEnabled: any = document.getElementById('sfyCategoryEnabled');
+				const sfyCategoryEnabled: any = document.getElementById('sfyCategoryEnabled');
 
-        const sfyMyKeywardEnabled: any = document.getElementById('sfyMyKeywardEnabled');
-        const sfyCategoryInput: any = document.getElementById('sfyCategoryInput');
-        const sfyMyKeywardInput: any = document.getElementById('sfyMyKeywardInput');
-        const sfyCategoryList = document.getElementById('sfyCategoryList');
+				const sfyMyKeywardEnabled: any = document.getElementById('sfyMyKeywardEnabled');
+				const sfyCategoryInput: any = document.getElementById('sfyCategoryInput');
+				const sfyMyKeywardInput: any = document.getElementById('sfyMyKeywardInput');
+				const sfyCategoryList = document.getElementById('sfyCategoryList');
 
-        const sfyStart = document.getElementById('sfyStart');
-        const sfyCancel = document.getElementById('sfyCancel');
+				const sfyStart = document.getElementById('sfyStart');
+				const sfyCancel = document.getElementById('sfyCancel');
 
-        const sfyPageStart: any = document.getElementById('sfyPageStart');
-        const sfyPageEnd: any = document.getElementById('sfyPageEnd');
+				const sfyPageStart: any = document.getElementById('sfyPageStart');
+				const sfyPageEnd: any = document.getElementById('sfyPageEnd');
 
-        const sfyAmount: any = document.getElementById('sfyAmount');
+				const sfyAmount: any = document.getElementById('sfyAmount');
 
-        if (
-          !sfyGoldMedalEnabled ||
-          !sfyStandardShippingEnabled ||
-          !sfyCategoryEnabled ||
-          !sfyCategoryInput ||
-          !sfyCategoryList ||
-          !sfyStart ||
-          !sfyCancel ||
-          !sfyPageStart ||
-          !sfyPageEnd ||
-          !sfyMyKeywardEnabled
-        ) {
-          return;
-        }
+				if (
+					!sfyGoldMedalEnabled ||
+					!sfyStandardShippingEnabled ||
+					!sfyCategoryEnabled ||
+					!sfyCategoryInput ||
+					!sfyCategoryList ||
+					!sfyStart ||
+					!sfyCancel ||
+					!sfyPageStart ||
+					!sfyPageEnd ||
+					!sfyMyKeywardEnabled
+				) {
+					return;
+				}
 
-        sfyCategoryEnabled.addEventListener('change', (e: any) => {
-          sfyCategoryInput.disabled = !e.target.checked;
-          sfyCategoryList.style.display = 'none';
-        });
+				sfyCategoryEnabled.addEventListener('change', (e: any) => {
+					sfyCategoryInput.disabled = !e.target.checked;
+					sfyCategoryList.style.display = 'none';
+				});
 
-        sfyMyKeywardEnabled.addEventListener('change', (e: any) => {
-          sfyMyKeywardInput.disabled = !e.target.checked;
-        });
+				sfyMyKeywardEnabled.addEventListener('change', (e: any) => {
+					sfyMyKeywardInput.disabled = !e.target.checked;
+				});
 
-        sfyCategoryInput.addEventListener('focus', (e: any) => {
-          sfyCategoryList.style.display = '';
-        });
+				sfyCategoryInput.addEventListener('focus', (e: any) => {
+					sfyCategoryList.style.display = '';
+				});
 
-        sfyMyKeywardInput.addEventListener('change', (e: any) => {
-          sfyMyKeywardInput.value = e.target.value.trim();
-          sfyMyKeywardInput.setAttribute('data-myKeyward-id', e.target.value.trim());
-        });
+				sfyMyKeywardInput.addEventListener('change', (e: any) => {
+					sfyMyKeywardInput.value = e.target.value.trim();
+					sfyMyKeywardInput.setAttribute('data-myKeyward-id', e.target.value.trim());
+				});
 
-        sfyCategoryInput.addEventListener('change', (e: any) => {
-          const input = e.target.value;
+				sfyCategoryInput.addEventListener('change', (e: any) => {
+					const input = e.target.value;
 
-          const filtered = categoryJson.filter(
-            (v: any) =>
-              v['대분류'].includes(input) ||
-              v['중분류'].includes(input) ||
-              v['소분류'].includes(input) ||
-              v['세분류'].includes(input)
-          );
+					const filtered = categoryJson.filter(
+						(v: any) =>
+							v['대분류'].includes(input) ||
+							v['중분류'].includes(input) ||
+							v['소분류'].includes(input) ||
+							v['세분류'].includes(input),
+					);
 
-          if (!filtered) {
-            return;
-          }
+					if (!filtered) {
+						return;
+					}
 
-          sfyCategoryList.innerHTML = ``;
+					sfyCategoryList.innerHTML = ``;
 
-          filtered.map((v: any) => {
-            let categoryName = ``;
+					filtered.map((v: any) => {
+						let categoryName = ``;
 
-            if (v['대분류']) {
-              categoryName += v['대분류'];
-            }
+						if (v['대분류']) {
+							categoryName += v['대분류'];
+						}
 
-            if (v['중분류']) {
-              categoryName += ' > ';
-              categoryName += v['중분류'];
-            }
+						if (v['중분류']) {
+							categoryName += ' > ';
+							categoryName += v['중분류'];
+						}
 
-            if (v['소분류']) {
-              categoryName += ' > ';
-              categoryName += v['소분류'];
-            }
+						if (v['소분류']) {
+							categoryName += ' > ';
+							categoryName += v['소분류'];
+						}
 
-            if (v['세분류']) {
-              categoryName += ' > ';
-              categoryName += v['세분류'];
-            }
+						if (v['세분류']) {
+							categoryName += ' > ';
+							categoryName += v['세분류'];
+						}
 
-            sfyCategoryList.innerHTML += `
+						sfyCategoryList.innerHTML += `
                             <div class="sfyCategory" data-category-id="${v['카테고리번호']}" style="cursor: pointer; padding: 5px; 0px;">
                                 ${categoryName}
                             </div>
                         `;
-          });
+					});
 
-          const categories = document.getElementsByClassName('sfyCategory');
+					const categories = document.getElementsByClassName('sfyCategory');
 
-          for (let i = 0; i < categories.length; i++) {
-            categories[i].addEventListener('click', (e: any) => {
-              sfyCategoryInput.value = e.target.textContent.trim();
-              sfyCategoryInput.setAttribute('data-category-id', e.target.getAttribute('data-category-id'));
+					for (let i = 0; i < categories.length; i++) {
+						categories[i].addEventListener('click', (e: any) => {
+							sfyCategoryInput.value = e.target.textContent.trim();
+							sfyCategoryInput.setAttribute('data-category-id', e.target.getAttribute('data-category-id'));
 
-              sfyCategoryList.style.display = 'none';
-            });
-          }
-        });
+							sfyCategoryList.style.display = 'none';
+						});
+					}
+				});
 
-        const startBulk = async (type) => {
-          const tabs: any = await sendRuntimeMessage({
-            action: 'tab-info-all',
-          });
+				const startBulk = async (type) => {
+					const tabs: any = await sendRuntimeMessage({
+						action: 'tab-info-all',
+					});
 
-          let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
+					let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
 
-          collectInfo = collectInfo.filter((v: any) => {
-            if (v.sender.tab.id === info.tabInfo.tab.id) {
-              return false;
-            }
+					collectInfo = collectInfo.filter((v: any) => {
+						if (v.sender.tab.id === info.tabInfo.tab.id) {
+							return false;
+						}
 
-            const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
+						const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
 
-            if (!matched) {
-              return false;
-            }
+						if (!matched) {
+							return false;
+						}
 
-            return true;
-          });
+						return true;
+					});
 
-          if (!sfyCategoryEnabled.checked) {
-            sfyCategoryInput.setAttribute('data-category-id', '');
-          }
-          if (!sfyMyKeywardEnabled.checked) {
-            sfyMyKeywardInput.setAttribute('data-myKeyward-id', '');
-          }
-          switch (type) {
-            case 'page': {
-              collectInfo.push({
-                categoryId: sfyCategoryInput.getAttribute('data-category-id'),
-                myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
-                currentPage: parseInt(sfyPageStart.value),
+					if (!sfyCategoryEnabled.checked) {
+						sfyCategoryInput.setAttribute('data-category-id', '');
+					}
+					if (!sfyMyKeywardEnabled.checked) {
+						sfyMyKeywardInput.setAttribute('data-myKeyward-id', '');
+					}
+					switch (type) {
+						case 'page': {
+							collectInfo.push({
+								categoryId: sfyCategoryInput.getAttribute('data-category-id'),
+								myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
+								currentPage: parseInt(sfyPageStart.value),
 
-                inputs: [],
+								inputs: [],
 
-                maxLimits: 0,
+								maxLimits: 0,
 
-                pageStart: parseInt(sfyPageStart.value),
-                pageEnd: parseInt(sfyPageEnd.value),
+								pageStart: parseInt(sfyPageStart.value),
+								pageEnd: parseInt(sfyPageEnd.value),
 
-                sender: info.tabInfo,
+								sender: info.tabInfo,
 
-                type: 'page',
+								type: 'page',
 
-                useMedal: sfyGoldMedalEnabled.checked,
-                useStandardShipping: sfyStandardShippingEnabled.checked,
-              });
+								useMedal: sfyGoldMedalEnabled.checked,
+								useStandardShipping: sfyStandardShippingEnabled.checked,
+							});
 
-              break;
-            }
+							break;
+						}
 
-            case 'amount': {
-              collectInfo.push({
-                categoryId: sfyCategoryInput.getAttribute('data-category-id'),
-                myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
-                currentPage: 1,
+						case 'amount': {
+							collectInfo.push({
+								categoryId: sfyCategoryInput.getAttribute('data-category-id'),
+								myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
+								currentPage: 1,
 
-                inputs: [],
+								inputs: [],
 
-                maxLimits: parseInt(sfyAmount.value),
+								maxLimits: parseInt(sfyAmount.value),
 
-                pageStart: 1,
-                pageEnd: 100,
+								pageStart: 1,
+								pageEnd: 100,
 
-                sender: info.tabInfo,
+								sender: info.tabInfo,
 
-                type: 'amount',
+								type: 'amount',
 
-                useMedal: sfyGoldMedalEnabled.checked,
-                useStandardShipping: sfyStandardShippingEnabled.checked,
-              });
+								useMedal: sfyGoldMedalEnabled.checked,
+								useStandardShipping: sfyStandardShippingEnabled.checked,
+							});
 
-              break;
-            }
-          }
+							break;
+						}
+					}
 
-          await setLocalStorage({ collectInfo });
+					await setLocalStorage({ collectInfo });
 
-          pageRefresh(shop, parseInt(sfyPageStart.value));
-        };
+					pageRefresh(shop, parseInt(sfyPageStart.value));
+				};
 
-        sfyStart.addEventListener('click', () => {
-          const radios: any = document.getElementsByName('sfyBulkType');
+				sfyStart.addEventListener('click', () => {
+					const radios: any = document.getElementsByName('sfyBulkType');
 
-          for (let i = 0; i < radios.length; i++) {
-            if (!radios[i].checked) {
-              continue;
-            }
+					for (let i = 0; i < radios.length; i++) {
+						if (!radios[i].checked) {
+							continue;
+						}
 
-            startBulk(radios[i].value);
-          }
-        });
+						startBulk(radios[i].value);
+					}
+				});
 
-        sfyCancel.addEventListener('click', () => {
-          paper.remove();
-        });
-      });
+				sfyCancel.addEventListener('click', () => {
+					paper.remove();
+				});
+			});
 
-      buttonPageConfig.addEventListener('mouseenter', () => {
-        buttonPageConfig.innerHTML = `
+			buttonPageConfig.addEventListener('mouseenter', () => {
+				buttonPageConfig.innerHTML = `
                     <div style="font-size: 12px;">
                         사용자정의
                         
@@ -1065,76 +1065,76 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
                         대량수집
                     </div>
                 `;
-      });
+			});
 
-      buttonPageConfig.addEventListener('mouseleave', () => {
-        buttonPageConfig.innerHTML = buttonPageConfigDefault;
-      });
+			buttonPageConfig.addEventListener('mouseleave', () => {
+				buttonPageConfig.innerHTML = buttonPageConfigDefault;
+			});
 
-      const buttonPageConfigCol = document.createElement('td');
-      const buttonPageConfigRow = document.createElement('tr');
+			const buttonPageConfigCol = document.createElement('td');
+			const buttonPageConfigRow = document.createElement('tr');
 
-      buttonPageConfigCol.className = 'SELLFORYOU-CELL';
-      buttonPageConfigCol.append(buttonPageConfig);
-      buttonPageConfigRow.append(buttonPageConfigCol);
+			buttonPageConfigCol.className = 'SELLFORYOU-CELL';
+			buttonPageConfigCol.append(buttonPageConfig);
+			buttonPageConfigRow.append(buttonPageConfigCol);
 
-      container.append(buttonPageConfigRow);
+			container.append(buttonPageConfigRow);
 
-      let buttonLogo = document.createElement('button');
-      let buttonLogoDefault = `
+			let buttonLogo = document.createElement('button');
+			let buttonLogoDefault = `
                 <div style="font-size: 12px;">
                     상품관리
                 </div>
             `;
 
-      buttonLogo.className = 'SELLFORYOU-COLLECT';
-      buttonLogo.style.height = '40px';
-      buttonLogo.innerHTML = buttonLogoDefault;
-      buttonLogo.addEventListener('click', () => {
-        window.open(chrome.runtime.getURL('product/collected.html'));
-      });
+			buttonLogo.className = 'SELLFORYOU-COLLECT';
+			buttonLogo.style.height = '40px';
+			buttonLogo.innerHTML = buttonLogoDefault;
+			buttonLogo.addEventListener('click', () => {
+				window.open(chrome.runtime.getURL('product/collected.html'));
+			});
 
-      const logoCol = document.createElement('td');
-      const logoRow = document.createElement('tr');
+			const logoCol = document.createElement('td');
+			const logoRow = document.createElement('tr');
 
-      logoCol.className = 'SELLFORYOU-CELL';
-      logoCol.append(buttonLogo);
-      logoRow.append(logoCol);
+			logoCol.className = 'SELLFORYOU-CELL';
+			logoCol.append(buttonLogo);
+			logoRow.append(logoCol);
 
-      container.append(logoRow);
-    }
+			container.append(logoRow);
+		}
 
-    bulkPage(info, shop);
-  }
+		bulkPage(info, shop);
+	}
 
-  document.documentElement.appendChild(container);
+	document.documentElement.appendChild(container);
 
-  if (info.isBulk && !bulk) {
-    buttonCollect.click();
-  }
+	if (info.isBulk && !bulk) {
+		buttonCollect.click();
+	}
 };
 
 const resultDetails = async (data: any) => {
-  let paper: any = document.getElementById('sfyPaper');
+	let paper: any = document.getElementById('sfyPaper');
 
-  if (!paper) {
-    paper = document.createElement('div');
+	if (!paper) {
+		paper = document.createElement('div');
 
-    paper.id = 'sfyPaper';
-    paper.className = 'SELLFORYOU-INFORM';
+		paper.id = 'sfyPaper';
+		paper.className = 'SELLFORYOU-INFORM';
 
-    document.documentElement.appendChild(paper);
-  }
+		document.documentElement.appendChild(paper);
+	}
 
-  let results = data.results.filter((v: any) => v.status === 'failed');
+	let results = data.results.filter((v: any) => v.status === 'failed');
 
-  if (results.length > 0) {
-    let form = `
+	if (results.length > 0) {
+		let form = `
             <div style="background: white; border: 1px solid black; color: black; font-size: 16px; padding: 10px; width: 1000px; text-align: left;">
                 <div style="display: flex; align-items: center; font-size: 20px; margin-bottom: 40px;">
                     <img src=${chrome.runtime.getURL(
-                      'resources/icon-failed.png'
-                    )} width="28px" height="28px" style="margin-bottom: 5px;" />
+											'resources/icon-failed.png',
+										)} width="28px" height="28px" style="margin-bottom: 5px;" />
                     
                     &nbsp;
 
@@ -1161,8 +1161,8 @@ const resultDetails = async (data: any) => {
                     <table id="sfyResultDetail" style="width: 100%;">
         `;
 
-    results.map((v: any, index: number) => {
-      form += `
+		results.map((v: any, index: number) => {
+			form += `
                 <tr>
                     <td style="text-align: center; width: 10%;">
                         <input id=${index} class="SFY-RESULT-CHECK" type="checkbox" checked style="width: 20px; height: 20px;" />
@@ -1183,9 +1183,9 @@ const resultDetails = async (data: any) => {
                     </td>
                 </tr>
             `;
-    });
+		});
 
-    form += `
+		form += `
                     </table>
                 </div>
 
@@ -1219,14 +1219,14 @@ const resultDetails = async (data: any) => {
             </div>
         `;
 
-    paper.innerHTML = form;
-  } else {
-    let form = `
+		paper.innerHTML = form;
+	} else {
+		let form = `
             <div style="background: white; border: 1px solid black; color: black; font-size: 16px; padding: 10px; width: 500px; text-align: left;">
                 <div style="display: flex; align-items: center; font-size: 20px; margin-bottom: 40px;">
                     <img src=${chrome.runtime.getURL(
-                      'resources/icon-success.png'
-                    )} width="28px" height="28px" style="margin-bottom: 5px;" />
+											'resources/icon-success.png',
+										)} width="28px" height="28px" style="margin-bottom: 5px;" />
                     
                     &nbsp;
                     
@@ -1251,136 +1251,136 @@ const resultDetails = async (data: any) => {
             </div>
         `;
 
-    paper.innerHTML = form;
-  }
+		paper.innerHTML = form;
+	}
 
-  const checks: any = document.getElementsByClassName('SFY-RESULT-CHECK');
+	const checks: any = document.getElementsByClassName('SFY-RESULT-CHECK');
 
-  for (let i = 0; i < checks.length; i++) {
-    checks[i].addEventListener('change', (e: any) => {
-      results[e.target.id].checked = e.target.checked;
-    });
-  }
+	for (let i = 0; i < checks.length; i++) {
+		checks[i].addEventListener('change', (e: any) => {
+			results[e.target.id].checked = e.target.checked;
+		});
+	}
 
-  document.getElementById('sfyResultAll')?.addEventListener('change', (e: any) => {
-    results.map((v: any) => (v.checked = e.target.checked));
+	document.getElementById('sfyResultAll')?.addEventListener('change', (e: any) => {
+		results.map((v: any) => (v.checked = e.target.checked));
 
-    for (let i = 0; i < checks.length; i++) {
-      checks[i].checked = e.target.checked;
-    }
-  });
+		for (let i = 0; i < checks.length; i++) {
+			checks[i].checked = e.target.checked;
+		}
+	});
 
-  document.getElementById('sfyPage')?.addEventListener('click', () => {
-    window.location.href = data.sender.tab.url;
-  });
+	document.getElementById('sfyPage')?.addEventListener('click', () => {
+		window.location.href = data.sender.tab.url;
+	});
 
-  document.getElementById('sfyRetry')?.addEventListener('click', () => {
-    const inputs = results
-      .filter((v: any) => v.checked)
-      .map((v: any) => {
-        return v.input;
-      });
+	document.getElementById('sfyRetry')?.addEventListener('click', () => {
+		const inputs = results
+			.filter((v: any) => v.checked)
+			.map((v: any) => {
+				return v.input;
+			});
 
-    if (data.isExcel) {
-      sendRuntimeMessage({
-        action: 'collect-product-excel',
-        source: { data: inputs, retry: true },
-      });
-    } else {
-      sendRuntimeMessage({
-        action: 'collect-bulk',
-        source: { data: inputs, retry: true },
-      });
-    }
-  });
+		if (data.isExcel) {
+			sendRuntimeMessage({
+				action: 'collect-product-excel',
+				source: { data: inputs, retry: true },
+			});
+		} else {
+			sendRuntimeMessage({
+				action: 'collect-bulk',
+				source: { data: inputs, retry: true },
+			});
+		}
+	});
 
-  document.getElementById('sfyConnect')?.addEventListener('click', () => {
-    window.open(chrome.runtime.getURL('product/collected.html'));
-  });
+	document.getElementById('sfyConnect')?.addEventListener('click', () => {
+		window.open(chrome.runtime.getURL('product/collected.html'));
+	});
 
-  document.getElementById('sfyCopy')?.addEventListener('click', () => {
-    const text = document.getElementById('sfyResultDetail')?.innerText ?? '';
+	document.getElementById('sfyCopy')?.addEventListener('click', () => {
+		const text = document.getElementById('sfyResultDetail')?.innerText ?? '';
 
-    navigator.clipboard.writeText(text).then(
-      function () {
-        alert('클립보드에 복사되었습니다.');
-      },
-      function () {
-        alert('클립보드에 복사할 수 없습니다.');
-      }
-    );
-  });
+		navigator.clipboard.writeText(text).then(
+			function () {
+				alert('클립보드에 복사되었습니다.');
+			},
+			function () {
+				alert('클립보드에 복사할 수 없습니다.');
+			},
+		);
+	});
 
-  const tabInfo: any = await sendRuntimeMessage({ action: 'tab-info' });
+	const tabInfo: any = await sendRuntimeMessage({ action: 'tab-info' });
 
-  let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
-  let collect = collectInfo.find((v: any) => v.sender.tab.id === tabInfo.tab.id);
+	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
+	let collect = collectInfo.find((v: any) => v.sender.tab.id === tabInfo.tab.id);
 
-  if (!collect) {
-    return;
-  }
+	if (!collect) {
+		return;
+	}
 
-  collect.currentPage = collect.pageEnd + 1;
+	collect.currentPage = collect.pageEnd + 1;
 
-  await setLocalStorage({ collectInfo });
+	await setLocalStorage({ collectInfo });
 
-  return true;
+	return true;
 };
 
 const addExcelInfo = async (request) => {
-  const tabInfo: any = await sendRuntimeMessage({ action: 'tab-info' });
-  const tabs: any = await sendRuntimeMessage({ action: 'tab-info-all' });
+	const tabInfo: any = await sendRuntimeMessage({ action: 'tab-info' });
+	const tabs: any = await sendRuntimeMessage({ action: 'tab-info-all' });
 
-  let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
+	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
 
-  collectInfo = collectInfo.filter((v: any) => {
-    if (v.sender.tab.id === tabInfo.tab.id) {
-      return false;
-    }
+	collectInfo = collectInfo.filter((v: any) => {
+		if (v.sender.tab.id === tabInfo.tab.id) {
+			return false;
+		}
 
-    const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
+		const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
 
-    if (!matched) {
-      return false;
-    }
+		if (!matched) {
+			return false;
+		}
 
-    return true;
-  });
+		return true;
+	});
 
-  collectInfo.push({
-    categoryId: '',
-    myKeyward: '',
-    currentPage: 1,
+	collectInfo.push({
+		categoryId: '',
+		myKeyward: '',
+		currentPage: 1,
 
-    inputs: [],
+		inputs: [],
 
-    pageStart: 1,
-    pageEnd: request.source.data.length,
-    pageList: request.source.data,
+		pageStart: 1,
+		pageEnd: request.source.data.length,
+		pageList: request.source.data,
 
-    sender: tabInfo,
+		sender: tabInfo,
 
-    type: 'excel-page',
-  });
+		type: 'excel-page',
+	});
 
-  await setLocalStorage({ collectInfo });
+	await setLocalStorage({ collectInfo });
 
-  window.location.href = request.source.data[0].url;
+	window.location.href = request.source.data[0].url;
 
-  return true;
+	return true;
 };
 
 const initInfo = async (display: boolean) => {
-  const user = await sendRuntimeMessage({ action: 'user' });
-  const isBulk = await sendRuntimeMessage({ action: 'is-bulk' });
-  const tabInfo = await sendRuntimeMessage({ action: 'tab-info' });
+	const user = await sendRuntimeMessage({ action: 'user' });
+	const isBulk = await sendRuntimeMessage({ action: 'is-bulk' });
+	const tabInfo = await sendRuntimeMessage({ action: 'tab-info' });
 
-  if (display && isBulk) {
-    let paper = document.createElement('div');
+	if (display && isBulk) {
+		let paper = document.createElement('div');
 
-    paper.id = 'sfyPaper';
-    paper.className = 'SELLFORYOU-INFORM';
-    paper.innerHTML = `
+		paper.id = 'sfyPaper';
+		paper.className = 'SELLFORYOU-INFORM';
+		paper.innerHTML = `
             <div style="margin-bottom: 40px;">
                 대량 수집이 진행 중입니다.
             </div>
@@ -1420,11 +1420,11 @@ const initInfo = async (display: boolean) => {
             </div>
         `;
 
-    document.documentElement.appendChild(paper);
+		document.documentElement.appendChild(paper);
 
-    window.addEventListener('keydown', (e: any) => {
-      if (e.key === 'Escape') {
-        paper.innerHTML = `
+		window.addEventListener('keydown', (e: any) => {
+			if (e.key === 'Escape') {
+				paper.innerHTML = `
                         <div style="margin-bottom: 40px;">
                             대량 수집을 중단하는 중입니다.
                         </div>
@@ -1438,12 +1438,12 @@ const initInfo = async (display: boolean) => {
                         </div>
                     `;
 
-        sendRuntimeMessage({ action: 'collect-stop' });
-      }
-    });
+				sendRuntimeMessage({ action: 'collect-stop' });
+			}
+		});
 
-    document.getElementById('sfyPause')?.addEventListener('click', () => {
-      paper.innerHTML = `
+		document.getElementById('sfyPause')?.addEventListener('click', () => {
+			paper.innerHTML = `
                     <div style="margin-bottom: 40px;">
                         대량 수집을 중단하는 중입니다.
                     </div>
@@ -1457,48 +1457,48 @@ const initInfo = async (display: boolean) => {
                     </div>
                 `;
 
-      sendRuntimeMessage({ action: 'collect-stop' });
-    });
+			sendRuntimeMessage({ action: 'collect-stop' });
+		});
 
-    document.getElementById('sfySkip')?.addEventListener('click', () => {
-      sendRuntimeMessage({ action: 'collect-finish' });
-    });
-  }
+		document.getElementById('sfySkip')?.addEventListener('click', () => {
+			sendRuntimeMessage({ action: 'collect-finish' });
+		});
+	}
 
-  if (!user) {
-    alert('상품을 수집하려면 셀포유에 로그인되어 있어야 합니다.');
-  }
+	if (!user) {
+		alert('상품을 수집하려면 셀포유에 로그인되어 있어야 합니다.');
+	}
 
-  return { user, isBulk, tabInfo };
+	return { user, isBulk, tabInfo };
 };
 
 const cardPay = async (info: any) => {
-  sessionStorage.removeItem(`sfy-iamport`);
+	sessionStorage.removeItem(`sfy-iamport`);
 
-  let script = document.createElement('script');
+	let script = document.createElement('script');
 
-  script.id = 'sfyIMP';
-  script.setAttribute('code', info.code);
-  script.setAttribute('data', JSON.stringify(info.data));
-  script.src = chrome.runtime.getURL('/resources/iamport.js');
+	script.id = 'sfyIMP';
+	script.setAttribute('code', info.code);
+	script.setAttribute('data', JSON.stringify(info.data));
+	script.src = chrome.runtime.getURL('/resources/iamport.js');
 
-  document.head.appendChild(script);
+	document.head.appendChild(script);
 
-  while (true) {
-    const response = sessionStorage.getItem('sfy-iamport');
+	while (true) {
+		const response = sessionStorage.getItem('sfy-iamport');
 
-    if (!response) {
-      await sleep(1000 * 1);
+		if (!response) {
+			await sleep(1000 * 1);
 
-      continue;
-    }
+			continue;
+		}
 
-    if (response === 'true') {
-      return true;
-    } else {
-      return false;
-    }
-  }
+		if (response === 'true') {
+			return true;
+		} else {
+			return false;
+		}
+	}
 };
 
 // const getsetPage = async (body: any) => {
@@ -1549,79 +1549,79 @@ const cardPay = async (info: any) => {
 //   xhr.send(formData);
 // };
 const getsetPage = async (body) => {
-  const url = 'https://aws-set.playauto.co.kr/shop_group_set_make_amp_api_tab.html';
+	const url = 'https://aws-set.playauto.co.kr/shop_group_set_make_amp_api_tab.html';
 
-  const formData = new FormData();
-  formData.append('dataMethod', 'post');
-  formData.append('dataInfo', JSON.stringify(body));
+	const formData = new FormData();
+	formData.append('dataMethod', 'post');
+	formData.append('dataInfo', JSON.stringify(body));
 
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      body: formData,
-      mode: 'cors',
-    });
+	try {
+		const response = await fetch(url, {
+			method: 'POST',
+			body: formData,
+			mode: 'cors',
+		});
 
-    // Handle the response here
-    console.log(response);
-  } catch (error) {
-    // Handle any errors that occur during the request
-    console.error(error);
-  }
+		// Handle the response here
+		console.log(response);
+	} catch (error) {
+		// Handle any errors that occur during the request
+		console.error(error);
+	}
 };
 
 const main = async () => {
-  let link = document.createElement('link');
+	let link = document.createElement('link');
 
-  link.href = chrome.runtime.getURL('ui/css/uicons-regular-straight.css');
-  link.type = 'text/css';
-  link.rel = 'stylesheet';
+	link.href = chrome.runtime.getURL('ui/css/uicons-regular-straight.css');
+	link.type = 'text/css';
+	link.rel = 'stylesheet';
 
-  document.documentElement.insertBefore(link, null);
+	document.documentElement.insertBefore(link, null);
 
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    switch (request.action) {
-      case 'set_info': {
-        getsetPage(request.source).then(sendResponse);
-        // getsetPage(request.source)
-        //   .then((response) => {
-        //     if (response.status === 200) {
-        //       // 상태 코드가 200인 경우 처리
-        //     } else {
-        //       // 상태 코드가 200이 아닌 경우 처리
-        //     }
-        //   })
-        //   .catch((error) => {
-        //     console.error(error);
-        //   });
+	chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+		switch (request.action) {
+			case 'set_info': {
+				getsetPage(request.source).then(sendResponse);
+				// getsetPage(request.source)
+				//   .then((response) => {
+				//     if (response.status === 200) {
+				//       // 상태 코드가 200인 경우 처리
+				//     } else {
+				//       // 상태 코드가 200이 아닌 경우 처리
+				//     }
+				//   })
+				//   .catch((error) => {
+				//     console.error(error);
+				//   });
 
-        return true;
-      }
-      case 'pay-card': {
-        cardPay(request.source).then(sendResponse);
+				return true;
+			}
+			case 'pay-card': {
+				cardPay(request.source).then(sendResponse);
 
-        return true;
-      }
+				return true;
+			}
 
-      case 'fetch': {
-        const url = request.source;
+			case 'fetch': {
+				const url = request.source;
 
-        fetch(url)
-          .then((res) => res.text())
-          .then((data) => {
-            sendResponse(data);
-          });
+				fetch(url)
+					.then((res) => res.text())
+					.then((data) => {
+						sendResponse(data);
+					});
 
-        return true;
-      }
+				return true;
+			}
 
-      //위메프
-      case 'upload-B719': {
-        let paper = document.createElement('div');
+			//위메프
+			case 'upload-B719': {
+				let paper = document.createElement('div');
 
-        paper.id = 'sfyPaper';
-        paper.className = 'SELLFORYOU-INFORM';
-        paper.innerHTML = `
+				paper.id = 'sfyPaper';
+				paper.className = 'SELLFORYOU-INFORM';
+				paper.innerHTML = `
                     <div style="margin-bottom: 40px;">
                         위메프에 업로드가 진행 중입니다.
                     </div>
@@ -1635,19 +1635,19 @@ const main = async () => {
                     </div>
                 `;
 
-        document.documentElement.appendChild(paper);
+				document.documentElement.appendChild(paper);
 
-        uploadWemakeprice2(request.source).then(sendResponse);
+				uploadWemakeprice2(request.source).then(sendResponse);
 
-        return true;
-      }
+				return true;
+			}
 
-      case 'upload-A077': {
-        let paper = document.createElement('div');
+			case 'upload-A077': {
+				let paper = document.createElement('div');
 
-        paper.id = 'sfyPaper';
-        paper.className = 'SELLFORYOU-INFORM';
-        paper.innerHTML = `
+				paper.id = 'sfyPaper';
+				paper.className = 'SELLFORYOU-INFORM';
+				paper.innerHTML = `
                     <div style="margin-bottom: 40px;">
                         스마트스토어 업로드가 진행 중입니다.
                     </div>
@@ -1661,299 +1661,299 @@ const main = async () => {
                     </div>
                 `;
 
-        document.documentElement.appendChild(paper);
+				document.documentElement.appendChild(paper);
 
-        uploadA077Resources(request.source).then(sendResponse);
+				uploadA077Resources(request.source).then(sendResponse);
 
-        return true;
-      }
+				return true;
+			}
 
-      case 'upload-A077-products': {
-        uploadA077Products(request.source).then(sendResponse);
+			case 'upload-A077-products': {
+				uploadA077Products(request.source).then(sendResponse);
 
-        return true;
-      }
-      case 'search-A077-products': {
-        searchA077Products(request.source).then(sendResponse);
+				return true;
+			}
+			case 'search-A077-products': {
+				searchA077Products(request.source).then(sendResponse);
 
-        return true;
-      }
+				return true;
+			}
 
-      case 'edited-B719': {
-        editWemakeprice(request.source).then(sendResponse);
+			case 'edited-B719': {
+				editWemakeprice(request.source).then(sendResponse);
 
-        return true;
-      }
+				return true;
+			}
 
-      case 'delete-B719': {
-        deleteWemakeprice2(request.source).then(sendResponse);
+			case 'delete-B719': {
+				deleteWemakeprice2(request.source).then(sendResponse);
 
-        return true;
-      }
+				return true;
+			}
 
-      case 'edited-A077-products': {
-        editedA077Products(request.source).then(sendResponse);
+			case 'edited-A077-products': {
+				editedA077Products(request.source).then(sendResponse);
 
-        return true;
-      }
+				return true;
+			}
 
-      case 'delete-A077-products': {
-        deleteA077Products(request.source).then(sendResponse);
+			case 'delete-A077-products': {
+				deleteA077Products(request.source).then(sendResponse);
 
-        return true;
-      }
+				return true;
+			}
 
-      case 'collect-product-excel': {
-        sendRuntimeMessage(request);
-        sendResponse(true);
+			case 'collect-product-excel': {
+				sendRuntimeMessage(request);
+				sendResponse(true);
 
-        break;
-      }
+				break;
+			}
 
-      case 'collect-page-excel': {
-        addExcelInfo(request).then(sendResponse);
+			case 'collect-page-excel': {
+				addExcelInfo(request).then(sendResponse);
 
-        return true;
-      }
+				return true;
+			}
 
-      case 'collect-finish': {
-        resultDetails(request.source).then(sendResponse);
+			case 'collect-finish': {
+				resultDetails(request.source).then(sendResponse);
 
-        return true;
-      }
+				return true;
+			}
 
-      case 'order-taobao': {
-        getTaobaoData(request.source).then(sendResponse);
+			case 'order-taobao': {
+				getTaobaoData(request.source).then(sendResponse);
 
-        return true;
-      }
+				return true;
+			}
 
-      case 'order-taobao-id': {
-        sendResponse(getCookie('lgc'));
+			case 'order-taobao-id': {
+				sendResponse(getCookie('lgc'));
 
-        break;
-      }
+				break;
+			}
 
-      case 'order-tmall': {
-        break;
-      }
+			case 'order-tmall': {
+				break;
+			}
 
-      case 'order-express': {
-        break;
-      }
+			case 'order-express': {
+				break;
+			}
 
-      case 'order-alibaba': {
-        break;
-      }
+			case 'order-alibaba': {
+				break;
+			}
 
-      case 'order-vvic': {
-        break;
-      }
-    }
-  });
-  /** 상품수집하는 방법 : 3가지
-   * 1. 리스트 페이지에서 대량수집
-   * 2. 단일 상품에서 단일수집
-   * 3. 판매자 페이지에서 대량수집
-   */
-  const currentUrl = window.location.href;
-  /** 타오바오 단일상품 페이지 */
-  if (/item.taobao.com\/item.htm/.test(currentUrl)) {
-    const info = await initInfo(true);
-    const result = await new taobao().get(info.user);
-    floatingButton(info, null, result, false);
+			case 'order-vvic': {
+				break;
+			}
+		}
+	});
+	/** 상품수집하는 방법 : 3가지
+	 * 1. 리스트 페이지에서 대량수집
+	 * 2. 단일 상품에서 단일수집
+	 * 3. 판매자 페이지에서 대량수집
+	 */
+	const currentUrl = window.location.href;
+	/** 타오바오 단일상품 페이지 */
+	if (/item.taobao.com\/item.htm/.test(currentUrl)) {
+		const info = await initInfo(true);
+		const result = await new taobao().get(info.user);
+		floatingButton(info, null, result, false);
 
-    /** 타오바오 리스트 페이지 */
-  } else if (/s.taobao.com\/search/.test(currentUrl)) {
-    const info = await initInfo(false);
-    await new taobao().bulkTypeOne(info.user);
-    floatingButton(info, 'taobao1', true, true);
+		/** 타오바오 리스트 페이지 */
+	} else if (/s.taobao.com\/search/.test(currentUrl)) {
+		const info = await initInfo(false);
+		await new taobao().bulkTypeOne(info.user);
+		floatingButton(info, 'taobao1', true, true);
 
-    /**  */
-  } else if (/world.taobao.com\/wow/.test(currentUrl)) {
-    const info = await initInfo(false);
-    await new taobao().bulkTypeThree(info.user);
-    floatingButton(info, 'taobao1', true, true);
+		/**  */
+	} else if (/world.taobao.com\/wow/.test(currentUrl)) {
+		const info = await initInfo(false);
+		await new taobao().bulkTypeThree(info.user);
+		floatingButton(info, 'taobao1', true, true);
 
-    /** 타오바오 상점 페이지 */
-  } else if (
-    /world.taobao.com\/search/.test(currentUrl) ||
-    /taobao.com\/search/.test(currentUrl) ||
-    /taobao.com\/category/.test(currentUrl)
-  ) {
-    const info = await initInfo(false);
-    await new taobao().bulkTypeTwo(info.user);
-    floatingButton(info, 'taobao2', true, true);
+		/** 타오바오 상점 페이지 */
+	} else if (
+		/world.taobao.com\/search/.test(currentUrl) ||
+		/taobao.com\/search/.test(currentUrl) ||
+		/taobao.com\/category/.test(currentUrl)
+	) {
+		const info = await initInfo(false);
+		await new taobao().bulkTypeTwo(info.user);
+		floatingButton(info, 'taobao2', true, true);
 
-    /**  */
-  } else if (/guang.taobao.com/.test(currentUrl)) {
-    skip();
+		/**  */
+	} else if (/guang.taobao.com/.test(currentUrl)) {
+		skip();
 
-    /** */
-  } else if (
-    /detail.tmall.com/.test(currentUrl) ||
-    /chaoshi.detail.tmall.com/.test(currentUrl) ||
-    /detail.tmall.hk/.test(currentUrl)
-  ) {
-    const info = await initInfo(true);
-    const result = await new tmall().get(info.user);
-    floatingButton(info, null, result, false);
+		/** */
+	} else if (
+		/detail.tmall.com/.test(currentUrl) ||
+		/chaoshi.detail.tmall.com/.test(currentUrl) ||
+		/detail.tmall.hk/.test(currentUrl)
+	) {
+		const info = await initInfo(true);
+		const result = await new tmall().get(info.user);
+		floatingButton(info, null, result, false);
 
-    /**  */
-  } else if (/tmall.com/.test(currentUrl)) {
-    const info = await initInfo(false);
-    if (/list.tmall.com/.test(currentUrl)) {
-      await new tmall().bulkTypeOne(info.user);
-      floatingButton(info, 'tmall1', true, true);
-    } else {
-      await new tmall().bulkTypeTwo(info.user);
-      floatingButton(info, 'tmall2', true, true);
-    }
+		/**  */
+	} else if (/tmall.com/.test(currentUrl)) {
+		const info = await initInfo(false);
+		if (/list.tmall.com/.test(currentUrl)) {
+			await new tmall().bulkTypeOne(info.user);
+			floatingButton(info, 'tmall1', true, true);
+		} else {
+			await new tmall().bulkTypeTwo(info.user);
+			floatingButton(info, 'tmall2', true, true);
+		}
 
-    /** */
-  } else if (/aliexpress.com\/item/.test(currentUrl)) {
-    const info = await initInfo(true);
-    const result = await new express().get(info.user);
-    floatingButton(info, 'express', result, false);
+		/** */
+	} else if (/aliexpress.com\/item/.test(currentUrl)) {
+		const info = await initInfo(true);
+		const result = await new express().get(info.user);
+		floatingButton(info, 'express', result, false);
 
-    /** */
-  } else if (
-    /aliexpress.com\/af/.test(currentUrl) ||
-    /aliexpress.com\/af\/category/.test(currentUrl) ||
-    /aliexpress.com\/af\/wholesale/.test(currentUrl) ||
-    /aliexpress.com\/w\/wholesale/.test(currentUrl) ||
-    /aliexpress.com\/category/.test(currentUrl) ||
-    /aliexpress.com\/premium/.test(currentUrl) ||
-    /aliexpress.com\/wholesale/.test(currentUrl)
-  ) {
-    const info = await initInfo(false);
-    await new express().bulkTypeOne(info.user);
-    await new express().bulkTypeTwo(info.user);
-    floatingButton(info, 'express', true, true);
+		/** */
+	} else if (
+		/aliexpress.com\/af/.test(currentUrl) ||
+		/aliexpress.com\/af\/category/.test(currentUrl) ||
+		/aliexpress.com\/af\/wholesale/.test(currentUrl) ||
+		/aliexpress.com\/w\/wholesale/.test(currentUrl) ||
+		/aliexpress.com\/category/.test(currentUrl) ||
+		/aliexpress.com\/premium/.test(currentUrl) ||
+		/aliexpress.com\/wholesale/.test(currentUrl)
+	) {
+		const info = await initInfo(false);
+		await new express().bulkTypeOne(info.user);
+		await new express().bulkTypeTwo(info.user);
+		floatingButton(info, 'express', true, true);
 
-    /** */
-  } else if (/aliexpress.com\/store/.test(currentUrl)) {
-    const info = await initInfo(false);
-    await new express().bulkTypeThree(info.user);
-    floatingButton(info, 'express', true, true);
+		/** */
+	} else if (/aliexpress.com\/store/.test(currentUrl)) {
+		const info = await initInfo(false);
+		await new express().bulkTypeThree(info.user);
+		floatingButton(info, 'express', true, true);
 
-    /** */
-  } else if (/detail.1688.com/.test(currentUrl)) {
-    const info = await initInfo(true);
-    const result = await new alibaba().get(info.user);
-    floatingButton(info, 'alibaba', result, false);
+		/** */
+	} else if (/detail.1688.com/.test(currentUrl)) {
+		const info = await initInfo(true);
+		const result = await new alibaba().get(info.user);
+		floatingButton(info, 'alibaba', result, false);
 
-    /** */
-  } else if (
-    /s.1688.com\/selloffer\/offer_search.htm/.test(currentUrl) ||
-    /1688.com\/page\/offerlist/.test(currentUrl) ||
-    /s.1688.com\/youyuan\/index.htm/.test(currentUrl)
-  ) {
-    const info = await initInfo(false);
-    await new alibaba().bulkTypeOne(info.user);
-    await new alibaba().bulkTypeTwo(info.user);
-    floatingButton(info, 'alibaba', true, true);
+		/** */
+	} else if (
+		/s.1688.com\/selloffer\/offer_search.htm/.test(currentUrl) ||
+		/1688.com\/page\/offerlist/.test(currentUrl) ||
+		/s.1688.com\/youyuan\/index.htm/.test(currentUrl)
+	) {
+		const info = await initInfo(false);
+		await new alibaba().bulkTypeOne(info.user);
+		await new alibaba().bulkTypeTwo(info.user);
+		floatingButton(info, 'alibaba', true, true);
 
-    /** */
-  } else if (/show.1688.com\/pinlei\/industry\/pllist.html/.test(currentUrl)) {
-    const info = await initInfo(false);
-    await new alibaba().bulkTypeOne(info.user);
-    floatingButton(info, 'alibaba', true, true);
+		/** */
+	} else if (/show.1688.com\/pinlei\/industry\/pllist.html/.test(currentUrl)) {
+		const info = await initInfo(false);
+		await new alibaba().bulkTypeOne(info.user);
+		floatingButton(info, 'alibaba', true, true);
 
-    /** */
-  } else if (/www.vvic.com\/item/.test(currentUrl)) {
-    const info = await initInfo(true);
-    const result = await new vvic().get(info.user);
-    floatingButton(info, 'vvic', result, false);
+		/** */
+	} else if (/www.vvic.com\/item/.test(currentUrl)) {
+		const info = await initInfo(true);
+		const result = await new vvic().get(info.user);
+		floatingButton(info, 'vvic', result, false);
 
-    /** */
-  } else if (/www.vvic.com\/.+\/search/.test(currentUrl) || /www.vvic.com\/.+\/topic/.test(currentUrl)) {
-    const info = await initInfo(false);
-    await new vvic().bulkTypeOne(info.user, 2);
-    floatingButton(info, 'vvic', true, true);
+		/** */
+	} else if (/www.vvic.com\/.+\/search/.test(currentUrl) || /www.vvic.com\/.+\/topic/.test(currentUrl)) {
+		const info = await initInfo(false);
+		await new vvic().bulkTypeOne(info.user, 2);
+		floatingButton(info, 'vvic', true, true);
 
-    /** */
-  } else if (/www.vvic.com\/shop/.test(currentUrl)) {
-    const info = await initInfo(false);
-    await new vvic().bulkTypeOne(info.user, 3);
-    floatingButton(info, 'vvic', true, true);
+		/** */
+	} else if (/www.vvic.com\/shop/.test(currentUrl)) {
+		const info = await initInfo(false);
+		await new vvic().bulkTypeOne(info.user, 3);
+		floatingButton(info, 'vvic', true, true);
 
-    /** */
-  } else if (/www.vvic.com\/.+\/list/.test(currentUrl)) {
-    const info = await initInfo(false);
-    await new vvic().bulkTypeOne(info.user, 4);
-    floatingButton(info, 'vvic', true, true);
+		/** */
+	} else if (/www.vvic.com\/.+\/list/.test(currentUrl)) {
+		const info = await initInfo(false);
+		await new vvic().bulkTypeOne(info.user, 4);
+		floatingButton(info, 'vvic', true, true);
 
-    /** */
-  } else if (/www.amazon.com\/.+\/dp\//.test(currentUrl) || /www.amazon.com\/dp/.test(currentUrl)) {
-    const info = await initInfo(true);
-    const result = await new amazon().get(info.user, 'us');
-    floatingButton(info, 'amazon', result, false);
+		/** */
+	} else if (/www.amazon.com\/.+\/dp\//.test(currentUrl) || /www.amazon.com\/dp/.test(currentUrl)) {
+		const info = await initInfo(true);
+		const result = await new amazon().get(info.user, 'us');
+		floatingButton(info, 'amazon', result, false);
 
-    /** */
-  } else if (/www.amazon.co.jp\/.+\/dp\//.test(currentUrl) || /www.amazon.co.jp\/dp/.test(currentUrl)) {
-    const info = await initInfo(true);
-    const result = await new amazon().get(info.user, 'jp');
-    floatingButton(info, 'amazon', result, false);
+		/** */
+	} else if (/www.amazon.co.jp\/.+\/dp\//.test(currentUrl) || /www.amazon.co.jp\/dp/.test(currentUrl)) {
+		const info = await initInfo(true);
+		const result = await new amazon().get(info.user, 'jp');
+		floatingButton(info, 'amazon', result, false);
 
-    /** */
-  } else if (/www.amazon.de\/.+\/dp\//.test(currentUrl) || /www.amazon.de\/dp/.test(currentUrl)) {
-    const info = await initInfo(true);
-    const result = await new amazon().get(info.user, 'de');
-    floatingButton(info, 'amazon', result, false);
+		/** */
+	} else if (/www.amazon.de\/.+\/dp\//.test(currentUrl) || /www.amazon.de\/dp/.test(currentUrl)) {
+		const info = await initInfo(true);
+		const result = await new amazon().get(info.user, 'de');
+		floatingButton(info, 'amazon', result, false);
 
-    /** */
-  } else if (
-    /www.amazon.com\/s\?/.test(currentUrl) ||
-    /www.amazon.com\/s\//.test(currentUrl) ||
-    /www.amazon.com\/b\//.test(currentUrl)
-  ) {
-    const info = await initInfo(false);
-    await new amazon().bulkTypeOne(info.user, 'amazon.com');
-    floatingButton(info, 'amazon1', true, true);
+		/** */
+	} else if (
+		/www.amazon.com\/s\?/.test(currentUrl) ||
+		/www.amazon.com\/s\//.test(currentUrl) ||
+		/www.amazon.com\/b\//.test(currentUrl)
+	) {
+		const info = await initInfo(false);
+		await new amazon().bulkTypeOne(info.user, 'amazon.com');
+		floatingButton(info, 'amazon1', true, true);
 
-    /** */
-  } else if (/www.amazon.com\/stores/.test(currentUrl)) {
-    const info = await initInfo(false);
-    await new amazon().bulkTypeTwo(info.user, 'amazon.com');
-    floatingButton(info, 'amazon2', true, true);
+		/** */
+	} else if (/www.amazon.com\/stores/.test(currentUrl)) {
+		const info = await initInfo(false);
+		await new amazon().bulkTypeTwo(info.user, 'amazon.com');
+		floatingButton(info, 'amazon2', true, true);
 
-    /** */
-  } else if (
-    /www.amazon.co.jp\/s\?/.test(currentUrl) ||
-    /www.amazon.co.jp\/s\//.test(currentUrl) ||
-    /www.amazon.co.jp\/b\//.test(currentUrl)
-  ) {
-    const info = await initInfo(false);
-    await new amazon().bulkTypeOne(info.user, 'amazon.co.jp');
-    floatingButton(info, 'amazon1', true, true);
+		/** */
+	} else if (
+		/www.amazon.co.jp\/s\?/.test(currentUrl) ||
+		/www.amazon.co.jp\/s\//.test(currentUrl) ||
+		/www.amazon.co.jp\/b\//.test(currentUrl)
+	) {
+		const info = await initInfo(false);
+		await new amazon().bulkTypeOne(info.user, 'amazon.co.jp');
+		floatingButton(info, 'amazon1', true, true);
 
-    /** */
-  } else if (/www.amazon.co.jp\/stores/.test(currentUrl)) {
-    const info = await initInfo(false);
-    await new amazon().bulkTypeTwo(info.user, 'amazon.co.jp');
-    floatingButton(info, 'amazon2', true, true);
+		/** */
+	} else if (/www.amazon.co.jp\/stores/.test(currentUrl)) {
+		const info = await initInfo(false);
+		await new amazon().bulkTypeTwo(info.user, 'amazon.co.jp');
+		floatingButton(info, 'amazon2', true, true);
 
-    /** */
-  } else if (
-    /www.amazon.de\/s\?/.test(currentUrl) ||
-    /www.amazon.de\/s\//.test(currentUrl) ||
-    /www.amazon.de\/b\//.test(currentUrl)
-  ) {
-    const info = await initInfo(false);
-    await new amazon().bulkTypeOne(info.user, 'amazon.de');
-    floatingButton(info, 'amazon1', true, true);
+		/** */
+	} else if (
+		/www.amazon.de\/s\?/.test(currentUrl) ||
+		/www.amazon.de\/s\//.test(currentUrl) ||
+		/www.amazon.de\/b\//.test(currentUrl)
+	) {
+		const info = await initInfo(false);
+		await new amazon().bulkTypeOne(info.user, 'amazon.de');
+		floatingButton(info, 'amazon1', true, true);
 
-    /** */
-  } else if (/www.amazon.de\/stores/.test(currentUrl)) {
-    const info = await initInfo(false);
-    await new amazon().bulkTypeTwo(info.user, 'amazon.de');
-    floatingButton(info, 'amazon2', true, true);
+		/** */
+	} else if (/www.amazon.de\/stores/.test(currentUrl)) {
+		const info = await initInfo(false);
+		await new amazon().bulkTypeTwo(info.user, 'amazon.de');
+		floatingButton(info, 'amazon2', true, true);
 
-    /** 테무 리스트 페이지 */
-  } else if (/.temu.com\/kr-en\/.*opt_level/.test(currentUrl)) {
-    alert('테무 리스트 페이지 진입');
-  }
+		/** 테무 리스트 페이지 */
+	} else if (/.temu.com\/kr-en\/.*opt_level/.test(currentUrl)) {
+		alert('테무 리스트 페이지 진입');
+	}
 };
 
 main();

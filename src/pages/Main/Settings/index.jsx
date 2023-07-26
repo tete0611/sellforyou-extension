@@ -6,7 +6,7 @@ import { Settings } from './Settings';
 import './index.css';
 
 render(
-  <Settings />,
+	<Settings />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

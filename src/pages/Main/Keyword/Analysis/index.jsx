@@ -6,7 +6,7 @@ import { Analysis } from './Analysis';
 import './index.css';
 
 render(
-  <Analysis />,
+	<Analysis />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

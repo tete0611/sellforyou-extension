@@ -6,7 +6,7 @@ import { LostAndFound } from './LostAndFound';
 import './index.css';
 
 render(
-  <LostAndFound />,
+	<LostAndFound />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );

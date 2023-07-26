@@ -6,7 +6,7 @@ import { Inflow } from './Inflow';
 import './index.css';
 
 render(
-  <Inflow />,
+	<Inflow />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );
