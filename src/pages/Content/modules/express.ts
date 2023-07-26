@@ -908,7 +908,6 @@ export class express {
 			}
 
 			let data = sessionStorage.getItem('sfy-express-item');
-
 			if (data) {
 				let originalData = JSON.parse(data);
 

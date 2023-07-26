@@ -11,9 +11,7 @@ let papagoApiKey = '';
 
 /** 크롬스토리지 파파고 키 가져오기 */
 getLocalStorage('ppgKey').then((apiKey) => {
-	console.log({ apiKey });
 	papagoApiKey = apiKey as string;
-	console.log('파파고 키 연동완료');
 });
 
 let applyWaterMarkText: any = document.getElementById('applyWaterMarkText');
@@ -430,7 +428,6 @@ function replayCanvas(type: string) {
 }
 
 async function translationPapago(input_string: string, source: string, target: string) {
-	console.log({ papagoApiKey });
 	let deviceid = '364961ac-efa2-49ca-a998-ad55f7f9d32d';
 	let url = 'https://papago.naver.com/apis/n2mt/translate';
 	let time = new Date().getTime();

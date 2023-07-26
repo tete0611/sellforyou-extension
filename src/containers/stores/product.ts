@@ -1642,7 +1642,6 @@ export class product {
 					return;
 				}
 
-				console.log('너왜 여기까지옴?');
 				tagList.push(v.tag);
 			}),
 		);
@@ -5513,8 +5512,9 @@ export class product {
 		});
 
 		runInAction(() => {
-			this.manyDescriptionInfo.previewHtml = JSON.parse(response.data.getRegisterProductsDataByUser)[0]?.DShopInfo
-				?.DataDataSet?.data[0]?.content;
+			this.manyDescriptionInfo.previewHtml = JSON.parse(
+				response.data.getRegisterProductsDataByUser,
+			)[0]?.DShopInfo?.DataDataSet?.data[0]?.content;
 		});
 	};
 }

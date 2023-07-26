@@ -504,7 +504,6 @@ export class alibaba {
 			}
 
 			let data = sessionStorage.getItem('sfy-alibaba-item');
-
 			if (data) {
 				let originalData = JSON.parse(data);
 
