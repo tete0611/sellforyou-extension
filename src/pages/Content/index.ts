@@ -1764,7 +1764,7 @@ const main = async () => {
 		floatingButton(info, null, result, false);
 
 		/** 타오바오 리스트 페이지 */
-	} else if (/s.taobao.com\/search/.test(currentUrl)) {
+	} else if (/\bs.taobao.com\/search/.test(currentUrl)) {
 		const info = await initInfo(false);
 		await new taobao().bulkTypeOne(info.user);
 		floatingButton(info, 'taobao1', true, true);
@@ -1837,7 +1837,7 @@ const main = async () => {
 		await new express().bulkTypeThree(info.user);
 		floatingButton(info, 'express', true, true);
 
-		/** */
+		/** 1688 단일상품 페이지 */
 	} else if (/detail.1688.com/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new alibaba().get(info.user);
@@ -1849,13 +1849,15 @@ const main = async () => {
 		/1688.com\/page\/offerlist/.test(currentUrl) ||
 		/s.1688.com\/youyuan\/index.htm/.test(currentUrl)
 	) {
+		console.log('1688 상점 페이지 진입');
 		const info = await initInfo(false);
 		await new alibaba().bulkTypeOne(info.user);
 		await new alibaba().bulkTypeTwo(info.user);
 		floatingButton(info, 'alibaba', true, true);
 
-		/** */
+		/** 1688 리스트 페이지 */
 	} else if (/show.1688.com\/pinlei\/industry\/pllist.html/.test(currentUrl)) {
+		console.log('1688 리스트페이지 진입');
 		const info = await initInfo(false);
 		await new alibaba().bulkTypeOne(info.user);
 		floatingButton(info, 'alibaba', true, true);

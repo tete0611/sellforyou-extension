@@ -66,7 +66,7 @@ async function scrape(items: any, user: any) {
 					} else {
 						const image: any = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
 						if (image < 1000) {
-							console.log('흰색 이미지', desc[i]);
+							// console.log('흰색 이미지', desc[i]);
 							desc[i].parentNode.removeChild(desc[i]);
 						} else {
 							desc[i].src = desc[i].src;
@@ -296,7 +296,7 @@ async function scrape(items: any, user: any) {
 					} else {
 						const image: any = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
 						if (image < 1000) {
-							console.log('흰색 이미지', desc[i]);
+							// console.log('흰색 이미지', desc[i]);
 							desc[i].parentNode.removeChild(desc[i]);
 						} else {
 							desc[i].src = desc[i].src;
@@ -507,7 +507,7 @@ export class alibaba {
 			if (data) {
 				let originalData = JSON.parse(data);
 
-				console.log(originalData);
+				// console.log(originalData);
 
 				return await scrape(originalData, user);
 			}
@@ -521,7 +521,7 @@ export class alibaba {
 	// 대량수집 페이지별 체크표시
 	async bulkTypeOne(user) {
 		document.addEventListener('DOMNodeInserted', function (e: any) {
-			console.log(e.target);
+			// console.log(e.target);
 
 			try {
 				if (
