@@ -426,8 +426,10 @@ function replayCanvas(type: string) {
 		await displayImage(currentImageIndex, 0);
 	});
 }
-
+/** 이미지 번역에 사용되는 파파고 */
 async function translationPapago(input_string: string, source: string, target: string) {
+	if (papagoApiKey === '') return alert('번역 API키 Error , 관리자에게 문의해주세요');
+
 	let deviceid = '364961ac-efa2-49ca-a998-ad55f7f9d32d';
 	let url = 'https://papago.naver.com/apis/n2mt/translate';
 	let time = new Date().getTime();

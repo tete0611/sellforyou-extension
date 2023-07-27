@@ -1,10 +1,19 @@
 import CryptoJS from 'crypto-js';
-const papagoApiKey = 'v1.7.6_fa52a4d6c8';
-// 파파고 번역 엔진 크롤러
-// 파파고 번역 페이지 버전과 다를 경우 응답이 오지 않을 수 있음
-// 번역 오류 발생 시 해당 부분 수정 필요
-// 현재 버전: v1.7.1_12f919c9b5
+import { getLocalStorage } from './ChromeAsync';
+
+let papagoApiKey = '';
+/** 크롬스토리지 파파고 키 가져오기 */
+getLocalStorage('ppgKey').then((apiKey) => {
+	papagoApiKey = apiKey as string;
+});
+
+/**
+ * 상품수집에 사용되는 파파고 번역 엔진 크롤러
+ * 파파고 번역 페이지 버전과 다를 경우 응답이 오지 않을 수 있음
+ * 번역 오류 발생 시 해당 부분 수정 필요
+ */
 async function papagoTranslation(textdict: any, source: string, target: string, input: any) {
+	if (papagoApiKey === '') return alert('번역 API키 Error , 관리자에게 문의해주세요');
 	let input_string = '';
 	if (!input) {
 		for (let i in textdict) {
