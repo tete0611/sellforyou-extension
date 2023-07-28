@@ -1843,13 +1843,12 @@ const main = async () => {
 		const result = await new alibaba().get(info.user);
 		floatingButton(info, 'alibaba', result, false);
 
-		/** */
+		/** 1688 상점 페이지 인듯? */
 	} else if (
 		/s.1688.com\/selloffer\/offer_search.htm/.test(currentUrl) ||
 		/1688.com\/page\/offerlist/.test(currentUrl) ||
 		/s.1688.com\/youyuan\/index.htm/.test(currentUrl)
 	) {
-		console.log('1688 상점 페이지 진입');
 		const info = await initInfo(false);
 		await new alibaba().bulkTypeOne(info.user);
 		await new alibaba().bulkTypeTwo(info.user);
@@ -1954,7 +1953,7 @@ const main = async () => {
 
 		/** 테무 리스트 페이지 */
 	} else if (/.temu.com\/kr-en\/.*opt_level/.test(currentUrl)) {
-		alert('테무 리스트 페이지 진입');
+		// alert('테무 리스트 페이지 진입');
 	}
 };
 

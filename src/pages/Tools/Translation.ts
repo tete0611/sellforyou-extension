@@ -4,7 +4,7 @@ import { getLocalStorage } from './ChromeAsync';
 let papagoApiKey = '';
 /** 크롬스토리지 파파고 키 가져오기 */
 getLocalStorage('ppgKey').then((apiKey) => {
-	papagoApiKey = apiKey as string;
+	if (apiKey) papagoApiKey = apiKey as string;
 });
 
 /**
