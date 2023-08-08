@@ -315,7 +315,7 @@ export class reference {
 		let lotteonACJson = await lotteonACResp.json();
 		let lotteonACData = lotteonACJson.result.keyword.map((v) => v.keyword);
 
-		console.log(this.searchInfo.results);
+		// console.log(this.searchInfo.results);
 
 		runInAction(() => {
 			this.searchInfo.results.naver.dn = naverDNData;

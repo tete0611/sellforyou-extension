@@ -6,7 +6,7 @@ import { sleep } from './Common';
 // 기타 chrome API는 https://developer.chrome.com/docs/extensions/reference/ 참조
 
 // 크롬 스토리지 데이터 가져오기
-const getLocalStorage = (key: any) => {
+export const getLocalStorage = (key: any) => {
 	return new Promise((resolve, reject) => {
 		try {
 			chrome.storage.local.get(key, (value) => {
@@ -23,7 +23,7 @@ const getLocalStorage = (key: any) => {
 };
 
 // 크롬 스토리지 데이터 저장하기
-const setLocalStorage = (obj: any) => {
+export const setLocalStorage = (obj: any) => {
 	return new Promise((resolve, reject) => {
 		try {
 			chrome.storage.local.set(obj, () => {
@@ -36,7 +36,7 @@ const setLocalStorage = (obj: any) => {
 };
 
 // 크롬 스토리지 데이터 삭제하기
-const deleteLocalStorage = (keys: any) => {
+export const deleteLocalStorage = (keys: any) => {
 	return new Promise((resolve, reject) => {
 		try {
 			chrome.storage.local.remove(keys, () => {
@@ -49,7 +49,7 @@ const deleteLocalStorage = (keys: any) => {
 };
 
 // 메시지 전송 (콘텐츠스크립트 -> 확장프로그램)
-const sendRuntimeMessage = (obj: any) => {
+export const sendRuntimeMessage = (obj: any) => {
 	console.log('runtime', obj);
 
 	return new Promise((resolve, reject) => {
@@ -72,7 +72,8 @@ const sendRuntimeMessage = (obj: any) => {
 };
 
 // 메시지 전송 (확장프로그램 -> 콘텐츠스크립트)
-const sendTabMessage = (tabid: number, obj: any) => {
+export const sendTabMessage = (tabid: number, obj: any) => {
+	console.log('sendTabMessage 메서드 작동');
 	console.log(tabid, obj);
 
 	return new Promise((resolve, reject) => {
@@ -95,7 +96,7 @@ const sendTabMessage = (tabid: number, obj: any) => {
 };
 
 // 열려있는 창 조회
-const queryWindow = (options: any) => {
+export const queryWindow = (options: any) => {
 	return new Promise((resolve, reject) => {
 		try {
 			chrome.windows.getAll(options, (windows) => {
@@ -108,7 +109,7 @@ const queryWindow = (options: any) => {
 };
 
 // 열려있는 탭 조회
-const queryTabs = (options: any) => {
+export const queryTabs = (options: any) => {
 	return new Promise((resolve, reject) => {
 		try {
 			chrome.tabs.query(options, (tabs) => {
@@ -121,7 +122,7 @@ const queryTabs = (options: any) => {
 };
 
 // 새로운 탭 생성 (생성 즉시 탭 정보 반환)
-const createTab = (options: any) => {
+export const createTab = (options: any) => {
 	return new Promise((resolve, reject) => {
 		try {
 			chrome.tabs.create(options, (tab) => {
@@ -134,7 +135,7 @@ const createTab = (options: any) => {
 };
 
 // 새로운 탭 생성 (생성 및 URL 요청 후 페이지가 완전히 로드되면 탭 정보 반환)
-const createTabCompletely = async (options: any, limit: number) => {
+export const createTabCompletely = async (options: any, limit: number) => {
 	let timeout = 0;
 	let tab: any = await createTab(options);
 
@@ -154,16 +155,4 @@ const createTabCompletely = async (options: any, limit: number) => {
 
 		await sleep(1000 * 1);
 	}
-};
-
-export {
-	getLocalStorage,
-	setLocalStorage,
-	deleteLocalStorage,
-	sendRuntimeMessage,
-	sendTabMessage,
-	queryWindow,
-	queryTabs,
-	createTab,
-	createTabCompletely,
 };

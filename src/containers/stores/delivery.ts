@@ -367,7 +367,7 @@ export class delivery {
 			}
 		}
 
-		console.log(this.orderInfo.ordersFiltered);
+		// console.log(this.orderInfo.ordersFiltered);
 
 		this.orderInfo.ordersFiltered.map((v: any) => {
 			v.checked = false;

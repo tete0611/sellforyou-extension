@@ -720,9 +720,9 @@ export class product {
 		};
 
 		this.itemInfo.items[index].edited.summary = 2;
-
+		// console.log(value.code);
 		const response = await gql(QUERIES.SEARCH_CATEGORY_INFO_A077_BY_CODE, { code: value.code }, false);
-
+		// console.log({ response });
 		if (response.errors) {
 			alert(response.errors[0].message);
 
@@ -732,7 +732,7 @@ export class product {
 		}
 
 		const categories = response.data.searchCategoryInfoA077BySomeone[0];
-
+		// console.log({ categories });
 		const updateResponse = await gql(
 			MUTATIONS.UPDATE_PRODUCT_CATEGORY,
 			{
@@ -1376,7 +1376,7 @@ export class product {
 			this.itemInfo.checkedAll = false;
 		});
 
-		console.log(this.itemInfo);
+		// console.log(this.itemInfo);
 	};
 
 	// 상품 삭제
@@ -1602,7 +1602,7 @@ export class product {
 
 			return;
 		}
-		console.log('testtest');
+
 		let tagDataSet = await Promise.all(
 			addList
 				.filter((v: any) => v)
@@ -1623,7 +1623,7 @@ export class product {
 
 		await Promise.all(
 			tagDataSet.map((v: any) => {
-				console.log('test', v.restricted);
+				// console.log('test', v.restricted);
 
 				if (tagList.length > 9) {
 					floatingToast('검색어는 최대 10개까지만 입력하실 수 있습니다.', 'information');

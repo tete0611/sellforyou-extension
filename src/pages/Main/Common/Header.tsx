@@ -76,7 +76,7 @@ export const Header = observer(() => {
 		Promise.all(
 			notionPageList.map(async (v, i) => {
 				const response = await getNotionPage(v);
-				console.log(i);
+				// console.log(i);
 				if (i === 0) {
 					common.setNotionPage(response);
 				}

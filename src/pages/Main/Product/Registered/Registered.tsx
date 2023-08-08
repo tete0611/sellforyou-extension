@@ -40,7 +40,7 @@ export const Registered = observer(() => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
 
-	console.log('common', common);
+	// console.log('common', common);
 	// 컴포넌트 초기화
 	React.useEffect(() => {
 		// 태그사전 데이터 가져오기

@@ -1563,7 +1563,7 @@ const getsetPage = async (body) => {
 		});
 
 		// Handle the response here
-		console.log(response);
+		// console.log(response);
 	} catch (error) {
 		// Handle any errors that occur during the request
 		console.error(error);
@@ -1579,7 +1579,7 @@ const main = async () => {
 
 	document.documentElement.insertBefore(link, null);
 
-	chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+	chrome.runtime.onMessage.addListener((request: { action: string; source: any }, sender, sendResponse) => {
 		switch (request.action) {
 			case 'set_info': {
 				getsetPage(request.source).then(sendResponse);
@@ -1641,7 +1641,7 @@ const main = async () => {
 
 				return true;
 			}
-
+			/** 스마트스토어 */
 			case 'upload-A077': {
 				let paper = document.createElement('div');
 
@@ -1664,7 +1664,6 @@ const main = async () => {
 				document.documentElement.appendChild(paper);
 
 				uploadA077Resources(request.source).then(sendResponse);
-
 				return true;
 			}
 

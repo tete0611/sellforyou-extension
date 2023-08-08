@@ -66,7 +66,7 @@ export const Inflow = observer(() => {
 	const rowRenderer = (props) => {
 		const item = inflow.dataGroup[props.index][1];
 
-		console.log(item);
+		// console.log(item);
 
 		return (
 			<div key={props.key} style={props.style}>

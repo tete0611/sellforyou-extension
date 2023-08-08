@@ -296,8 +296,8 @@ export class inflow {
 				(this.dataGroup = [...mapGroup]);
 		});
 
-		console.log('test', this.dataInfos);
-		console.log('test2', this.dataGroup);
+		// console.log('test', this.dataInfos);
+		// console.log('test2', this.dataGroup);
 	};
 
 	// 검색 정보

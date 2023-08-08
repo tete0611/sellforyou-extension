@@ -247,7 +247,7 @@ async function scrape(items: any, user: any, region: string) {
 		}
 
 		const visualImg = parseData.visualDimensions.length;
-		console.log('test', visualImg);
+		// console.log('test', visualImg);
 		let optionProperties: any = [];
 
 		try {

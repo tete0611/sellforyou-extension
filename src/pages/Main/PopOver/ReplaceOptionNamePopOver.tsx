@@ -237,7 +237,7 @@ export const ReplaceOptionNamePopOver = observer(() => {
 											find.split(',').map((w: any) => {
 												let pattern = new RegExp(w, 'g');
 												name = name.replace(pattern, replace).replace(/  +/g, ' ');
-												console.log('name', name);
+												// console.log('name', name);
 											});
 										} else {
 											name = name.replaceAll(find, replace).replace(/  +/g, ' ');
