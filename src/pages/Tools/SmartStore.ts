@@ -15,8 +15,8 @@ import {
 import { createTabCompletely, sendTabMessage } from './ChromeAsync';
 
 // 스마트스토어 이미지업로드
-async function uploadA077Images(image_list: any) {
-	let image_data: any = [];
+async function uploadA077Images(image_list: string[]) {
+	let image_data: { index: string; data: any }[] = [];
 
 	for (let i in image_list) {
 		let result = await fetch(image_list[i]);
@@ -68,10 +68,12 @@ async function uploadA077Images(image_list: any) {
 				break;
 			}
 		}
-
-		// 업로드 API
+		/** 업로드 API */
+		// 간혹 452 에러를 반환할때가 있음 (리소스저작권 문제나 네트워크 문제같은데 확실하지 않음)
+		// 버전1 : https://sell.smartstore.naver.com/api/file/photoinfra/uploads?acceptedPatterns=image%2Fjpeg,image%2Fgif,image%2Fpng,image%2Fbmp
+		// 버전2(현재) : https://sell.smartstore.naver.com/api/v2/product-photos/uploads?acceptedPatterns=image%2Fjpeg,image%2Fgif,image%2Fpng,image%2Fbmp
 		let image_resp: any = await request(
-			'https://sell.smartstore.naver.com/api/file/photoinfra/uploads?acceptedPatterns=image%2Fjpeg,image%2Fgif,image%2Fpng,image%2Fbmp',
+			'https://sell.smartstore.naver.com/api/v2/product-photos/uploads?acceptedPatterns=image%2Fjpeg,image%2Fgif,image%2Fpng,image%2Fbmp',
 			{
 				method: 'POST',
 				body: formData,
@@ -92,14 +94,13 @@ async function uploadA077Images(image_list: any) {
 // 스마트스토어 리소스업로드 (이미지 & 동영상)
 async function uploadA077Resources(input: any) {
 	try {
-		let image_list: any = [];
+		let image_list: string[] = [];
 
 		for (let i in input) {
 			if (i.match(/img[0-9]/) && !i.includes('blob')) {
 				if (input[i] !== '') {
 					try {
-						let img: any = input[i].includes('http://') ? input[i].replaceAll('http://', 'https://') : input[i];
-
+						let img: string = input[i].includes('http://') ? input[i].replaceAll('http://', 'https://') : input[i];
 						image_list.push(img);
 					} catch {
 						continue;
@@ -107,7 +108,6 @@ async function uploadA077Resources(input: any) {
 				}
 			}
 		}
-
 		let image_data = await uploadA077Images(image_list);
 
 		let image_sort: any = image_data.sort(function (a, b) {
@@ -707,7 +707,7 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
 
 					return false;
 				}
-
+				/** 썸네일이미지 업로드 부문 */
 				if (!uploaded_naver || !uploaded_naver.image || uploaded_naver.image.length < 1) {
 					productStore.addRegisteredFailed(
 						Object.assign(market_item, {
