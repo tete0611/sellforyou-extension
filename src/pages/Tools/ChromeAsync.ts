@@ -73,7 +73,6 @@ export const sendRuntimeMessage = (obj: any) => {
 
 // 메시지 전송 (확장프로그램 -> 콘텐츠스크립트)
 export const sendTabMessage = (tabid: number, obj: any) => {
-	console.log('sendTabMessage 메서드 작동');
 	console.log(tabid, obj);
 
 	return new Promise((resolve, reject) => {

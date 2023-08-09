@@ -1860,7 +1860,7 @@ const main = async () => {
 		await new alibaba().bulkTypeOne(info.user);
 		floatingButton(info, 'alibaba', true, true);
 
-		/** */
+		/** vvic 단일상품 페이지 */
 	} else if (/www.vvic.com\/item/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new vvic().get(info.user);

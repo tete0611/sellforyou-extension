@@ -73,19 +73,14 @@ async function addBulkInfo(source: any, sender: any, isExcel: boolean) {
 // onebound에는 상품 원본 데이터에 대한 정보, sellforyou에는 번역 데이터에 대한 정보
 async function addToInventory(sender: any, origin: any) {
 	// 상품 수집 실패 시
-	if (origin.error) {
-		return await finishCollect(sender, 'failed', origin.error);
-	}
+	if (origin.error) return await finishCollect(sender, 'failed', origin.error);
+
 	// 대량 수집 시 (대량수집 시) 설정해둔 값들을 불러 옴
 	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
 	let collect = collectInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
 	if (collect && collect.useStandardShipping) {
-		if (
-			origin.item.shop_id === 'express' &&
-			!origin.item.props.find((v) => v.name === 'AliExpress Standard Shipping')
-		) {
-			return await finishCollect(sender, 'failed', '스탠다드 쉬핑 불가 상품입니다.'); // finish로 그냥 에러내서 끝내버림 . skip 해버림.
-		}
+		if (origin.item.shop_id === 'express' && !origin.item.props.find((v) => v.name === 'AliExpress Standard Shipping'))
+			return await finishCollect(sender, 'failed', '스탠다드 쉬핑 불가 상품입니다.'); // finish로 그냥 에러내서 끝내버림. skip 해버림.
 	}
 
 	// 번역 데이터 초기화

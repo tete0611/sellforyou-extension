@@ -477,7 +477,7 @@ export const TabOption = observer((props: any) => {
 														{
 															JSON.parse(props.item.activeTaobaoProduct.originalData).propsList[
 																`${v.taobaoPid}:${v.productOptionValue[0].taobaoVid}`
-															].split(':')[0]
+															]?.split(':')[0]
 														}
 													</Typography>
 												</Box>
@@ -630,7 +630,7 @@ export const TabOption = observer((props: any) => {
 																{
 																	JSON.parse(props.item.activeTaobaoProduct.originalData).propsList[
 																		`${v.taobaoPid}:${w.taobaoVid}`
-																	].split(':')[1]
+																	]?.split(':')[1]
 																}
 															</Typography>
 														</Box>
