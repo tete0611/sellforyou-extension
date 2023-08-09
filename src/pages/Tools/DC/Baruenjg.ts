@@ -2,7 +2,7 @@
 
 import { getAirportName } from '../Common';
 
-async function getBaruenjgForm(data) {
+export async function getBaruenjgForm(data) {
 	let results = await Promise.all(
 		data.map(async (v: any, i: number) => {
 			let receiverNameEn = v.connected.receiverName;
@@ -61,5 +61,3 @@ async function getBaruenjgForm(data) {
 		type: 'xlsx',
 	};
 }
-
-export { getBaruenjgForm };

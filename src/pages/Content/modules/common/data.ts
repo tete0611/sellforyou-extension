@@ -1,5 +1,5 @@
 // 상품 수집 공통 폼
-const form = {
+export const form = {
 	item: {
 		num_iid: '',
 		id: '',
@@ -73,5 +73,3 @@ const form = {
 	},
 	user: null,
 };
-
-export { form };

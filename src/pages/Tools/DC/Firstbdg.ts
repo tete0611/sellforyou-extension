@@ -2,7 +2,7 @@
 
 import { floatingToast, getAirportName } from '../Common';
 
-async function getFirstbdgForm(data, commonStore) {
+export async function getFirstbdgForm(data, commonStore) {
 	if (!commonStore.user.userInfo.orderToDeliveryMethod) {
 		floatingToast('배송방법이 선택되어 있지 않습니다.\n기본설정 > 배대지 설정 > 배송방법을 확인해주세요.', 'failed');
 
@@ -70,5 +70,3 @@ async function getFirstbdgForm(data, commonStore) {
 		type: 'xls',
 	};
 }
-
-export { getFirstbdgForm };

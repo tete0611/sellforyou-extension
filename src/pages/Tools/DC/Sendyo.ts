@@ -2,7 +2,7 @@
 
 import { getAirportName } from '../Common';
 
-async function getSendyoForm(data) {
+export async function getSendyoForm(data) {
 	let results = await Promise.all(
 		data.map(async (v: any, i: number) => {
 			let receiverNameEn = v.connected.receiverName;
@@ -65,5 +65,3 @@ async function getSendyoForm(data) {
 		type: 'xlsx',
 	};
 }
-
-export { getSendyoForm };

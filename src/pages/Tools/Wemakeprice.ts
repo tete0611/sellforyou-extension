@@ -13,7 +13,7 @@ import {
 	transformContent,
 } from './Common';
 // 위메프 상품삭제 메시지 탭
-async function deleteWemakeprice2(data: any) {
+export async function deleteWemakeprice2(data: any) {
 	const deleteResp: any = await request('https://wpartner.wemakeprice.com/product/setProdStatus.json', {
 		headers: {
 			accept: 'application/json, text/javascript, */*; q=0.01',
@@ -39,7 +39,7 @@ async function deleteWemakeprice2(data: any) {
 	return deleteJson;
 }
 // 위메프 상품수정 메시지 탭
-async function editWemakeprice(data: any) {
+export async function editWemakeprice(data: any) {
 	let productResp: any = await request('https://wpartner.wemakeprice.com/product/setProd.json', {
 		headers: {
 			accept: 'application/json, text/javascript, */*; q=0.01',
@@ -66,7 +66,7 @@ async function editWemakeprice(data: any) {
 	return productJson;
 }
 // 위메프 상품등록 메시지 탭
-async function uploadWemakeprice2(data: any) {
+export async function uploadWemakeprice2(data: any) {
 	let productResp: any = await request('https://wpartner.wemakeprice.com/product/setProd.json', {
 		headers: {
 			accept: 'application/json, text/javascript, */*; q=0.01',
@@ -92,7 +92,7 @@ async function uploadWemakeprice2(data: any) {
 }
 
 // 위메프 상품등록
-async function uploadWemakeprice(productStore: any, commonStore: any, data: any) {
+export async function uploadWemakeprice(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -331,10 +331,10 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
 					prodDesc: `
         ${getStoreTraceCodeV1(market_item.id, data.DShopInfo.site_code)}
         ${market_item.content2}${
-					commonStore.user.userInfo.descriptionShowTitle === 'Y'
-						? `<br /><br /><div style="text-align: center;">${market_item.name3}</div><br /><br />`
-						: `<br /><br />`
-				}${transformContent(market_item.content1)}${market_item.content3}`,
+						commonStore.user.userInfo.descriptionShowTitle === 'Y'
+							? `<br /><br /><div style="text-align: center;">${market_item.name3}</div><br /><br />`
+							: `<br /><br />`
+					}${transformContent(market_item.content1)}${market_item.content3}`,
 				};
 
 				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
@@ -683,7 +683,7 @@ async function uploadWemakeprice(productStore: any, commonStore: any, data: any)
 }
 
 // 위메프 상품 등록해제
-async function deleteWemakeprice(productStore: any, commonStore: any, data: any) {
+export async function deleteWemakeprice(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -805,7 +805,7 @@ async function deleteWemakeprice(productStore: any, commonStore: any, data: any)
 }
 
 // 위메프 신규주문조회
-async function newOrderWemakeprice(commonStore: any, shopInfo: any) {
+export async function newOrderWemakeprice(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -891,7 +891,7 @@ async function newOrderWemakeprice(commonStore: any, shopInfo: any) {
 }
 
 // 위메프 발주확인 처리
-async function productPreparedWemakeprice(commonStore: any, shopInfo: any, props: any) {
+export async function productPreparedWemakeprice(commonStore: any, shopInfo: any, props: any) {
 	let productshipNo: any = [];
 	if (props !== '' && props.item.marketCode === 'B719') {
 		productshipNo.push(props.item.shipNo);
@@ -954,7 +954,7 @@ async function productPreparedWemakeprice(commonStore: any, shopInfo: any, props
 }
 
 // 위메프 발송처리주문조회
-async function deliveryOrderWemakeprice(commonStore: any, shopInfo: any) {
+export async function deliveryOrderWemakeprice(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -1038,14 +1038,3 @@ async function deliveryOrderWemakeprice(commonStore: any, shopInfo: any) {
 		return [];
 	}
 }
-
-export {
-	deleteWemakeprice2,
-	editWemakeprice,
-	uploadWemakeprice2,
-	uploadWemakeprice,
-	deleteWemakeprice,
-	newOrderWemakeprice,
-	productPreparedWemakeprice,
-	deliveryOrderWemakeprice,
-};

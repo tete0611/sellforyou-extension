@@ -18,7 +18,7 @@ const iconv = require('iconv-lite');
 const xml2js = require('xml2js');
 
 // 11번가 API Endpoint 인터페이스
-async function streetApiGateway(body: any) {
+export async function streetApiGateway(body: any) {
 	let xmlBuilder = new xml2js.Builder({ cdata: true });
 	let xmlData: any = body.method !== 'GET' ? xmlBuilder.buildObject(body.data) : undefined;
 	let xmlHeader: any = {
@@ -49,7 +49,7 @@ async function streetApiGateway(body: any) {
 }
 
 // 11번가 상품등록
-async function uploadStreet(productStore: any, commonStore: any, data: any) {
+export async function uploadStreet(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -646,7 +646,7 @@ async function uploadStreet(productStore: any, commonStore: any, data: any) {
 }
 
 // 11번가 상품등록 해제
-async function deleteStreet(productStore: any, commonStore: any, data: any) {
+export async function deleteStreet(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -789,7 +789,7 @@ async function deleteStreet(productStore: any, commonStore: any, data: any) {
 }
 
 // 11번가 신규주문조회
-async function newOrderStreet(commonStore: any, shopInfo: any) {
+export async function newOrderStreet(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -891,7 +891,7 @@ async function newOrderStreet(commonStore: any, shopInfo: any) {
 }
 
 // 11번가 발주확인처리
-async function productPreparedStreet(commonStore: any, shopInfo: any) {
+export async function productPreparedStreet(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -998,7 +998,7 @@ async function productPreparedStreet(commonStore: any, shopInfo: any) {
 }
 
 // 11번가 발송처리주문조회
-async function deliveryOrderStreet(commonStore: any, shopInfo: any) {
+export async function deliveryOrderStreet(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -1098,5 +1098,3 @@ async function deliveryOrderStreet(commonStore: any, shopInfo: any) {
 		return [];
 	}
 }
-
-export { streetApiGateway, uploadStreet, deleteStreet, newOrderStreet, productPreparedStreet, deliveryOrderStreet };

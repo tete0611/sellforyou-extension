@@ -52,7 +52,7 @@ async function convertB956Resources(content: any, type: any) {
 }
 
 // 티몬 상품등록
-async function uploadTmon(productStore: any, commonStore: any, data: any) {
+export async function uploadTmon(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -1201,7 +1201,7 @@ async function uploadTmon(productStore: any, commonStore: any, data: any) {
 }
 
 // 티몬 상품등록해제
-async function deleteTmon(productStore: any, commonStore: any, data: any) {
+export async function deleteTmon(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -1290,7 +1290,7 @@ async function deleteTmon(productStore: any, commonStore: any, data: any) {
 }
 
 // 티몬 신규주문
-async function newOrderTmon(commonStore: any, shopInfo: any) {
+export async function newOrderTmon(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -1380,5 +1380,3 @@ async function newOrderTmon(commonStore: any, shopInfo: any) {
 		return [];
 	}
 }
-
-export { uploadTmon, deleteTmon, newOrderTmon };

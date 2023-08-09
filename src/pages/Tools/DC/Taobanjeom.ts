@@ -2,7 +2,7 @@
 
 import { floatingToast, getAirportName } from '../Common';
 
-async function getTaobanjeomForm(data, commonStore) {
+export async function getTaobanjeomForm(data, commonStore) {
 	if (!commonStore.user.userInfo.orderToDeliveryMethod) {
 		floatingToast('배송방법이 선택되어 있지 않습니다.\n기본설정 > 배대지 설정 > 배송방법을 확인해주세요.', 'failed');
 
@@ -73,5 +73,3 @@ async function getTaobanjeomForm(data, commonStore) {
 		type: 'xlsx',
 	};
 }
-
-export { getTaobanjeomForm };

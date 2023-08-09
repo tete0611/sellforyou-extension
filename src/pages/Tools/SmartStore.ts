@@ -15,7 +15,7 @@ import {
 import { createTabCompletely, sendTabMessage } from './ChromeAsync';
 
 // 스마트스토어 이미지업로드
-async function uploadA077Images(image_list: string[]) {
+export async function uploadA077Images(image_list: string[]) {
 	let image_data: { index: string; data: any }[] = [];
 
 	for (let i in image_list) {
@@ -92,7 +92,7 @@ async function uploadA077Images(image_list: string[]) {
 }
 
 // 스마트스토어 리소스업로드 (이미지 & 동영상)
-async function uploadA077Resources(input: any) {
+export async function uploadA077Resources(input: any) {
 	try {
 		let image_list: string[] = [];
 
@@ -383,7 +383,7 @@ async function uploadA077Resources(input: any) {
 }
 
 // 스마트스토어 상품등록
-async function uploadA077Products(data: any) {
+export async function uploadA077Products(data: any) {
 	const resp_text: any = await request('https://sell.smartstore.naver.com/api/products', {
 		headers: {
 			'content-type': 'application/json;charset=UTF-8',
@@ -402,7 +402,7 @@ async function uploadA077Products(data: any) {
 }
 
 // 스마트스토어 상품수정
-async function editedA077Products(data: any) {
+export async function editedA077Products(data: any) {
 	const resp_text: any = await request('https://sell.smartstore.naver.com/api/products', {
 		headers: {
 			'content-type': 'application/json;charset=UTF-8',
@@ -421,7 +421,7 @@ async function editedA077Products(data: any) {
 }
 
 // 스마트스토어 상품조회
-async function searchA077Products(data: any) {
+export async function searchA077Products(data: any) {
 	const resp_text: any = await request('https://sell.smartstore.naver.com/api/products/list/search', {
 		headers: {
 			'content-type': 'application/json;charset=UTF-8',
@@ -440,7 +440,7 @@ async function searchA077Products(data: any) {
 }
 
 // 스마트스토어 상품삭제
-async function deleteA077Products(data: any) {
+export async function deleteA077Products(data: any) {
 	const resp_text: any = await request(
 		'https://sell.smartstore.naver.com/api/products/bulk-update?_action=updateProductStatusType',
 		{
@@ -462,7 +462,7 @@ async function deleteA077Products(data: any) {
 }
 
 // 스마트스토어 상품등록
-async function uploadSmartStore(productStore: any, commonStore: any, data: any) {
+export async function uploadSmartStore(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -1432,7 +1432,7 @@ async function uploadSmartStore(productStore: any, commonStore: any, data: any) 
 }
 
 // 스마트스토어 상품 등록해제
-async function deleteSmartStore(productStore: any, commonStore: any, data: any) {
+export async function deleteSmartStore(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -1588,7 +1588,7 @@ async function deleteSmartStore(productStore: any, commonStore: any, data: any) 
 }
 
 // 스마트스토어 신규주문조회
-async function newOrderSmartStore(commonStore: any, shopInfo: any) {
+export async function newOrderSmartStore(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -1797,7 +1797,7 @@ async function newOrderSmartStore(commonStore: any, shopInfo: any) {
 }
 
 // 스마트스토어 발주확인처리
-async function productPreparedSmartStore(commonStore: any, shopInfo: any, props: any) {
+export async function productPreparedSmartStore(commonStore: any, shopInfo: any, props: any) {
 	let productOrderIds: any = [];
 	console.log(props);
 	if (props !== '' && props.item.marketCode === 'A077') {
@@ -1874,7 +1874,7 @@ async function productPreparedSmartStore(commonStore: any, shopInfo: any, props:
 }
 
 // 스마트스토어 발송처리주문조회
-async function deliveryOrderSmartStore(commonStore: any, shopInfo: any) {
+export async function deliveryOrderSmartStore(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -2078,16 +2078,3 @@ async function deliveryOrderSmartStore(commonStore: any, shopInfo: any) {
 		return [];
 	}
 }
-
-export {
-	uploadA077Resources,
-	editedA077Products,
-	searchA077Products,
-	deleteA077Products,
-	uploadA077Products,
-	uploadSmartStore,
-	deleteSmartStore,
-	newOrderSmartStore,
-	productPreparedSmartStore,
-	deliveryOrderSmartStore,
-};

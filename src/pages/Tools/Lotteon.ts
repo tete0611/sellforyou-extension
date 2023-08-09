@@ -14,7 +14,7 @@ import {
 } from './Common';
 
 // 롯데온 상품등록해제
-async function deleteLotteon(productStore: any, commonStore: any, data: any) {
+export async function deleteLotteon(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -117,7 +117,7 @@ async function deleteLotteon(productStore: any, commonStore: any, data: any) {
 }
 
 // 롯데온 상품등록
-async function uploadLotteon(productStore: any, commonStore: any, data: any) {
+export async function uploadLotteon(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -875,7 +875,7 @@ async function uploadLotteon(productStore: any, commonStore: any, data: any) {
 }
 
 // 롯데온 신규주문조회
-async function newOrderLotteon(commonStore: any, shopInfo: any) {
+export async function newOrderLotteon(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -960,7 +960,7 @@ async function newOrderLotteon(commonStore: any, shopInfo: any) {
 }
 
 // 롯데온 발주확인처리
-async function productPreparedLotteon(commonStore: any, shopInfo: any) {
+export async function productPreparedLotteon(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -1012,7 +1012,7 @@ async function productPreparedLotteon(commonStore: any, shopInfo: any) {
 }
 
 // 롯데온 발송처리주문조회
-async function deliveryOrderLotteon(commonStore: any, shopInfo: any) {
+export async function deliveryOrderLotteon(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -1095,5 +1095,3 @@ async function deliveryOrderLotteon(commonStore: any, shopInfo: any) {
 		return [];
 	}
 }
-
-export { deleteLotteon, uploadLotteon, newOrderLotteon, productPreparedLotteon, deliveryOrderLotteon };

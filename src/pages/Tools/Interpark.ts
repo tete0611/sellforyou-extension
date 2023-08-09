@@ -16,7 +16,7 @@ const iconv = require('iconv-lite');
 const xml2js = require('xml2js');
 
 // 인터파크 API Endpoint 인터페이스
-async function interparkApiGateway(path: any) {
+export async function interparkApiGateway(path: any) {
 	const streetResp = await fetch(`http://ipss1.interpark.com/openapi/${path}`);
 	const streetBuffer = await streetResp.arrayBuffer();
 
@@ -36,7 +36,7 @@ async function interparkApiGateway(path: any) {
 }
 
 // 인터파크 상품등록
-async function uploadInterpark(productStore: any, commonStore: any, data: any) {
+export async function uploadInterpark(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -504,7 +504,7 @@ async function uploadInterpark(productStore: any, commonStore: any, data: any) {
 }
 
 // 인터파크 상품 등록해제
-async function deleteInterpark(productStore: any, commonStore: any, data: any) {
+export async function deleteInterpark(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -604,7 +604,7 @@ async function deleteInterpark(productStore: any, commonStore: any, data: any) {
 }
 
 // 인터파크 신규주문조회 (API 승인 절차가 까다롭고, 제한사항이 많아 구현불가)
-async function newOrderInterpark(commonStore: any, shopInfo: any) {
+export async function newOrderInterpark(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -621,5 +621,3 @@ async function newOrderInterpark(commonStore: any, shopInfo: any) {
 		return [];
 	}
 }
-
-export { interparkApiGateway, uploadInterpark, deleteInterpark, newOrderInterpark };

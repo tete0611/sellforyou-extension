@@ -17,7 +17,7 @@ import {
 } from './Common';
 
 // 지마켓/옥션 1.0 상품등록
-async function uploadESMPlus(productStore: any, commonStore: any, data: any) {
+export async function uploadESMPlus(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -1028,7 +1028,7 @@ async function uploadESMPlus(productStore: any, commonStore: any, data: any) {
 // 지마켓/옥션 상품 등록해제
 // 상품수정 - 판매중지 - 삭제 순으로 진행해야 함
 // 따라서 상품등록 로직과 유사하게 보일 수 있음
-async function deleteESMPlus(productStore: any, commonStore: any, data: any) {
+export async function deleteESMPlus(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -1830,7 +1830,7 @@ async function deleteESMPlus(productStore: any, commonStore: any, data: any) {
 }
 
 // 지마켓/옥션 신규주문조회
-async function newOrderESMPlus(commonStore: any, shopInfo: any) {
+export async function newOrderESMPlus(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -2031,7 +2031,7 @@ async function newOrderESMPlus(commonStore: any, shopInfo: any) {
 }
 
 // 지마켓/옥션 발주확인 처리
-async function productPreparedESMPlus(commonStore: any, shopInfo: any, props: any) {
+export async function productPreparedESMPlus(commonStore: any, shopInfo: any, props: any) {
 	let productorderInfo: any = [];
 
 	if (props !== '' && props.item.marketCode === 'A001') {
@@ -2182,7 +2182,7 @@ async function productPreparedESMPlus(commonStore: any, shopInfo: any, props: an
 }
 
 // 지마켓/옥션 발송처리 주문조회
-async function deliveryOrderESMPlus(commonStore: any, shopInfo: any) {
+export async function deliveryOrderESMPlus(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -2387,5 +2387,3 @@ async function deliveryOrderESMPlus(commonStore: any, shopInfo: any) {
 		return [];
 	}
 }
-
-export { uploadESMPlus, deleteESMPlus, newOrderESMPlus, productPreparedESMPlus, deliveryOrderESMPlus };

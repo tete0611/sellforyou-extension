@@ -2,7 +2,7 @@
 
 import { floatingToast, getAirportName } from '../Common';
 
-async function getThebayForm(data, commonStore) {
+export async function getThebayForm(data, commonStore) {
 	if (!commonStore.user.userInfo.orderToDeliveryMembership) {
 		floatingToast('배송등급이 선택되어 있지 않습니다.\n기본설정 > 배대지 설정 > 배송등급을 확인해주세요.', 'failed');
 
@@ -67,5 +67,3 @@ async function getThebayForm(data, commonStore) {
 		type: 'xlsx',
 	};
 }
-
-export { getThebayForm };

@@ -39,7 +39,7 @@ async function taobaoAPIOrderList(seq: number, dateStart: any, dateEnd: any) {
 	return orderJson;
 }
 
-async function getTaobaoData(lastUpdated: any) {
+export async function getTaobaoData(lastUpdated: any) {
 	let results: any = [];
 	let pages: any = [];
 
@@ -91,7 +91,7 @@ async function getTaobaoData(lastUpdated: any) {
 }
 
 // 타오바오 통합 주문조회 (1차수집 + 2차수집)
-async function getTaobaoOrder() {
+export async function getTaobaoOrder() {
 	const newTab: any = await createTabCompletely(
 		{
 			active: false,
@@ -247,5 +247,3 @@ async function getTaobaoOrder() {
 
 	return { taobaoId, taobaoData: results };
 }
-
-export { getTaobaoData, getTaobaoOrder };

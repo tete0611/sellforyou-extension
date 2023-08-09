@@ -19,7 +19,7 @@ import {
 import { getLocalStorage } from './ChromeAsync';
 
 // 쿠팡 API Endpoint 인터페이스
-async function coupangApiGateway(body: any) {
+export async function coupangApiGateway(body: any) {
 	const datetime = new Date().toISOString().substr(2, 17).replace(/:/gi, '').replace(/-/gi, '') + 'Z';
 
 	const method = body.method;
@@ -53,7 +53,7 @@ async function coupangApiGateway(body: any) {
 }
 
 // 쿠팡 상품등록 API
-async function uploadCoupang(productStore: any, commonStore: any, data: any) {
+export async function uploadCoupang(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -771,7 +771,7 @@ async function uploadCoupang(productStore: any, commonStore: any, data: any) {
 }
 
 // 쿠팡 상품등록해제
-async function deleteCoupang(productStore: any, commonStore: any, data: any) {
+export async function deleteCoupang(productStore: any, commonStore: any, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -883,7 +883,7 @@ async function deleteCoupang(productStore: any, commonStore: any, data: any) {
 }
 
 // 쿠팡 신규주문 조회
-async function newOrderCoupang(commonStore: any, shopInfo: any) {
+export async function newOrderCoupang(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -958,7 +958,7 @@ async function newOrderCoupang(commonStore: any, shopInfo: any) {
 }
 
 // 쿠팡 발주확인 처리
-async function productPreparedCoupang(commonStore: any, shopInfo: any) {
+export async function productPreparedCoupang(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 	const orderList: any = await getLocalStorage('order');
 	const coupangOrderList = orderList.filter((v: any) => v.marketCode === 'B378');
@@ -1009,7 +1009,7 @@ async function productPreparedCoupang(commonStore: any, shopInfo: any) {
 }
 
 // 쿠팡 발송처리 주문조회
-async function deliveryOrderCoupang(commonStore: any, shopInfo: any) {
+export async function deliveryOrderCoupang(commonStore: any, shopInfo: any) {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -1082,12 +1082,3 @@ async function deliveryOrderCoupang(commonStore: any, shopInfo: any) {
 		return [];
 	}
 }
-
-export {
-	coupangApiGateway,
-	uploadCoupang,
-	deleteCoupang,
-	newOrderCoupang,
-	productPreparedCoupang,
-	deliveryOrderCoupang,
-};

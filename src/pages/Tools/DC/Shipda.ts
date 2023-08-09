@@ -2,7 +2,7 @@
 
 import { getAirportName } from '../Common';
 
-async function getShipdaForm(data) {
+export async function getShipdaForm(data) {
 	let results = await Promise.all(
 		data.map(async (v: any, i: number) => {
 			let receiverNameEn = v.connected.receiverName;
@@ -95,5 +95,3 @@ async function getShipdaForm(data) {
 		type: 'xls',
 	};
 }
-
-export { getShipdaForm };
