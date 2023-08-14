@@ -163,12 +163,22 @@ async function addToInventory(sender: any, origin: any) {
 	// 옵션값을 순회하면서 기본 데이터 생성
 	for (let i in option_value) {
 		let id = i.split(':');
-
-		result.data[0].optionValue.push({
-			taobaoPid: id[0],
-			taobaoVid: id[1],
-			name: option_value[i],
-		});
+		// 옵션 키가 2개일 경우
+		if (id.length === 2) {
+			result.data[0].optionValue.push({
+				taobaoPid: id[0],
+				taobaoVid: id[1],
+				name: option_value[i],
+			});
+			// 옵션 키다 3개일 경우 (가운데 키값은 일단 무시해뒀음)
+		} else if (id.length === 3) {
+			result.data[0].optionValue.push({
+				taobaoPid: id[0],
+				taobaoVid: id[2],
+				name: option_value[i],
+			});
+			// 둘다아니면 일단 에러 반환
+		} else return await finishCollect(sender, 'failed', '상품옵션값에 오류가 있습니다 (관리자에게 문의 요망).');
 	}
 
 	// 상세페이지 텍스트도 번역 사전에 추가
@@ -317,9 +327,24 @@ async function addToInventory(sender: any, origin: any) {
 				productName: productName,
 			},
 		});
+		// TODO 쿠팡 API 타입 달라질 경우 대비해서 장치 마련해놓기
 
-		if (categoryJson.code.ERROR || categoryJson.data.autoCategorizationPredictionResultType !== 'SUCCESS') {
-			return await finishCollect(sender, 'failed', '카테고리 설정 도중 오류가 발생하였습니다.');
+		try {
+			if (categoryJson?.error) {
+				if (categoryJson.message.includes('Not allowed IP'))
+					return await finishCollect(
+						sender,
+						'failed',
+						'쿠팡 seller에 등록된 IP와 셀포유를 사용중인 PC의 IP가 같은지 확인바랍니다.',
+					);
+				else return await finishCollect(sender, 'failed', '쿠팡 카테고리 자동설정 도중 오류가 발생하였습니다.');
+			}
+		} catch (e) {
+			return await finishCollect(
+				sender,
+				'failed',
+				'쿠팡 카테고리 자동설정 도중 오류가 발생하였습니다.\n관리자 문의 요망',
+			);
 		}
 
 		origin.item.cid = categoryJson.data.predictedCategoryId;
@@ -356,8 +381,6 @@ async function addToInventory(sender: any, origin: any) {
 	}
 
 	result.data[0].attr = JSON.stringify(result.data[0].attr);
-	// console.log('origin', origin);
-	// console.log(result);
 
 	// 최종 가공 데이터를 백엔드에 보내서 DB에 추가하도록 요청
 	const response = await gql(

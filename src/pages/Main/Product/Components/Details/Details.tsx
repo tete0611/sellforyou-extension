@@ -215,31 +215,37 @@ export const Details = observer((props: any) => {
                   />
                 ) : null} */}
 							</Tabs>
-
+							{/* 기본정보 탭 */}
 							<TabPanel value={props.item.tabs} index={0} dir={theme.direction}>
 								<TabBase item={props.item} index={props.index} />
 							</TabPanel>
 
+							{/* 상품속성 탭 */}
 							<TabPanel value={props.item.tabs} index={1} dir={theme.direction}>
 								<TabAttribute item={props.item} index={props.index} />
 							</TabPanel>
 
+							{/* 옵션 탭 */}
 							<TabPanel value={props.item.tabs} index={2} dir={theme.direction}>
 								<TabOption item={props.item} index={props.index} />
 							</TabPanel>
 
+							{/* 가격 탭 */}
 							<TabPanel value={props.item.tabs} index={3} dir={theme.direction}>
 								<TabPrice item={props.item} index={props.index} />
 							</TabPanel>
 
+							{/* 썸네일이미지 탭 */}
 							<TabPanel value={props.item.tabs} index={4} dir={theme.direction}>
 								<TabThumbnails item={props.item} index={props.index} />
 							</TabPanel>
 
+							{/* 옵션이미지 탭 */}
 							<TabPanel value={props.item.tabs} index={5} dir={theme.direction}>
 								<TabOptionImages item={props.item} index={props.index} />
 							</TabPanel>
 
+							{/* 상세이미지 탭 */}
 							<TabPanel value={props.item.tabs} index={6} dir={theme.direction}>
 								<TabDescriptions item={props.item} index={props.index} />
 							</TabPanel>

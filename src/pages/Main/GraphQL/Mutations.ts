@@ -1,4 +1,5 @@
 const MUTATIONS = {
+	// 로그인
 	SIGN_IN_USER_BY_EVERYONE: `
         mutation ($id: String!, $pw: String!) {
             signInUserByEveryone(userType: EMAIL, email: $id, password: $pw) {
@@ -7,31 +8,35 @@ const MUTATIONS = {
             }
         }
     `,
-
+	// 로그아웃
 	SIGN_OUT_USER_BY_EVERYONE: `
         mutation {
             signOutUserByEveryone
         }
     `,
 
+	// 회원가입
 	SIGN_UP_USER_BY_EVERYONE: `
         mutation ($email: String!, $password: String!, $phone: String!, $refCode: String) {
             signUpUserByEveryone2(email: $email, password: $password, phone: $phone, verificationId: 0, refCode: $refCode)
         }
     `,
 
+	// 인증번호요청
 	REQUEST_PHONE_VERIFICATION_BY_EVERYONE: `
         mutation ($phoneNumber: String!) {
             requestPhoneVerificationByEveryone(phoneNumber: $phoneNumber)
         }
     `,
 
+	// 인증하기
 	VERIFY_PHONE_BY_EVERYONE: `
         mutation ($phoneNumber: String!, $verificationNumber: String!) {
             verifyPhoneByEveryone(phoneNumber: $phoneNumber, verificationNumber: $verificationNumber)
         }
     `,
 
+	// 내정보 수정
 	UPDATE_MY_DATA_BY_USER: `
         mutation (
             $marginRate: Float
