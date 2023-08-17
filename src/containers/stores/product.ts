@@ -2026,7 +2026,15 @@ export class product {
 
 				w.map((x: any, valueIndex: number) => {
 					optionInfo = optionInfo.filter((y: any) => {
-						const skus = y.properties.split(';');
+						let skus = y.properties.split(';');
+						// 타오바오 옵션 키값이 3개인 경우 데이터를 조작 (가운데 값 삭제)
+						if (skus?.[0].split(':').length === 3) {
+							const first = skus[0].split(':').splice(0, 1).at(0);
+							const second = skus[0].split(':').splice(2, 1).at(0);
+							skus[0] = `${first}:${second}`;
+						}
+						// 키가 3개 있는 타오바오 옵션의 경우
+						// const isThirdKeyProduct = skus[0]?.split(':').length === 3;
 						const matched = skus.find((z: any) => z === `${x.name.taobaoPid}:${x.value.taobaoVid}`);
 
 						if (!matched) {
