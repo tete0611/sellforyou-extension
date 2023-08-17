@@ -24,15 +24,15 @@ import { ComboBox, Image, Input, Title } from '../../../Common/UI';
 import { makeStyles } from '@material-ui/core/styles';
 
 // MUI Box 사용자 지정 스타일
-const useStyles = makeStyles((theme) => ({
-	defaultBox: {
-		background: '#d1e8ff',
-	},
+// const useStyles = makeStyles((theme) => ({
+// 	defaultBox: {
+// 		background: '#d1e8ff',
+// 	},
 
-	errorBox: {
-		background: '#ffd1d1',
-	},
-}));
+// 	errorBox: {
+// 		background: '#ffd1d1',
+// 	},
+// }));
 
 // 가격 탭 하위 컴포넌트
 export const TabPrice = observer((props: any) => {
@@ -63,6 +63,7 @@ export const TabPrice = observer((props: any) => {
 				<Box>
 					<Table>
 						<TableRow hover>
+							{/* 체크박스 */}
 							<TableCell
 								width={50}
 								sx={{
@@ -91,6 +92,7 @@ export const TabPrice = observer((props: any) => {
 								/>
 							</TableCell>
 
+							{/* 이미지 */}
 							<TableCell
 								width={50}
 								sx={{
@@ -141,6 +143,7 @@ export const TabPrice = observer((props: any) => {
 								})}
 							</TableCell>
 
+							{/* 옵션명 */}
 							<TableCell
 								sx={{
 									background:
@@ -159,6 +162,7 @@ export const TabPrice = observer((props: any) => {
 								{v.name}
 							</TableCell>
 
+							{/* 등록불가마켓 */}
 							<TableCell
 								width={120}
 								sx={{
@@ -242,6 +246,7 @@ export const TabPrice = observer((props: any) => {
 								) : null}
 							</TableCell>
 
+							{/* 도매가 */}
 							<TableCell
 								width={120}
 								sx={{
@@ -268,6 +273,7 @@ export const TabPrice = observer((props: any) => {
 									: '¥'}
 							</TableCell>
 
+							{/* 배대지배송비 */}
 							<TableCell
 								width={120}
 								sx={{
@@ -313,6 +319,7 @@ export const TabPrice = observer((props: any) => {
 								/>
 							</TableCell>
 
+							{/* 기본판매가대비 */}
 							<TableCell
 								width={120}
 								sx={{
@@ -334,6 +341,7 @@ export const TabPrice = observer((props: any) => {
 									: `${Math.ceil((v.price / props.item.price - 1) * 100)}%`}
 							</TableCell>
 
+							{/* 옵션판매가 */}
 							<TableCell
 								width={120}
 								sx={{
@@ -379,6 +387,7 @@ export const TabPrice = observer((props: any) => {
 								/>
 							</TableCell>
 
+							{/* 재고수량 */}
 							<TableCell
 								width={120}
 								sx={{
@@ -423,6 +432,7 @@ export const TabPrice = observer((props: any) => {
 								/>
 							</TableCell>
 
+							{/* 예상순이익 */}
 							<TableCell
 								width={120}
 								sx={{
@@ -1196,15 +1206,17 @@ export const TabPrice = observer((props: any) => {
 						}}
 					>
 						<AutoSizer>
-							{({ height, width }) => (
-								<List
-									width={width}
-									height={height}
-									rowCount={props.item.productOption.length}
-									rowRenderer={rowRenderer}
-									rowHeight={42}
-								/>
-							)}
+							{({ height, width }) => {
+								return (
+									<List
+										width={width}
+										height={height}
+										rowCount={props.item.productOption.length}
+										rowRenderer={rowRenderer}
+										rowHeight={42}
+									/>
+								);
+							}}
 						</AutoSizer>
 					</div>
 				</Paper>

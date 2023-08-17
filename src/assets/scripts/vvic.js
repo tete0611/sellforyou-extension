@@ -27,7 +27,7 @@ async function main() {
 				descriptions: descHtml.querySelector('#descTemplate').innerHTML,
 				title: title.textContent,
 			};
-			console.log(json);
+			// console.log(json);
 			// 세션 스토리지로 데이터 공유할 때 주의사항
 			// 1) sendMessage 사용 불가(삽입 스크립트와 크롬 확장프로그램 간 통신 방법은 스토리지가 유일함)
 			// 2) 세션 스토리지 키 값이 충돌하지 않도록 고려해야 함
