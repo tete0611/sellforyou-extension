@@ -4,6 +4,7 @@ import { fabric } from 'fabric';
 import gql from '../Main/GraphQL/Requests';
 import { createTabCompletely, getLocalStorage, sendTabMessage } from '../Tools/ChromeAsync';
 import { floatingToast, getClock, readFileDataURL, sleep } from '../Tools/Common';
+import { fi } from 'date-fns/locale';
 
 const ENDPOINT_IMAGE = 'https://img.sellforyou.co.kr';
 const FLASK_URL = 'http://www.sellforyou.co.kr:5003/trangers/';
@@ -168,11 +169,12 @@ let visionKey: any = null;
 let removeType = 'area-remove-drag';
 let recoveryType = 'area-recovery-drag';
 
+/** 쿼리스트링 파싱 */
 const params = new Proxy(new URLSearchParams(window.location.search), {
 	get: (searchParams: any, prop) => searchParams.get(prop),
 });
 
-function loadLocalSettings() {
+const loadLocalSettings = () => {
 	applyWaterMarkText.value = appData.settings.waterMarkText ?? appData.user.id;
 	applyWaterMarkOpacity.value = appData.settings.waterMarkOpacity ?? '20';
 	applyOriginWidthPC.value = appData.settings.originWidthPC ?? 'Y';
@@ -242,9 +244,9 @@ function loadLocalSettings() {
 			}
 		});
 	}
-}
+};
 
-async function getProductList(id: string) {
+const getProductList = async (id: string) => {
 	let list_query = `query TEST($where: ProductWhereInput) {
         selectProductsBySomeone(where: $where) {
             productCode
@@ -272,9 +274,9 @@ async function getProductList(id: string) {
 	}
 
 	return list_json;
-}
+};
 
-function saveLocalSettings(key: string, value: string) {
+const saveLocalSettings = (key: string, value: string) => {
 	appData = {
 		...appData,
 
@@ -286,9 +288,9 @@ function saveLocalSettings(key: string, value: string) {
 	};
 
 	localStorage.setItem('appInfo', JSON.stringify(appData));
-}
+};
 
-function getCurrentLayer() {
+const getCurrentLayer = () => {
 	let layer = layers.filter((v: any) => {
 		if (v.index !== currentImageIndex || v.type !== currentType) {
 			return false;
@@ -297,22 +299,22 @@ function getCurrentLayer() {
 	});
 
 	return layer[0];
-}
+};
 
-function mergeImage(dataUrl: any) {
+const mergeImage = (dataUrl: any) => {
 	return new Promise((resolve, reject) => {
 		let cropped = new Image();
 
 		cropped.src = dataUrl;
-		cropped.onload = function () {
+		cropped.onload = () => {
 			resolve(cropped);
 		};
 
 		cropped.onerror = reject;
 	});
-}
+};
 
-function saveCanvas() {
+const saveCanvas = () => {
 	layers.map((v: any) => {
 		if (v.index !== currentImageIndex || v.type !== currentType) {
 			v.state.undo = {
@@ -354,9 +356,9 @@ function saveCanvas() {
 
 	layer.state.current.canvas = canvas;
 	layer.state.current.object = object;
-}
+};
 
-function replayCanvas(type: string) {
+const replayCanvas = (type: string) => {
 	let layer = getCurrentLayer();
 
 	let playStack: any = null;
@@ -393,7 +395,7 @@ function replayCanvas(type: string) {
 	saveStack.object.push(layer.state.current.object);
 
 	myCanvas.clear();
-	myCanvas.loadFromJSON(stateCanvas, async function () {
+	myCanvas.loadFromJSON(stateCanvas, async () => {
 		myCanvas.renderAll();
 
 		layer.image.current = myCanvas.backgroundImage?.src ?? myCanvas.overlayImage.src;
@@ -425,9 +427,9 @@ function replayCanvas(type: string) {
 
 		await displayImage(currentImageIndex, 0);
 	});
-}
+};
 /** 이미지 번역에 사용되는 파파고 */
-async function translationPapago(input_string: string, source: string, target: string) {
+const translationPapago = async (input_string: string, source: string, target: string) => {
 	if (papagoApiKey === '') return alert('번역 API키 Error , 관리자에게 문의해주세요');
 
 	let deviceid = '364961ac-efa2-49ca-a998-ad55f7f9d32d';
@@ -465,13 +467,13 @@ async function translationPapago(input_string: string, source: string, target: s
 	} catch (e) {
 		return null;
 	}
-}
+};
 
-async function displayImage(index: number, customWidth: number) {
+const displayImage = async (index: number, customWidth: number) => {
 	currentImageIndex = index;
 
 	let imageList = document.getElementsByClassName('image-thumbnail');
-
+	console.log({ imageList });
 	for (let i = 0; i < imageList.length; i++) {
 		if (imageList[i].getAttribute('key') === currentImageIndex.toString()) {
 			imageList[i].className = 'image-thumbnail activated';
@@ -716,7 +718,7 @@ async function displayImage(index: number, customWidth: number) {
 
 			myCanvas.setOverlayImage(
 				currentImage,
-				function () {
+				() => {
 					myCanvas.renderAll();
 				},
 				{
@@ -816,9 +818,9 @@ async function displayImage(index: number, customWidth: number) {
 	myCanvas.renderAll();
 
 	return resultData;
-}
+};
 
-async function processVisionData(info: any) {
+const processVisionData = async (info: any) => {
 	try {
 		startRegion.disabled = true;
 		endRegion.disabled = true;
@@ -965,9 +967,9 @@ async function processVisionData(info: any) {
 
 		console.log('번역 에러:', e);
 	}
-}
+};
 
-function dataURItoBlob(dataURI: string) {
+const dataURItoBlob = (dataURI: string) => {
 	const mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
 	const binary: any = atob(dataURI.split(',')[1]);
 	const array: any = [];
@@ -977,9 +979,9 @@ function dataURItoBlob(dataURI: string) {
 	}
 
 	return new Blob([new Uint8Array(array)], { type: mime });
-}
+};
 
-async function getMaskImage(itemList: any) {
+const getMaskImage = async (itemList: any) => {
 	let layer = getCurrentLayer();
 
 	let currentMerged: any = await mergeImage(layer.image.current);
@@ -1033,9 +1035,9 @@ async function getMaskImage(itemList: any) {
 	layer.image.current = dataBase64;
 
 	await displayImage(currentImageIndex, 0);
-}
+};
 
-async function visionAnalyzer(data: any) {
+const visionAnalyzer = async (data: any) => {
 	if (!data.fullTextAnnotation) {
 		return [];
 	}
@@ -1145,10 +1147,10 @@ async function visionAnalyzer(data: any) {
 	}
 
 	return vision_info;
-}
+};
 
-function sortBy(array: any, key: string, asc: boolean) {
-	let sorted = array.sort(function (a: any, b: any) {
+const sortBy = (array: any, key: string, asc: boolean) => {
+	let sorted = array.sort((a: any, b: any) => {
 		if (a[key] < b[key]) {
 			return asc ? -1 : 1;
 		}
@@ -1161,9 +1163,9 @@ function sortBy(array: any, key: string, asc: boolean) {
 	});
 
 	return sorted;
-}
+};
 
-async function addToLayers() {
+const addToLayers = async () => {
 	if (testLayer !== 1) {
 		layers = [];
 	}
@@ -1220,12 +1222,13 @@ async function addToLayers() {
 			let productOption: any = [];
 
 			product.productOptionName.map((v: any) => {
-				v.productOptionValue.map((w: any) => {
-					if (w.image) {
-						let imageUrl = /^https?:/.test(w.image) ? w.image : `${ENDPOINT_IMAGE}/sellforyou/${w.image}`;
+				v.productOptionValue.map((w: any, i) => {
+					console.log(`addToLayers 함수에 있는 ${i}번째 w`);
+					console.log({ w });
+					let imageUrl = '';
+					if (w.image) imageUrl = /^https?:/.test(w.image) ? w.image : `${ENDPOINT_IMAGE}/sellforyou/${w.image}`;
 
-						productOption.push(imageUrl);
-					}
+					productOption.push(imageUrl);
 
 					return;
 				});
@@ -1240,38 +1243,70 @@ async function addToLayers() {
 					let layer = getCurrentLayer();
 
 					if (!layer || testLayer !== 1) {
-						let imageResp = await fetch(v);
-						let imageBlob = await imageResp.blob();
-						let imageData = await readFileDataURL(imageBlob);
+						// 옵션이미지의 경우 이미지가 없어도 레이어가 삭제되지않으므로 이미지가 없어도 레이어는 추가한채 전체번역에 포함되지 않도록 처리
+						if (v !== '') {
+							let imageResp = await fetch(v);
+							let imageBlob = await imageResp.blob();
+							let imageData = await readFileDataURL(imageBlob);
 
-						layers.push({
-							type: params.type,
+							layers.push({
+								type: params.type,
 
-							index: i,
+								index: i,
 
-							image: {
-								origin: v,
-								current: imageData,
-							},
-
-							object: [],
-
-							state: {
-								undo: {
-									canvas: [],
-									object: [],
+								image: {
+									origin: v,
+									current: imageData,
 								},
 
-								redo: {
-									canvas: [],
-									object: [],
+								object: [],
+
+								state: {
+									undo: {
+										canvas: [],
+										object: [],
+									},
+
+									redo: {
+										canvas: [],
+										object: [],
+									},
+
+									current: {},
+
+									check: 'checked',
+								},
+							});
+						} else {
+							layers.push({
+								type: params.type,
+
+								index: i,
+
+								image: {
+									origin: v,
+									current: '',
 								},
 
-								current: {},
+								object: [],
 
-								check: 'checked',
-							},
-						});
+								state: {
+									undo: {
+										canvas: [],
+										object: [],
+									},
+
+									redo: {
+										canvas: [],
+										object: [],
+									},
+
+									current: {},
+									// 체크상태를 disabled 처리
+									check: 'disabled',
+								},
+							});
+						}
 					}
 
 					return;
@@ -1360,9 +1395,11 @@ async function addToLayers() {
 
 	layers = sortBy(layers, 'index', true);
 	layers = sortBy(layers, 'type', true);
-}
+	console.log('====addToLayers() :  만들어진 레이어====');
+	console.log({ layers });
+};
 
-async function loadImageList() {
+const loadImageList = async () => {
 	imageList.innerHTML = ``;
 
 	let filterdImages: any = [];
@@ -1372,6 +1409,8 @@ async function loadImageList() {
 	}
 
 	let newLayer = layers.filter((v: any) => v.type === currentType);
+	console.log('===필터로 걸러진 newLayer===');
+	console.log({ newLayer });
 	switch (currentType) {
 		case '1': {
 			await Promise.all(
@@ -1390,12 +1429,13 @@ async function loadImageList() {
 		case '2': {
 			await Promise.all(
 				product.productOptionName.map((v: any) => {
-					v.productOptionValue.map((w: any) => {
-						if (w.image) {
-							let imageUrl: any = /^https?:/.test(w.image) ? w.image : `${ENDPOINT_IMAGE}/sellforyou/${w.image}`;
+					v.productOptionValue.map((w: any, i) => {
+						console.log(`loadImageList 에 있는 ${i}번째 w`);
+						console.log({ w });
+						let imageUrl = '';
+						if (w.image) imageUrl = /^https?:/.test(w.image) ? w.image : `${ENDPOINT_IMAGE}/sellforyou/${w.image}`;
 
-							filterdImages.push(imageUrl);
-						}
+						filterdImages.push(imageUrl);
 
 						return;
 					});
@@ -1431,18 +1471,24 @@ async function loadImageList() {
 					filterdImages.push(imageUrl);
 				}
 			}
-
+			console.log('===만들어진 filterdImages===');
+			console.log({ filterdImages });
 			break;
 		}
 
 		default:
 			break;
 	}
+	console.log(filterdImages.length);
 	if (filterdImages.length > 0) {
 		for (let i = 0; i < filterdImages.length; i++) {
+			if (filterdImages[i] === '') continue;
+			console.log(`i는 : ${i}`);
 			imageList.innerHTML += `
-                <div class="imageListDiv">
-                    <img class="image-thumbnail" key=${i} src=${filterdImages[i]} alt="" width="72px" height="72px" style="object-fit: contain; cursor: pointer; margin: 5px;" />
+                <div class="imageListDiv" ${filterdImages[i] === '' ? 'hidden' : ''}>
+                    <img class="image-thumbnail" key=${i} src=${
+				filterdImages[i]
+			} alt="" width="72px" height="72px" style="object-fit: contain; cursor: pointer; margin: 5px;" />
                     <input id="check${i}" class="checkBox" key=${i} type="checkbox" ${newLayer[i].state.check}>
                 </div>
                 `;
@@ -1455,8 +1501,9 @@ async function loadImageList() {
 	}
 
 	let checked: any = document.getElementsByClassName(`checkBox`);
-
+	console.log({ checked });
 	for (let i = 0; i < checked.length; i++) {
+		console.log(`${i}번 1번루프 들어옴`);
 		checked[i].addEventListener('click', () => {
 			if (newLayer[i].state.check == 'checked') {
 				newLayer[i].state.check = '';
@@ -1470,6 +1517,8 @@ async function loadImageList() {
 
 	checkAll.addEventListener('click', () => {
 		for (let i = 0; i < newLayer.length; i++) {
+			console.log(`${i}번 2번루프 들어옴`);
+
 			newLayer[i].state.check = 'checked';
 			try {
 				checked[i].checked = true;
@@ -1481,6 +1530,8 @@ async function loadImageList() {
 
 	checkDel.addEventListener('click', () => {
 		for (let i = 0; i < newLayer.length; i++) {
+			console.log(`${i}번 3번루프 들어옴`);
+
 			newLayer[i].state.check = '';
 			try {
 				checked[i].checked = false;
@@ -1491,44 +1542,47 @@ async function loadImageList() {
 	});
 
 	let imageElement = document.getElementsByClassName(`image-thumbnail`);
+	console.log({ imageElement });
 
 	if (imageElement.length < 0) {
 		return;
 	}
 
 	for (let i = 0; i < imageElement.length; i++) {
+		console.log(`${i}번 4번루프 들어옴`);
+
 		imageElement[i].addEventListener('click', async () => {
 			await displayImage(i, 0);
 
 			saveCanvas();
 		});
 	}
-
+	console.log(params.index);
 	if (!params.index) {
 		await displayImage(0, 0);
 	} else {
 		await displayImage(parseInt(params.index) ?? 0, 0);
 	}
-
+	console.log('여기서 뻑이나나');
 	saveCanvas();
 
 	headerSub.style.display = '';
-}
+};
 
-function ColorToHex(color: any) {
+const ColorToHex = (color: any) => {
 	let hexadecimal = color.toString(16);
 
 	return hexadecimal.length == 1 ? '0' + hexadecimal : hexadecimal;
-}
+};
 
-function ConvertRGBtoHex(red: any, green: any, blue: any) {
+const ConvertRGBtoHex = (red: any, green: any, blue: any) => {
 	return '#' + ColorToHex(red) + ColorToHex(green) + ColorToHex(blue);
-}
+};
 
-function hexToRgb(hex: any) {
+const hexToRgb = (hex: any) => {
 	let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
 
-	hex = hex.replace(shorthandRegex, function (m: any, r: any, g: any, b: any) {
+	hex = hex.replace(shorthandRegex, (m: any, r: any, g: any, b: any) => {
 		return r + r + g + g + b + b;
 	});
 
@@ -1541,9 +1595,9 @@ function hexToRgb(hex: any) {
 				b: parseInt(result[3], 16),
 		  }
 		: null;
-}
+};
 
-function canvasSetting() {
+const canvasSetting = () => {
 	fabric.Object.prototype.set({
 		borderColor: 'rgb(41, 136, 255)',
 		cornerColor: 'rgb(41, 136, 255)',
@@ -2533,9 +2587,9 @@ function canvasSetting() {
 			}
 		},
 	});
-}
+};
 
-async function setTextFont(e: any) {
+const setTextFont = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	let layer = getCurrentLayer();
@@ -2559,9 +2613,9 @@ async function setTextFont(e: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setTextSize(e: any) {
+const setTextSize = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	let layer = getCurrentLayer();
@@ -2587,9 +2641,9 @@ async function setTextSize(e: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setTextColor(e: any) {
+const setTextColor = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
 	let objects = myCanvas.getActiveObject();
 
@@ -2628,9 +2682,9 @@ async function setTextColor(e: any) {
 	}
 
 	myCanvas.renderAll();
-}
+};
 
-async function setTextBackground(e: any) {
+const setTextBackground = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
 	let objects = myCanvas.getActiveObject();
 
@@ -2669,9 +2723,9 @@ async function setTextBackground(e: any) {
 	}
 
 	myCanvas.renderAll();
-}
+};
 
-async function setShapeColor(e: any) {
+const setShapeColor = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
 	let objects = myCanvas.getActiveObject();
 
@@ -2710,9 +2764,9 @@ async function setShapeColor(e: any) {
 	}
 
 	myCanvas.renderAll();
-}
+};
 
-async function setShapeStrokeWidth(e: any) {
+const setShapeStrokeWidth = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	if (!objects) {
@@ -2742,9 +2796,9 @@ async function setShapeStrokeWidth(e: any) {
 	}
 
 	myCanvas.renderAll();
-}
+};
 
-async function setShapeStrokeShape(e) {
+const setShapeStrokeShape = async (e) => {
 	let objects = myCanvas.getActiveObject();
 	let layer = getCurrentLayer();
 
@@ -2776,9 +2830,9 @@ async function setShapeStrokeShape(e) {
 		});
 	}
 	myCanvas.renderAll();
-}
+};
 
-async function setShapeBackground(e: any) {
+const setShapeBackground = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
 	let objects = myCanvas.getActiveObject();
 
@@ -2817,9 +2871,9 @@ async function setShapeBackground(e: any) {
 	}
 
 	myCanvas.renderAll();
-}
+};
 
-async function setTextBold(e: any) {
+const setTextBold = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	let layer = getCurrentLayer();
@@ -2851,9 +2905,9 @@ async function setTextBold(e: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setTextItalic(e: any) {
+const setTextItalic = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	let layer = getCurrentLayer();
@@ -2885,9 +2939,9 @@ async function setTextItalic(e: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setTextLineThrough(e: any) {
+const setTextLineThrough = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	let layer = getCurrentLayer();
@@ -2919,9 +2973,9 @@ async function setTextLineThrough(e: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setTextUnderLine(e: any) {
+const setTextUnderLine = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	let layer = getCurrentLayer();
@@ -2953,9 +3007,9 @@ async function setTextUnderLine(e: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setTextAlign(direction: any) {
+const setTextAlign = async (direction: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	if (objects['_objects']) {
@@ -2975,9 +3029,9 @@ async function setTextAlign(direction: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setGroupAlign(direction: any) {
+const setGroupAlign = async (direction: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	if (objects['_objects']) {
@@ -3042,9 +3096,9 @@ async function setGroupAlign(direction: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-function toggleInit(mode: string) {
+const toggleInit = (mode: string) => {
 	switch (mode) {
 		case 'area-translation': {
 			startRegion.disabled = false;
@@ -3113,9 +3167,9 @@ function toggleInit(mode: string) {
 		default:
 			break;
 	}
-}
+};
 
-async function toggleToolbar(element: any, mode: string) {
+const toggleToolbar = async (element: any, mode: string) => {
 	let buttons = document.getElementsByClassName('toolbar');
 
 	for (let i = 0; i < buttons.length; i++) {
@@ -3249,9 +3303,9 @@ async function toggleToolbar(element: any, mode: string) {
 	}
 
 	await displayImage(currentImageIndex, 0);
-}
+};
 
-async function addShape() {
+const addShape = async () => {
 	let color = {
 		r: 0,
 		g: 0,
@@ -3301,9 +3355,9 @@ async function addShape() {
 
 	await displayImage(currentImageIndex, 0);
 	await saveCanvas();
-}
+};
 
-async function addText() {
+const addText = async () => {
 	let color: any = hexToRgb(toolTextColor.value);
 
 	let info = {
@@ -3353,9 +3407,9 @@ async function addText() {
 
 	await displayImage(currentImageIndex, 0);
 	await saveCanvas();
-}
+};
 
-function setTextTab() {
+const setTextTab = () => {
 	let objects = myCanvas.getActiveObject();
 	let layer = getCurrentLayer();
 	let length = Object.keys(objects['_objects']).length;
@@ -3377,9 +3431,9 @@ function setTextTab() {
 			fixedShapeTool.style.display = 'none';
 		}
 	}
-}
+};
 
-async function addTextVertical() {
+const addTextVertical = async () => {
 	let info = {
 		object: 'i-text',
 
@@ -3427,9 +3481,9 @@ async function addTextVertical() {
 
 	await displayImage(currentImageIndex, 0);
 	await saveCanvas();
-}
+};
 
-function setShapeTab() {
+const setShapeTab = () => {
 	let objects = myCanvas.getActiveObject();
 	let layer = getCurrentLayer();
 	let length = Object.keys(objects['_objects']).length;
@@ -3451,13 +3505,17 @@ function setShapeTab() {
 			fixedShapeTool.style.display = '';
 		}
 	}
-}
+};
 
-async function multiple() {
+const multiple = async () => {
+	console.log('멀티플작동');
 	cancel = false;
 
 	loading.style.display = '';
-
+	layers.map((v, i) => {
+		console.log(`${i}번 레이어`);
+		console.log({ v });
+	});
 	let filtered = layers.filter((v: any) => v.type === currentType && v.state.check === 'checked');
 	for (let i = 0; i < filtered.length; i++) {
 		if (cancel) {
@@ -3485,8 +3543,6 @@ async function multiple() {
 
 	loading.style.display = 'none';
 	if (testLayer !== 1) {
-		//todo list 이거 다 돌리지말고 몇개만 체크해서 돌릴수있게 처리해야함 .이라고 생각했지만 의미없을지도,,,? 그냥 이렇게 하는게 나을수도 .. ㅎ .. 일단 이거 생각좀 해보자..
-		//하ㅏㅏㅏㅏㅏㅏㅏ아
 		for (let i = 0; i < filtered.length; i++) {
 			if (cancel) {
 				floatingToast(`번역이 중지되었습니다.`, 'failed');
@@ -3510,9 +3566,10 @@ async function multiple() {
 	}
 
 	floatingToast(`번역이 완료되었습니다.`, 'information');
-}
+};
 
-async function single() {
+const single = async () => {
+	console.log('싱글작동');
 	loading.style.display = '';
 
 	await processVisionData(null);
@@ -3525,17 +3582,17 @@ async function single() {
 	loading.style.display = 'none';
 
 	floatingToast(`번역이 완료되었습니다.`, 'information');
-}
+};
 
-function recovery() {
+const recovery = () => {
 	let accept = confirm('모든 이미지를 적용 전으로 되돌리시겠습니까?');
 
 	if (accept) {
 		window.location.reload();
 	}
-}
+};
 
-function exit() {
+const exit = () => {
 	let accept = confirm('편집을 종료하시겠습니까?');
 
 	if (!accept) {
@@ -3543,9 +3600,9 @@ function exit() {
 	}
 
 	window.close();
-}
+};
 
-async function thisRecovery() {
+const thisRecovery = async () => {
 	let accept = confirm('현재 이미지를 적용 전으로 되돌리시겠습니까?');
 	let layer = getCurrentLayer();
 
@@ -3572,9 +3629,9 @@ async function thisRecovery() {
 		layer.image.current = imageData;
 	}
 	displayImage(currentImageIndex, 0);
-}
+};
 
-async function zoomOut() {
+const zoomOut = async () => {
 	let percentage = parseInt(previewSize.value);
 
 	if (percentage - 10 < 0) {
@@ -3586,9 +3643,9 @@ async function zoomOut() {
 	previewSize.value = percentage;
 
 	displayImage(currentImageIndex, 0);
-}
+};
 
-async function zoomIn() {
+const zoomIn = async () => {
 	let percentage = parseInt(previewSize.value);
 	if (percentage + 10 > 200) {
 		percentage = 200;
@@ -3599,9 +3656,9 @@ async function zoomIn() {
 	previewSize.value = percentage;
 
 	displayImage(currentImageIndex, 0);
-}
+};
 //avif 확장자의 경우 버킷에 저장하고 다시 번역하게끔 저장하는 부분
-async function saveBadImage() {
+const saveBadImage = async () => {
 	loading.style.display = '';
 
 	let uploadData: any = {
@@ -3651,7 +3708,9 @@ async function saveBadImage() {
 			}
 
 			for (let j in product.productOptionName) {
+				console.log({ j });
 				for (let k in product.productOptionName[j].productOptionValue) {
+					console.log({ k });
 					let option = product.productOptionName[j].productOptionValue[k];
 					let optionImage = /product\/[0-9]+\/option/.test(option.image)
 						? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
@@ -3693,7 +3752,7 @@ async function saveBadImage() {
 			uploadData.description = description;
 		}
 	}
-
+	console.log({ uploadData });
 	let uploadQuery = `mutation TEST($productId: Int!, $thumbnails: [ProductNewThumbnailImageUpdateInput!], $optionValues: [ProductOptionValueImageUpdateInput!]!, $description:String) {
         updateNewProductImageBySomeone(
             productId: $productId, 
@@ -3719,13 +3778,13 @@ async function saveBadImage() {
 				action: 'trangers',
 				source: JSON.parse(upload_json.data.updateNewProductImageBySomeone),
 			},
-			async function () {},
+			async () => {},
 		);
 	} else {
 		alert(upload_json.errors[0].message);
 	}
-}
-async function saveSingle() {
+};
+const saveSingle = async () => {
 	let accept = confirm('적용 시 이미지를 되돌릴 수 없습니다.');
 
 	if (!accept) {
@@ -3850,7 +3909,7 @@ async function saveSingle() {
 				action: 'trangers',
 				source: JSON.parse(upload_json.data.updateNewProductImageBySomeone),
 			},
-			function () {
+			() => {
 				if (thisImageSave.getAttribute('key') == '5') {
 					window.close();
 				}
@@ -3861,9 +3920,10 @@ async function saveSingle() {
 	} else {
 		alert(upload_json.errors[0].message);
 	}
-}
+};
 
-async function saveMultiple() {
+const saveMultiple = async () => {
+	console.log('세이브멀티플 발동');
 	loading.style.display = '';
 
 	let uploadData: any = {
@@ -3885,8 +3945,8 @@ async function saveMultiple() {
 			description = product.description;
 		}
 	}
-
-	let filtered = layers.filter((v: any) => v.type === currentType);
+	console.log({ layers });
+	let filtered = layers.filter((v: any) => v.type === currentType && v.image.origin !== '');
 
 	for (let i = 0; i < filtered.length; i++) {
 		let dataUrl = null;
@@ -3910,18 +3970,23 @@ async function saveMultiple() {
 			case '2': {
 				if (applyOriginWidthOption.value === 'N') {
 					dataUrl = await displayImage(filtered[i].index, originWidthOption.value);
+					console.log({ dataUrl });
 				} else {
 					dataUrl = await displayImage(filtered[i].index, 0);
+					console.log({ dataUrl });
 				}
 
 				for (let j in product.productOptionName) {
 					for (let k in product.productOptionName[j].productOptionValue) {
 						let option = product.productOptionName[j].productOptionValue[k];
+						if (option.image === '') continue;
 						let optionImage = /product\/[0-9]+\/option/.test(option.image)
 							? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
 							: option.image;
 
 						if (filtered[i].image.origin === optionImage) {
+							console.log('filtered[i].image.origin : ' + filtered[i].image.origin);
+							console.log('optionImage : ' + optionImage);
 							uploadData.optionValues.push({
 								id: option.id,
 								image: optionImage,
@@ -3958,7 +4023,7 @@ async function saveMultiple() {
 			uploadData.description = description;
 		}
 	}
-
+	console.log({ uploadData });
 	let uploadQuery = `mutation TEST($productId: Int!, $thumbnails: [ProductNewThumbnailImageUpdateInput!], $optionValues: [ProductOptionValueImageUpdateInput!]!, $description:String) {
         updateNewProductImageBySomeone(
             productId: $productId, 
@@ -3977,23 +4042,22 @@ async function saveMultiple() {
 
 		return;
 	}
-
+	// return alert('강제종료!');
 	if (upload_json.data) {
+		console.log(JSON.parse(upload_json.data.updateNewProductImageBySomeone));
 		chrome.runtime.sendMessage(
 			{
 				action: 'trangers',
 				source: JSON.parse(upload_json.data.updateNewProductImageBySomeone),
 			},
-			function () {
-				window.close();
-			},
+			() => window.close(),
 		);
 	} else {
 		alert(upload_json.errors[0].message);
 	}
-}
+};
 
-function imageToolHelper() {
+const imageToolHelper = () => {
 	if (product.activeTaobaoProduct.shopName === 'express' || product.activeTaobaoProduct.shopName.includes('amazon')) {
 		startRegion.value = 'en';
 	}
@@ -4577,9 +4641,9 @@ function imageToolHelper() {
 	thisImageSave.addEventListener('click', () => {
 		saveSingle();
 	});
-}
+};
 
-function setKeyEvents() {
+const setKeyEvents = () => {
 	window.addEventListener('wheel', (e) => {
 		if (e.shiftKey) {
 			if (e.deltaY > 0) {
@@ -5042,9 +5106,9 @@ function setKeyEvents() {
 			saveCanvas();
 		}
 	});
-}
+};
 
-function setTypeEvents() {
+const setTypeEvents = () => {
 	let menuList = document.getElementsByClassName('menu');
 
 	for (let i = 0; i < menuList.length; i++) {
@@ -5068,8 +5132,8 @@ function setTypeEvents() {
 			}
 		});
 	}
-}
-async function reloadTranslate() {
+};
+const reloadTranslate = async () => {
 	while (true) {
 		if (loading.style.display === 'none') {
 			break;
@@ -5080,9 +5144,11 @@ async function reloadTranslate() {
 	await single();
 
 	return true;
-}
-async function autoTranslation() {
+};
+const autoTranslation = async () => {
+	console.log('오토트랜스래이션작동');
 	while (true) {
+		console.log(loading.style.display);
 		if (loading.style.display === 'none') {
 			break;
 		}
@@ -5094,11 +5160,11 @@ async function autoTranslation() {
 	await saveMultiple();
 
 	return true;
-}
+};
 let testLayer = 1;
 let testLayerList: any = [];
 
-async function main() {
+const main = async () => {
 	loading.style.display = '';
 
 	chrome.runtime.onMessage.addListener((request, sender: any, sendResponse) => {
@@ -5112,7 +5178,6 @@ async function main() {
 				break;
 		}
 	});
-
 	let userQuery = `query {
         selectMyInfoByUser {
             email
@@ -5174,6 +5239,7 @@ async function main() {
 	visionKey = await keyResp.text();
 
 	const products = await getProductList(params.id);
+	console.log('여기는 ?');
 
 	for (let i in products.data.selectProductsBySomeone) {
 		if (products.data.selectProductsBySomeone[i].id === parseInt(params.id)) {
@@ -5188,24 +5254,25 @@ async function main() {
 
 		return;
 	}
-
 	canvasSetting();
 
 	imageToolHelper();
 
 	setTypeEvents();
 	setKeyEvents();
-
+	console.log('이기는 ?');
 	await addToLayers();
-
+	console.log('이기1');
 	currentType = '1';
 
 	await loadImageList();
+	console.log('이기2');
 
 	// headerFromURL.style.display = "";
 	menuToolbar.style.display = '';
 
 	loading.style.display = 'none';
-}
+	console.log('여기까지 도달 했습니광?');
+};
 
 main();
