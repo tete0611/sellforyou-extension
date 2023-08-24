@@ -170,11 +170,14 @@ export async function uploadESMPlus(productStore: any, commonStore: any, data: a
 
 		// 반품지 조회
 		let delivery_return_code = '0';
+		try {
+			let delivery_return_resp = await fetch('https://www.esmplus.com/SELL/SYI/GetDefaultReturnMemberAddress');
+			let delivery_return_json = await delivery_return_resp.json();
 
-		let delivery_return_resp = await fetch('https://www.esmplus.com/SELL/SYI/GetDefaultReturnMemberAddress');
-		let delivery_return_json = await delivery_return_resp.json();
-
-		delivery_return_code = delivery_return_json.MembAddrNo.toString();
+			delivery_return_code = delivery_return_json.MembAddrNo.toString();
+		} catch (error) {
+			notificationByEveryTime(`(${shopName}) 업로드 도중 오류가 발생하였습니다. (반품지 조회실패)`);
+		}
 
 		// 루프 돌면서 상품정보 생성
 		for (let product in data.DShopInfo.prod_codes) {
