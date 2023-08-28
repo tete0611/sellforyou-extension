@@ -136,7 +136,24 @@ let fixedTextAlignLeft: any = document.getElementById('fixedTextAlignLeft');
 let fixedTextAlignCenter: any = document.getElementById('fixedTextAlignCenter');
 let fixedTextAlignRight: any = document.getElementById('fixedTextAlignRight');
 
-let product: any = null;
+/** 상품타입 커스텀 */
+type Product = {
+	id: number;
+	productCode: string;
+	description: string;
+	imageThumbnail: string[];
+	productOptionName: {
+		productOptionValue: {
+			id: number;
+			image: string | null | undefined;
+		};
+	}[];
+	activeTaobaoProduct: {
+		shopName: string | null | undefined;
+	};
+};
+
+let product: Product | null = null;
 let appData: any = null;
 let areaPos: any = {};
 
@@ -249,7 +266,7 @@ const loadLocalSettings = () => {
 const getProductList = async (id: string) => {
 	let list_query = `query TEST($where: ProductWhereInput) {
         selectProductsBySomeone(where: $where) {
-            productCode
+            productCode 
             id
             description
             imageThumbnail
@@ -1166,13 +1183,13 @@ const sortBy = (array: any, key: string, asc: boolean) => {
 };
 
 const addToLayers = async () => {
-	if (testLayer !== 1) {
-		layers = [];
-	}
+	if (!product) return;
+	if (testLayer !== 1) layers = [];
+
 	switch (params.type) {
 		case '1': {
 			await Promise.all(
-				product.imageThumbnail.map(async (v: any, i: number) => {
+				product.imageThumbnail.map(async (v: string, i: number) => {
 					currentImageIndex = i;
 
 					let layer = getCurrentLayer();
@@ -1219,7 +1236,7 @@ const addToLayers = async () => {
 		}
 
 		case '2': {
-			let productOption: any = [];
+			let productOption: string[] = [];
 
 			product.productOptionName.map((v: any) => {
 				v.productOptionValue.map((w: any, i) => {
@@ -1237,7 +1254,7 @@ const addToLayers = async () => {
 			});
 
 			await Promise.all(
-				productOption.map(async (v: any, i: number) => {
+				productOption.map(async (v, i: number) => {
 					currentImageIndex = i;
 
 					let layer = getCurrentLayer();
@@ -1280,14 +1297,11 @@ const addToLayers = async () => {
 						} else {
 							layers.push({
 								type: params.type,
-
 								index: i,
-
 								image: {
 									origin: v,
 									current: '',
 								},
-
 								object: [],
 
 								state: {
@@ -1295,12 +1309,10 @@ const addToLayers = async () => {
 										canvas: [],
 										object: [],
 									},
-
 									redo: {
 										canvas: [],
 										object: [],
 									},
-
 									current: {},
 									// 체크상태를 disabled 처리
 									check: 'disabled',
@@ -1400,6 +1412,7 @@ const addToLayers = async () => {
 };
 
 const loadImageList = async () => {
+	if (!product) return;
 	imageList.innerHTML = ``;
 
 	let filterdImages: any = [];
@@ -3659,6 +3672,7 @@ const zoomIn = async () => {
 };
 //avif 확장자의 경우 버킷에 저장하고 다시 번역하게끔 저장하는 부분
 const saveBadImage = async () => {
+	if (!product) return;
 	loading.style.display = '';
 
 	let uploadData: any = {
@@ -3785,6 +3799,7 @@ const saveBadImage = async () => {
 	}
 };
 const saveSingle = async () => {
+	if (!product) return;
 	let accept = confirm('적용 시 이미지를 되돌릴 수 없습니다.');
 
 	if (!accept) {
@@ -3923,6 +3938,7 @@ const saveSingle = async () => {
 };
 
 const saveMultiple = async () => {
+	if (!product) return;
 	console.log('세이브멀티플 발동');
 	loading.style.display = '';
 
@@ -3976,7 +3992,7 @@ const saveMultiple = async () => {
 					console.log({ dataUrl });
 				}
 
-				for (let j in product.productOptionName) {
+				for (let j in product?.productOptionName) {
 					for (let k in product.productOptionName[j].productOptionValue) {
 						let option = product.productOptionName[j].productOptionValue[k];
 						if (option.image === '') continue;
@@ -4058,7 +4074,8 @@ const saveMultiple = async () => {
 };
 
 const imageToolHelper = () => {
-	if (product.activeTaobaoProduct.shopName === 'express' || product.activeTaobaoProduct.shopName.includes('amazon')) {
+	if (!product) return;
+	if (product.activeTaobaoProduct.shopName === 'express' || product.activeTaobaoProduct.shopName?.includes('amazon')) {
 		startRegion.value = 'en';
 	}
 
