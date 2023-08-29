@@ -6,8 +6,7 @@ import { Registered } from './Registered';
 import './index.css';
 
 render(
-  <Registered />,
+	<Registered />,
 
-  window.document.querySelector('#app-container')
+	window.document.querySelector('#app-container'),
 );
-

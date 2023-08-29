@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import { render } from "react-dom";
-import { BanWords } from "./BanWords";
+import { render } from 'react-dom';
+import { BanWords } from './BanWords';
 
-import "./index.css";
+import './index.css';
 
 render(
-  <BanWords />,
+	<BanWords />,
 
-  window.document.querySelector("#app-container")
+	window.document.querySelector('#app-container'),
 );

@@ -1,5 +1,6 @@
 const MUTATIONS = {
-  SIGN_IN_USER_BY_EVERYONE: `
+	// 로그인
+	SIGN_IN_USER_BY_EVERYONE: `
         mutation ($id: String!, $pw: String!) {
             signInUserByEveryone(userType: EMAIL, email: $id, password: $pw) {
                 accessToken
@@ -7,32 +8,36 @@ const MUTATIONS = {
             }
         }
     `,
-
-  SIGN_OUT_USER_BY_EVERYONE: `
+	// 로그아웃
+	SIGN_OUT_USER_BY_EVERYONE: `
         mutation {
             signOutUserByEveryone
         }
     `,
 
-  SIGN_UP_USER_BY_EVERYONE: `
+	// 회원가입
+	SIGN_UP_USER_BY_EVERYONE: `
         mutation ($email: String!, $password: String!, $phone: String!, $refCode: String) {
             signUpUserByEveryone2(email: $email, password: $password, phone: $phone, verificationId: 0, refCode: $refCode)
         }
     `,
 
-  REQUEST_PHONE_VERIFICATION_BY_EVERYONE: `
+	// 인증번호요청
+	REQUEST_PHONE_VERIFICATION_BY_EVERYONE: `
         mutation ($phoneNumber: String!) {
             requestPhoneVerificationByEveryone(phoneNumber: $phoneNumber)
         }
     `,
 
-  VERIFY_PHONE_BY_EVERYONE: `
+	// 인증하기
+	VERIFY_PHONE_BY_EVERYONE: `
         mutation ($phoneNumber: String!, $verificationNumber: String!) {
             verifyPhoneByEveryone(phoneNumber: $phoneNumber, verificationNumber: $verificationNumber)
         }
     `,
 
-  UPDATE_MY_DATA_BY_USER: `
+	// 내정보 수정
+	UPDATE_MY_DATA_BY_USER: `
         mutation (
             $marginRate: Float
             $defaultShippingFee: Int
@@ -252,13 +257,13 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_MY_IMAGE_URL_BY_USER: `
+	UPDATE_MY_IMAGE_URL_BY_USER: `
         mutation ($fixImageTop: String, $fixImageSubTop: String, $fixImageBottom: String, $fixImageSubBottom: String) {
             updateMyImageByUser(fixImageTop: $fixImageTop, fixImageSubTop: $fixImageSubTop, fixImageBottom: $fixImageBottom, fixImageSubBottom: $fixImageSubBottom)
         }   
     `,
 
-  SILENT_REFRESH_TOKEN: `
+	SILENT_REFRESH_TOKEN: `
         mutation ($refreshToken: String!) {
             silentRefreshToken(refreshToken: $refreshToken) {
                 accessToken
@@ -267,13 +272,13 @@ const MUTATIONS = {
         }
     `,
 
-  SET_PRODUCT_OPTION_NAME_BY_SOMEONE: `
+	SET_PRODUCT_OPTION_NAME_BY_SOMEONE: `
         mutation ($productOptionNameId: Int!, $isActive: Boolean!, $name: String!) {
             setProductOptionNameBySomeOne(productOptionNameId: $productOptionNameId, isActive: $isActive, name: $name)
         }
     `,
 
-  SET_PRODUCT_OPTION_VALUE_BY_SOMEONE: `
+	SET_PRODUCT_OPTION_VALUE_BY_SOMEONE: `
         mutation (
             $productOptionNameId: Int, 
             $productOptionValueId: Int, 
@@ -293,49 +298,49 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_PRODUCT_OPTION: `
+	UPDATE_PRODUCT_OPTION: `
         mutation ($id: Int!, $productOption: [setProductOption!]!) {
             updateProductOption(id: $id, productOption: $productOption)
         }
     `,
 
-  DELETE_PRODUCT_BY_USER: `
+	DELETE_PRODUCT_BY_USER: `
         mutation ($productId: [Int!]!) {
             deleteProductByUser(productId: $productId)
         }
     `,
 
-  GET_TAOBAO_ITEM_USING_EXTENSION_BY_USER: `
+	GET_TAOBAO_ITEM_USING_EXTENSION_BY_USER: `
         mutation ($data: String!) {
             getTaobaoItemUsingExtensionByUser(data: $data)
         }
     `,
 
-  UPDATE_PRODUCT_STORE_URL_INFO_BY_SOMEONE: `
+	UPDATE_PRODUCT_STORE_URL_INFO_BY_SOMEONE: `
         mutation ($productStoreId: Int!, $storeProductId: String!) {
             updateProductStoreUrlInfoBySomeone(productStoreId: $productStoreId, storeProductId: $storeProductId)
         }
     `,
 
-  UPDATE_PRODUCT_NAME_BY_USER: `
+	UPDATE_PRODUCT_NAME_BY_USER: `
         mutation ($productId: Int!, $name: String!) {
             updateProductNameByUser(productId: $productId, name: $name)
         }
     `,
 
-  UPDATE_MULTIPLE_PRODUCT_NAME_BY_USER: `
+	UPDATE_MULTIPLE_PRODUCT_NAME_BY_USER: `
         mutation($data: [ProductOptionNameInput!]!) {
             updateMultipleProductNameByUser(data: $data)
         }
     `,
 
-  UPDATE_PRODUCT_TAG_BY_USER: `
+	UPDATE_PRODUCT_TAG_BY_USER: `
         mutation ($productId: Int!, $searchTags: String, $immSearchTags: String) {
             updateProductTagByUser(productId: $productId, searchTags: $searchTags, immSearchTags: $immSearchTags)
         }
     `,
 
-  UPDATE_PRODUCT_CATEGORY: `
+	UPDATE_PRODUCT_CATEGORY: `
         mutation (
             $productId: Int!,
             $categoryA077: String,
@@ -367,7 +372,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_PRODUCT_FEE: `
+	UPDATE_PRODUCT_FEE: `
         mutation (
             $productId: Int!,
             $naverFee: Float,
@@ -399,7 +404,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_MANY_PRODUCT_PRICE_BY_USER: `
+	UPDATE_MANY_PRODUCT_PRICE_BY_USER: `
         mutation (
             $productIds: [Int!]!,
             $cnyRate: Float!,
@@ -421,7 +426,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_MANY_PRODUCT_FEE: `
+	UPDATE_MANY_PRODUCT_FEE: `
         mutation (
             $productId: [Int!]!,
             $naverFee: Float,
@@ -453,7 +458,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_MANY_PRODUCT_CATEGORY_BY_USER: `
+	UPDATE_MANY_PRODUCT_CATEGORY_BY_USER: `
         mutation (
             $productIds: [Int!]!,
             $categoryA077: String,
@@ -485,7 +490,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_MANY_PRODUCT_NAME_BY_USER: `
+	UPDATE_MANY_PRODUCT_NAME_BY_USER: `
         mutation (
             $productIds: [Int!]!,
             $head: String,
@@ -501,7 +506,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_MANY_PRODUCT_TAG_BY_USER: `
+	UPDATE_MANY_PRODUCT_TAG_BY_USER: `
         mutation (
             $productIds: [Int!]!,
             $searchTags: String,
@@ -515,7 +520,7 @@ const MUTATIONS = {
         }
     `,
 
-  ADD_WORD_BY_USER: `
+	ADD_WORD_BY_USER: `
         mutation (
             $findWord: String!,
             $replaceWord: String
@@ -527,7 +532,7 @@ const MUTATIONS = {
         }
     `,
 
-  DELETE_WORD_BY_USER: `
+	DELETE_WORD_BY_USER: `
         mutation (
             $wordId: [Int!]!,
         ) {
@@ -537,7 +542,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_IMAGE_THUMBNAIL_DATA: `
+	UPDATE_IMAGE_THUMBNAIL_DATA: `
         mutation (
             $productId: Int!,
             $thumbnails: [ProductThumbnailUpdateInput!]
@@ -549,7 +554,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_DESCRIPTION: `
+	UPDATE_DESCRIPTION: `
         mutation (
             $productId: Int!,
             $description: String!
@@ -561,7 +566,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_MANY_PRODUCT_OPTION: `
+	UPDATE_MANY_PRODUCT_OPTION: `
         mutation (
             $data: [ProductOptionInput!]!
         ) {
@@ -571,7 +576,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_MANY_PRODUCT_OPTION_VALUE: `
+	UPDATE_MANY_PRODUCT_OPTION_VALUE: `
         mutation (
             $data: [ProductOptionValueInput!]!
         ) {
@@ -581,7 +586,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_PRODUCT_SINGLE_PRICE_BY_USER: `
+	UPDATE_PRODUCT_SINGLE_PRICE_BY_USER: `
         mutation (
             $productId: Int!,
             $price: Int!
@@ -593,7 +598,7 @@ const MUTATIONS = {
         }
     `,
 
-  INIT_PRODUCT_THUMBNAIL_IMAGE_BY_USER: `
+	INIT_PRODUCT_THUMBNAIL_IMAGE_BY_USER: `
         mutation (
             $productId: Int!
         ) {
@@ -603,7 +608,7 @@ const MUTATIONS = {
         }
     `,
 
-  INIT_PRODUCT_OPTION_IMAGE_BY_USER: `
+	INIT_PRODUCT_OPTION_IMAGE_BY_USER: `
         mutation (
             $productId: Int!
         ) {
@@ -613,7 +618,7 @@ const MUTATIONS = {
         }
     `,
 
-  INIT_PRODUCT_DESCRIPTION_BY_USER: `
+	INIT_PRODUCT_DESCRIPTION_BY_USER: `
         mutation (
             $productId: Int!
         ) {
@@ -623,7 +628,7 @@ const MUTATIONS = {
         }
     `,
 
-  UNLINK_PRODUCT_STORE: `
+	UNLINK_PRODUCT_STORE: `
         mutation (
             $productId: Int!
             $siteCode: String!
@@ -636,7 +641,7 @@ const MUTATIONS = {
             )
         }
     `,
-  CHECK_ESM_PLUS: `
+	CHECK_ESM_PLUS: `
     mutation (
         $productId: Int!
         $siteCode: String!
@@ -649,7 +654,7 @@ const MUTATIONS = {
         )
     }`,
 
-  CREATE_NEW_ORDER: `
+	CREATE_NEW_ORDER: `
         mutation (
             $data: [newOrderInput!]!
         ) {
@@ -657,7 +662,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_PRODUCT_ATTRIBUTE_BY_USER: `
+	UPDATE_PRODUCT_ATTRIBUTE_BY_USER: `
         mutation (
             $productId: Int!
             $brandName: String
@@ -672,7 +677,7 @@ const MUTATIONS = {
             )
         }
     `,
-  UPDATE_KEYWARD_LIST: `
+	UPDATE_KEYWARD_LIST: `
   mutation(
     $productId : Int!
     $myKeyward : String!
@@ -682,7 +687,7 @@ const MUTATIONS = {
         myKeyward : $myKeyward
     )
   }`,
-  SET_LOCK_PRODUCT: `
+	SET_LOCK_PRODUCT: `
   mutation (
     $productId : Int!
     $mylock : Int!
@@ -693,7 +698,7 @@ const MUTATIONS = {
     )
   }`,
 
-  COUPANG_PRODUCTSTORE_DELETE: `
+	COUPANG_PRODUCTSTORE_DELETE: `
         mutation (
             $productId : Int!
         ){
@@ -702,7 +707,7 @@ const MUTATIONS = {
             )
         }
   `,
-  TEST_ADD_JOB_CALLBACK: `
+	TEST_ADD_JOB_CALLBACK: `
         mutation (
             $response: String!
         ) {
@@ -712,7 +717,7 @@ const MUTATIONS = {
         }
     `,
 
-  EDIT_PASSWORD_CREATE_VERIFICATION: `
+	EDIT_PASSWORD_CREATE_VERIFICATION: `
         mutation (
             $email: String!
             $phoneNumber: String!
@@ -724,7 +729,7 @@ const MUTATIONS = {
         }
     `,
 
-  EDIT_PASSWORD: `
+	EDIT_PASSWORD: `
         mutation (
             $email: String!
             $verificationNumber: String!
@@ -740,7 +745,7 @@ const MUTATIONS = {
         }
     `,
 
-  CHANGE_PASSWORD_BY_USER: `
+	CHANGE_PASSWORD_BY_USER: `
         mutation (
             $currentPassword: String!
             $newPassword: String!
@@ -752,7 +757,7 @@ const MUTATIONS = {
         }
     `,
 
-  FIND_EMAIL_CREATE_VERIFICATION: `
+	FIND_EMAIL_CREATE_VERIFICATION: `
         mutation (
             $phoneNumber: String!
         ) {
@@ -762,7 +767,7 @@ const MUTATIONS = {
         }
     `,
 
-  FIND_EMAIL: `
+	FIND_EMAIL: `
         mutation (
             $phone: String!
             $verificationNumber: String!
@@ -773,7 +778,7 @@ const MUTATIONS = {
             )
         }
     `,
-  UPDATE_MANY_KEYWARD_LIST: `
+	UPDATE_MANY_KEYWARD_LIST: `
         mutation (
             $productIds :[Int!]!
             $myKeyward:String!
@@ -783,7 +788,7 @@ const MUTATIONS = {
                 myKeyward : $myKeyward
             )
         }`,
-  UPDATE_MANY_PRODUCT_ATTRIBUTE_BY_USER: `
+	UPDATE_MANY_PRODUCT_ATTRIBUTE_BY_USER: `
         mutation (
             $productId: [Int!]!
             $brandName: String
@@ -799,7 +804,7 @@ const MUTATIONS = {
         }
     `,
 
-  COUPANG_CATEGORY_SILL_CODE_INPUT: `
+	COUPANG_CATEGORY_SILL_CODE_INPUT: `
         mutation (
             $data: [sillCodeInput!]!
         ) {
@@ -809,7 +814,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_PRODUCT_SILL_DATAS_BY_USER: `
+	UPDATE_PRODUCT_SILL_DATAS_BY_USER: `
         mutation (
             $productIds: [Int!]!
             $data_a077: String
@@ -841,7 +846,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_PRODUCT_SILL_CODES_BY_USER: `
+	UPDATE_PRODUCT_SILL_CODES_BY_USER: `
         mutation (
             $productIds: [Int!]!
             $code_a077: String
@@ -873,7 +878,7 @@ const MUTATIONS = {
         }
     `,
 
-  SET_MULTI_PURCHASE_INFO_BY_ADMIN: `
+	SET_MULTI_PURCHASE_INFO_BY_ADMIN: `
         mutation (
             $purchaseInputs: [purchaseInputs!]!
             $credit: Int!
@@ -885,7 +890,7 @@ const MUTATIONS = {
         }
     `,
 
-  UPDATE_MANY_DESCRIPTION: `
+	UPDATE_MANY_DESCRIPTION: `
         mutation (
             $data: [DescriptionDataInput!]!
         ) {

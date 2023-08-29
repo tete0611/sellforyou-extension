@@ -1,623 +1,623 @@
 @font-face {
-  font-family: "NNSQUAREROUNDR";
-  src: url("resources/NanumSquareRoundR.ttf");
+	font-family: 'NNSQUAREROUNDR';
+	src: url('resources/NanumSquareRoundR.ttf');
 }
 
 html * {
-  font-family: "NNSQUAREROUNDR";
-  font-weight: bold;
+	font-family: 'NNSQUAREROUNDR';
+	font-weight: bold;
 }
 
 body {
-  background: rgb(41, 41, 41);
+	background: rgb(41, 41, 41);
 
-  font-family: "NNSQUAREROUNDR";
+	font-family: 'NNSQUAREROUNDR';
 
-  margin: 0px 0px 0px;
+	margin: 0px 0px 0px;
 }
 
 a {
-  color: white;
+	color: white;
 
-  text-decoration: none;
+	text-decoration: none;
 }
 
 button {
-  border: none;
+	border: none;
 
-  cursor: pointer;
+	cursor: pointer;
 }
 
 button:disabled {
-  cursor: not-allowed;
+	cursor: not-allowed;
 }
 
 input {
-  background: white;
+	background: white;
 
-  border: 1px solid lightgray;
+	border: 1px solid lightgray;
 
-  cursor: text;
+	cursor: text;
 
-  font-size: 14px;
+	font-size: 14px;
 
-  height: 30px;
+	height: 30px;
 
-  text-align: center;
+	text-align: center;
 }
 
 .round {
-  border-radius: 5px;
+	border-radius: 5px;
 }
 
 input:focus {
-  outline: none;
+	outline: none;
 }
 
 input:hover {
-  color: rgb(41, 136, 255);
+	color: rgb(41, 136, 255);
 }
 
 input:disabled {
-  cursor: not-allowed;
+	cursor: not-allowed;
 }
 
 select {
-  background: white;
-  border: none;
+	background: white;
+	border: none;
 
-  height: 28px;
+	height: 28px;
 }
 
 select:disabled {
-  cursor: not-allowed;
+	cursor: not-allowed;
 }
 
 table {
-  font-size: 16px;
+	font-size: 16px;
 
-  text-align: center;
+	text-align: center;
 
-  width: 100%;
+	width: 100%;
 }
 
 td {
-  color: black;
+	color: black;
 
-  font-size: 14px;
+	font-size: 14px;
 }
 
 .activated {
-  background: rgb(41, 136, 255);
-  border: 2px solid rgb(41, 136, 255);
+	background: rgb(41, 136, 255);
+	border: 2px solid rgb(41, 136, 255);
 
-  color: white;
+	color: white;
 }
 
 .canvas {
-  display: flex;
+	display: flex;
 
-  overflow: auto;
+	overflow: auto;
 
-  width: 100vw;
-  height: 804px;
+	width: 100vw;
+	height: 804px;
 }
 
 .canvas-container {
-  margin: auto;
+	margin: auto;
 }
 
 .button {
-  display: block;
+	display: block;
 
-  cursor: pointer;
+	cursor: pointer;
 
-  font-size: 14px;
+	font-size: 14px;
 
-  padding: 3px;
+	padding: 3px;
 }
 
 .button:hover {
-  background: rgb(163, 169, 179);
+	background: rgb(163, 169, 179);
 
-  color: white;
+	color: white;
 
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
+	-webkit-transition: all 0.3s ease;
+	transition: all 0.3s ease;
 }
 
 .button:disabled {
-  cursor: not-allowed;
+	cursor: not-allowed;
 }
 
 .dark {
-  background: rgb(76, 76, 76);
-  color: white;
+	background: rgb(76, 76, 76);
+	color: white;
 }
 
 .deactivated {
-  background: lightgray;
-  border: 2px solid lightgray;
+	background: lightgray;
+	border: 2px solid lightgray;
 
-  color: white;
+	color: white;
 }
 
 .default {
-  background: dimgray;
+	background: dimgray;
 
-  color: white;
+	color: white;
 }
 
 .header {
-  left: 0%;
-  top: 0%;
-  width: 100%;
-  height: 67px;
-  z-index: 10;
+	left: 0%;
+	top: 0%;
+	width: 100%;
+	height: 67px;
+	z-index: 10;
 }
 
 .header-top {
-  color: white;
+	color: white;
 
-  font-size: 14px;
+	font-size: 14px;
 
-  padding: 2.5px 5px;
+	padding: 2.5px 5px;
 }
 
 .header-center {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
 }
 
 .header-login {
-  position: absolute;
-  left: 50%;
-  padding: 50px;
-  top: 50%;
-  transform: translate(-50%, -50%);
+	position: absolute;
+	left: 50%;
+	padding: 50px;
+	top: 50%;
+	transform: translate(-50%, -50%);
 }
 
 .header-menu {
-  color: rgb(41, 136, 255);
+	color: rgb(41, 136, 255);
 
-  display: flex;
+	display: flex;
 
-  left: 0;
-  bottom: 100px;
+	left: 0;
+	bottom: 100px;
 
-  position: fixed;
+	position: fixed;
 
-  text-align: center;
+	text-align: center;
 
-  z-index: 11;
+	z-index: 11;
 }
 
 .header-history {
-  background: transparent;
+	background: transparent;
 
-  font-size: 16px;
+	font-size: 16px;
 
-  right: 246px;
+	right: 246px;
 
-  top: 190px;
+	top: 190px;
 
-  padding: 10px;
-  position: fixed;
+	padding: 10px;
+	position: fixed;
 
-  width: 120px;
+	width: 120px;
 
-  z-index: 5;
+	z-index: 5;
 }
 
 .header-quick {
-  background: rgb(59 102 181);
+	background: rgb(59 102 181);
 
-  font-size: 12px;
+	font-size: 12px;
 
-  padding: 0px 10px;
-  position: fixed;
+	padding: 0px 10px;
+	position: fixed;
 
-  height: 34px;
+	height: 34px;
 
-  z-index: 12;
+	z-index: 12;
 
-  transform: translate(-50%, -200%);
+	transform: translate(-50%, -200%);
 }
 
 .header-sub {
-  background: rgb(54, 54, 54);
+	background: rgb(54, 54, 54);
 
-  font-size: 16px;
+	font-size: 16px;
 
-  padding: 15px 20px;
+	padding: 15px 20px;
 
-  min-width: 220px;
+	min-width: 220px;
 }
 
 .header-sider {
-  background: rgb(80, 80, 80);
-  bottom: 0;
+	background: rgb(80, 80, 80);
+	bottom: 0;
 
-  display: flex;
+	display: flex;
 
-  flex-wrap: nowrap;
-  font-size: 20px;
-  font-weight: bold;
+	flex-wrap: nowrap;
+	font-size: 20px;
+	font-weight: bold;
 
-  width: 100vw;
+	width: 100vw;
 
-  left: 0;
+	left: 0;
 
-  position: fixed;
+	position: fixed;
 
-  text-align: center;
+	text-align: center;
 
-  z-index: 12;
+	z-index: 12;
 }
 
 .header-toolbar {
-  background: white;
+	background: white;
 
-  color: white;
+	color: white;
 
-  height: 100vh;
+	height: 100vh;
 
-  margin-top: 69px;
+	margin-top: 69px;
 
-  right: 191px;
+	right: 191px;
 
-  padding: 20px;
-  position: fixed;
+	padding: 20px;
+	position: fixed;
 
-  text-align: center;
+	text-align: center;
 
-  z-index: 11;
+	z-index: 11;
 }
 
 .header-text {
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
+	font-size: 20px;
+	font-weight: bold;
+	cursor: pointer;
 }
 
 .image-thumnail:hover {
-  box-shadow: 0px 0px 5px rgb(41, 136, 255);
+	box-shadow: 0px 0px 5px rgb(41, 136, 255);
 
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
+	-webkit-transition: all 0.3s ease;
+	transition: all 0.3s ease;
 }
 
 .video-thumnail:hover {
-  box-shadow: 0px 0px 5px rgb(41, 136, 255);
+	box-shadow: 0px 0px 5px rgb(41, 136, 255);
 
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
+	-webkit-transition: all 0.3s ease;
+	transition: all 0.3s ease;
 }
 
 .overlay {
-  background: rgba(0, 0, 0, 0.3);
+	background: rgba(0, 0, 0, 0.3);
 
-  display: flex;
+	display: flex;
 
-  height: 100%;
+	height: 100%;
 
-  left: 50%;
+	left: 50%;
 
-  margin: auto;
+	margin: auto;
 
-  position: absolute;
+	position: absolute;
 
-  top: 50%;
-  transform: translate(-50%, -50%);
+	top: 50%;
+	transform: translate(-50%, -50%);
 
-  width: 100%;
+	width: 100%;
 
-  z-index: 100;
+	z-index: 100;
 }
 
 .loading {
-  box-sizing: unset;
+	box-sizing: unset;
 
-  border: 2px solid #fff;
-  border-right-color: gray;
-  border-top-color: gray;
-  border-radius: 100%;
+	border: 2px solid #fff;
+	border-right-color: gray;
+	border-top-color: gray;
+	border-radius: 100%;
 
-  -webkit-animation: spin 400ms infinite linear;
-  animation: spin 400ms infinite linear;
+	-webkit-animation: spin 400ms infinite linear;
+	animation: spin 400ms infinite linear;
 
-  margin: auto;
+	margin: auto;
 }
 
 .loading-large {
-  box-sizing: unset;
+	box-sizing: unset;
 
-  border: 8px solid #fff;
-  border-right-color: gray;
-  border-top-color: gray;
-  border-radius: 100%;
+	border: 8px solid #fff;
+	border-right-color: gray;
+	border-top-color: gray;
+	border-radius: 100%;
 
-  -webkit-animation: spin 400ms infinite linear;
-  animation: spin 400ms infinite linear;
+	-webkit-animation: spin 400ms infinite linear;
+	animation: spin 400ms infinite linear;
 
-  margin: auto;
+	margin: auto;
 }
 
 .menu {
-  background: gray;
+	background: gray;
 
-  color: white;
+	color: white;
 
-  font-size: 13px;
-  font-weight: bold;
+	font-size: 13px;
+	font-weight: bold;
 
-  text-align: center;
+	text-align: center;
 
-  width: 84px;
-  height: 35px;
+	width: 84px;
+	height: 35px;
 
-  margin: 0px 1px 6px 1px;
+	margin: 0px 1px 6px 1px;
 }
 
 .menu:hover {
-  background: rgb(80, 80, 80);
+	background: rgb(80, 80, 80);
 
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
+	-webkit-transition: all 0.3s ease;
+	transition: all 0.3s ease;
 }
 
 .primary {
-  background: rgb(41, 136, 255);
+	background: rgb(41, 136, 255);
 
-  color: white;
+	color: white;
 }
 
 .radio {
-  border: 1px solid dimgray;
+	border: 1px solid dimgray;
 
-  cursor: pointer;
+	cursor: pointer;
 
-  font-size: 12px;
-  flex-grow: 1;
+	font-size: 12px;
+	flex-grow: 1;
 
-  text-align: center;
+	text-align: center;
 
-  padding-top: 6px;
+	padding-top: 6px;
 }
 
 .radio:hover {
-  background: rgb(163, 169, 179);
+	background: rgb(163, 169, 179);
 
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
+	-webkit-transition: all 0.3s ease;
+	transition: all 0.3s ease;
 }
 
 .secondary {
-  background: rgb(255, 80, 80);
+	background: rgb(255, 80, 80);
 
-  color: white;
+	color: white;
 }
 
 .selected {
-  background: rgb(80, 80, 80);
+	background: rgb(80, 80, 80);
 }
 
 .translation-step {
-  cursor: not-allowed;
+	cursor: not-allowed;
 
-  padding: 6px;
+	padding: 6px;
 
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .th {
-  background: rgb(59 102 181);
+	background: rgb(59 102 181);
 
-  color: white;
+	color: white;
 
-  font-size: 14px;
+	font-size: 14px;
 }
 
 .failed {
-  background: #cb4856;
+	background: #cb4856;
 }
 
 .success {
-  background: #2ba38e;
+	background: #2ba38e;
 }
 
 .information {
-  background: #1e8ad7;
+	background: #1e8ad7;
 }
 
 .warning {
-  background: #ff9900;
+	background: #ff9900;
 }
 
 .toast-container {
-  bottom: 0px;
+	bottom: 0px;
 
-  display: flex;
+	display: flex;
 
-  flex-direction: column;
+	flex-direction: column;
 
-  position: fixed;
+	position: fixed;
 
-  right: 0px;
+	right: 0px;
 
-  min-width: 400px;
+	min-width: 400px;
 
-  max-height: 750px;
+	max-height: 750px;
 
-  z-index: 12;
+	z-index: 12;
 }
 
 .toast {
-  border-radius: 5px;
-  border: 1px solid lightgray;
+	border-radius: 5px;
+	border: 1px solid lightgray;
 
-  color: white;
+	color: white;
 
-  font-size: 16px;
+	font-size: 16px;
 
-  padding: 15px;
+	padding: 15px;
 
-  margin: 10px;
-  margin-top: auto;
+	margin: 10px;
+	margin-top: auto;
 
-  z-index: 12;
+	z-index: 12;
 }
 
 .tooltip {
-  display: block;
+	display: block;
 
-  position: relative;
+	position: relative;
 }
 
 .tooltip .tooltip-text {
-  background-color: coral;
-  border-radius: 5px;
+	background-color: coral;
+	border-radius: 5px;
 
-  color: white;
+	color: white;
 
-  right: 0%;
+	right: 0%;
 
-  margin-top: 45px;
+	margin-top: 45px;
 
-  padding: 10px;
-  position: absolute;
+	padding: 10px;
+	position: absolute;
 
-  visibility: hidden;
+	visibility: hidden;
 
-  z-index: 13;
+	z-index: 13;
 }
 
 .tooltip:hover .tooltip-text {
-  visibility: visible;
+	visibility: visible;
 }
 
 .btnTooltip {
-  position: relative;
-  display: block;
+	position: relative;
+	display: block;
 }
 
 .btnTooltip .btnKeys_top {
-  visibility: hidden;
-  width: 120px;
-  background-color: rgb(59 102 181);
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  width: 120px;
-  bottom: 110%;
-  left: 50%;
-  margin-left: -60px;
+	visibility: hidden;
+	width: 120px;
+	background-color: rgb(59 102 181);
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	width: 120px;
+	bottom: 110%;
+	left: 50%;
+	margin-left: -60px;
 
-  position: absolute;
-  z-index: 1;
+	position: absolute;
+	z-index: 1;
 }
 
 .btnTooltip:hover .btnKeys_top {
-  visibility: visible;
+	visibility: visible;
 }
 
 .btnTooltip .btnKeys_top::after {
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-color: black transparent transparent transparent;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-color: black transparent transparent transparent;
 }
 
 .btnTooltip .btnKeys_bottom {
-  visibility: hidden;
-  width: 95px;
-  font-size: 13px;
-  background-color: rgb(59 102 181);
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  top: 110%;
-  left: 80%;
-  margin-left: -60px;
+	visibility: hidden;
+	width: 95px;
+	font-size: 13px;
+	background-color: rgb(59 102 181);
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+	top: 110%;
+	left: 80%;
+	margin-left: -60px;
 
-  position: absolute;
-  z-index: 999999;
+	position: absolute;
+	z-index: 999999;
 }
 
 .btnTooltip:hover .btnKeys_bottom {
-  visibility: visible;
+	visibility: visible;
 }
 
 .btnTooltip .btnKeys_bottom::after {
-  bottom: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-color: black transparent transparent transparent;
+	bottom: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-color: black transparent transparent transparent;
 }
 
 .imageListDiv {
-  position: relative;
-  float: left;
-  margin-top: 5px;
-  width: 86px;
-  height: 92px;
+	position: relative;
+	float: left;
+	margin-top: 5px;
+	width: 86px;
+	height: 92px;
 }
 
 .checkBox {
-  cursor: pointer;
-  position: absolute;
-  top: 1px;
-  right: 1px;
-  height: 25px;
-  width: 25px;
+	cursor: pointer;
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	height: 25px;
+	width: 25px;
 }
 
 #mainImg {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 input:hover {
-  color: rgb(41, 136, 255);
+	color: rgb(41, 136, 255);
 }
 
 #thisImageRecovery:hover #redRecovery {
-  color: red;
+	color: red;
 }
 
 #thisImageSave:hover #primarySave {
-  color: rgb(41, 136, 255);
+	color: rgb(41, 136, 255);
 }
 
 @keyframes fadeout {
-  from {
-    opacity: 1;
-  }
+	from {
+		opacity: 1;
+	}
 
-  to {
-    opacity: 0;
-  }
+	to {
+		opacity: 0;
+	}
 }
 
 @-webkit-keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
+	from {
+		transform: rotate(0deg);
+	}
 
-  to {
-    transform: rotate(359deg);
-  }
+	to {
+		transform: rotate(359deg);
+	}
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
+	from {
+		transform: rotate(0deg);
+	}
 
-  to {
-    transform: rotate(359deg);
-  }
+	to {
+		transform: rotate(359deg);
+	}
 }

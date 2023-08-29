@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import { render } from "react-dom";
-import { ChangePassword } from "./ChangePassword";
+import { render } from 'react-dom';
+import { ChangePassword } from './ChangePassword';
 
-import "./index.css";
+import './index.css';
 
 render(
-  <ChangePassword />,
+	<ChangePassword />,
 
-  window.document.querySelector("#app-container")
+	window.document.querySelector('#app-container'),
 );
