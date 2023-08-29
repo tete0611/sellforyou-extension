@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import { render } from "react-dom";
-import { Analysis } from "./Analysis";
+import { render } from 'react-dom';
+import { Analysis } from './Analysis';
 
-import "./index.css";
+import './index.css';
 
 render(
-  <Analysis />,
+	<Analysis />,
 
-  window.document.querySelector("#app-container")
+	window.document.querySelector('#app-container'),
 );

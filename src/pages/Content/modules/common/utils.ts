@@ -1,60 +1,58 @@
 // 페이지 삽입 스크립트를 실제로 넣어주기 위한 구문
 // 스크립트 삽입 시 외부 링크 사용불가 (인라인 스크립트만 사용 가능)
-async function injectScript(type: string) {
-  sessionStorage.removeItem(`${type}-item`);
+export async function injectScript(type: string) {
+	sessionStorage.removeItem(`${type}-item`);
 
-  let oldScript = document.getElementById("sellforyou");
+	let oldScript = document.getElementById('sellforyou');
 
-  if (oldScript) {
-    oldScript.remove();
-  }
+	if (oldScript) {
+		oldScript.remove();
+	}
 
-  let script = document.createElement("script");
+	let script = document.createElement('script');
 
-  script.id = "sellforyou";
+	script.id = 'sellforyou';
 
-  switch (type) {
-    case "taobao": {
-      script.src = chrome.runtime.getURL("/resources/taobao.js");
+	switch (type) {
+		case 'taobao': {
+			script.src = chrome.runtime.getURL('/resources/taobao.js');
 
-      break;
-    }
+			break;
+		}
 
-    case "tmall": {
-      script.src = chrome.runtime.getURL("/resources/tmall.js");
+		case 'tmall': {
+			script.src = chrome.runtime.getURL('/resources/tmall.js');
 
-      break;
-    }
+			break;
+		}
 
-    case "express": {
-      script.src = chrome.runtime.getURL("/resources/express.js");
+		case 'express': {
+			script.src = chrome.runtime.getURL('/resources/express.js');
 
-      break;
-    }
+			break;
+		}
 
-    case "alibaba": {
-      script.src = chrome.runtime.getURL("/resources/alibaba.js");
+		case 'alibaba': {
+			script.src = chrome.runtime.getURL('/resources/alibaba.js');
 
-      break;
-    }
+			break;
+		}
 
-    case "vvic": {
-      script.src = chrome.runtime.getURL("/resources/vvic.js");
+		case 'vvic': {
+			script.src = chrome.runtime.getURL('/resources/vvic.js');
 
-      break;
-    }
+			break;
+		}
 
-    case "amazon": {
-      script.src = chrome.runtime.getURL("/resources/amazon.js");
+		case 'amazon': {
+			script.src = chrome.runtime.getURL('/resources/amazon.js');
 
-      break;
-    }
+			break;
+		}
 
-    default:
-      break;
-  }
+		default:
+			break;
+	}
 
-  document.documentElement.appendChild(script);
+	document.documentElement.appendChild(script);
 }
-
-export { injectScript };

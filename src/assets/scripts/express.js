@@ -1124,415 +1124,427 @@
 
 //mtop.js express network 내용중 n.H5Request 또는 2147483648 하위 항목중 특정 function 안의 내용 복사 해당 function이름은 암호화 되어서 md5Customized라고 적혀있지 않음
 function md5Customized(e) {
-  function t(e, t) {
-    return (e << t) | (e >>> (32 - t));
-  }
-  function o(e, t) {
-    var o, n, r, i, s;
-    return (
-      (r = 2147483648 & e),
-      (i = 2147483648 & t),
-      (s = (1073741823 & e) + (1073741823 & t)),
-      (o = 1073741824 & e) & (n = 1073741824 & t)
-        ? 2147483648 ^ s ^ r ^ i
-        : o | n
-        ? 1073741824 & s
-          ? 3221225472 ^ s ^ r ^ i
-          : 1073741824 ^ s ^ r ^ i
-        : s ^ r ^ i
-    );
-  }
-  function n(e, n, r, i, s, a, p) {
-    return (
-      (e = o(
-        e,
-        o(
-          o(
-            (function (e, t, o) {
-              return (e & t) | (~e & o);
-            })(n, r, i),
-            s
-          ),
-          p
-        )
-      )),
-      o(t(e, a), n)
-    );
-  }
-  function r(e, n, r, i, s, a, p) {
-    return (
-      (e = o(
-        e,
-        o(
-          o(
-            (function (e, t, o) {
-              return (e & o) | (t & ~o);
-            })(n, r, i),
-            s
-          ),
-          p
-        )
-      )),
-      o(t(e, a), n)
-    );
-  }
-  function i(e, n, r, i, s, a, p) {
-    return (
-      (e = o(
-        e,
-        o(
-          o(
-            (function (e, t, o) {
-              return e ^ t ^ o;
-            })(n, r, i),
-            s
-          ),
-          p
-        )
-      )),
-      o(t(e, a), n)
-    );
-  }
-  function s(e, n, r, i, s, a, p) {
-    return (
-      (e = o(
-        e,
-        o(
-          o(
-            (function (e, t, o) {
-              return t ^ (e | ~o);
-            })(n, r, i),
-            s
-          ),
-          p
-        )
-      )),
-      o(t(e, a), n)
-    );
-  }
-  function a(e) {
-    var t,
-      o = "",
-      n = "";
-    for (t = 0; 3 >= t; t++) o += (n = "0" + ((e >>> (8 * t)) & 255).toString(16)).substr(n.length - 2, 2);
-    return o;
-  }
-  var p, u, c, d, l, f, m, h, g, _;
-  for (
-    _ = (function (e) {
-      for (var t, o = e.length, n = o + 8, r = 16 * ((n - (n % 64)) / 64 + 1), i = new Array(r - 1), s = 0, a = 0; o > a; )
-        (s = (a % 4) * 8), (i[(t = (a - (a % 4)) / 4)] = i[t] | (e.charCodeAt(a) << s)), a++;
-      return (s = (a % 4) * 8), (i[(t = (a - (a % 4)) / 4)] = i[t] | (128 << s)), (i[r - 2] = o << 3), (i[r - 1] = o >>> 29), i;
-    })(
-      (e = (function (e) {
-        e = e.replace(/\r\n/g, "\n");
-        for (var t = "", o = 0; o < e.length; o++) {
-          var n = e.charCodeAt(o);
-          128 > n
-            ? (t += String.fromCharCode(n))
-            : n > 127 && 2048 > n
-            ? ((t += String.fromCharCode((n >> 6) | 192)), (t += String.fromCharCode((63 & n) | 128)))
-            : ((t += String.fromCharCode((n >> 12) | 224)), (t += String.fromCharCode(((n >> 6) & 63) | 128)), (t += String.fromCharCode((63 & n) | 128)));
-        }
-        return t;
-      })(e))
-    ),
-      f = 1732584193,
-      m = 4023233417,
-      h = 2562383102,
-      g = 271733878,
-      p = 0;
-    p < _.length;
-    p += 16
-  )
-    (u = f),
-      (c = m),
-      (d = h),
-      (l = g),
-      (f = n(f, m, h, g, _[p + 0], 7, 3614090360)),
-      (g = n(g, f, m, h, _[p + 1], 12, 3905402710)),
-      (h = n(h, g, f, m, _[p + 2], 17, 606105819)),
-      (m = n(m, h, g, f, _[p + 3], 22, 3250441966)),
-      (f = n(f, m, h, g, _[p + 4], 7, 4118548399)),
-      (g = n(g, f, m, h, _[p + 5], 12, 1200080426)),
-      (h = n(h, g, f, m, _[p + 6], 17, 2821735955)),
-      (m = n(m, h, g, f, _[p + 7], 22, 4249261313)),
-      (f = n(f, m, h, g, _[p + 8], 7, 1770035416)),
-      (g = n(g, f, m, h, _[p + 9], 12, 2336552879)),
-      (h = n(h, g, f, m, _[p + 10], 17, 4294925233)),
-      (m = n(m, h, g, f, _[p + 11], 22, 2304563134)),
-      (f = n(f, m, h, g, _[p + 12], 7, 1804603682)),
-      (g = n(g, f, m, h, _[p + 13], 12, 4254626195)),
-      (h = n(h, g, f, m, _[p + 14], 17, 2792965006)),
-      (f = r(f, (m = n(m, h, g, f, _[p + 15], 22, 1236535329)), h, g, _[p + 1], 5, 4129170786)),
-      (g = r(g, f, m, h, _[p + 6], 9, 3225465664)),
-      (h = r(h, g, f, m, _[p + 11], 14, 643717713)),
-      (m = r(m, h, g, f, _[p + 0], 20, 3921069994)),
-      (f = r(f, m, h, g, _[p + 5], 5, 3593408605)),
-      (g = r(g, f, m, h, _[p + 10], 9, 38016083)),
-      (h = r(h, g, f, m, _[p + 15], 14, 3634488961)),
-      (m = r(m, h, g, f, _[p + 4], 20, 3889429448)),
-      (f = r(f, m, h, g, _[p + 9], 5, 568446438)),
-      (g = r(g, f, m, h, _[p + 14], 9, 3275163606)),
-      (h = r(h, g, f, m, _[p + 3], 14, 4107603335)),
-      (m = r(m, h, g, f, _[p + 8], 20, 1163531501)),
-      (f = r(f, m, h, g, _[p + 13], 5, 2850285829)),
-      (g = r(g, f, m, h, _[p + 2], 9, 4243563512)),
-      (h = r(h, g, f, m, _[p + 7], 14, 1735328473)),
-      (f = i(f, (m = r(m, h, g, f, _[p + 12], 20, 2368359562)), h, g, _[p + 5], 4, 4294588738)),
-      (g = i(g, f, m, h, _[p + 8], 11, 2272392833)),
-      (h = i(h, g, f, m, _[p + 11], 16, 1839030562)),
-      (m = i(m, h, g, f, _[p + 14], 23, 4259657740)),
-      (f = i(f, m, h, g, _[p + 1], 4, 2763975236)),
-      (g = i(g, f, m, h, _[p + 4], 11, 1272893353)),
-      (h = i(h, g, f, m, _[p + 7], 16, 4139469664)),
-      (m = i(m, h, g, f, _[p + 10], 23, 3200236656)),
-      (f = i(f, m, h, g, _[p + 13], 4, 681279174)),
-      (g = i(g, f, m, h, _[p + 0], 11, 3936430074)),
-      (h = i(h, g, f, m, _[p + 3], 16, 3572445317)),
-      (m = i(m, h, g, f, _[p + 6], 23, 76029189)),
-      (f = i(f, m, h, g, _[p + 9], 4, 3654602809)),
-      (g = i(g, f, m, h, _[p + 12], 11, 3873151461)),
-      (h = i(h, g, f, m, _[p + 15], 16, 530742520)),
-      (f = s(f, (m = i(m, h, g, f, _[p + 2], 23, 3299628645)), h, g, _[p + 0], 6, 4096336452)),
-      (g = s(g, f, m, h, _[p + 7], 10, 1126891415)),
-      (h = s(h, g, f, m, _[p + 14], 15, 2878612391)),
-      (m = s(m, h, g, f, _[p + 5], 21, 4237533241)),
-      (f = s(f, m, h, g, _[p + 12], 6, 1700485571)),
-      (g = s(g, f, m, h, _[p + 3], 10, 2399980690)),
-      (h = s(h, g, f, m, _[p + 10], 15, 4293915773)),
-      (m = s(m, h, g, f, _[p + 1], 21, 2240044497)),
-      (f = s(f, m, h, g, _[p + 8], 6, 1873313359)),
-      (g = s(g, f, m, h, _[p + 15], 10, 4264355552)),
-      (h = s(h, g, f, m, _[p + 6], 15, 2734768916)),
-      (m = s(m, h, g, f, _[p + 13], 21, 1309151649)),
-      (f = s(f, m, h, g, _[p + 4], 6, 4149444226)),
-      (g = s(g, f, m, h, _[p + 11], 10, 3174756917)),
-      (h = s(h, g, f, m, _[p + 2], 15, 718787259)),
-      (m = s(m, h, g, f, _[p + 9], 21, 3951481745)),
-      (f = o(f, u)),
-      (m = o(m, c)),
-      (h = o(h, d)),
-      (g = o(g, l));
-  return (a(f) + a(m) + a(h) + a(g)).toLowerCase();
+	function t(e, t) {
+		return (e << t) | (e >>> (32 - t));
+	}
+	function o(e, t) {
+		var o, n, r, i, s;
+		return (
+			(r = 2147483648 & e),
+			(i = 2147483648 & t),
+			(s = (1073741823 & e) + (1073741823 & t)),
+			(o = 1073741824 & e) & (n = 1073741824 & t)
+				? 2147483648 ^ s ^ r ^ i
+				: o | n
+				? 1073741824 & s
+					? 3221225472 ^ s ^ r ^ i
+					: 1073741824 ^ s ^ r ^ i
+				: s ^ r ^ i
+		);
+	}
+	function n(e, n, r, i, s, a, p) {
+		return (
+			(e = o(
+				e,
+				o(
+					o(
+						(function (e, t, o) {
+							return (e & t) | (~e & o);
+						})(n, r, i),
+						s,
+					),
+					p,
+				),
+			)),
+			o(t(e, a), n)
+		);
+	}
+	function r(e, n, r, i, s, a, p) {
+		return (
+			(e = o(
+				e,
+				o(
+					o(
+						(function (e, t, o) {
+							return (e & o) | (t & ~o);
+						})(n, r, i),
+						s,
+					),
+					p,
+				),
+			)),
+			o(t(e, a), n)
+		);
+	}
+	function i(e, n, r, i, s, a, p) {
+		return (
+			(e = o(
+				e,
+				o(
+					o(
+						(function (e, t, o) {
+							return e ^ t ^ o;
+						})(n, r, i),
+						s,
+					),
+					p,
+				),
+			)),
+			o(t(e, a), n)
+		);
+	}
+	function s(e, n, r, i, s, a, p) {
+		return (
+			(e = o(
+				e,
+				o(
+					o(
+						(function (e, t, o) {
+							return t ^ (e | ~o);
+						})(n, r, i),
+						s,
+					),
+					p,
+				),
+			)),
+			o(t(e, a), n)
+		);
+	}
+	function a(e) {
+		var t,
+			o = '',
+			n = '';
+		for (t = 0; 3 >= t; t++) o += (n = '0' + ((e >>> (8 * t)) & 255).toString(16)).substr(n.length - 2, 2);
+		return o;
+	}
+	var p, u, c, d, l, f, m, h, g, _;
+	for (
+		_ = (function (e) {
+			for (
+				var t, o = e.length, n = o + 8, r = 16 * ((n - (n % 64)) / 64 + 1), i = new Array(r - 1), s = 0, a = 0;
+				o > a;
+
+			)
+				(s = (a % 4) * 8), (i[(t = (a - (a % 4)) / 4)] = i[t] | (e.charCodeAt(a) << s)), a++;
+			return (
+				(s = (a % 4) * 8),
+				(i[(t = (a - (a % 4)) / 4)] = i[t] | (128 << s)),
+				(i[r - 2] = o << 3),
+				(i[r - 1] = o >>> 29),
+				i
+			);
+		})(
+			(e = (function (e) {
+				e = e.replace(/\r\n/g, '\n');
+				for (var t = '', o = 0; o < e.length; o++) {
+					var n = e.charCodeAt(o);
+					128 > n
+						? (t += String.fromCharCode(n))
+						: n > 127 && 2048 > n
+						? ((t += String.fromCharCode((n >> 6) | 192)), (t += String.fromCharCode((63 & n) | 128)))
+						: ((t += String.fromCharCode((n >> 12) | 224)),
+						  (t += String.fromCharCode(((n >> 6) & 63) | 128)),
+						  (t += String.fromCharCode((63 & n) | 128)));
+				}
+				return t;
+			})(e)),
+		),
+			f = 1732584193,
+			m = 4023233417,
+			h = 2562383102,
+			g = 271733878,
+			p = 0;
+		p < _.length;
+		p += 16
+	)
+		(u = f),
+			(c = m),
+			(d = h),
+			(l = g),
+			(f = n(f, m, h, g, _[p + 0], 7, 3614090360)),
+			(g = n(g, f, m, h, _[p + 1], 12, 3905402710)),
+			(h = n(h, g, f, m, _[p + 2], 17, 606105819)),
+			(m = n(m, h, g, f, _[p + 3], 22, 3250441966)),
+			(f = n(f, m, h, g, _[p + 4], 7, 4118548399)),
+			(g = n(g, f, m, h, _[p + 5], 12, 1200080426)),
+			(h = n(h, g, f, m, _[p + 6], 17, 2821735955)),
+			(m = n(m, h, g, f, _[p + 7], 22, 4249261313)),
+			(f = n(f, m, h, g, _[p + 8], 7, 1770035416)),
+			(g = n(g, f, m, h, _[p + 9], 12, 2336552879)),
+			(h = n(h, g, f, m, _[p + 10], 17, 4294925233)),
+			(m = n(m, h, g, f, _[p + 11], 22, 2304563134)),
+			(f = n(f, m, h, g, _[p + 12], 7, 1804603682)),
+			(g = n(g, f, m, h, _[p + 13], 12, 4254626195)),
+			(h = n(h, g, f, m, _[p + 14], 17, 2792965006)),
+			(f = r(f, (m = n(m, h, g, f, _[p + 15], 22, 1236535329)), h, g, _[p + 1], 5, 4129170786)),
+			(g = r(g, f, m, h, _[p + 6], 9, 3225465664)),
+			(h = r(h, g, f, m, _[p + 11], 14, 643717713)),
+			(m = r(m, h, g, f, _[p + 0], 20, 3921069994)),
+			(f = r(f, m, h, g, _[p + 5], 5, 3593408605)),
+			(g = r(g, f, m, h, _[p + 10], 9, 38016083)),
+			(h = r(h, g, f, m, _[p + 15], 14, 3634488961)),
+			(m = r(m, h, g, f, _[p + 4], 20, 3889429448)),
+			(f = r(f, m, h, g, _[p + 9], 5, 568446438)),
+			(g = r(g, f, m, h, _[p + 14], 9, 3275163606)),
+			(h = r(h, g, f, m, _[p + 3], 14, 4107603335)),
+			(m = r(m, h, g, f, _[p + 8], 20, 1163531501)),
+			(f = r(f, m, h, g, _[p + 13], 5, 2850285829)),
+			(g = r(g, f, m, h, _[p + 2], 9, 4243563512)),
+			(h = r(h, g, f, m, _[p + 7], 14, 1735328473)),
+			(f = i(f, (m = r(m, h, g, f, _[p + 12], 20, 2368359562)), h, g, _[p + 5], 4, 4294588738)),
+			(g = i(g, f, m, h, _[p + 8], 11, 2272392833)),
+			(h = i(h, g, f, m, _[p + 11], 16, 1839030562)),
+			(m = i(m, h, g, f, _[p + 14], 23, 4259657740)),
+			(f = i(f, m, h, g, _[p + 1], 4, 2763975236)),
+			(g = i(g, f, m, h, _[p + 4], 11, 1272893353)),
+			(h = i(h, g, f, m, _[p + 7], 16, 4139469664)),
+			(m = i(m, h, g, f, _[p + 10], 23, 3200236656)),
+			(f = i(f, m, h, g, _[p + 13], 4, 681279174)),
+			(g = i(g, f, m, h, _[p + 0], 11, 3936430074)),
+			(h = i(h, g, f, m, _[p + 3], 16, 3572445317)),
+			(m = i(m, h, g, f, _[p + 6], 23, 76029189)),
+			(f = i(f, m, h, g, _[p + 9], 4, 3654602809)),
+			(g = i(g, f, m, h, _[p + 12], 11, 3873151461)),
+			(h = i(h, g, f, m, _[p + 15], 16, 530742520)),
+			(f = s(f, (m = i(m, h, g, f, _[p + 2], 23, 3299628645)), h, g, _[p + 0], 6, 4096336452)),
+			(g = s(g, f, m, h, _[p + 7], 10, 1126891415)),
+			(h = s(h, g, f, m, _[p + 14], 15, 2878612391)),
+			(m = s(m, h, g, f, _[p + 5], 21, 4237533241)),
+			(f = s(f, m, h, g, _[p + 12], 6, 1700485571)),
+			(g = s(g, f, m, h, _[p + 3], 10, 2399980690)),
+			(h = s(h, g, f, m, _[p + 10], 15, 4293915773)),
+			(m = s(m, h, g, f, _[p + 1], 21, 2240044497)),
+			(f = s(f, m, h, g, _[p + 8], 6, 1873313359)),
+			(g = s(g, f, m, h, _[p + 15], 10, 4264355552)),
+			(h = s(h, g, f, m, _[p + 6], 15, 2734768916)),
+			(m = s(m, h, g, f, _[p + 13], 21, 1309151649)),
+			(f = s(f, m, h, g, _[p + 4], 6, 4149444226)),
+			(g = s(g, f, m, h, _[p + 11], 10, 3174756917)),
+			(h = s(h, g, f, m, _[p + 2], 15, 718787259)),
+			(m = s(m, h, g, f, _[p + 9], 21, 3951481745)),
+			(f = o(f, u)),
+			(m = o(m, c)),
+			(h = o(h, d)),
+			(g = o(g, l));
+	return (a(f) + a(m) + a(h) + a(g)).toLowerCase();
 }
 
 // 브라우저 쿠키정보 가져오기
 function getCookie(cookieName) {
-  let cookieValue = "";
+	let cookieValue = '';
 
-  if (document.cookie) {
-    let array = document.cookie.split(escape(cookieName) + "=");
+	if (document.cookie) {
+		let array = document.cookie.split(escape(cookieName) + '=');
 
-    if (array.length >= 2) {
-      let arraySub = array[1].split(";");
+		if (array.length >= 2) {
+			let arraySub = array[1].split(';');
 
-      cookieValue = unescape(arraySub[0]);
-    }
-  }
+			cookieValue = unescape(arraySub[0]);
+		}
+	}
 
-  return cookieValue;
+	return cookieValue;
 }
 
 // AJAX Content-Type가 application/x-www-form-urlencoded인 경우, JSON Object를 Encode하는 과정이 필요함
 function urlEncodedObject(urlEncodedData) {
-  let urlEncodedContent = [];
+	let urlEncodedContent = [];
 
-  for (let property in urlEncodedData) {
-    let encodedKey = encodeURIComponent(property);
-    let encodedValue = encodeURIComponent(urlEncodedData[property]);
+	for (let property in urlEncodedData) {
+		let encodedKey = encodeURIComponent(property);
+		let encodedValue = encodeURIComponent(urlEncodedData[property]);
 
-    urlEncodedContent.push(encodedKey + "=" + encodedValue);
-  }
+		urlEncodedContent.push(encodedKey + '=' + encodedValue);
+	}
 
-  return urlEncodedContent.join("&");
+	return urlEncodedContent.join('&');
 }
 
 // XHR Request (응답 데이터 문자열 형식)
 function request(url, opts) {
-  // 지연 응답에 따른 Promise 처리
-  return new Promise(function (resolve, reject) {
-    // 자바스크립트 내장 객체로 생성
-    let xhr = new XMLHttpRequest();
+	// 지연 응답에 따른 Promise 처리
+	return new Promise(function (resolve, reject) {
+		// 자바스크립트 내장 객체로 생성
+		let xhr = new XMLHttpRequest();
 
-    // 새로운 요청 생성
-    xhr.open(opts.method, url);
+		// 새로운 요청 생성
+		xhr.open(opts.method, url);
 
-    // 쿠키 값을 그대로 유지할 것인지
-    xhr.withCredentials = true;
+		// 쿠키 값을 그대로 유지할 것인지
+		xhr.withCredentials = true;
 
-    // 헤더 정보가 명시되어 있다면 객체를 순회하면서 헤더 정보를 설정
-    if (opts.headers) {
-      Object.keys(opts.headers).map((v) => {
-        xhr.setRequestHeader(v, opts.headers[v]);
-      });
-    }
+		// 헤더 정보가 명시되어 있다면 객체를 순회하면서 헤더 정보를 설정
+		if (opts.headers) {
+			Object.keys(opts.headers).map((v) => {
+				xhr.setRequestHeader(v, opts.headers[v]);
+			});
+		}
 
-    // fetch.then() (응답 데이터가 존재하는 경우)
-    xhr.onload = function () {
-      resolve(xhr.response);
-    };
+		// fetch.then() (응답 데이터가 존재하는 경우)
+		xhr.onload = function () {
+			resolve(xhr.response);
+		};
 
-    // fetch.catch() (응답 데이터가 존재하지 않을 경우)
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-        data: "rejected",
-      });
-    };
+		// fetch.catch() (응답 데이터가 존재하지 않을 경우)
+		xhr.onerror = function () {
+			reject({
+				status: this.status,
+				statusText: xhr.statusText,
+				data: 'rejected',
+			});
+		};
 
-    // send 메서드는 fetch(url)과 동일한 기능
-    xhr.send(opts.body);
-  });
+		// send 메서드는 fetch(url)과 동일한 기능
+		xhr.send(opts.body);
+	});
 }
 
 // 알리익스프레스 배송비 크롤링
 async function getShippingInfo(productId, minPrice, maxPrice, ext) {
-  // ext 값의 escape 맞춰주기 위한 작업
-  const ext2 = JSON.stringify(ext);
+	// ext 값의 escape 맞춰주기 위한 작업
+	const ext2 = JSON.stringify(ext);
 
-  //application > 쿠키 > https://ko.aliexpress.com 클릭 후 tk 검색
-  const token = getCookie("_m_h5_tk");
+	//application > 쿠키 > https://ko.aliexpress.com 클릭 후 tk 검색
+	const token = getCookie('_m_h5_tk');
 
-  const time = new Date().getTime();
+	const time = new Date().getTime();
 
-  // 고정값
-  const appKey = "12574478";
+	// 고정값
+	const appKey = '12574478';
 
-  // escape 문법에 주의 (Object Property가 문자열 형태로 암호화에 사용되므로 규격을 반드시 확인)
-  const body = {
-    data: `{\"productId\":\"${productId}\",\"country\":\"KR\",\"lang\":\"ko_KR\",\"locale\":\"ko_KR\",\"_lang\":\"ko_KR\",\"minPrice\":${minPrice},\"maxPrice\":${maxPrice},\"tradeCurrency\":\"KRW\",\"_currency\":\"KRW\",\"quantity\":1,\"clientType\":\"pc\",\"userScene\":\"PC_DETAIL_SHIPPING_PANEL\",\"ext\":${ext2}}`,
-  };
+	// escape 문법에 주의 (Object Property가 문자열 형태로 암호화에 사용되므로 규격을 반드시 확인)
+	const body = {
+		data: `{\"productId\":\"${productId}\",\"country\":\"KR\",\"lang\":\"ko_KR\",\"locale\":\"ko_KR\",\"_lang\":\"ko_KR\",\"minPrice\":${minPrice},\"maxPrice\":${maxPrice},\"tradeCurrency\":\"KRW\",\"_currency\":\"KRW\",\"quantity\":1,\"clientType\":\"pc\",\"userScene\":\"PC_DETAIL_SHIPPING_PANEL\",\"ext\":${ext2}}`,
+	};
 
-  // 암호화된 해시 생성
-  const sign = md5Customized(`${token.split("_")[0]}&${time}&${appKey}&${body.data}`);
+	// 암호화된 해시 생성
+	const sign = md5Customized(`${token.split('_')[0]}&${time}&${appKey}&${body.data}`);
 
-  // 알리익스프레스 배송비 목록 API (URL 변경될 가능성 있음)
-  const dataResp = await request(
-    `https://acs.aliexpress.com/h5/mtop.aliexpress.itemdetail.queryexpression/1.0/?jsv=2.5.1&appKey=${appKey}&t=${time}&sign=${sign}&api=mtop.aliexpress.itemdetail.queryExpression&v=1.0&type=originaljson&dataType=jsonp`,
-    {
-      headers: {
-        "content-type": "application/x-www-form-urlencoded",
-      },
+	// 알리익스프레스 배송비 목록 API (URL 변경될 가능성 있음)
+	const dataResp = await request(
+		`https://acs.aliexpress.com/h5/mtop.aliexpress.itemdetail.queryexpression/1.0/?jsv=2.5.1&appKey=${appKey}&t=${time}&sign=${sign}&api=mtop.aliexpress.itemdetail.queryExpression&v=1.0&type=originaljson&dataType=jsonp`,
+		{
+			headers: {
+				'content-type': 'application/x-www-form-urlencoded',
+			},
 
-      body: urlEncodedObject(body),
-      method: "POST",
-    }
-  );
+			body: urlEncodedObject(body),
+			method: 'POST',
+		},
+	);
 
-  // 이전에 fetch로 쐈을 때 흔적
-  // const dataJson = await dataResp.json();
+	// 이전에 fetch로 쐈을 때 흔적
+	// const dataJson = await dataResp.json();
 
-  // XHR 요청은 응답이 문자열 형식이므로 파싱 과정 필요
-  const dataJson = JSON.parse(dataResp);
+	// XHR 요청은 응답이 문자열 형식이므로 파싱 과정 필요
+	const dataJson = JSON.parse(dataResp);
 
-  // 데이터 정상 수신 여부 확인
-  console.log("shipdata", dataJson);
+	// 데이터 정상 수신 여부 확인
+	console.log('shipdata', dataJson);
 
-  return dataJson.data.data.deliveryExpressionResponse;
+	return dataJson.data.data.deliveryExpressionResponse;
 }
 
 // 알리익스프레스 페이지 삽입 스크립트
 async function main() {
-  // 데이터가 로드될 때까지 루프를 반복함
-  while (true) {
-    try {
-      let json = {};
+	// 데이터가 로드될 때까지 루프를 반복함
+	while (true) {
+		try {
+			let json = {};
 
-      //알리의 모든 페이지 정보에서 itemScene과 관련된 곳에서 ext를 찾음
-      console.log("페이지정보", window.runParams.data);
+			//알리의 모든 페이지 정보에서 itemScene과 관련된 곳에서 ext를 찾음
+			console.log('페이지정보', window.runParams.data);
 
-      if (!window._dida_config_) {
-        if (!window.runParams.data.abTestComponent) {
-          json = {
-            pageType: 1,
-            shippingModule: window.runParams.data.shippingModule,
-            commonModule: window.runParams.data.commonModule,
-            descriptionModule: window.runParams.data.descriptionModule,
-            imageModule: window.runParams.data.imageModule,
-            priceModule: window.runParams.data.priceModule,
-            skuModule: window.runParams.data.skuModule,
-            titleModule: window.runParams.data.titleModule,
-            specsModule: window.runParams.data.specsModule,
-          };
-        } else {
-          //여기부턴 구조가 아예다르네 ..^^
-          json = {
-            pageType: 3,
-            shippingModule: window.runParams.data.i18nComponent.i18nMap.ShippingModule, //일단...
-            commonModule: window.runParams.data.productInfoComponent, // productid만 일단 매칭시켜둠, 카테고리도 여기있음;
-            descriptionModule: window.runParams.data.productDescComponent, //descriptionUrl 만 있네 얘는 productId , sellerAdminSeq는 사라짐
-            imageModule: window.runParams.data.imageComponent, //얘는 비슷하게있네
-            priceModule: window.runParams.data.priceComponent, //얘는 여기에 sku도 있고 꽤 많이있음 . -> discountPrice , skuJson,skuPriceList
-            skuModule: window.runParams.data.skuComponent, //얘는 i18nMap 과 skumodule의 위치가 다름 type 1에선 depth가 반대인데 얜 뭐다있노;
-            titleModule: window.runParams.data.i18nComponent.i18nMap.TitleModule, //일단..
-            specsModule: window.runParams.data.productPropComponent, //일단....
-          };
-        }
-      } else {
-        json = {
-          pageType: 2,
-          shippingModule: window._dida_config_._init_data_.data.data.shipping_2262.fields,
-          commonModule: window._dida_config_._init_data_.data.data.actionButtons_2260.fields,
-          descriptionModule: window._dida_config_._init_data_.data.data.description_2253.fields,
-          imageModule: window._dida_config_._init_data_.data.data.imageView_2247.fields,
-          priceModule: window._dida_config_._init_data_.data.data.price_2256.fields,
-          skuModule: window._dida_config_._init_data_.data.data.sku_2257.fields,
-          titleModule: window._dida_config_._init_data_.data.data.titleBanner_2440.fields,
-          specsModule: window._dida_config_._init_data_.data.data.specsInfo_2263.fields,
-        };
-      }
+			if (!window._dida_config_) {
+				if (!window.runParams.data.abTestComponent) {
+					json = {
+						pageType: 1,
+						shippingModule: window.runParams.data.shippingModule,
+						commonModule: window.runParams.data.commonModule,
+						descriptionModule: window.runParams.data.descriptionModule,
+						imageModule: window.runParams.data.imageModule,
+						priceModule: window.runParams.data.priceModule,
+						skuModule: window.runParams.data.skuModule,
+						titleModule: window.runParams.data.titleModule,
+						specsModule: window.runParams.data.specsModule,
+					};
+				} else {
+					//여기부턴 구조가 아예다르네 ..^^
+					json = {
+						pageType: 3,
+						shippingModule: window.runParams.data.i18nComponent.i18nMap.ShippingModule, //일단...
+						commonModule: window.runParams.data.productInfoComponent, // productid만 일단 매칭시켜둠, 카테고리도 여기있음;
+						descriptionModule: window.runParams.data.productDescComponent, //descriptionUrl 만 있네 얘는 productId , sellerAdminSeq는 사라짐
+						imageModule: window.runParams.data.imageComponent, //얘는 비슷하게있네
+						priceModule: window.runParams.data.priceComponent, //얘는 여기에 sku도 있고 꽤 많이있음 . -> discountPrice , skuJson,skuPriceList
+						skuModule: window.runParams.data.skuComponent, //얘는 i18nMap 과 skumodule의 위치가 다름 type 1에선 depth가 반대인데 얜 뭐다있노;
+						titleModule: window.runParams.data.i18nComponent.i18nMap.TitleModule, //일단..
+						specsModule: window.runParams.data.productPropComponent, //일단....
+					};
+				}
+			} else {
+				json = {
+					pageType: 2,
+					shippingModule: window._dida_config_._init_data_.data.data.shipping_2262.fields,
+					commonModule: window._dida_config_._init_data_.data.data.actionButtons_2260.fields,
+					descriptionModule: window._dida_config_._init_data_.data.data.description_2253.fields,
+					imageModule: window._dida_config_._init_data_.data.data.imageView_2247.fields,
+					priceModule: window._dida_config_._init_data_.data.data.price_2256.fields,
+					skuModule: window._dida_config_._init_data_.data.data.sku_2257.fields,
+					titleModule: window._dida_config_._init_data_.data.data.titleBanner_2440.fields,
+					specsModule: window._dida_config_._init_data_.data.data.specsInfo_2263.fields,
+				};
+			}
 
-      if (
-        json["shippingModule"] &&
-        json["commonModule"] &&
-        json["descriptionModule"] &&
-        json["imageModule"] &&
-        json["priceModule"] &&
-        json["titleModule"] &&
-        json["specsModule"]
-      ) {
-        if (json["pageType"] === 3) {
-          const productId = json["commonModule"].id.toString();
+			if (
+				json['shippingModule'] &&
+				json['commonModule'] &&
+				json['descriptionModule'] &&
+				json['imageModule'] &&
+				json['priceModule'] &&
+				json['titleModule'] &&
+				json['specsModule']
+			) {
+				if (json['pageType'] === 3) {
+					const productId = json['commonModule'].id.toString();
 
-          const minPrice = json["priceModule"]["discountPrice"].hasOwnProperty("minActivityAmount")
-            ? json["priceModule"]["discountPrice"].minActivityAmount.value
-            : json["priceModule"]["discountPrice"].minAmount.value;
-          const maxPrice = json["priceModule"]["discountPrice"].hasOwnProperty("maxActivityAmount")
-            ? json["priceModule"]["discountPrice"].maxActivityAmount.value
-            : json["priceModule"]["discountPrice"].maxAmount.value;
+					const minPrice = json['priceModule']['discountPrice'].hasOwnProperty('minActivityAmount')
+						? json['priceModule']['discountPrice'].minActivityAmount.value
+						: json['priceModule']['discountPrice'].minAmount.value;
+					const maxPrice = json['priceModule']['discountPrice'].hasOwnProperty('maxActivityAmount')
+						? json['priceModule']['discountPrice'].maxActivityAmount.value
+						: json['priceModule']['discountPrice'].maxAmount.value;
 
-          const extList = JSON.parse(json.priceModule.skuJson);
-          const ext = extList.find((v) => v.skuVal.availQuantity !== 0)?.freightExt; //품절 아닌 임의의 옵션 ext 정보
+					const extList = JSON.parse(json.priceModule.skuJson);
+					const ext = extList.find((v) => v.skuVal.availQuantity !== 0)?.freightExt; //품절 아닌 임의의 옵션 ext 정보
 
-          json["shippingModule"]["generalFreightInfo"] = await getShippingInfo(productId, minPrice, maxPrice, ext); //bizdata
-        } else if (json["pageType"] !== 3) {
-          const productId = json["commonModule"].productId.toString();
+					json['shippingModule']['generalFreightInfo'] = await getShippingInfo(productId, minPrice, maxPrice, ext); //bizdata
+				} else if (json['pageType'] !== 3) {
+					const productId = json['commonModule'].productId.toString();
 
-          const minPrice = json["priceModule"].hasOwnProperty("minActivityAmount")
-            ? json["priceModule"].minActivityAmount.value
-            : json["priceModule"].minAmount.value;
-          const maxPrice = json["priceModule"].hasOwnProperty("maxActivityAmount")
-            ? json["priceModule"].maxActivityAmount.value
-            : json["priceModule"].maxAmount.value;
+					const minPrice = json['priceModule'].hasOwnProperty('minActivityAmount')
+						? json['priceModule'].minActivityAmount.value
+						: json['priceModule'].minAmount.value;
+					const maxPrice = json['priceModule'].hasOwnProperty('maxActivityAmount')
+						? json['priceModule'].maxActivityAmount.value
+						: json['priceModule'].maxAmount.value;
 
-          const ext = json.skuModule.skuPriceList.find((v) => v.skuVal.availQuantity !== 0)?.freightExt; // 품절 아닌 임의의 옵션의 ext 정보
+					const ext = json.skuModule.skuPriceList.find((v) => v.skuVal.availQuantity !== 0)?.freightExt; // 품절 아닌 임의의 옵션의 ext 정보
 
-          json["shippingModule"]["generalFreightInfo"] = await getShippingInfo(productId, minPrice, maxPrice, ext); //bizdata
-        }
+					json['shippingModule']['generalFreightInfo'] = await getShippingInfo(productId, minPrice, maxPrice, ext); //bizdata
+				}
 
-        sessionStorage.setItem("sfy-express-item", JSON.stringify(json));
+				sessionStorage.setItem('sfy-express-item', JSON.stringify(json));
 
-        break;
-      }
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch (e) {
-      console.log(e);
+				break;
+			}
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+		} catch (e) {
+			console.log(e);
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-  }
+			await new Promise((resolve) => setTimeout(resolve, 1000));
+		}
+	}
 }
 
 main();

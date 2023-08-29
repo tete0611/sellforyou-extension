@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import { render } from "react-dom";
-import { SignIn } from "./SignIn";
+import { render } from 'react-dom';
+import { SignIn } from './SignIn';
 
-import "./index.css";
+import './index.css';
 
 render(
-  <SignIn />,
+	<SignIn />,
 
-  window.document.querySelector("#app-container")
+	window.document.querySelector('#app-container'),
 );

@@ -1,70 +1,70 @@
 // 크롬확장프로그램 번들러
 // env파일을 자바스크립트에서 사용할 수 있게 해주는 방법
-require("dotenv").config({ path: "./.env" });
+require('dotenv').config({ path: './.env' });
 
-var webpack = require("webpack");
-var path = require("path");
-var fileSystem = require("fs-extra");
-var env = require("./utils/env");
+var webpack = require('webpack');
+var path = require('path');
+var fileSystem = require('fs-extra');
+var env = require('./utils/env');
 
-var CopyWebpackPlugin = require("copy-webpack-plugin");
-var HtmlWebpackPlugin = require("html-webpack-plugin");
-var TerserPlugin = require("terser-webpack-plugin");
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var TerserPlugin = require('terser-webpack-plugin');
 
-var { CleanWebpackPlugin } = require("clean-webpack-plugin");
+var { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-const ASSET_PATH = process.env.ASSET_PATH || "/";
+const ASSET_PATH = process.env.ASSET_PATH || '/';
 
 var alias = {
-  "react-dom": "@hot-loader/react-dom",
+  'react-dom': '@hot-loader/react-dom',
 };
 
-var secretsPath = path.join(__dirname, "secrets." + env.NODE_ENV + ".js");
-var fileExtensions = ["jpg", "jpeg", "png", "gif", "eot", "otf", "svg", "ttf", "woff", "woff2"];
+var secretsPath = path.join(__dirname, 'secrets.' + env.NODE_ENV + '.js');
+var fileExtensions = ['jpg', 'jpeg', 'png', 'gif', 'eot', 'otf', 'svg', 'ttf', 'woff', 'woff2'];
 
 if (fileSystem.existsSync(secretsPath)) {
-  alias["secrets"] = secretsPath;
+  alias['secrets'] = secretsPath;
 }
 
 // 페이지 생성 방법 ("페이지 생성"으로 검색)
 var options = {
-  mode: process.env.NODE_ENV || "development",
+  mode: process.env.NODE_ENV || 'development',
 
   entry: {
-    app: path.join(__dirname, "src", "pages", "Main", "index.jsx"),
-    signin: path.join(__dirname, "src", "pages", "Main", "SignIn", "index.jsx"),
-    signup: path.join(__dirname, "src", "pages", "Main", "SignUp", "index.jsx"),
-    lostandfound: path.join(__dirname, "src", "pages", "Main", "LostAndFound", "index.jsx"),
-    changepassword: path.join(__dirname, "src", "pages", "Main", "ChangePassword", "index.jsx"),
-    dashboard: path.join(__dirname, "src", "pages", "Main", "Dashboard", "index.jsx"),
-    collected: path.join(__dirname, "src", "pages", "Main", "Product", "Collected", "index.jsx"),
-    analysis: path.join(__dirname, "src", "pages", "Main", "Keyword", "Analysis", "index.jsx"),
-    reference: path.join(__dirname, "src", "pages", "Main", "Keyword", "Reference", "index.jsx"),
-    registered: path.join(__dirname, "src", "pages", "Main", "Product", "Registered", "index.jsx"),
-    locked: path.join(__dirname, "src", "pages", "Main", "Product", "Locked", "index.jsx"),
-    new: path.join(__dirname, "src", "pages", "Main", "Order", "New", "index.jsx"),
-    delivery: path.join(__dirname, "src", "pages", "Main", "Order", "Delivery", "index.jsx"),
-    tax: path.join(__dirname, "src", "pages", "Main", "Order", "Tax", "index.jsx"),
-    banwords: path.join(__dirname, "src", "pages", "Main", "BanWords", "index.jsx"),
-    settings: path.join(__dirname, "src", "pages", "Main", "Settings", "index.jsx"),
-    sourcing: path.join(__dirname, "src", "pages", "Main", "Sourcing", "index.jsx"),
-    connects: path.join(__dirname, "src", "pages", "Main", "Connects", "index.jsx"),
-    popup: path.join(__dirname, "src", "pages", "Popup", "index.jsx"),
-    background: path.join(__dirname, "src", "pages", "Background", "index.ts"),
-    contentScript: path.join(__dirname, "src", "pages", "Content", "index.ts"),
-    trangers: path.join(__dirname, "src", "pages", "Trangers", "trangers.ts"),
-    payments: path.join(__dirname, "src", "pages", "Main", "Payments", "index.jsx"),
-    inflow: path.join(__dirname, "src", "pages", "Main", "Inflow", "index.jsx"),
+    app: path.join(__dirname, 'src', 'pages', 'Main', 'index.jsx'),
+    signin: path.join(__dirname, 'src', 'pages', 'Main', 'SignIn', 'index.jsx'),
+    signup: path.join(__dirname, 'src', 'pages', 'Main', 'SignUp', 'index.jsx'),
+    lostandfound: path.join(__dirname, 'src', 'pages', 'Main', 'LostAndFound', 'index.jsx'),
+    changepassword: path.join(__dirname, 'src', 'pages', 'Main', 'ChangePassword', 'index.jsx'),
+    dashboard: path.join(__dirname, 'src', 'pages', 'Main', 'Dashboard', 'index.jsx'),
+    collected: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Collected', 'index.jsx'),
+    analysis: path.join(__dirname, 'src', 'pages', 'Main', 'Keyword', 'Analysis', 'index.jsx'),
+    reference: path.join(__dirname, 'src', 'pages', 'Main', 'Keyword', 'Reference', 'index.jsx'),
+    registered: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Registered', 'index.jsx'),
+    locked: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Locked', 'index.jsx'),
+    new: path.join(__dirname, 'src', 'pages', 'Main', 'Order', 'New', 'index.jsx'),
+    delivery: path.join(__dirname, 'src', 'pages', 'Main', 'Order', 'Delivery', 'index.jsx'),
+    tax: path.join(__dirname, 'src', 'pages', 'Main', 'Order', 'Tax', 'index.jsx'),
+    banwords: path.join(__dirname, 'src', 'pages', 'Main', 'BanWords', 'index.jsx'),
+    settings: path.join(__dirname, 'src', 'pages', 'Main', 'Settings', 'index.jsx'),
+    sourcing: path.join(__dirname, 'src', 'pages', 'Main', 'Sourcing', 'index.jsx'),
+    connects: path.join(__dirname, 'src', 'pages', 'Main', 'Connects', 'index.jsx'),
+    popup: path.join(__dirname, 'src', 'pages', 'Popup', 'index.jsx'),
+    background: path.join(__dirname, 'src', 'pages', 'Background', 'index.ts'),
+    contentScript: path.join(__dirname, 'src', 'pages', 'Content', 'index.ts'),
+    trangers: path.join(__dirname, 'src', 'pages', 'Trangers', 'trangers.ts'),
+    payments: path.join(__dirname, 'src', 'pages', 'Main', 'Payments', 'index.jsx'),
+    inflow: path.join(__dirname, 'src', 'pages', 'Main', 'Inflow', 'index.jsx'),
     // 페이지 생성 1) 여기에 새로운 엔트리명과 페이지 경로를 추가한다.
   },
 
   chromeExtensionBoilerplate: {
-    notHotReload: ["background", "contentScript", "devtools"],
+    notHotReload: ['background', 'contentScript', 'devtools'],
   },
 
   output: {
-    filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "build"),
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'build'),
     clean: true,
     publicPath: ASSET_PATH,
   },
@@ -76,13 +76,13 @@ var options = {
 
         use: [
           {
-            loader: "style-loader",
+            loader: 'style-loader',
           },
           {
-            loader: "css-loader",
+            loader: 'css-loader',
           },
           {
-            loader: "sass-loader",
+            loader: 'sass-loader',
 
             options: {
               sourceMap: true,
@@ -93,13 +93,13 @@ var options = {
 
       {
         test: /\.html$/,
-        loader: "html-loader",
+        loader: 'html-loader',
         exclude: /node_modules/,
       },
 
       {
         test: /\.(ts|tsx)$/,
-        loader: "ts-loader",
+        loader: 'ts-loader',
         exclude: /node_modules/,
       },
 
@@ -108,10 +108,10 @@ var options = {
 
         use: [
           {
-            loader: "source-map-loader",
+            loader: 'source-map-loader',
           },
           {
-            loader: "babel-loader",
+            loader: 'babel-loader',
           },
         ],
 
@@ -124,31 +124,31 @@ var options = {
     alias: alias,
 
     fallback: {
-      stream: require.resolve("stream-browserify"),
-      buffer: require.resolve("buffer"),
-      timers: require.resolve("timers-browserify"),
+      stream: require.resolve('stream-browserify'),
+      buffer: require.resolve('buffer'),
+      timers: require.resolve('timers-browserify'),
       crypto: false,
     },
 
-    extensions: fileExtensions.map((extension) => "." + extension).concat([".js", ".jsx", ".ts", ".tsx", ".css"]),
+    extensions: fileExtensions.map((extension) => '.' + extension).concat(['.js', '.jsx', '.ts', '.tsx', '.css']),
   },
 
   plugins: [
     new CleanWebpackPlugin({ verbose: false }),
 
     new webpack.ProgressPlugin(),
-    new webpack.EnvironmentPlugin(["NODE_ENV"]),
+    new webpack.EnvironmentPlugin(['NODE_ENV']),
     new webpack.DefinePlugin({
-      "process.env": JSON.stringify(process.env),
+      'process.env': JSON.stringify(process.env),
     }),
 
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/manifest.json",
-          to: path.join(__dirname, "build"),
+          from: 'src/manifest.json',
+          to: path.join(__dirname, 'build'),
           force: true,
-          transform: function (content, path) {
+          transform: (content, path) => {
             return Buffer.from(
               JSON.stringify({
                 description: process.env.npm_package_description,
@@ -164,8 +164,8 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/pages/Trangers/trangers.css",
-          to: path.join(__dirname, "build"),
+          from: 'src/pages/Trangers/trangers.css',
+          to: path.join(__dirname, 'build'),
           force: true,
         },
       ],
@@ -174,8 +174,8 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/pages/Trangers/trangers_single.html",
-          to: path.join(__dirname, "build"),
+          from: 'src/pages/Trangers/trangers_single.html',
+          to: path.join(__dirname, 'build'),
           force: true,
         },
       ],
@@ -184,8 +184,8 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/pages/Trangers/trangers_multiple.html",
-          to: path.join(__dirname, "build"),
+          from: 'src/pages/Trangers/trangers_multiple.html',
+          to: path.join(__dirname, 'build'),
           force: true,
         },
       ],
@@ -194,8 +194,8 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/pages/Content/content.styles.css",
-          to: path.join(__dirname, "build"),
+          from: 'src/pages/Content/content.styles.css',
+          to: path.join(__dirname, 'build'),
           force: true,
         },
       ],
@@ -204,8 +204,8 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/assets/**",
-          to: "resources/[name].[ext]",
+          from: 'src/assets/**',
+          to: 'resources/[name].[ext]',
           force: true,
         },
       ],
@@ -214,8 +214,8 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "ui/**",
-          to: path.join(__dirname, "build"),
+          from: 'ui/**',
+          to: path.join(__dirname, 'build'),
           force: true,
         },
       ],
@@ -224,8 +224,8 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/assets/img/icon.png",
-          to: path.join(__dirname, "build"),
+          from: 'src/assets/img/icon.png',
+          to: path.join(__dirname, 'build'),
           force: true,
         },
       ],
@@ -234,8 +234,8 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/assets/img/icon16.png",
-          to: path.join(__dirname, "build"),
+          from: 'src/assets/img/icon16.png',
+          to: path.join(__dirname, 'build'),
           force: true,
         },
       ],
@@ -244,8 +244,8 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/assets/img/icon48.png",
-          to: path.join(__dirname, "build"),
+          from: 'src/assets/img/icon48.png',
+          to: path.join(__dirname, 'build'),
           force: true,
         },
       ],
@@ -254,157 +254,157 @@ var options = {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/assets/img/icon128.png",
-          to: path.join(__dirname, "build"),
+          from: 'src/assets/img/icon128.png',
+          to: path.join(__dirname, 'build'),
           force: true,
         },
       ],
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "index.html"),
-      filename: "app.html",
-      chunks: ["app"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'index.html'),
+      filename: 'app.html',
+      chunks: ['app'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "SignIn", "index.html"),
-      filename: "signin.html",
-      chunks: ["signin"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'SignIn', 'index.html'),
+      filename: 'signin.html',
+      chunks: ['signin'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "SignUp", "index.html"),
-      filename: "signup.html",
-      chunks: ["signup"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'SignUp', 'index.html'),
+      filename: 'signup.html',
+      chunks: ['signup'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "LostAndFound", "index.html"),
-      filename: "lostandfound.html",
-      chunks: ["lostandfound"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'LostAndFound', 'index.html'),
+      filename: 'lostandfound.html',
+      chunks: ['lostandfound'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "ChangePassword", "index.html"),
-      filename: "changepassword.html",
-      chunks: ["changepassword"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'ChangePassword', 'index.html'),
+      filename: 'changepassword.html',
+      chunks: ['changepassword'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Dashboard", "index.html"),
-      filename: "dashboard.html",
-      chunks: ["dashboard"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Dashboard', 'index.html'),
+      filename: 'dashboard.html',
+      chunks: ['dashboard'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Product", "Collected", "index.html"),
-      filename: "product/collected.html",
-      chunks: ["collected"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Collected', 'index.html'),
+      filename: 'product/collected.html',
+      chunks: ['collected'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Keyword", "Analysis", "index.html"),
-      filename: "keyword/analysis.html",
-      chunks: ["analysis"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Keyword', 'Analysis', 'index.html'),
+      filename: 'keyword/analysis.html',
+      chunks: ['analysis'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Keyword", "Reference", "index.html"),
-      filename: "keyword/reference.html",
-      chunks: ["reference"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Keyword', 'Reference', 'index.html'),
+      filename: 'keyword/reference.html',
+      chunks: ['reference'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Product", "Registered", "index.html"),
-      filename: "product/registered.html",
-      chunks: ["registered"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Registered', 'index.html'),
+      filename: 'product/registered.html',
+      chunks: ['registered'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Product", "Locked", "index.html"),
-      filename: "product/locked.html",
-      chunks: ["locked"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Locked', 'index.html'),
+      filename: 'product/locked.html',
+      chunks: ['locked'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Order", "New", "index.html"),
-      filename: "order/new.html",
-      chunks: ["new"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Order', 'New', 'index.html'),
+      filename: 'order/new.html',
+      chunks: ['new'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Order", "Delivery", "index.html"),
-      filename: "order/delivery.html",
-      chunks: ["delivery"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Order', 'Delivery', 'index.html'),
+      filename: 'order/delivery.html',
+      chunks: ['delivery'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Order", "Tax", "index.html"),
-      filename: "order/tax.html",
-      chunks: ["tax"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Order', 'Tax', 'index.html'),
+      filename: 'order/tax.html',
+      chunks: ['tax'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "BanWords", "index.html"),
-      filename: "banwords.html",
-      chunks: ["banwords"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'BanWords', 'index.html'),
+      filename: 'banwords.html',
+      chunks: ['banwords'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Settings", "index.html"),
-      filename: "settings.html",
-      chunks: ["settings"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Settings', 'index.html'),
+      filename: 'settings.html',
+      chunks: ['settings'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Sourcing", "index.html"),
-      filename: "sourcing.html",
-      chunks: ["sourcing"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Sourcing', 'index.html'),
+      filename: 'sourcing.html',
+      chunks: ['sourcing'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Connects", "index.html"),
-      filename: "connects.html",
-      chunks: ["connects"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Connects', 'index.html'),
+      filename: 'connects.html',
+      chunks: ['connects'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Payments", "index.html"),
-      filename: "payments.html",
-      chunks: ["payments"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Payments', 'index.html'),
+      filename: 'payments.html',
+      chunks: ['payments'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Popup", "index.html"),
-      filename: "popup.html",
-      chunks: ["popup"],
+      template: path.join(__dirname, 'src', 'pages', 'Popup', 'index.html'),
+      filename: 'popup.html',
+      chunks: ['popup'],
       cache: false,
     }),
 
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "pages", "Main", "Inflow", "index.html"),
-      filename: "inflow.html",
-      chunks: ["inflow"],
+      template: path.join(__dirname, 'src', 'pages', 'Main', 'Inflow', 'index.html'),
+      filename: 'inflow.html',
+      chunks: ['inflow'],
       cache: false,
     }),
 
@@ -422,12 +422,12 @@ var options = {
   ],
 
   infrastructureLogging: {
-    level: "info",
+    level: 'info',
   },
 };
 
-if (env.NODE_ENV === "development") {
-  options.devtool = "cheap-module-source-map";
+if (env.NODE_ENV === 'development') {
+  options.devtool = 'cheap-module-source-map';
 } else {
   options.optimization = {
     minimize: true,

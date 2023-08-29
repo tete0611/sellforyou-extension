@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import { render } from "react-dom";
-import { Payments } from "./Payments";
+import { render } from 'react-dom';
+import { Payments } from './Payments';
 
-import "./index.css";
+import './index.css';
 
 render(
-  <Payments />,
+	<Payments />,
 
-  window.document.querySelector("#app-container")
+	window.document.querySelector('#app-container'),
 );
