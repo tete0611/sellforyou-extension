@@ -146,7 +146,7 @@ type Product = {
 		productOptionValue: {
 			id: number;
 			image: string | null | undefined;
-		};
+		}[];
 	}[];
 	activeTaobaoProduct: {
 		shopName: string | null | undefined;
@@ -1238,14 +1238,13 @@ const addToLayers = async () => {
 		case '2': {
 			let productOption: string[] = [];
 
-			product.productOptionName.map((v: any) => {
-				v.productOptionValue.map((w: any, i) => {
-					console.log(`addToLayers 함수에 있는 ${i}번째 w`);
-					console.log({ w });
-					let imageUrl = '';
-					if (w.image) imageUrl = /^https?:/.test(w.image) ? w.image : `${ENDPOINT_IMAGE}/sellforyou/${w.image}`;
+			product.productOptionName.map((v) => {
+				v.productOptionValue.map((w, i) => {
+					if (w.image) {
+						let imageUrl = /^https?:/.test(w.image) ? w.image : `${ENDPOINT_IMAGE}/sellforyou/${w.image}`;
 
-					productOption.push(imageUrl);
+						productOption.push(imageUrl);
+					}
 
 					return;
 				});
@@ -1260,65 +1259,38 @@ const addToLayers = async () => {
 					let layer = getCurrentLayer();
 
 					if (!layer || testLayer !== 1) {
-						// 옵션이미지의 경우 이미지가 없어도 레이어가 삭제되지않으므로 이미지가 없어도 레이어는 추가한채 전체번역에 포함되지 않도록 처리
-						if (v !== '') {
-							let imageResp = await fetch(v);
-							let imageBlob = await imageResp.blob();
-							let imageData = await readFileDataURL(imageBlob);
+						let imageResp = await fetch(v);
+						let imageBlob = await imageResp.blob();
+						let imageData = await readFileDataURL(imageBlob);
 
-							layers.push({
-								type: params.type,
+						layers.push({
+							type: params.type,
 
-								index: i,
+							index: i,
 
-								image: {
-									origin: v,
-									current: imageData,
+							image: {
+								origin: v,
+								current: imageData,
+							},
+
+							object: [],
+
+							state: {
+								undo: {
+									canvas: [],
+									object: [],
 								},
 
-								object: [],
-
-								state: {
-									undo: {
-										canvas: [],
-										object: [],
-									},
-
-									redo: {
-										canvas: [],
-										object: [],
-									},
-
-									current: {},
-
-									check: 'checked',
+								redo: {
+									canvas: [],
+									object: [],
 								},
-							});
-						} else {
-							layers.push({
-								type: params.type,
-								index: i,
-								image: {
-									origin: v,
-									current: '',
-								},
-								object: [],
 
-								state: {
-									undo: {
-										canvas: [],
-										object: [],
-									},
-									redo: {
-										canvas: [],
-										object: [],
-									},
-									current: {},
-									// 체크상태를 disabled 처리
-									check: 'disabled',
-								},
-							});
-						}
+								current: {},
+
+								check: 'checked',
+							},
+						});
 					}
 
 					return;
@@ -1443,13 +1415,11 @@ const loadImageList = async () => {
 			await Promise.all(
 				product.productOptionName.map((v: any) => {
 					v.productOptionValue.map((w: any, i) => {
-						console.log(`loadImageList 에 있는 ${i}번째 w`);
-						console.log({ w });
-						let imageUrl = '';
-						if (w.image) imageUrl = /^https?:/.test(w.image) ? w.image : `${ENDPOINT_IMAGE}/sellforyou/${w.image}`;
+						if (w.image) {
+							let imageUrl: any = /^https?:/.test(w.image) ? w.image : `${ENDPOINT_IMAGE}/sellforyou/${w.image}`;
 
-						filterdImages.push(imageUrl);
-
+							filterdImages.push(imageUrl);
+						}
 						return;
 					});
 
@@ -1495,8 +1465,6 @@ const loadImageList = async () => {
 	console.log(filterdImages.length);
 	if (filterdImages.length > 0) {
 		for (let i = 0; i < filterdImages.length; i++) {
-			if (filterdImages[i] === '') continue;
-			console.log(`i는 : ${i}`);
 			imageList.innerHTML += `
                 <div class="imageListDiv" ${filterdImages[i] === '' ? 'hidden' : ''}>
                     <img class="image-thumbnail" key=${i} src=${
@@ -1570,11 +1538,27 @@ const loadImageList = async () => {
 			saveCanvas();
 		});
 	}
+	console.log('파람스인덱스');
 	console.log(params.index);
+	/** trangers_multiple일 경우 */
 	if (!params.index) {
 		await displayImage(0, 0);
+		/** trangers_single일 경우 */
 	} else {
-		await displayImage(parseInt(params.index) ?? 0, 0);
+		const selectedIndex = parseInt(params.index ?? 0);
+		let emptyImageCount = 0;
+		if (selectedIndex)
+			product.productOptionName.forEach((v, i) => {
+				v.productOptionValue.forEach((v2, i2) => {
+					console.log(`${i}번 OptionName`);
+					console.log({ v });
+					console.log(`${i2}번 OptionValue`);
+					console.log({ v2 });
+					if (!v2.image && i < selectedIndex) emptyImageCount += 1;
+				});
+			});
+		console.log(`최종인덱스 : ${selectedIndex - emptyImageCount}`);
+		await displayImage(parseInt(params.index ?? 0), 0);
 	}
 	console.log('여기서 뻑이나나');
 	saveCanvas();
@@ -3726,7 +3710,7 @@ const saveBadImage = async () => {
 				for (let k in product.productOptionName[j].productOptionValue) {
 					console.log({ k });
 					let option = product.productOptionName[j].productOptionValue[k];
-					let optionImage = /product\/[0-9]+\/option/.test(option.image)
+					let optionImage = /product\/[0-9]+\/option/.test(option.image ?? '')
 						? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
 						: option.image;
 
@@ -3858,7 +3842,7 @@ const saveSingle = async () => {
 			for (let j in product.productOptionName) {
 				for (let k in product.productOptionName[j].productOptionValue) {
 					let option = product.productOptionName[j].productOptionValue[k];
-					let optionImage = /product\/[0-9]+\/option/.test(option.image)
+					let optionImage = /product\/[0-9]+\/option/.test(option.image ?? '')
 						? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
 						: option.image;
 
@@ -3995,8 +3979,7 @@ const saveMultiple = async () => {
 				for (let j in product?.productOptionName) {
 					for (let k in product.productOptionName[j].productOptionValue) {
 						let option = product.productOptionName[j].productOptionValue[k];
-						if (option.image === '') continue;
-						let optionImage = /product\/[0-9]+\/option/.test(option.image)
+						let optionImage = /product\/[0-9]+\/option/.test(option.image ?? '')
 							? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
 							: option.image;
 
