@@ -4,7 +4,7 @@ import { fabric } from 'fabric';
 import gql from '../Main/GraphQL/Requests';
 import { createTabCompletely, getLocalStorage, sendTabMessage } from '../Tools/ChromeAsync';
 import { floatingToast, getClock, readFileDataURL, sleep } from '../Tools/Common';
-import { fi } from 'date-fns/locale';
+import { Layer, Product } from './type';
 
 const ENDPOINT_IMAGE = 'https://img.sellforyou.co.kr';
 const FLASK_URL = 'http://www.sellforyou.co.kr:5003/trangers/';
@@ -137,21 +137,6 @@ let fixedTextAlignCenter: any = document.getElementById('fixedTextAlignCenter');
 let fixedTextAlignRight: any = document.getElementById('fixedTextAlignRight');
 
 /** 상품타입 커스텀 */
-type Product = {
-	id: number;
-	productCode: string;
-	description: string;
-	imageThumbnail: string[];
-	productOptionName: {
-		productOptionValue: {
-			id: number;
-			image: string | null | undefined;
-		}[];
-	}[];
-	activeTaobaoProduct: {
-		shopName: string | null | undefined;
-	};
-};
 
 let product: Product | null = null;
 let appData: any = null;
@@ -174,25 +159,14 @@ let isShapeFill = true;
 let isDrag = false;
 let isOriginal = false;
 
-let layers: {
-	index: number;
-	image: { current: string; origin: string };
-	object: any[];
-	state: {
-		check: string;
-		current: any;
-		redo: { canvas: any[]; object: any[] };
-		undo: { canvas: any[]; object: any[] };
-	};
-	type: string;
-}[] = [];
+let layers: Layer[] = [];
 
 let maskCanvas: any = new fabric.Canvas('mask');
 let myCanvas: any = new fabric.Canvas('main');
 
 let orgCanvas: any = new fabric.Canvas('original');
 
-let visionKey: any = null;
+let visionKey: string | null = null;
 
 let removeType = 'area-remove-drag';
 let recoveryType = 'area-recovery-drag';
