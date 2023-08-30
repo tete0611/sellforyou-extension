@@ -174,7 +174,18 @@ let isShapeFill = true;
 let isDrag = false;
 let isOriginal = false;
 
-let layers: any = [];
+let layers: {
+	index: number;
+	image: { current: string; origin: string };
+	object: any[];
+	state: {
+		check: string;
+		current: any;
+		redo: { canvas: any[]; object: any[] };
+		undo: { canvas: any[]; object: any[] };
+	};
+	type: string;
+}[] = [];
 
 let maskCanvas: any = new fabric.Canvas('mask');
 let myCanvas: any = new fabric.Canvas('main');
@@ -1049,7 +1060,7 @@ const getMaskImage = async (itemList: any) => {
 		selectable: false,
 	});
 
-	layer.image.current = dataBase64;
+	layer.image.current = dataBase64 as string;
 
 	await displayImage(currentImageIndex, 0);
 };
@@ -1207,7 +1218,7 @@ const addToLayers = async () => {
 
 							image: {
 								origin: imageUrl,
-								current: imageData,
+								current: imageData as string,
 							},
 
 							object: [],
@@ -1270,7 +1281,7 @@ const addToLayers = async () => {
 
 							image: {
 								origin: v,
-								current: imageData,
+								current: imageData as string,
 							},
 
 							object: [],
@@ -1345,7 +1356,7 @@ const addToLayers = async () => {
 
 							image: {
 								origin: v,
-								current: imageData,
+								current: imageData as string,
 							},
 
 							object: [],
@@ -4594,7 +4605,7 @@ const imageToolHelper = () => {
 
 			let dataPath = `트랜져스/${now.YY}${now.MM}${now.DD}_${now.hh}${now.mm}${now.ss}/`;
 
-			let indexed = (parseInt(filtered[i].index) + 1).toString().padStart(2, '0');
+			let indexed = (filtered[i].index + 1).toString().padStart(2, '0');
 
 			switch (currentType) {
 				case '1': {
