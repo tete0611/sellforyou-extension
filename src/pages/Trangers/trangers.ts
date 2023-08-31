@@ -4,7 +4,7 @@ import { fabric } from 'fabric';
 import gql from '../Main/GraphQL/Requests';
 import { createTabCompletely, getLocalStorage, sendTabMessage } from '../Tools/ChromeAsync';
 import { floatingToast, getClock, readFileDataURL, sleep } from '../Tools/Common';
-import { Layer, Product } from './type';
+import { Layer, Product } from '../../type/type';
 
 const ENDPOINT_IMAGE = 'https://img.sellforyou.co.kr';
 const FLASK_URL = 'http://www.sellforyou.co.kr:5003/trangers/';
@@ -463,7 +463,6 @@ const translationPapago = async (input_string: string, source: string, target: s
 
 	try {
 		let result = await output.json();
-		// console.log(result.translatedText);
 		let result_array = result.translatedText.split('\n');
 		return result_array;
 	} catch (e) {
@@ -475,7 +474,6 @@ const displayImage = async (index: number, customWidth: number) => {
 	currentImageIndex = index;
 
 	let imageList = document.getElementsByClassName('image-thumbnail');
-	console.log({ imageList });
 	for (let i = 0; i < imageList.length; i++) {
 		if (imageList[i].getAttribute('key') === currentImageIndex.toString()) {
 			imageList[i].className = 'image-thumbnail activated';
@@ -858,7 +856,6 @@ const processVisionData = async (info: any) => {
 			method: 'POST',
 		});
 		let visionJson = await visionResp.json();
-		// console.log("visionJson", visionJson.responses[0].fullTextAnnotation.text);
 		if (visionJson.responses[0]?.error?.message === 'Bad image data.') {
 			await saveBadImage();
 
@@ -879,7 +876,6 @@ const processVisionData = async (info: any) => {
 		}
 
 		let visionArray: any = await visionAnalyzer(visionJson.responses[0]); // 여기안에 PPG모듈 번역
-		// console.log(visionArray);
 		if (visionArray.length === 0) {
 			return;
 		}
@@ -1364,8 +1360,6 @@ const addToLayers = async () => {
 
 	layers = sortBy(layers, 'index', true);
 	layers = sortBy(layers, 'type', true);
-	console.log('====addToLayers() :  만들어진 레이어====');
-	console.log({ layers });
 };
 
 const loadImageList = async () => {
@@ -1379,8 +1373,6 @@ const loadImageList = async () => {
 	}
 
 	let newLayer = layers.filter((v: any) => v.type === currentType);
-	console.log('===필터로 걸러진 newLayer===');
-	console.log({ newLayer });
 	switch (currentType) {
 		case '1': {
 			await Promise.all(
@@ -1439,15 +1431,12 @@ const loadImageList = async () => {
 					filterdImages.push(imageUrl);
 				}
 			}
-			console.log('===만들어진 filterdImages===');
-			console.log({ filterdImages });
 			break;
 		}
 
 		default:
 			break;
 	}
-	console.log(filterdImages.length);
 	if (filterdImages.length > 0) {
 		for (let i = 0; i < filterdImages.length; i++) {
 			imageList.innerHTML += `
@@ -1467,9 +1456,7 @@ const loadImageList = async () => {
 	}
 
 	let checked: any = document.getElementsByClassName(`checkBox`);
-	console.log({ checked });
 	for (let i = 0; i < checked.length; i++) {
-		console.log(`${i}번 1번루프 들어옴`);
 		checked[i].addEventListener('click', () => {
 			if (newLayer[i].state.check == 'checked') {
 				newLayer[i].state.check = '';
@@ -1483,8 +1470,6 @@ const loadImageList = async () => {
 
 	checkAll.addEventListener('click', () => {
 		for (let i = 0; i < newLayer.length; i++) {
-			console.log(`${i}번 2번루프 들어옴`);
-
 			newLayer[i].state.check = 'checked';
 			try {
 				checked[i].checked = true;
@@ -1496,8 +1481,6 @@ const loadImageList = async () => {
 
 	checkDel.addEventListener('click', () => {
 		for (let i = 0; i < newLayer.length; i++) {
-			console.log(`${i}번 3번루프 들어옴`);
-
 			newLayer[i].state.check = '';
 			try {
 				checked[i].checked = false;
@@ -1508,44 +1491,50 @@ const loadImageList = async () => {
 	});
 
 	let imageElement = document.getElementsByClassName(`image-thumbnail`);
-	console.log({ imageElement });
 
 	if (imageElement.length < 0) {
 		return;
 	}
 
 	for (let i = 0; i < imageElement.length; i++) {
-		console.log(`${i}번 4번루프 들어옴`);
-
 		imageElement[i].addEventListener('click', async () => {
 			await displayImage(i, 0);
 
 			saveCanvas();
 		});
 	}
-	console.log('파람스인덱스');
-	console.log(params.index);
 	/** trangers_multiple일 경우 */
 	if (!params.index) {
 		await displayImage(0, 0);
 		/** trangers_single일 경우 */
 	} else {
-		const selectedIndex = parseInt(params.index ?? 0);
-		let emptyImageCount = 0;
-		if (selectedIndex)
-			product.productOptionName.forEach((v, i) => {
-				v.productOptionValue.forEach((v2, i2) => {
-					console.log(`${i}번 OptionName`);
-					console.log({ v });
-					console.log(`${i2}번 OptionValue`);
-					console.log({ v2 });
-					if (!v2.image && i < selectedIndex) emptyImageCount += 1;
-				});
-			});
-		console.log(`최종인덱스 : ${selectedIndex - emptyImageCount}`);
-		await displayImage(parseInt(params.index ?? 0), 0);
+		/** "옵션이미지 -> 이미지 편집/번역"일 경우 */
+		if (params.type === '2') {
+			let emptyImageCount = 0;
+			const selectedLayer = parseInt(params.layer ?? 0); // 선택된 옵션 레이어
+			/** 이전 레이어까지의 옵션수 계산 */
+			const prevOptionCount = product.productOptionName
+				.map((v, i) => (i < selectedLayer ? v.productOptionValue.length : 0))
+				.reduce((acc, curr) => acc + curr);
+			const selectedIndex = parseInt(params.index ?? 0) + prevOptionCount; // 선택된 옵션 인덱스
+			/** 선택된 옵션의 Id값 */
+			const selectedOptionId =
+				product.productOptionName[selectedLayer].productOptionValue[parseInt(params.index ?? 0)].id;
+			// 현재 레이어까지의 빈 옵션이미지 개수 계산
+			for (let j = 0; j <= selectedLayer; j++) {
+				const productOptionName = product.productOptionName[j];
+				for (let i = 0; i < productOptionName.productOptionValue.length; i++) {
+					const productOptionValue = productOptionName.productOptionValue[i];
+					// 선택된 옵션까지 루프가 도달하면 루프종료
+					if (productOptionValue?.id === selectedOptionId) break;
+					// 이미지가 없으면 빈이미지 +1
+					if (!productOptionValue.image) emptyImageCount += 1;
+				}
+			}
+			const resultIndex = selectedIndex - emptyImageCount;
+			await displayImage(resultIndex, 0);
+		} else await displayImage(parseInt(params.index ?? 0), 0);
 	}
-	console.log('여기서 뻑이나나');
 	saveCanvas();
 
 	headerSub.style.display = '';
@@ -3490,14 +3479,9 @@ const setShapeTab = () => {
 };
 
 const multiple = async () => {
-	console.log('멀티플작동');
 	cancel = false;
 
 	loading.style.display = '';
-	layers.map((v, i) => {
-		console.log(`${i}번 레이어`);
-		console.log({ v });
-	});
 	let filtered = layers.filter((v: any) => v.type === currentType && v.state.check === 'checked');
 	for (let i = 0; i < filtered.length; i++) {
 		if (cancel) {
@@ -3551,7 +3535,6 @@ const multiple = async () => {
 };
 
 const single = async () => {
-	console.log('싱글작동');
 	loading.style.display = '';
 
 	await processVisionData(null);
@@ -3691,9 +3674,7 @@ const saveBadImage = async () => {
 			}
 
 			for (let j in product.productOptionName) {
-				console.log({ j });
 				for (let k in product.productOptionName[j].productOptionValue) {
-					console.log({ k });
 					let option = product.productOptionName[j].productOptionValue[k];
 					let optionImage = /product\/[0-9]+\/option/.test(option.image ?? '')
 						? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
@@ -3735,7 +3716,7 @@ const saveBadImage = async () => {
 			uploadData.description = description;
 		}
 	}
-	console.log({ uploadData });
+
 	let uploadQuery = `mutation TEST($productId: Int!, $thumbnails: [ProductNewThumbnailImageUpdateInput!], $optionValues: [ProductOptionValueImageUpdateInput!]!, $description:String) {
         updateNewProductImageBySomeone(
             productId: $productId, 
@@ -3908,7 +3889,7 @@ const saveSingle = async () => {
 
 const saveMultiple = async () => {
 	if (!product) return;
-	console.log('세이브멀티플 발동');
+
 	loading.style.display = '';
 
 	let uploadData: any = {
@@ -3930,7 +3911,7 @@ const saveMultiple = async () => {
 			description = product.description;
 		}
 	}
-	console.log({ layers });
+
 	let filtered = layers.filter((v: any) => v.type === currentType && v.image.origin !== '');
 
 	for (let i = 0; i < filtered.length; i++) {
@@ -3955,10 +3936,8 @@ const saveMultiple = async () => {
 			case '2': {
 				if (applyOriginWidthOption.value === 'N') {
 					dataUrl = await displayImage(filtered[i].index, originWidthOption.value);
-					console.log({ dataUrl });
 				} else {
 					dataUrl = await displayImage(filtered[i].index, 0);
-					console.log({ dataUrl });
 				}
 
 				for (let j in product?.productOptionName) {
@@ -3969,8 +3948,6 @@ const saveMultiple = async () => {
 							: option.image;
 
 						if (filtered[i].image.origin === optionImage) {
-							console.log('filtered[i].image.origin : ' + filtered[i].image.origin);
-							console.log('optionImage : ' + optionImage);
 							uploadData.optionValues.push({
 								id: option.id,
 								image: optionImage,
@@ -4007,7 +3984,7 @@ const saveMultiple = async () => {
 			uploadData.description = description;
 		}
 	}
-	console.log({ uploadData });
+
 	let uploadQuery = `mutation TEST($productId: Int!, $thumbnails: [ProductNewThumbnailImageUpdateInput!], $optionValues: [ProductOptionValueImageUpdateInput!]!, $description:String) {
         updateNewProductImageBySomeone(
             productId: $productId, 
@@ -4026,9 +4003,8 @@ const saveMultiple = async () => {
 
 		return;
 	}
-	// return alert('강제종료!');
+
 	if (upload_json.data) {
-		console.log(JSON.parse(upload_json.data.updateNewProductImageBySomeone));
 		chrome.runtime.sendMessage(
 			{
 				action: 'trangers',
@@ -5131,9 +5107,7 @@ const reloadTranslate = async () => {
 	return true;
 };
 const autoTranslation = async () => {
-	console.log('오토트랜스래이션작동');
 	while (true) {
-		console.log(loading.style.display);
 		if (loading.style.display === 'none') {
 			break;
 		}
@@ -5224,7 +5198,6 @@ const main = async () => {
 	visionKey = await keyResp.text();
 
 	const products = await getProductList(params.id);
-	console.log('여기는 ?');
 
 	for (let i in products.data.selectProductsBySomeone) {
 		if (products.data.selectProductsBySomeone[i].id === parseInt(params.id)) {
@@ -5245,19 +5218,15 @@ const main = async () => {
 
 	setTypeEvents();
 	setKeyEvents();
-	console.log('이기는 ?');
 	await addToLayers();
-	console.log('이기1');
 	currentType = '1';
 
 	await loadImageList();
-	console.log('이기2');
 
 	// headerFromURL.style.display = "";
 	menuToolbar.style.display = '';
 
 	loading.style.display = 'none';
-	console.log('여기까지 도달 했습니광?');
 };
 
 main();
