@@ -4,6 +4,7 @@ import { fabric } from 'fabric';
 import gql from '../Main/GraphQL/Requests';
 import { createTabCompletely, getLocalStorage, sendTabMessage } from '../Tools/ChromeAsync';
 import { floatingToast, getClock, readFileDataURL, sleep } from '../Tools/Common';
+import { Layer, Product } from '../../type/type';
 
 const ENDPOINT_IMAGE = 'https://img.sellforyou.co.kr';
 const FLASK_URL = 'http://www.sellforyou.co.kr:5003/trangers/';
@@ -135,7 +136,9 @@ let fixedTextAlignLeft: any = document.getElementById('fixedTextAlignLeft');
 let fixedTextAlignCenter: any = document.getElementById('fixedTextAlignCenter');
 let fixedTextAlignRight: any = document.getElementById('fixedTextAlignRight');
 
-let product: any = null;
+/** 상품타입 커스텀 */
+
+let product: Product | null = null;
 let appData: any = null;
 let areaPos: any = {};
 
@@ -156,23 +159,24 @@ let isShapeFill = true;
 let isDrag = false;
 let isOriginal = false;
 
-let layers: any = [];
+let layers: Layer[] = [];
 
 let maskCanvas: any = new fabric.Canvas('mask');
 let myCanvas: any = new fabric.Canvas('main');
 
 let orgCanvas: any = new fabric.Canvas('original');
 
-let visionKey: any = null;
+let visionKey: string | null = null;
 
 let removeType = 'area-remove-drag';
 let recoveryType = 'area-recovery-drag';
 
+/** 쿼리스트링 파싱 */
 const params = new Proxy(new URLSearchParams(window.location.search), {
 	get: (searchParams: any, prop) => searchParams.get(prop),
 });
 
-function loadLocalSettings() {
+const loadLocalSettings = () => {
 	applyWaterMarkText.value = appData.settings.waterMarkText ?? appData.user.id;
 	applyWaterMarkOpacity.value = appData.settings.waterMarkOpacity ?? '20';
 	applyOriginWidthPC.value = appData.settings.originWidthPC ?? 'Y';
@@ -242,12 +246,12 @@ function loadLocalSettings() {
 			}
 		});
 	}
-}
+};
 
-async function getProductList(id: string) {
+const getProductList = async (id: string) => {
 	let list_query = `query TEST($where: ProductWhereInput) {
         selectProductsBySomeone(where: $where) {
-            productCode
+            productCode 
             id
             description
             imageThumbnail
@@ -272,9 +276,9 @@ async function getProductList(id: string) {
 	}
 
 	return list_json;
-}
+};
 
-function saveLocalSettings(key: string, value: string) {
+const saveLocalSettings = (key: string, value: string) => {
 	appData = {
 		...appData,
 
@@ -286,9 +290,9 @@ function saveLocalSettings(key: string, value: string) {
 	};
 
 	localStorage.setItem('appInfo', JSON.stringify(appData));
-}
+};
 
-function getCurrentLayer() {
+const getCurrentLayer = () => {
 	let layer = layers.filter((v: any) => {
 		if (v.index !== currentImageIndex || v.type !== currentType) {
 			return false;
@@ -297,22 +301,22 @@ function getCurrentLayer() {
 	});
 
 	return layer[0];
-}
+};
 
-function mergeImage(dataUrl: any) {
+const mergeImage = (dataUrl: any) => {
 	return new Promise((resolve, reject) => {
 		let cropped = new Image();
 
 		cropped.src = dataUrl;
-		cropped.onload = function () {
+		cropped.onload = () => {
 			resolve(cropped);
 		};
 
 		cropped.onerror = reject;
 	});
-}
+};
 
-function saveCanvas() {
+const saveCanvas = () => {
 	layers.map((v: any) => {
 		if (v.index !== currentImageIndex || v.type !== currentType) {
 			v.state.undo = {
@@ -354,9 +358,9 @@ function saveCanvas() {
 
 	layer.state.current.canvas = canvas;
 	layer.state.current.object = object;
-}
+};
 
-function replayCanvas(type: string) {
+const replayCanvas = (type: string) => {
 	let layer = getCurrentLayer();
 
 	let playStack: any = null;
@@ -393,7 +397,7 @@ function replayCanvas(type: string) {
 	saveStack.object.push(layer.state.current.object);
 
 	myCanvas.clear();
-	myCanvas.loadFromJSON(stateCanvas, async function () {
+	myCanvas.loadFromJSON(stateCanvas, async () => {
 		myCanvas.renderAll();
 
 		layer.image.current = myCanvas.backgroundImage?.src ?? myCanvas.overlayImage.src;
@@ -425,9 +429,9 @@ function replayCanvas(type: string) {
 
 		await displayImage(currentImageIndex, 0);
 	});
-}
+};
 /** 이미지 번역에 사용되는 파파고 */
-async function translationPapago(input_string: string, source: string, target: string) {
+const translationPapago = async (input_string: string, source: string, target: string) => {
 	if (papagoApiKey === '') return alert('번역 API키 Error , 관리자에게 문의해주세요');
 
 	let deviceid = '364961ac-efa2-49ca-a998-ad55f7f9d32d';
@@ -459,19 +463,17 @@ async function translationPapago(input_string: string, source: string, target: s
 
 	try {
 		let result = await output.json();
-		// console.log(result.translatedText);
 		let result_array = result.translatedText.split('\n');
 		return result_array;
 	} catch (e) {
 		return null;
 	}
-}
+};
 
-async function displayImage(index: number, customWidth: number) {
+const displayImage = async (index: number, customWidth: number) => {
 	currentImageIndex = index;
 
 	let imageList = document.getElementsByClassName('image-thumbnail');
-
 	for (let i = 0; i < imageList.length; i++) {
 		if (imageList[i].getAttribute('key') === currentImageIndex.toString()) {
 			imageList[i].className = 'image-thumbnail activated';
@@ -716,7 +718,7 @@ async function displayImage(index: number, customWidth: number) {
 
 			myCanvas.setOverlayImage(
 				currentImage,
-				function () {
+				() => {
 					myCanvas.renderAll();
 				},
 				{
@@ -816,9 +818,9 @@ async function displayImage(index: number, customWidth: number) {
 	myCanvas.renderAll();
 
 	return resultData;
-}
+};
 
-async function processVisionData(info: any) {
+const processVisionData = async (info: any) => {
 	try {
 		startRegion.disabled = true;
 		endRegion.disabled = true;
@@ -854,7 +856,6 @@ async function processVisionData(info: any) {
 			method: 'POST',
 		});
 		let visionJson = await visionResp.json();
-		// console.log("visionJson", visionJson.responses[0].fullTextAnnotation.text);
 		if (visionJson.responses[0]?.error?.message === 'Bad image data.') {
 			await saveBadImage();
 
@@ -875,7 +876,6 @@ async function processVisionData(info: any) {
 		}
 
 		let visionArray: any = await visionAnalyzer(visionJson.responses[0]); // 여기안에 PPG모듈 번역
-		// console.log(visionArray);
 		if (visionArray.length === 0) {
 			return;
 		}
@@ -965,9 +965,9 @@ async function processVisionData(info: any) {
 
 		console.log('번역 에러:', e);
 	}
-}
+};
 
-function dataURItoBlob(dataURI: string) {
+const dataURItoBlob = (dataURI: string) => {
 	const mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
 	const binary: any = atob(dataURI.split(',')[1]);
 	const array: any = [];
@@ -977,9 +977,9 @@ function dataURItoBlob(dataURI: string) {
 	}
 
 	return new Blob([new Uint8Array(array)], { type: mime });
-}
+};
 
-async function getMaskImage(itemList: any) {
+const getMaskImage = async (itemList: any) => {
 	let layer = getCurrentLayer();
 
 	let currentMerged: any = await mergeImage(layer.image.current);
@@ -1030,12 +1030,12 @@ async function getMaskImage(itemList: any) {
 		selectable: false,
 	});
 
-	layer.image.current = dataBase64;
+	layer.image.current = dataBase64 as string;
 
 	await displayImage(currentImageIndex, 0);
-}
+};
 
-async function visionAnalyzer(data: any) {
+const visionAnalyzer = async (data: any) => {
 	if (!data.fullTextAnnotation) {
 		return [];
 	}
@@ -1145,10 +1145,10 @@ async function visionAnalyzer(data: any) {
 	}
 
 	return vision_info;
-}
+};
 
-function sortBy(array: any, key: string, asc: boolean) {
-	let sorted = array.sort(function (a: any, b: any) {
+const sortBy = (array: any, key: string, asc: boolean) => {
+	let sorted = array.sort((a: any, b: any) => {
 		if (a[key] < b[key]) {
 			return asc ? -1 : 1;
 		}
@@ -1161,16 +1161,16 @@ function sortBy(array: any, key: string, asc: boolean) {
 	});
 
 	return sorted;
-}
+};
 
-async function addToLayers() {
-	if (testLayer !== 1) {
-		layers = [];
-	}
+const addToLayers = async () => {
+	if (!product) return;
+	if (testLayer !== 1) layers = [];
+
 	switch (params.type) {
 		case '1': {
 			await Promise.all(
-				product.imageThumbnail.map(async (v: any, i: number) => {
+				product.imageThumbnail.map(async (v: string, i: number) => {
 					currentImageIndex = i;
 
 					let layer = getCurrentLayer();
@@ -1188,7 +1188,7 @@ async function addToLayers() {
 
 							image: {
 								origin: imageUrl,
-								current: imageData,
+								current: imageData as string,
 							},
 
 							object: [],
@@ -1217,10 +1217,10 @@ async function addToLayers() {
 		}
 
 		case '2': {
-			let productOption: any = [];
+			let productOption: string[] = [];
 
-			product.productOptionName.map((v: any) => {
-				v.productOptionValue.map((w: any) => {
+			product.productOptionName.map((v) => {
+				v.productOptionValue.map((w, i) => {
 					if (w.image) {
 						let imageUrl = /^https?:/.test(w.image) ? w.image : `${ENDPOINT_IMAGE}/sellforyou/${w.image}`;
 
@@ -1234,7 +1234,7 @@ async function addToLayers() {
 			});
 
 			await Promise.all(
-				productOption.map(async (v: any, i: number) => {
+				productOption.map(async (v, i: number) => {
 					currentImageIndex = i;
 
 					let layer = getCurrentLayer();
@@ -1251,7 +1251,7 @@ async function addToLayers() {
 
 							image: {
 								origin: v,
-								current: imageData,
+								current: imageData as string,
 							},
 
 							object: [],
@@ -1326,7 +1326,7 @@ async function addToLayers() {
 
 							image: {
 								origin: v,
-								current: imageData,
+								current: imageData as string,
 							},
 
 							object: [],
@@ -1360,9 +1360,10 @@ async function addToLayers() {
 
 	layers = sortBy(layers, 'index', true);
 	layers = sortBy(layers, 'type', true);
-}
+};
 
-async function loadImageList() {
+const loadImageList = async () => {
+	if (!product) return;
 	imageList.innerHTML = ``;
 
 	let filterdImages: any = [];
@@ -1390,13 +1391,12 @@ async function loadImageList() {
 		case '2': {
 			await Promise.all(
 				product.productOptionName.map((v: any) => {
-					v.productOptionValue.map((w: any) => {
+					v.productOptionValue.map((w: any, i) => {
 						if (w.image) {
 							let imageUrl: any = /^https?:/.test(w.image) ? w.image : `${ENDPOINT_IMAGE}/sellforyou/${w.image}`;
 
 							filterdImages.push(imageUrl);
 						}
-
 						return;
 					});
 
@@ -1431,7 +1431,6 @@ async function loadImageList() {
 					filterdImages.push(imageUrl);
 				}
 			}
-
 			break;
 		}
 
@@ -1441,8 +1440,10 @@ async function loadImageList() {
 	if (filterdImages.length > 0) {
 		for (let i = 0; i < filterdImages.length; i++) {
 			imageList.innerHTML += `
-                <div class="imageListDiv">
-                    <img class="image-thumbnail" key=${i} src=${filterdImages[i]} alt="" width="72px" height="72px" style="object-fit: contain; cursor: pointer; margin: 5px;" />
+                <div class="imageListDiv" ${filterdImages[i] === '' ? 'hidden' : ''}>
+                    <img class="image-thumbnail" key=${i} src=${
+				filterdImages[i]
+			} alt="" width="72px" height="72px" style="object-fit: contain; cursor: pointer; margin: 5px;" />
                     <input id="check${i}" class="checkBox" key=${i} type="checkbox" ${newLayer[i].state.check}>
                 </div>
                 `;
@@ -1455,7 +1456,6 @@ async function loadImageList() {
 	}
 
 	let checked: any = document.getElementsByClassName(`checkBox`);
-
 	for (let i = 0; i < checked.length; i++) {
 		checked[i].addEventListener('click', () => {
 			if (newLayer[i].state.check == 'checked') {
@@ -1503,32 +1503,57 @@ async function loadImageList() {
 			saveCanvas();
 		});
 	}
-
+	/** trangers_multiple일 경우 */
 	if (!params.index) {
 		await displayImage(0, 0);
+		/** trangers_single일 경우 */
 	} else {
-		await displayImage(parseInt(params.index) ?? 0, 0);
+		/** "옵션이미지 -> 이미지 편집/번역"일 경우 */
+		if (params.type === '2') {
+			let emptyImageCount = 0;
+			const selectedLayer = parseInt(params.layer ?? 0); // 선택된 옵션 레이어
+			/** 이전 레이어까지의 옵션수 계산 */
+			const prevOptionCount = product.productOptionName
+				.map((v, i) => (i < selectedLayer ? v.productOptionValue.length : 0))
+				.reduce((acc, curr) => acc + curr);
+			const selectedIndex = parseInt(params.index ?? 0) + prevOptionCount; // 선택된 옵션 인덱스
+			/** 선택된 옵션의 Id값 */
+			const selectedOptionId =
+				product.productOptionName[selectedLayer].productOptionValue[parseInt(params.index ?? 0)].id;
+			// 현재 레이어까지의 빈 옵션이미지 개수 계산
+			for (let j = 0; j <= selectedLayer; j++) {
+				const productOptionName = product.productOptionName[j];
+				for (let i = 0; i < productOptionName.productOptionValue.length; i++) {
+					const productOptionValue = productOptionName.productOptionValue[i];
+					// 선택된 옵션까지 루프가 도달하면 루프종료
+					if (productOptionValue?.id === selectedOptionId) break;
+					// 이미지가 없으면 빈이미지 +1
+					if (!productOptionValue.image) emptyImageCount += 1;
+				}
+			}
+			const resultIndex = selectedIndex - emptyImageCount;
+			await displayImage(resultIndex, 0);
+		} else await displayImage(parseInt(params.index ?? 0), 0);
 	}
-
 	saveCanvas();
 
 	headerSub.style.display = '';
-}
+};
 
-function ColorToHex(color: any) {
+const ColorToHex = (color: any) => {
 	let hexadecimal = color.toString(16);
 
 	return hexadecimal.length == 1 ? '0' + hexadecimal : hexadecimal;
-}
+};
 
-function ConvertRGBtoHex(red: any, green: any, blue: any) {
+const ConvertRGBtoHex = (red: any, green: any, blue: any) => {
 	return '#' + ColorToHex(red) + ColorToHex(green) + ColorToHex(blue);
-}
+};
 
-function hexToRgb(hex: any) {
+const hexToRgb = (hex: any) => {
 	let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
 
-	hex = hex.replace(shorthandRegex, function (m: any, r: any, g: any, b: any) {
+	hex = hex.replace(shorthandRegex, (m: any, r: any, g: any, b: any) => {
 		return r + r + g + g + b + b;
 	});
 
@@ -1541,9 +1566,9 @@ function hexToRgb(hex: any) {
 				b: parseInt(result[3], 16),
 		  }
 		: null;
-}
+};
 
-function canvasSetting() {
+const canvasSetting = () => {
 	fabric.Object.prototype.set({
 		borderColor: 'rgb(41, 136, 255)',
 		cornerColor: 'rgb(41, 136, 255)',
@@ -2533,9 +2558,9 @@ function canvasSetting() {
 			}
 		},
 	});
-}
+};
 
-async function setTextFont(e: any) {
+const setTextFont = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	let layer = getCurrentLayer();
@@ -2559,9 +2584,9 @@ async function setTextFont(e: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setTextSize(e: any) {
+const setTextSize = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	let layer = getCurrentLayer();
@@ -2587,9 +2612,9 @@ async function setTextSize(e: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setTextColor(e: any) {
+const setTextColor = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
 	let objects = myCanvas.getActiveObject();
 
@@ -2628,9 +2653,9 @@ async function setTextColor(e: any) {
 	}
 
 	myCanvas.renderAll();
-}
+};
 
-async function setTextBackground(e: any) {
+const setTextBackground = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
 	let objects = myCanvas.getActiveObject();
 
@@ -2669,9 +2694,9 @@ async function setTextBackground(e: any) {
 	}
 
 	myCanvas.renderAll();
-}
+};
 
-async function setShapeColor(e: any) {
+const setShapeColor = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
 	let objects = myCanvas.getActiveObject();
 
@@ -2710,9 +2735,9 @@ async function setShapeColor(e: any) {
 	}
 
 	myCanvas.renderAll();
-}
+};
 
-async function setShapeStrokeWidth(e: any) {
+const setShapeStrokeWidth = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	if (!objects) {
@@ -2742,9 +2767,9 @@ async function setShapeStrokeWidth(e: any) {
 	}
 
 	myCanvas.renderAll();
-}
+};
 
-async function setShapeStrokeShape(e) {
+const setShapeStrokeShape = async (e) => {
 	let objects = myCanvas.getActiveObject();
 	let layer = getCurrentLayer();
 
@@ -2776,9 +2801,9 @@ async function setShapeStrokeShape(e) {
 		});
 	}
 	myCanvas.renderAll();
-}
+};
 
-async function setShapeBackground(e: any) {
+const setShapeBackground = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
 	let objects = myCanvas.getActiveObject();
 
@@ -2817,9 +2842,9 @@ async function setShapeBackground(e: any) {
 	}
 
 	myCanvas.renderAll();
-}
+};
 
-async function setTextBold(e: any) {
+const setTextBold = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	let layer = getCurrentLayer();
@@ -2851,9 +2876,9 @@ async function setTextBold(e: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setTextItalic(e: any) {
+const setTextItalic = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	let layer = getCurrentLayer();
@@ -2885,9 +2910,9 @@ async function setTextItalic(e: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setTextLineThrough(e: any) {
+const setTextLineThrough = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	let layer = getCurrentLayer();
@@ -2919,9 +2944,9 @@ async function setTextLineThrough(e: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setTextUnderLine(e: any) {
+const setTextUnderLine = async (e: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	let layer = getCurrentLayer();
@@ -2953,9 +2978,9 @@ async function setTextUnderLine(e: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setTextAlign(direction: any) {
+const setTextAlign = async (direction: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	if (objects['_objects']) {
@@ -2975,9 +3000,9 @@ async function setTextAlign(direction: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-async function setGroupAlign(direction: any) {
+const setGroupAlign = async (direction: any) => {
 	let objects = myCanvas.getActiveObject();
 
 	if (objects['_objects']) {
@@ -3042,9 +3067,9 @@ async function setGroupAlign(direction: any) {
 	myCanvas.renderAll();
 
 	await saveCanvas();
-}
+};
 
-function toggleInit(mode: string) {
+const toggleInit = (mode: string) => {
 	switch (mode) {
 		case 'area-translation': {
 			startRegion.disabled = false;
@@ -3113,9 +3138,9 @@ function toggleInit(mode: string) {
 		default:
 			break;
 	}
-}
+};
 
-async function toggleToolbar(element: any, mode: string) {
+const toggleToolbar = async (element: any, mode: string) => {
 	let buttons = document.getElementsByClassName('toolbar');
 
 	for (let i = 0; i < buttons.length; i++) {
@@ -3249,9 +3274,9 @@ async function toggleToolbar(element: any, mode: string) {
 	}
 
 	await displayImage(currentImageIndex, 0);
-}
+};
 
-async function addShape() {
+const addShape = async () => {
 	let color = {
 		r: 0,
 		g: 0,
@@ -3301,9 +3326,9 @@ async function addShape() {
 
 	await displayImage(currentImageIndex, 0);
 	await saveCanvas();
-}
+};
 
-async function addText() {
+const addText = async () => {
 	let color: any = hexToRgb(toolTextColor.value);
 
 	let info = {
@@ -3353,9 +3378,9 @@ async function addText() {
 
 	await displayImage(currentImageIndex, 0);
 	await saveCanvas();
-}
+};
 
-function setTextTab() {
+const setTextTab = () => {
 	let objects = myCanvas.getActiveObject();
 	let layer = getCurrentLayer();
 	let length = Object.keys(objects['_objects']).length;
@@ -3377,9 +3402,9 @@ function setTextTab() {
 			fixedShapeTool.style.display = 'none';
 		}
 	}
-}
+};
 
-async function addTextVertical() {
+const addTextVertical = async () => {
 	let info = {
 		object: 'i-text',
 
@@ -3427,9 +3452,9 @@ async function addTextVertical() {
 
 	await displayImage(currentImageIndex, 0);
 	await saveCanvas();
-}
+};
 
-function setShapeTab() {
+const setShapeTab = () => {
 	let objects = myCanvas.getActiveObject();
 	let layer = getCurrentLayer();
 	let length = Object.keys(objects['_objects']).length;
@@ -3451,13 +3476,12 @@ function setShapeTab() {
 			fixedShapeTool.style.display = '';
 		}
 	}
-}
+};
 
-async function multiple() {
+const multiple = async () => {
 	cancel = false;
 
 	loading.style.display = '';
-
 	let filtered = layers.filter((v: any) => v.type === currentType && v.state.check === 'checked');
 	for (let i = 0; i < filtered.length; i++) {
 		if (cancel) {
@@ -3485,8 +3509,6 @@ async function multiple() {
 
 	loading.style.display = 'none';
 	if (testLayer !== 1) {
-		//todo list 이거 다 돌리지말고 몇개만 체크해서 돌릴수있게 처리해야함 .이라고 생각했지만 의미없을지도,,,? 그냥 이렇게 하는게 나을수도 .. ㅎ .. 일단 이거 생각좀 해보자..
-		//하ㅏㅏㅏㅏㅏㅏㅏ아
 		for (let i = 0; i < filtered.length; i++) {
 			if (cancel) {
 				floatingToast(`번역이 중지되었습니다.`, 'failed');
@@ -3510,9 +3532,9 @@ async function multiple() {
 	}
 
 	floatingToast(`번역이 완료되었습니다.`, 'information');
-}
+};
 
-async function single() {
+const single = async () => {
 	loading.style.display = '';
 
 	await processVisionData(null);
@@ -3525,17 +3547,17 @@ async function single() {
 	loading.style.display = 'none';
 
 	floatingToast(`번역이 완료되었습니다.`, 'information');
-}
+};
 
-function recovery() {
+const recovery = () => {
 	let accept = confirm('모든 이미지를 적용 전으로 되돌리시겠습니까?');
 
 	if (accept) {
 		window.location.reload();
 	}
-}
+};
 
-function exit() {
+const exit = () => {
 	let accept = confirm('편집을 종료하시겠습니까?');
 
 	if (!accept) {
@@ -3543,9 +3565,9 @@ function exit() {
 	}
 
 	window.close();
-}
+};
 
-async function thisRecovery() {
+const thisRecovery = async () => {
 	let accept = confirm('현재 이미지를 적용 전으로 되돌리시겠습니까?');
 	let layer = getCurrentLayer();
 
@@ -3572,9 +3594,9 @@ async function thisRecovery() {
 		layer.image.current = imageData;
 	}
 	displayImage(currentImageIndex, 0);
-}
+};
 
-async function zoomOut() {
+const zoomOut = async () => {
 	let percentage = parseInt(previewSize.value);
 
 	if (percentage - 10 < 0) {
@@ -3586,9 +3608,9 @@ async function zoomOut() {
 	previewSize.value = percentage;
 
 	displayImage(currentImageIndex, 0);
-}
+};
 
-async function zoomIn() {
+const zoomIn = async () => {
 	let percentage = parseInt(previewSize.value);
 	if (percentage + 10 > 200) {
 		percentage = 200;
@@ -3599,9 +3621,10 @@ async function zoomIn() {
 	previewSize.value = percentage;
 
 	displayImage(currentImageIndex, 0);
-}
+};
 //avif 확장자의 경우 버킷에 저장하고 다시 번역하게끔 저장하는 부분
-async function saveBadImage() {
+const saveBadImage = async () => {
+	if (!product) return;
 	loading.style.display = '';
 
 	let uploadData: any = {
@@ -3653,7 +3676,7 @@ async function saveBadImage() {
 			for (let j in product.productOptionName) {
 				for (let k in product.productOptionName[j].productOptionValue) {
 					let option = product.productOptionName[j].productOptionValue[k];
-					let optionImage = /product\/[0-9]+\/option/.test(option.image)
+					let optionImage = /product\/[0-9]+\/option/.test(option.image ?? '')
 						? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
 						: option.image;
 
@@ -3719,13 +3742,14 @@ async function saveBadImage() {
 				action: 'trangers',
 				source: JSON.parse(upload_json.data.updateNewProductImageBySomeone),
 			},
-			async function () {},
+			async () => {},
 		);
 	} else {
 		alert(upload_json.errors[0].message);
 	}
-}
-async function saveSingle() {
+};
+const saveSingle = async () => {
+	if (!product) return;
 	let accept = confirm('적용 시 이미지를 되돌릴 수 없습니다.');
 
 	if (!accept) {
@@ -3784,7 +3808,7 @@ async function saveSingle() {
 			for (let j in product.productOptionName) {
 				for (let k in product.productOptionName[j].productOptionValue) {
 					let option = product.productOptionName[j].productOptionValue[k];
-					let optionImage = /product\/[0-9]+\/option/.test(option.image)
+					let optionImage = /product\/[0-9]+\/option/.test(option.image ?? '')
 						? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
 						: option.image;
 
@@ -3850,7 +3874,7 @@ async function saveSingle() {
 				action: 'trangers',
 				source: JSON.parse(upload_json.data.updateNewProductImageBySomeone),
 			},
-			function () {
+			() => {
 				if (thisImageSave.getAttribute('key') == '5') {
 					window.close();
 				}
@@ -3861,9 +3885,11 @@ async function saveSingle() {
 	} else {
 		alert(upload_json.errors[0].message);
 	}
-}
+};
 
-async function saveMultiple() {
+const saveMultiple = async () => {
+	if (!product) return;
+
 	loading.style.display = '';
 
 	let uploadData: any = {
@@ -3886,7 +3912,7 @@ async function saveMultiple() {
 		}
 	}
 
-	let filtered = layers.filter((v: any) => v.type === currentType);
+	let filtered = layers.filter((v: any) => v.type === currentType && v.image.origin !== '');
 
 	for (let i = 0; i < filtered.length; i++) {
 		let dataUrl = null;
@@ -3914,10 +3940,10 @@ async function saveMultiple() {
 					dataUrl = await displayImage(filtered[i].index, 0);
 				}
 
-				for (let j in product.productOptionName) {
+				for (let j in product?.productOptionName) {
 					for (let k in product.productOptionName[j].productOptionValue) {
 						let option = product.productOptionName[j].productOptionValue[k];
-						let optionImage = /product\/[0-9]+\/option/.test(option.image)
+						let optionImage = /product\/[0-9]+\/option/.test(option.image ?? '')
 							? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
 							: option.image;
 
@@ -3984,17 +4010,16 @@ async function saveMultiple() {
 				action: 'trangers',
 				source: JSON.parse(upload_json.data.updateNewProductImageBySomeone),
 			},
-			function () {
-				window.close();
-			},
+			() => window.close(),
 		);
 	} else {
 		alert(upload_json.errors[0].message);
 	}
-}
+};
 
-function imageToolHelper() {
-	if (product.activeTaobaoProduct.shopName === 'express' || product.activeTaobaoProduct.shopName.includes('amazon')) {
+const imageToolHelper = () => {
+	if (!product) return;
+	if (product.activeTaobaoProduct.shopName === 'express' || product.activeTaobaoProduct.shopName?.includes('amazon')) {
 		startRegion.value = 'en';
 	}
 
@@ -4530,7 +4555,7 @@ function imageToolHelper() {
 
 			let dataPath = `트랜져스/${now.YY}${now.MM}${now.DD}_${now.hh}${now.mm}${now.ss}/`;
 
-			let indexed = (parseInt(filtered[i].index) + 1).toString().padStart(2, '0');
+			let indexed = (filtered[i].index + 1).toString().padStart(2, '0');
 
 			switch (currentType) {
 				case '1': {
@@ -4577,9 +4602,9 @@ function imageToolHelper() {
 	thisImageSave.addEventListener('click', () => {
 		saveSingle();
 	});
-}
+};
 
-function setKeyEvents() {
+const setKeyEvents = () => {
 	window.addEventListener('wheel', (e) => {
 		if (e.shiftKey) {
 			if (e.deltaY > 0) {
@@ -5042,9 +5067,9 @@ function setKeyEvents() {
 			saveCanvas();
 		}
 	});
-}
+};
 
-function setTypeEvents() {
+const setTypeEvents = () => {
 	let menuList = document.getElementsByClassName('menu');
 
 	for (let i = 0; i < menuList.length; i++) {
@@ -5068,8 +5093,8 @@ function setTypeEvents() {
 			}
 		});
 	}
-}
-async function reloadTranslate() {
+};
+const reloadTranslate = async () => {
 	while (true) {
 		if (loading.style.display === 'none') {
 			break;
@@ -5080,8 +5105,8 @@ async function reloadTranslate() {
 	await single();
 
 	return true;
-}
-async function autoTranslation() {
+};
+const autoTranslation = async () => {
 	while (true) {
 		if (loading.style.display === 'none') {
 			break;
@@ -5094,11 +5119,11 @@ async function autoTranslation() {
 	await saveMultiple();
 
 	return true;
-}
+};
 let testLayer = 1;
 let testLayerList: any = [];
 
-async function main() {
+const main = async () => {
 	loading.style.display = '';
 
 	chrome.runtime.onMessage.addListener((request, sender: any, sendResponse) => {
@@ -5112,7 +5137,6 @@ async function main() {
 				break;
 		}
 	});
-
 	let userQuery = `query {
         selectMyInfoByUser {
             email
@@ -5188,16 +5212,13 @@ async function main() {
 
 		return;
 	}
-
 	canvasSetting();
 
 	imageToolHelper();
 
 	setTypeEvents();
 	setKeyEvents();
-
 	await addToLayers();
-
 	currentType = '1';
 
 	await loadImageList();
@@ -5206,6 +5227,6 @@ async function main() {
 	menuToolbar.style.display = '';
 
 	loading.style.display = 'none';
-}
+};
 
 main();

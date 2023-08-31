@@ -162,188 +162,194 @@ export const TabOptionImages = observer((props: any) => {
 						p: 0.5,
 					}}
 				>
-					{props.item.productOptionName.map((v: any, nameIndex: number) => (
-						<Paper
-							sx={{
-								mb: 0.5,
-							}}
-							variant='outlined'
-						>
-							<Title subTitle dark={common.darkTheme}>
-								{v.name}
-							</Title>
-
-							<Box
-								sx={{
-									display: 'flex',
-									justifyContent: 'center',
-									p: 1,
-								}}
-							>
-								<ImageList
+					{props.item.productOptionName.map(
+						(v: { name: string; productOptionValue: { image: string; name: string }[] }, nameIndex: number) => {
+							return (
+								<Paper
 									sx={{
-										// width: 1208,
-										m: 0,
+										mb: 0.5,
 									}}
-									cols={5}
+									variant='outlined'
 								>
-									{v.productOptionValue.map((w: any, valueIndex: number) => (
-										<ImageListItem key={`image-${nameIndex}-${valueIndex}`}>
-											<Paper variant='outlined'>
-												<Title
-													subTitle
-													dark={common.darkTheme}
-													error={props.item.imageCheckList && props.item.imageCheckList[w.image]}
-												>
-													<Box
-														sx={{
-															display: 'flex',
-															alignItems: 'center',
-														}}
-													>
-														<Typography
-															noWrap
-															fontSize={13}
-															sx={{
-																textAlign: 'left',
-																width: 190,
-															}}
-														>
-															{w.name}
-														</Typography>
+									<Title subTitle dark={common.darkTheme}>
+										{v.name}
+									</Title>
 
-														{props.item.imageCheckList && props.item.imageCheckList[w.image] ? (
-															<ErrorIcon
-																color='error'
+									<Box
+										sx={{
+											display: 'flex',
+											justifyContent: 'center',
+											p: 1,
+										}}
+									>
+										<ImageList
+											sx={{
+												// width: 1208,
+												m: 0,
+											}}
+											cols={5}
+										>
+											{v.productOptionValue.map((w: any, valueIndex: number) => {
+												return (
+													<ImageListItem key={`image-${nameIndex}-${valueIndex}`}>
+														<Paper variant='outlined'>
+															<Title
+																subTitle
+																dark={common.darkTheme}
+																error={props.item.imageCheckList && props.item.imageCheckList[w.image]}
+															>
+																<Box
+																	sx={{
+																		display: 'flex',
+																		alignItems: 'center',
+																	}}
+																>
+																	<Typography
+																		noWrap
+																		fontSize={13}
+																		sx={{
+																			textAlign: 'left',
+																			width: 190,
+																		}}
+																	>
+																		{w.name}
+																	</Typography>
+
+																	{props.item.imageCheckList && props.item.imageCheckList[w.image] ? (
+																		<ErrorIcon
+																			color='error'
+																			sx={{
+																				fontSize: 18,
+																				mx: 0.5,
+																			}}
+																		/>
+																	) : null}
+																</Box>
+
+																<IconButton
+																	color='error'
+																	sx={{
+																		p: 0,
+																	}}
+																	size='small'
+																	onClick={() => {
+																		product.updateProductOptionImage(
+																			{
+																				...w,
+
+																				image: '',
+																			},
+																			props.index,
+																			nameIndex,
+																			valueIndex,
+																			'',
+																		);
+																	}}
+																>
+																	<ClearIcon />
+																</IconButton>
+															</Title>
+
+															<Box
 																sx={{
-																	fontSize: 18,
-																	mx: 0.5,
-																}}
-															/>
-														) : null}
-													</Box>
-
-													<IconButton
-														color='error'
-														sx={{
-															p: 0,
-														}}
-														size='small'
-														onClick={() => {
-															product.updateProductOptionImage(
-																{
-																	...w,
-
-																	image: '',
-																},
-																props.index,
-																nameIndex,
-																valueIndex,
-																'',
-															);
-														}}
-													>
-														<ClearIcon />
-													</IconButton>
-												</Title>
-
-												<Box
-													sx={{
-														p: 0.5,
-														height: 215,
-													}}
-												>
-													{w.image ? (
-														<Image
-															src={w.image}
-															alt={w.name}
-															width={215}
-															height={215}
-															style={{
-																objectFit: 'contain',
-															}}
-															onClick={(e) => {
-																product.setImagePopOver({
-																	element: e.target,
-																	data: { src: w.image },
-																	open: true,
-																});
-															}}
-														/>
-													) : (
-														<label htmlFor={`addOptionImage-${nameIndex}-${valueIndex}`}>
-															<input
-																accept='image/*'
-																id={`addOptionImage-${nameIndex}-${valueIndex}`}
-																type='file'
-																style={{
-																	display: 'none',
-																}}
-																onChange={async (e) => {
-																	const fileList = e.target.files ?? [];
-																	const fileData = await readFileDataURL(fileList[0]);
-
-																	product.updateProductOptionImage(
-																		{
-																			...w,
-
-																			newImage: fileList[0],
-																		},
-																		props.index,
-																		nameIndex,
-																		valueIndex,
-																		fileData,
-																	);
-																}}
-															/>
-
-															<IconButton
-																component='span'
-																sx={{
-																	p: 0,
-																	width: 215,
+																	p: 0.5,
 																	height: 215,
 																}}
 															>
-																<AddIcon />
-															</IconButton>
-														</label>
-													)}
-												</Box>
+																{w.image ? (
+																	<Image
+																		src={w.image}
+																		alt={w.name}
+																		width={215}
+																		height={215}
+																		style={{
+																			objectFit: 'contain',
+																		}}
+																		onClick={(e) => {
+																			product.setImagePopOver({
+																				element: e.target,
+																				data: { src: w.image },
+																				open: true,
+																			});
+																		}}
+																	/>
+																) : (
+																	<label htmlFor={`addOptionImage-${nameIndex}-${valueIndex}`}>
+																		<input
+																			accept='image/*'
+																			id={`addOptionImage-${nameIndex}-${valueIndex}`}
+																			type='file'
+																			style={{
+																				display: 'none',
+																			}}
+																			onChange={async (e) => {
+																				const fileList = e.target.files ?? [];
+																				const fileData = await readFileDataURL(fileList[0]);
 
-												<Title
-													subTitle
-													dark={common.darkTheme}
-													error={props.item.imageCheckList && props.item.imageCheckList[w.image]}
-												>
-													<Button
-														disabled={!w.image}
-														disableElevation
-														variant='contained'
-														color='info'
-														sx={{
-															fontSize: 13,
-															width: '100%',
-															height: 26,
-														}}
-														onClick={() => {
-															window.open(
-																chrome.runtime.getURL(
-																	`/trangers_single.html?id=${props.item.id}&type=2&index=${valueIndex}`,
-																),
-															);
-														}}
-													>
-														이미지 편집/번역
-													</Button>
-												</Title>
-											</Paper>
-										</ImageListItem>
-									))}
-								</ImageList>
-							</Box>
-						</Paper>
-					))}
+																				product.updateProductOptionImage(
+																					{
+																						...w,
+
+																						newImage: fileList[0],
+																					},
+																					props.index,
+																					nameIndex,
+																					valueIndex,
+																					fileData,
+																				);
+																			}}
+																		/>
+
+																		<IconButton
+																			component='span'
+																			sx={{
+																				p: 0,
+																				width: 215,
+																				height: 215,
+																			}}
+																		>
+																			<AddIcon />
+																		</IconButton>
+																	</label>
+																)}
+															</Box>
+
+															<Title
+																subTitle
+																dark={common.darkTheme}
+																error={props.item.imageCheckList && props.item.imageCheckList[w.image]}
+															>
+																<Button
+																	disabled={!w.image}
+																	disableElevation
+																	variant='contained'
+																	color='info'
+																	sx={{
+																		fontSize: 13,
+																		width: '100%',
+																		height: 26,
+																	}}
+																	onClick={() => {
+																		window.open(
+																			chrome.runtime.getURL(
+																				`/trangers_single.html?id=${props.item.id}&type=2&layer=${nameIndex}&index=${valueIndex}`,
+																			),
+																		);
+																	}}
+																>
+																	이미지 편집/번역
+																</Button>
+															</Title>
+														</Paper>
+													</ImageListItem>
+												);
+											})}
+										</ImageList>
+									</Box>
+								</Paper>
+							);
+						},
+					)}
 				</Box>
 			</Paper>
 		</>
