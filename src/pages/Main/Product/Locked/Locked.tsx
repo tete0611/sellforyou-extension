@@ -30,7 +30,7 @@ import { SetProductSillDataPopOver } from '../../PopOver/SetProductSillDataPopOv
 import { UpdateManyProductPopOver } from '../../PopOver/UpdateManyProductPopOver';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ReplaceOptionNamePopOver } from '../../PopOver/ReplaceOptionNamePopOver';
-import { Esm2UploadModal } from '../../Modals/Esm2UploadModal';
+// import { Esm2UploadModal } from '../../Modals/Esm2UploadModal';
 import { Esm2UploadDisabledModal } from '../../Modals/Esm2UploadDisabledModal';
 // import { PreviewModal } from '../../Modals/PreviewModal';
 
@@ -283,7 +283,7 @@ export const Locked = observer(() => {
 				<UploadModal />
 				<UploadFailedModal />
 				<UploadDisabledModal />
-				<Esm2UploadModal />
+				{/* <Esm2UploadModal /> */}
 				<Esm2UploadDisabledModal />
 			</Frame>
 		</ThemeProvider>

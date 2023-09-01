@@ -369,8 +369,8 @@ export const UploadModal = observer(() => {
 													control={
 														<Checkbox
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A077').disabled}
-															checked={common.uploadInfo.markets.find((v: any) => v.code === 'A077').upload}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'A077')?.disabled}
+															checked={common?.uploadInfo?.markets?.find((v) => v.code === 'A077')?.upload}
 															onChange={(e) => {
 																common.toggleUploadInfoMarket('A077', e.target.checked);
 															}}
@@ -394,8 +394,8 @@ export const UploadModal = observer(() => {
 											<StyledTableCell>
 												<Checkbox
 													size='small'
-													disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A077').disabled}
-													checked={common.uploadInfo.markets.find((v: any) => v.code === 'A077').video}
+													disabled={common.uploadInfo.markets?.find((v) => v.code === 'A077')?.disabled}
+													checked={common.uploadInfo.markets?.find((v) => v.code === 'A077')?.video}
 													onChange={(e) => {
 														common.toggleUploadInfoVideo('A077', e.target.checked);
 													}}
@@ -403,11 +403,11 @@ export const UploadModal = observer(() => {
 											</StyledTableCell>
 
 											<StyledTableCell>
-												{common.uploadInfo.markets.find((v: any) => v.code === 'A077').progress > 0 ? (
+												{common.uploadInfo.markets?.find((v) => v.code === 'A077')?.progress ?? 0 > 0 ? (
 													<CircularProgressWithLabel
-														value={common.uploadInfo.markets.find((v: any) => v.code === 'A077').progress}
+														value={common.uploadInfo.markets?.find((v) => v.code === 'A077')?.progress}
 													/>
-												) : common.uploadInfo.markets.find((v: any) => v.code === 'A077').disabled ? (
+												) : common.uploadInfo.markets?.find((v) => v.code === 'A077')?.disabled ? (
 													<Typography
 														sx={{
 															color: 'error.main',
@@ -437,8 +437,8 @@ export const UploadModal = observer(() => {
 													control={
 														<Checkbox
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B378').disabled}
-															checked={common.uploadInfo.markets.find((v: any) => v.code === 'B378').upload}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'B378')?.disabled}
+															checked={common.uploadInfo.markets.find((v) => v.code === 'B378')?.upload}
 															onChange={(e) => {
 																common.toggleUploadInfoMarket('B378', e.target.checked);
 															}}
@@ -462,11 +462,11 @@ export const UploadModal = observer(() => {
 											<StyledTableCell></StyledTableCell>
 
 											<StyledTableCell>
-												{common.uploadInfo.markets.find((v: any) => v.code === 'B378').progress > 0 ? (
+												{common.uploadInfo.markets.find((v) => v.code === 'B378')?.progress ?? 0 > 0 ? (
 													<CircularProgressWithLabel
-														value={common.uploadInfo.markets.find((v: any) => v.code === 'B378').progress}
+														value={common.uploadInfo.markets.find((v) => v.code === 'B378')?.progress}
 													/>
-												) : common.uploadInfo.markets.find((v: any) => v.code === 'B378').disabled ? (
+												) : common.uploadInfo.markets.find((v) => v.code === 'B378')?.disabled ? (
 													<Typography
 														sx={{
 															color: 'error.main',
@@ -498,8 +498,8 @@ export const UploadModal = observer(() => {
 													control={
 														<Checkbox
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A112').disabled}
-															checked={common.uploadInfo.markets.find((v: any) => v.code === 'A112').upload}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'A112')?.disabled}
+															checked={common.uploadInfo.markets.find((v) => v.code === 'A112')?.upload}
 															onChange={(e) => {
 																common.toggleUploadInfoMarket('A112', e.target.checked);
 															}}
@@ -523,8 +523,8 @@ export const UploadModal = observer(() => {
 											<StyledTableCell>
 												<Checkbox
 													size='small'
-													disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A112').disabled}
-													checked={common.uploadInfo.markets.find((v: any) => v.code === 'A112').video}
+													disabled={common.uploadInfo.markets.find((v) => v.code === 'A112')?.disabled}
+													checked={common.uploadInfo.markets.find((v) => v.code === 'A112')?.video}
 													onChange={(e) => {
 														common.toggleUploadInfoVideo('A112', e.target.checked);
 													}}
@@ -532,11 +532,11 @@ export const UploadModal = observer(() => {
 											</StyledTableCell>
 
 											<StyledTableCell>
-												{common.uploadInfo.markets.find((v: any) => v.code === 'A112').progress > 0 ? (
+												{common.uploadInfo.markets.find((v) => v.code === 'A112')?.progress ?? 0 > 0 ? (
 													<CircularProgressWithLabel
-														value={common.uploadInfo.markets.find((v: any) => v.code === 'A112').progress}
+														value={common.uploadInfo.markets.find((v) => v.code === 'A112')?.progress}
 													/>
-												) : common.uploadInfo.markets.find((v: any) => v.code === 'A112').disabled ? (
+												) : common.uploadInfo.markets.find((v) => v.code === 'A112')?.disabled ? (
 													<Typography
 														sx={{
 															color: 'error.main',
@@ -566,8 +566,8 @@ export const UploadModal = observer(() => {
 													control={
 														<Checkbox
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A113').disabled}
-															checked={common.uploadInfo.markets.find((v: any) => v.code === 'A113').upload}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'A113')?.disabled}
+															checked={common.uploadInfo.markets.find((v) => v.code === 'A113')?.upload}
 															onChange={(e) => {
 																common.toggleUploadInfoMarket('A113', e.target.checked);
 															}}
@@ -591,8 +591,8 @@ export const UploadModal = observer(() => {
 											<StyledTableCell>
 												<Checkbox
 													size='small'
-													disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A113').disabled}
-													checked={common.uploadInfo.markets.find((v: any) => v.code === 'A113').video}
+													disabled={common.uploadInfo.markets.find((v) => v.code === 'A113')?.disabled}
+													checked={common.uploadInfo.markets.find((v) => v.code === 'A113')?.video}
 													onChange={(e) => {
 														common.toggleUploadInfoVideo('A113', e.target.checked);
 													}}
@@ -600,11 +600,11 @@ export const UploadModal = observer(() => {
 											</StyledTableCell>
 
 											<StyledTableCell>
-												{common.uploadInfo.markets.find((v: any) => v.code === 'A113').progress > 0 ? (
+												{common.uploadInfo.markets.find((v) => v.code === 'A113')?.progress ?? 0 > 0 ? (
 													<CircularProgressWithLabel
-														value={common.uploadInfo.markets.find((v: any) => v.code === 'A113').progress}
+														value={common.uploadInfo.markets.find((v) => v.code === 'A113')?.progress}
 													/>
-												) : common.uploadInfo.markets.find((v: any) => v.code === 'A113').disabled ? (
+												) : common.uploadInfo.markets.find((v) => v.code === 'A113')?.disabled ? (
 													<Typography
 														sx={{
 															color: 'error.main',
@@ -636,8 +636,146 @@ export const UploadModal = observer(() => {
 													control={
 														<Checkbox
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A006').disabled}
-															checked={common.uploadInfo.markets.find((v: any) => v.code === 'A006').upload}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'A523')?.disabled}
+															checked={common.uploadInfo.markets.find((v) => v.code === 'A523')?.upload}
+															onChange={(e) => {
+																common.toggleUploadInfoMarket('A523', e.target.checked);
+															}}
+														/>
+													}
+													label={
+														<Box
+															sx={{
+																display: 'flex',
+																fontSize: 12,
+																alignItems: 'center',
+															}}
+														>
+															<img src='/resources/icon-gmarket.png' />
+															&nbsp; 지마켓 2.0
+														</Box>
+													}
+												/>
+											</StyledTableCell>
+
+											<StyledTableCell>
+												<Checkbox
+													size='small'
+													disabled={common.uploadInfo.markets.find((v) => v.code === 'A523')?.disabled}
+													checked={common.uploadInfo.markets.find((v) => v.code === 'A523')?.video}
+													onChange={(e) => {
+														common.toggleUploadInfoVideo('A523', e.target.checked);
+													}}
+												/>
+											</StyledTableCell>
+
+											<StyledTableCell>
+												{common.uploadInfo.markets.find((v) => v.code === 'A523')?.progress ?? 0 > 0 ? (
+													<CircularProgressWithLabel
+														value={common.uploadInfo.markets.find((v) => v.code === 'A523')?.progress}
+													/>
+												) : common.uploadInfo.markets.find((v) => v.code === 'A523')?.disabled ? (
+													<Typography
+														sx={{
+															color: 'error.main',
+															fontSize: 12,
+														}}
+													>
+														{common.uploadInfo.editable ? '수정불가' : '등록불가'}
+													</Typography>
+												) : (
+													<Typography
+														sx={{
+															color: 'success.main',
+															fontSize: 12,
+														}}
+													>
+														{common.uploadInfo.editable ? '수정가능' : '등록가능'}
+													</Typography>
+												)}
+											</StyledTableCell>
+
+											<StyledTableCell
+												sx={{
+													textAlign: 'left',
+												}}
+											>
+												<FormControlLabel
+													control={
+														<Checkbox
+															size='small'
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'A522')?.disabled}
+															checked={common.uploadInfo.markets.find((v) => v.code === 'A522')?.upload}
+															onChange={(e) => {
+																common.toggleUploadInfoMarket('A522', e.target.checked);
+															}}
+														/>
+													}
+													label={
+														<Box
+															sx={{
+																display: 'flex',
+																fontSize: 12,
+																alignItems: 'center',
+															}}
+														>
+															<img src='/resources/icon-auction.png' />
+															&nbsp; 옥션 2.0
+														</Box>
+													}
+												/>
+											</StyledTableCell>
+
+											<StyledTableCell>
+												<Checkbox
+													size='small'
+													disabled={common.uploadInfo.markets.find((v) => v.code === 'A522')?.disabled}
+													checked={common.uploadInfo.markets.find((v) => v.code === 'A522')?.video}
+													onChange={(e) => {
+														common.toggleUploadInfoVideo('A522', e.target.checked);
+													}}
+												/>
+											</StyledTableCell>
+
+											<StyledTableCell>
+												{common.uploadInfo.markets.find((v) => v.code === 'A522')?.progress ?? 0 > 0 ? (
+													<CircularProgressWithLabel
+														value={common.uploadInfo.markets.find((v) => v.code === 'A522')?.progress}
+													/>
+												) : common.uploadInfo.markets.find((v) => v.code === 'A522')?.disabled ? (
+													<Typography
+														sx={{
+															color: 'error.main',
+															fontSize: 12,
+														}}
+													>
+														{common.uploadInfo.editable ? '수정불가' : '등록불가'}
+													</Typography>
+												) : (
+													<Typography
+														sx={{
+															color: 'success.main',
+															fontSize: 12,
+														}}
+													>
+														{common.uploadInfo.editable ? '수정가능' : '등록가능'}
+													</Typography>
+												)}
+											</StyledTableCell>
+										</TableRow>
+
+										<TableRow>
+											<StyledTableCell
+												sx={{
+													textAlign: 'left',
+												}}
+											>
+												<FormControlLabel
+													control={
+														<Checkbox
+															size='small'
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'A006')?.disabled}
+															checked={common.uploadInfo.markets.find((v) => v.code === 'A006')?.upload}
 															onChange={(e) => {
 																common.toggleUploadInfoMarket('A006', e.target.checked);
 															}}
@@ -652,7 +790,7 @@ export const UploadModal = observer(() => {
 															}}
 														>
 															<img src='/resources/icon-gmarket.png' />
-															&nbsp; 지마켓
+															&nbsp; 지마켓 1.0
 														</Box>
 													}
 												/>
@@ -661,8 +799,8 @@ export const UploadModal = observer(() => {
 											<StyledTableCell>
 												<Checkbox
 													size='small'
-													disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A006').disabled}
-													checked={common.uploadInfo.markets.find((v: any) => v.code === 'A006').video}
+													disabled={common.uploadInfo.markets.find((v) => v.code === 'A006')?.disabled}
+													checked={common.uploadInfo.markets.find((v) => v.code === 'A006')?.video}
 													onChange={(e) => {
 														common.toggleUploadInfoVideo('A006', e.target.checked);
 													}}
@@ -670,11 +808,11 @@ export const UploadModal = observer(() => {
 											</StyledTableCell>
 
 											<StyledTableCell>
-												{common.uploadInfo.markets.find((v: any) => v.code === 'A006').progress > 0 ? (
+												{common.uploadInfo.markets.find((v) => v.code === 'A006')?.progress ?? 0 > 0 ? (
 													<CircularProgressWithLabel
-														value={common.uploadInfo.markets.find((v: any) => v.code === 'A006').progress}
+														value={common.uploadInfo.markets.find((v) => v.code === 'A006')?.progress}
 													/>
-												) : common.uploadInfo.markets.find((v: any) => v.code === 'A006').disabled ? (
+												) : common.uploadInfo.markets.find((v) => v.code === 'A006')?.disabled ? (
 													<Typography
 														sx={{
 															color: 'error.main',
@@ -704,8 +842,8 @@ export const UploadModal = observer(() => {
 													control={
 														<Checkbox
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A001').disabled}
-															checked={common.uploadInfo.markets.find((v: any) => v.code === 'A001').upload}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'A001')?.disabled}
+															checked={common.uploadInfo.markets.find((v) => v.code === 'A001')?.upload}
 															onChange={(e) => {
 																common.toggleUploadInfoMarket('A001', e.target.checked);
 															}}
@@ -720,7 +858,7 @@ export const UploadModal = observer(() => {
 															}}
 														>
 															<img src='/resources/icon-auction.png' />
-															&nbsp; 옥션
+															&nbsp; 옥션 1.0
 														</Box>
 													}
 												/>
@@ -729,8 +867,8 @@ export const UploadModal = observer(() => {
 											<StyledTableCell>
 												<Checkbox
 													size='small'
-													disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A001').disabled}
-													checked={common.uploadInfo.markets.find((v: any) => v.code === 'A001').video}
+													disabled={common.uploadInfo.markets.find((v) => v.code === 'A001')?.disabled}
+													checked={common.uploadInfo.markets.find((v) => v.code === 'A001')?.video}
 													onChange={(e) => {
 														common.toggleUploadInfoVideo('A001', e.target.checked);
 													}}
@@ -738,11 +876,11 @@ export const UploadModal = observer(() => {
 											</StyledTableCell>
 
 											<StyledTableCell>
-												{common.uploadInfo.markets.find((v: any) => v.code === 'A001').progress > 0 ? (
+												{common.uploadInfo.markets.find((v) => v.code === 'A001')?.progress ?? 0 > 0 ? (
 													<CircularProgressWithLabel
-														value={common.uploadInfo.markets.find((v: any) => v.code === 'A001').progress}
+														value={common.uploadInfo.markets.find((v) => v.code === 'A001')?.progress}
 													/>
-												) : common.uploadInfo.markets.find((v: any) => v.code === 'A001').disabled ? (
+												) : common.uploadInfo.markets.find((v) => v.code === 'A001')?.disabled ? (
 													<Typography
 														sx={{
 															color: 'error.main',
@@ -774,8 +912,8 @@ export const UploadModal = observer(() => {
 													control={
 														<Checkbox
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A027').disabled}
-															checked={common.uploadInfo.markets.find((v: any) => v.code === 'A027').upload}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'A027')?.disabled}
+															checked={common.uploadInfo.markets.find((v) => v.code === 'A027')?.upload}
 															onChange={(e) => {
 																common.toggleUploadInfoMarket('A027', e.target.checked);
 															}}
@@ -799,8 +937,8 @@ export const UploadModal = observer(() => {
 											<StyledTableCell>
 												<Checkbox
 													size='small'
-													disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A027').disabled}
-													checked={common.uploadInfo.markets.find((v: any) => v.code === 'A027').video}
+													disabled={common.uploadInfo.markets.find((v) => v.code === 'A027')?.disabled}
+													checked={common.uploadInfo.markets.find((v) => v.code === 'A027')?.video}
 													onChange={(e) => {
 														common.toggleUploadInfoVideo('A027', e.target.checked);
 													}}
@@ -808,11 +946,11 @@ export const UploadModal = observer(() => {
 											</StyledTableCell>
 
 											<StyledTableCell>
-												{common.uploadInfo.markets.find((v: any) => v.code === 'A027').progress > 0 ? (
+												{common.uploadInfo.markets.find((v) => v.code === 'A027')?.progress ?? 0 > 0 ? (
 													<CircularProgressWithLabel
-														value={common.uploadInfo.markets.find((v: any) => v.code === 'A027').progress}
+														value={common.uploadInfo.markets.find((v) => v.code === 'A027')?.progress}
 													/>
-												) : common.uploadInfo.markets.find((v: any) => v.code === 'A027').disabled ? (
+												) : common.uploadInfo.markets.find((v) => v.code === 'A027')?.disabled ? (
 													<Typography
 														sx={{
 															color: 'error.main',
@@ -842,8 +980,8 @@ export const UploadModal = observer(() => {
 													control={
 														<Checkbox
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B719').disabled}
-															checked={common.uploadInfo.markets.find((v: any) => v.code === 'B719').upload}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'B719')?.disabled}
+															checked={common.uploadInfo.markets.find((v) => v.code === 'B719')?.upload}
 															onChange={(e) => {
 																common.toggleUploadInfoMarket('B719', e.target.checked);
 															}}
@@ -867,11 +1005,11 @@ export const UploadModal = observer(() => {
 											<StyledTableCell></StyledTableCell>
 
 											<StyledTableCell>
-												{common.uploadInfo.markets.find((v: any) => v.code === 'B719').progress > 0 ? (
+												{common.uploadInfo.markets.find((v) => v.code === 'B719')?.progress ?? 0 > 0 ? (
 													<CircularProgressWithLabel
-														value={common.uploadInfo.markets.find((v: any) => v.code === 'B719').progress}
+														value={common.uploadInfo.markets.find((v) => v.code === 'B719')?.progress}
 													/>
-												) : common.uploadInfo.markets.find((v: any) => v.code === 'B719').disabled ? (
+												) : common.uploadInfo.markets.find((v) => v.code === 'B719')?.disabled ? (
 													<Typography
 														sx={{
 															color: 'error.main',
@@ -903,8 +1041,8 @@ export const UploadModal = observer(() => {
 													control={
 														<Checkbox
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A524').disabled}
-															checked={common.uploadInfo.markets.find((v: any) => v.code === 'A524').upload}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'A524')?.disabled}
+															checked={common.uploadInfo.markets.find((v) => v.code === 'A524')?.upload}
 															onChange={(e) => {
 																common.toggleUploadInfoMarket('A524', e.target.checked);
 															}}
@@ -928,11 +1066,11 @@ export const UploadModal = observer(() => {
 											<StyledTableCell></StyledTableCell>
 
 											<StyledTableCell>
-												{common.uploadInfo.markets.find((v: any) => v.code === 'A524').progress > 0 ? (
+												{common.uploadInfo.markets.find((v) => v.code === 'A524')?.progress ?? 0 > 0 ? (
 													<CircularProgressWithLabel
-														value={common.uploadInfo.markets.find((v: any) => v.code === 'A524').progress}
+														value={common.uploadInfo.markets.find((v) => v.code === 'A524')?.progress}
 													/>
-												) : common.uploadInfo.markets.find((v: any) => v.code === 'A524').disabled ? (
+												) : common.uploadInfo.markets.find((v) => v.code === 'A524')?.disabled ? (
 													<Typography
 														sx={{
 															color: 'error.main',
@@ -962,8 +1100,8 @@ export const UploadModal = observer(() => {
 													control={
 														<Checkbox
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A525').disabled}
-															checked={common.uploadInfo.markets.find((v: any) => v.code === 'A525').upload}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'A525')?.disabled}
+															checked={common.uploadInfo.markets.find((v) => v.code === 'A525')?.upload}
 															onChange={(e) => {
 																common.toggleUploadInfoMarket('A525', e.target.checked);
 															}}
@@ -987,11 +1125,11 @@ export const UploadModal = observer(() => {
 											<StyledTableCell></StyledTableCell>
 
 											<StyledTableCell>
-												{common.uploadInfo.markets.find((v: any) => v.code === 'A525').progress > 0 ? (
+												{common.uploadInfo.markets.find((v) => v.code === 'A525')?.progress ?? 0 > 0 ? (
 													<CircularProgressWithLabel
-														value={common.uploadInfo.markets.find((v: any) => v.code === 'A525').progress}
+														value={common.uploadInfo.markets.find((v) => v.code === 'A525')?.progress}
 													/>
-												) : common.uploadInfo.markets.find((v: any) => v.code === 'A525').disabled ? (
+												) : common.uploadInfo.markets.find((v) => v.code === 'A525')?.disabled ? (
 													<Typography
 														sx={{
 															color: 'error.main',
@@ -1023,8 +1161,8 @@ export const UploadModal = observer(() => {
 													control={
 														<Checkbox
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B956').disabled}
-															checked={common.uploadInfo.markets.find((v: any) => v.code === 'B956').upload}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'B956')?.disabled}
+															checked={common.uploadInfo.markets.find((v) => v.code === 'B956')?.upload}
 															onChange={(e) => {
 																common.toggleUploadInfoMarket('B956', e.target.checked);
 															}}
@@ -1048,11 +1186,11 @@ export const UploadModal = observer(() => {
 											<StyledTableCell></StyledTableCell>
 
 											<StyledTableCell>
-												{common.uploadInfo.markets.find((v: any) => v.code === 'B956').progress > 0 ? (
+												{common.uploadInfo.markets.find((v) => v.code === 'B956')?.progress ?? 0 > 0 ? (
 													<CircularProgressWithLabel
-														value={common.uploadInfo.markets.find((v: any) => v.code === 'B956').progress}
+														value={common.uploadInfo.markets.find((v) => v.code === 'B956')?.progress}
 													/>
-												) : common.uploadInfo.markets.find((v: any) => v.code === 'B956').disabled ? (
+												) : common.uploadInfo.markets.find((v) => v.code === 'B956')?.disabled ? (
 													<Typography
 														sx={{
 															color: 'error.main',
@@ -1079,7 +1217,7 @@ export const UploadModal = observer(() => {
 								</Box>
 							</Paper>
 
-							{common.uploadInfo.markets.find((v: any) => v.code === 'B719').upload ? (
+							{common.uploadInfo.markets.find((v) => v.code === 'B719')?.upload ? (
 								<Paper
 									variant='outlined'
 									sx={{
@@ -1093,13 +1231,13 @@ export const UploadModal = observer(() => {
 									위메프 발송정책
 									<FormControl
 										sx={{ width: 250 }}
-										error={!common.uploadInfo.markets.find((v: any) => v.code === 'B719').policyInfo}
+										error={!common.uploadInfo.markets.find((v) => v.code === 'B719')?.policyInfo}
 									>
 										<ComboBox
 											sx={{
 												width: '100%',
 											}}
-											value={common.uploadInfo.markets.find((v: any) => v.code === 'B719').policyInfo}
+											value={common.uploadInfo.markets.find((v) => v.code === 'B719')?.policyInfo}
 											onOpen={async () => {
 												if (common.deliveryPolicy.wemakepricePolicyList.length > 0) {
 													return;
@@ -1134,14 +1272,14 @@ export const UploadModal = observer(() => {
 											))}
 										</ComboBox>
 
-										{!common.uploadInfo.markets.find((v: any) => v.code === 'B719').policyInfo ? (
+										{!common.uploadInfo.markets.find((v) => v.code === 'B719')?.policyInfo ? (
 											<FormHelperText>발송정책을 설정해주세요.</FormHelperText>
 										) : null}
 									</FormControl>
 								</Paper>
 							) : null}
 
-							{common.uploadInfo.markets.find((v: any) => v.code === 'A524').upload ? (
+							{common.uploadInfo.markets.find((v) => v.code === 'A524')?.upload ? (
 								<Paper
 									variant='outlined'
 									sx={{
@@ -1155,13 +1293,13 @@ export const UploadModal = observer(() => {
 									롯데온 발송정책
 									<FormControl
 										sx={{ width: 250 }}
-										error={!common.uploadInfo.markets.find((v: any) => v.code === 'A524').policyInfo}
+										error={!common.uploadInfo.markets.find((v) => v.code === 'A524')?.policyInfo}
 									>
 										<ComboBox
 											sx={{
 												width: '100%',
 											}}
-											value={common.uploadInfo.markets.find((v: any) => v.code === 'A524').policyInfo}
+											value={common.uploadInfo.markets.find((v) => v.code === 'A524')?.policyInfo}
 											onOpen={async () => {
 												if (common.deliveryPolicy.lotteonPolicyList.length > 0) {
 													return;
@@ -1207,14 +1345,14 @@ export const UploadModal = observer(() => {
 											))}
 										</ComboBox>
 
-										{!common.uploadInfo.markets.find((v: any) => v.code === 'A524').policyInfo ? (
+										{!common.uploadInfo.markets.find((v) => v.code === 'A524')?.policyInfo ? (
 											<FormHelperText>발송정책을 설정해주세요.</FormHelperText>
 										) : null}
 									</FormControl>
 								</Paper>
 							) : null}
 
-							{common.uploadInfo.markets.find((v: any) => v.code === 'A525').upload ? (
+							{common.uploadInfo.markets.find((v) => v.code === 'A525')?.upload ? (
 								<Paper
 									variant='outlined'
 									sx={{
@@ -1228,13 +1366,13 @@ export const UploadModal = observer(() => {
 									롯데온 발송정책
 									<FormControl
 										sx={{ width: 250 }}
-										error={!common.uploadInfo.markets.find((v: any) => v.code === 'A525').policyInfo}
+										error={!common.uploadInfo.markets.find((v) => v.code === 'A525')?.policyInfo}
 									>
 										<ComboBox
 											sx={{
 												width: '100%',
 											}}
-											value={common.uploadInfo.markets.find((v: any) => v.code === 'A525').policyInfo}
+											value={common.uploadInfo.markets.find((v) => v.code === 'A525')?.policyInfo}
 											onOpen={async () => {
 												if (common.deliveryPolicy.lotteonPolicyList.length > 0) {
 													return;
@@ -1280,14 +1418,14 @@ export const UploadModal = observer(() => {
 											))}
 										</ComboBox>
 
-										{!common.uploadInfo.markets.find((v: any) => v.code === 'A525').policyInfo ? (
+										{!common.uploadInfo.markets.find((v) => v.code === 'A525')?.policyInfo ? (
 											<FormHelperText>발송정책을 설정해주세요.</FormHelperText>
 										) : null}
 									</FormControl>
 								</Paper>
 							) : null}
 
-							{common.uploadInfo.markets.find((v: any) => v.code === 'B956').upload ? (
+							{common.uploadInfo.markets.find((v) => v.code === 'B956')?.upload ? (
 								<Paper
 									variant='outlined'
 									sx={{
@@ -1301,13 +1439,13 @@ export const UploadModal = observer(() => {
 									티몬 발송정책
 									<FormControl
 										sx={{ width: 250 }}
-										error={!common.uploadInfo.markets.find((v: any) => v.code === 'B956').policyInfo}
+										error={!common.uploadInfo.markets.find((v) => v.code === 'B956')?.policyInfo}
 									>
 										<ComboBox
 											sx={{
 												width: '100%',
 											}}
-											value={common.uploadInfo.markets.find((v: any) => v.code === 'B956').policyInfo}
+											value={common.uploadInfo.markets.find((v) => v.code === 'B956')?.policyInfo}
 											onOpen={async () => {
 												if (common.deliveryPolicy.tmonPolicyList.length > 0) {
 													return;
@@ -1350,7 +1488,7 @@ export const UploadModal = observer(() => {
 											))}
 										</ComboBox>
 
-										{!common.uploadInfo.markets.find((v: any) => v.code === 'B956').policyInfo ? (
+										{!common.uploadInfo.markets.find((v) => v.code === 'B956')?.policyInfo ? (
 											<FormHelperText>발송정책을 설정해주세요.</FormHelperText>
 										) : null}
 									</FormControl>

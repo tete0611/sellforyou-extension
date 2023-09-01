@@ -7,7 +7,7 @@ import { Header } from '../../Common/Header';
 import { ProductTables } from '../Components/ProductTables';
 import { UploadModal } from '../../Modals/UploadModal';
 import { UploadFailedModal } from '../../Modals/UploadFailedModal';
-import { Esm2UploadModal } from '../../Modals/Esm2UploadModal';
+// import { Esm2UploadModal } from '../../Modals/Esm2UploadModal';
 import { AppContext } from '../../../../containers/AppContext';
 import { ManyCategoryModal } from '../../Modals/ManyCategoryModal';
 import { ManyNameModal } from '../../Modals/ManyNameModal';
@@ -282,7 +282,7 @@ export const Registered = observer(() => {
 				<MyKeywardModal />
 				<SearchFilterModal />
 				<UploadModal />
-				<Esm2UploadModal />
+				{/* <Esm2UploadModal /> */}
 				<UploadFailedModal />
 				<UploadDisabledModal />
 				<Esm2UploadDisabledModal />
