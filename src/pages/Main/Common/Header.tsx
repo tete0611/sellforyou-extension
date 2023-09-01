@@ -834,7 +834,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{common.uploadInfo.markets.find((v: any) => v.code === 'A077' && v.connected) ? (
+														{common.uploadInfo.markets.find((v) => v.code === 'A077' && v.connected) ? (
 															<img src='/resources/icon-smartstore.png' />
 														) : (
 															<img src='/resources/icon-smartstore-gray.png' />
@@ -843,7 +843,7 @@ export const Header = observer(() => {
 														<Switch
 															size='small'
 															checked={common.user.userInfo?.naverUseType === 'Y' ? true : false}
-															disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A077').connected}
+															disabled={!common.uploadInfo.markets.find((v) => v.code === 'A077')?.connected}
 															onChange={async (e) => {
 																const naverUseType = e.target.checked ? 'Y' : 'N';
 
@@ -854,10 +854,9 @@ export const Header = observer(() => {
 																	naverUseType,
 																});
 
-																common.uploadInfo.markets.find((v: any) => v.code === 'A077').disabled =
-																	!e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'A077').upload = e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'A077').video = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A077')!.disabled = !e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A077')!.upload = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A077')!.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -870,7 +869,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{common.uploadInfo.markets.find((v: any) => v.code === 'B378' && v.connected) ? (
+														{common.uploadInfo.markets.find((v) => v.code === 'B378' && v.connected) ? (
 															<img src='/resources/icon-coupang.png' />
 														) : (
 															<img src='/resources/icon-coupang-gray.png' />
@@ -879,7 +878,7 @@ export const Header = observer(() => {
 														<Switch
 															size='small'
 															checked={common.user.userInfo?.coupangUseType === 'Y' ? true : false}
-															disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected}
+															disabled={!common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected}
 															onChange={async (e) => {
 																const coupangUseType = e.target.checked ? 'Y' : 'N';
 
@@ -890,10 +889,9 @@ export const Header = observer(() => {
 																	coupangUseType,
 																});
 
-																common.uploadInfo.markets.find((v: any) => v.code === 'B378').disabled =
-																	!e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'B378').upload = e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'B378').video = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'B378')!.disabled = !e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'B378')!.upload = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'B378')!.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -906,7 +904,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{common.uploadInfo.markets.find((v: any) => v.code === 'A112' && v.connected) ? (
+														{common.uploadInfo.markets.find((v) => v.code === 'A112' && v.connected) ? (
 															<img src='/resources/icon-street-global.png' />
 														) : (
 															<img src='/resources/icon-street-global-gray.png' />
@@ -915,7 +913,7 @@ export const Header = observer(() => {
 														<Switch
 															size='small'
 															checked={common.user.userInfo?.streetUseType === 'Y' ? true : false}
-															disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected}
+															disabled={!common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected}
 															onChange={async (e) => {
 																const streetUseType = e.target.checked ? 'Y' : 'N';
 
@@ -926,10 +924,9 @@ export const Header = observer(() => {
 																	streetUseType,
 																});
 
-																common.uploadInfo.markets.find((v: any) => v.code === 'A112').disabled =
-																	!e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'A112').upload = e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'A112').video = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A112')!.disabled = !e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A112')!.upload = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A112')!.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -942,7 +939,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{common.uploadInfo.markets.find((v: any) => v.code === 'A113' && v.connected) ? (
+														{common.uploadInfo.markets.find((v) => v.code === 'A113' && v.connected) ? (
 															<img src='/resources/icon-street-normal.png' />
 														) : (
 															<img src='/resources/icon-street-normal-gray.png' />
@@ -951,7 +948,7 @@ export const Header = observer(() => {
 														<Switch
 															size='small'
 															checked={common.user.userInfo?.streetNormalUseType === 'Y' ? true : false}
-															disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected}
+															disabled={!common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected}
 															onChange={async (e) => {
 																const streetNormalUseType = e.target.checked ? 'Y' : 'N';
 
@@ -964,10 +961,9 @@ export const Header = observer(() => {
 																	streetNormalUseType,
 																});
 
-																common.uploadInfo.markets.find((v: any) => v.code === 'A113').disabled =
-																	!e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'A113').upload = e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'A113').video = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A113')!.disabled = !e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A113')!.upload = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A113')!.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -980,7 +976,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{common.uploadInfo.markets.find((v: any) => v.code === 'A006' && v.connected) ? (
+														{common.uploadInfo.markets.find((v) => v.code === 'A006' && v.connected) ? (
 															<img src='/resources/icon-gmarket.png' />
 														) : (
 															<img src='/resources/icon-gmarket-gray.png' />
@@ -989,7 +985,7 @@ export const Header = observer(() => {
 														<Switch
 															size='small'
 															checked={common.user.userInfo?.gmarketUseType === 'Y' ? true : false}
-															disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A006').connected}
+															disabled={!common.uploadInfo.markets.find((v) => v.code === 'A006')?.connected}
 															onChange={async (e) => {
 																const gmarketUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1000,10 +996,9 @@ export const Header = observer(() => {
 																	gmarketUseType,
 																});
 
-																common.uploadInfo.markets.find((v: any) => v.code === 'A006').disabled =
-																	!e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'A006').upload = e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'A006').video = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A006')!.disabled = !e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A006')!.upload = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A006')!.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -1016,7 +1011,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{common.uploadInfo.markets.find((v: any) => v.code === 'A001' && v.connected) ? (
+														{common.uploadInfo.markets.find((v) => v.code === 'A001' && v.connected) ? (
 															<img src='/resources/icon-auction.png' />
 														) : (
 															<img src='/resources/icon-auction-gray.png' />
@@ -1025,7 +1020,7 @@ export const Header = observer(() => {
 														<Switch
 															size='small'
 															checked={common.user.userInfo?.auctionUseType === 'Y' ? true : false}
-															disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A001').connected}
+															disabled={!common.uploadInfo.markets.find((v) => v.code === 'A001')?.connected}
 															onChange={async (e) => {
 																const auctionUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1036,10 +1031,9 @@ export const Header = observer(() => {
 																	auctionUseType,
 																});
 
-																common.uploadInfo.markets.find((v: any) => v.code === 'A001').disabled =
-																	!e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'A001').upload = e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'A001').video = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A001')!.disabled = !e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A001')!.upload = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A001')!.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -1052,7 +1046,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{common.uploadInfo.markets.find((v: any) => v.code === 'A027' && v.connected) ? (
+														{common.uploadInfo.markets.find((v) => v.code === 'A027' && v.connected) ? (
 															<img src='/resources/icon-interpark.png' />
 														) : (
 															<img src='/resources/icon-interpark-gray.png' />
@@ -1061,7 +1055,7 @@ export const Header = observer(() => {
 														<Switch
 															size='small'
 															checked={common.user.userInfo?.interparkUseType === 'Y' ? true : false}
-															disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected}
+															disabled={!common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected}
 															onChange={async (e) => {
 																const interparkUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1072,10 +1066,9 @@ export const Header = observer(() => {
 																	interparkUseType,
 																});
 
-																common.uploadInfo.markets.find((v: any) => v.code === 'A027').disabled =
-																	!e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'A027').upload = e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'A027').video = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A027')!.disabled = !e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A027')!.upload = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'A027')!.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -1088,7 +1081,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{common.uploadInfo.markets.find((v: any) => v.code === 'B719' && v.connected) ? (
+														{common.uploadInfo.markets.find((v) => v.code === 'B719' && v.connected) ? (
 															<img src='/resources/icon-wemakeprice.png' />
 														) : (
 															<img src='/resources/icon-wemakeprice-gray.png' />
@@ -1097,7 +1090,7 @@ export const Header = observer(() => {
 														<Switch
 															size='small'
 															checked={common.user.userInfo?.wemakepriceUseType === 'Y' ? true : false}
-															disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'B719').connected}
+															disabled={!common.uploadInfo.markets.find((v) => v.code === 'B719')?.connected}
 															onChange={async (e) => {
 																const wemakepriceUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1110,10 +1103,9 @@ export const Header = observer(() => {
 																	wemakepriceUseType,
 																});
 
-																common.uploadInfo.markets.find((v: any) => v.code === 'B719').disabled =
-																	!e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'B719').upload = e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'B719').video = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'B719')!.disabled = !e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'B719')!.upload = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'B719')!.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -1126,7 +1118,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{common.uploadInfo.markets.find((v: any) => v.code === 'A524' && v.connected) ? (
+														{common.uploadInfo.markets.find((v) => v.code === 'A524' && v.connected) ? (
 															<img src='/resources/icon-lotteon-global.png' />
 														) : (
 															<img src='/resources/icon-lotteon-global-gray.png' />
@@ -1137,8 +1129,8 @@ export const Header = observer(() => {
 															checked={common.user.userInfo?.lotteonUseType === 'Y' ? true : false}
 															disabled={
 																!(
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A524').connected ||
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A525').connected
+																	common.uploadInfo.markets.find((v) => v.code === 'A524')?.connected ||
+																	common.uploadInfo.markets.find((v) => v.code === 'A525')?.connected
 																)
 															}
 															onChange={async (e) => {
@@ -1152,19 +1144,15 @@ export const Header = observer(() => {
 																});
 
 																if (common.user.userInfo.lotteonSellerType === 'G') {
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A524').disabled =
+																	common.uploadInfo.markets.find((v) => v.code === 'A524')!.disabled =
 																		!e.target.checked;
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A524').upload =
-																		e.target.checked;
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A524').video =
-																		e.target.checked;
+																	common.uploadInfo.markets.find((v) => v.code === 'A524')!.upload = e.target.checked;
+																	common.uploadInfo.markets.find((v) => v.code === 'A524')!.video = e.target.checked;
 																} else {
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A525').disabled =
+																	common.uploadInfo.markets.find((v) => v.code === 'A525')!.disabled =
 																		!e.target.checked;
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A525').upload =
-																		e.target.checked;
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A525').video =
-																		e.target.checked;
+																	common.uploadInfo.markets.find((v) => v.code === 'A525')!.upload = e.target.checked;
+																	common.uploadInfo.markets.find((v) => v.code === 'A525')!.video = e.target.checked;
 																}
 															}}
 														/>
@@ -1178,7 +1166,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{common.uploadInfo.markets.find((v: any) => v.code === 'A525' && v.connected) ? (
+														{common.uploadInfo.markets.find((v) => v.code === 'A525' && v.connected) ? (
 															<img src='/resources/icon-lotteon-normal.png' />
 														) : (
 															<img src='/resources/icon-lotteon-normal-gray.png' />
@@ -1189,8 +1177,8 @@ export const Header = observer(() => {
 															checked={common.user.userInfo?.lotteonUseType === 'Y' ? true : false}
 															disabled={
 																!(
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A524').connected ||
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A525').connected
+																	common.uploadInfo.markets.find((v) => v.code === 'A524')?.connected ||
+																	common.uploadInfo.markets.find((v) => v.code === 'A525')?.connected
 																)
 															}
 															onChange={async (e) => {
@@ -1204,19 +1192,15 @@ export const Header = observer(() => {
 																});
 
 																if (common.user.userInfo.lotteonSellerType === 'G') {
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A524').disabled =
+																	common.uploadInfo.markets.find((v) => v.code === 'A524')!.disabled =
 																		!e.target.checked;
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A524').upload =
-																		e.target.checked;
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A524').video =
-																		e.target.checked;
+																	common.uploadInfo.markets.find((v) => v.code === 'A524')!.upload = e.target.checked;
+																	common.uploadInfo.markets.find((v) => v.code === 'A524')!.video = e.target.checked;
 																} else {
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A525').disabled =
+																	common.uploadInfo.markets.find((v) => v.code === 'A525')!.disabled =
 																		!e.target.checked;
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A525').upload =
-																		e.target.checked;
-																	common.uploadInfo.markets.find((v: any) => v.code === 'A525').video =
-																		e.target.checked;
+																	common.uploadInfo.markets.find((v) => v.code === 'A525')!.upload = e.target.checked;
+																	common.uploadInfo.markets.find((v) => v.code === 'A525')!.video = e.target.checked;
 																}
 															}}
 														/>
@@ -1230,7 +1214,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{common.uploadInfo.markets.find((v: any) => v.code === 'B956' && v.connected) ? (
+														{common.uploadInfo.markets.find((v) => v.code === 'B956' && v.connected) ? (
 															<img src='/resources/icon-tmon.png' />
 														) : (
 															<img src='/resources/icon-tmon-gray.png' />
@@ -1239,7 +1223,7 @@ export const Header = observer(() => {
 														<Switch
 															size='small'
 															checked={common.user.userInfo?.tmonUseType === 'Y' ? true : false}
-															disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'B956').connected}
+															disabled={!common.uploadInfo.markets.find((v) => v.code === 'B956')?.connected}
 															onChange={async (e) => {
 																const tmonUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1250,10 +1234,9 @@ export const Header = observer(() => {
 																	tmonUseType,
 																});
 
-																common.uploadInfo.markets.find((v: any) => v.code === 'B956').disabled =
-																	!e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'B956').upload = e.target.checked;
-																common.uploadInfo.markets.find((v: any) => v.code === 'B956').video = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'B956')!.disabled = !e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'B956')!.upload = e.target.checked;
+																common.uploadInfo.markets.find((v) => v.code === 'B956')!.video = e.target.checked;
 															}}
 														/>
 													</Box>

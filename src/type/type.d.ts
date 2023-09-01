@@ -26,3 +26,19 @@ export type Layer = {
 	};
 	type: string;
 };
+
+export type UploadInfo = {
+	stopped: boolean;
+	editable: boolean;
+	uploadable: boolean;
+	markets: {
+		code: string;
+		name: string;
+		connected: boolean;
+		disabled: boolean;
+		upload: boolean;
+		video: boolean;
+		progress: number;
+		policyInfo?: any;
+	}[];
+};
