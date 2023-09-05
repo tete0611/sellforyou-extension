@@ -516,8 +516,8 @@ export class common {
 
 				if (this.user.userInfo.gmarketUseType === 'Y') {
 					result!.disabled = false;
-					result!.upload = true;
-					result!.video = true;
+					result!.upload = false;
+					result!.video = false;
 				}
 			}
 
@@ -551,8 +551,8 @@ export class common {
 
 				if (this.user.userInfo.auctionUseType === 'Y') {
 					result!.disabled = false;
-					result!.upload = true;
-					result!.video = true;
+					result!.upload = false;
+					result!.video = false;
 				}
 			}
 
@@ -1389,7 +1389,9 @@ export class common {
 
 	// 전체마켓 등록 여부 설정
 	toggleUploadInfoMarketAll = (value: boolean) => {
-		this.uploadInfo.markets.filter((v: any) => !v.disabled).map((v: any) => (v.upload = value));
+		this.uploadInfo.markets
+			.filter((v) => !v.disabled)
+			.map((v) => (v.code === 'A006' || v.code === 'A001' ? (v.upload = false) : (v.upload = value)));
 	};
 
 	// 오픈마켓 동영상 업로드 여부 설정
@@ -1399,7 +1401,9 @@ export class common {
 
 	// 전체마켓 동영상 업로드 여부 설정
 	toggleUploadInfoVideoAll = (value: boolean) => {
-		this.uploadInfo.markets.filter((v: any) => !v.disabled).map((v: any) => (v.video = value));
+		this.uploadInfo.markets
+			.filter((v) => !v.disabled)
+			.map((v) => (v.code === 'A006' || v.code === 'A001' ? (v.video = false) : (v.video = value)));
 	};
 
 	// 수정모드 설정
