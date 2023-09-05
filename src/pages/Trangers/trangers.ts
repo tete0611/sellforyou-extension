@@ -2,7 +2,7 @@ import CryptoJS from 'crypto-js';
 import { fabric } from 'fabric';
 
 import gql from '../Main/GraphQL/Requests';
-import { createTabCompletely, getLocalStorage, sendTabMessage } from '../Tools/ChromeAsync';
+import { getLocalStorage } from '../Tools/ChromeAsync';
 import { floatingToast, getClock, readFileDataURL, sleep } from '../Tools/Common';
 import { Layer, Product } from '../../type/type';
 
