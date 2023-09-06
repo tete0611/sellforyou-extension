@@ -13,6 +13,8 @@ import {
 	transformContent,
 } from './Common';
 import { createTabCompletely, sendTabMessage } from './ChromeAsync';
+import { product } from '../../containers/stores/product';
+import { common } from '../../containers/stores/common';
 
 // 스마트스토어 이미지업로드
 export async function uploadA077Images(image_list: string[]) {
@@ -462,7 +464,7 @@ export async function deleteA077Products(data: any) {
 }
 
 // 스마트스토어 상품등록
-export async function uploadSmartStore(productStore: any, commonStore: any, data: any) {
+export async function uploadSmartStore(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -691,7 +693,7 @@ export async function uploadSmartStore(productStore: any, commonStore: any, data
 
 				let images: any = [];
 
-				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code).video) {
+				if (!commonStore.uploadInfo.markets.find((v) => v.code === data.DShopInfo.site_code)?.video) {
 					market_item.misc1 = '';
 				}
 

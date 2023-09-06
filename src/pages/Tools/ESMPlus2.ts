@@ -1,5 +1,7 @@
 // 지마켓/옥션 자체개발 API
 
+import { common } from '../../containers/stores/common';
+import { product } from '../../containers/stores/product';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import QUERIES from '../Main/GraphQL/Queries';
 import gql from '../Main/GraphQL/Requests';
@@ -18,7 +20,7 @@ import {
 } from './Common';
 
 // 지마켓/옥션 2.0 상품등록
-export async function uploadESMPlus2(productStore: any, commonStore: any, data: any) {
+export async function uploadESMPlus2(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -156,8 +158,10 @@ export async function uploadESMPlus2(productStore: any, commonStore: any, data: 
 		}
 
 		const userResp = await fetch('https://www.esmplus.com/Escrow/Order/NewOrder');
+		if (userResp.status === 500)
+			notificationByEveryTime(`(${shopName}) 업로드 도중 오류가 발생하였습니다. (${userResp.statusText})`);
 		const userText = await userResp.text();
-		const userMatched: any = userText.match(/var masterID = "([0-9]+)"/);
+		const userMatched = userText.match(/var masterID = "([0-9]+)"/);
 
 		// 출고지 조회
 		let delivery_shipping_code = '0';
@@ -347,7 +351,7 @@ export async function uploadESMPlus2(productStore: any, commonStore: any, data: 
 					}
 				}
 
-				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code).video) {
+				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code)?.video) {
 					market_item.misc1 = '';
 				}
 
@@ -662,9 +666,8 @@ export async function uploadESMPlus2(productStore: any, commonStore: any, data: 
 						continue;
 					}
 				}
-
 				let test_body = {
-					MasterId: userMatched[1], //esm2.0추가
+					MasterId: userMatched?.[1], //esm2.0추가
 					LoginId:
 						data.DShopInfo.site_code === 'A522'
 							? commonStore.user.userInfo.esmplusAuctionId
@@ -1773,7 +1776,7 @@ export async function uploadESMPlus2(productStore: any, commonStore: any, data: 
 // 지마켓/옥션 상품 등록해제
 // 상품수정 - 판매중지 - 삭제 순으로 진행해야 함
 // 따라서 상품등록 로직과 유사하게 보일 수 있음
-export async function deleteESMPlus2(productStore: any, commonStore: any, data: any) {
+export async function deleteESMPlus2(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -1966,7 +1969,7 @@ export async function deleteESMPlus2(productStore: any, commonStore: any, data: 
 					}
 				}
 
-				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code).video) {
+				if (!commonStore.uploadInfo.markets.find((v) => v.code === data.DShopInfo.site_code)?.video) {
 					market_item.misc1 = '';
 				}
 

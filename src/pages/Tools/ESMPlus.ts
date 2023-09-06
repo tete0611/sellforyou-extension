@@ -1,5 +1,7 @@
 // 지마켓/옥션 자체개발 API
 
+import { common } from '../../containers/stores/common';
+import { product } from '../../containers/stores/product';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import QUERIES from '../Main/GraphQL/Queries';
 import gql from '../Main/GraphQL/Requests';
@@ -17,7 +19,7 @@ import {
 } from './Common';
 
 // 지마켓/옥션 1.0 상품등록
-export async function uploadESMPlus(productStore: any, commonStore: any, data: any) {
+export async function uploadESMPlus(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -258,7 +260,7 @@ export async function uploadESMPlus(productStore: any, commonStore: any, data: a
 					}
 				}
 
-				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code).video) {
+				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code)?.video) {
 					market_item.misc1 = '';
 				}
 

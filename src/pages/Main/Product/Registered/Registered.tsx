@@ -32,7 +32,7 @@ import { SetProductSillDataPopOver } from '../../PopOver/SetProductSillDataPopOv
 import { UpdateManyProductPopOver } from '../../PopOver/UpdateManyProductPopOver';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ReplaceOptionNamePopOver } from '../../PopOver/ReplaceOptionNamePopOver';
-import { Esm2UploadDisabledModal } from '../../Modals/Esm2UploadDisabledModal';
+// import { Esm2UploadDisabledModal } from '../../Modals/Esm2UploadDisabledModal';
 // import { PreviewModal } from '../../Modals/PreviewModal';
 
 // 상품등록관리 목록 테이블 뷰
@@ -285,7 +285,7 @@ export const Registered = observer(() => {
 				{/* <Esm2UploadModal /> */}
 				<UploadFailedModal />
 				<UploadDisabledModal />
-				<Esm2UploadDisabledModal />
+				{/* <Esm2UploadDisabledModal /> */}
 			</Frame>
 		</ThemeProvider>
 	);

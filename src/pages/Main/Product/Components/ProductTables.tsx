@@ -430,7 +430,7 @@ export const ProductTables = observer(() => {
 											>
 												일괄등록(2.0)
 											</MyButton> */}
-											{product.state === 7 || product.myLock === 2 ? (
+											{/* {product.state === 7 || product.myLock === 2 ? (
 												<MyButton
 													color='error'
 													sx={{
@@ -443,7 +443,7 @@ export const ProductTables = observer(() => {
 												>
 													일괄해제(2.0)
 												</MyButton>
-											) : null}
+											) : null} */}
 											{product.state !== 7 && product.myLock !== 2 ? (
 												<MyButton
 													color='error'

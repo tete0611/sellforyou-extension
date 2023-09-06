@@ -204,13 +204,7 @@ export const UploadModal = observer(() => {
 											ml: 1,
 										}}
 									>
-										{editable ? '수정완료' : '등록완료'} (
-										{
-											product.registeredInfo.success.filter(
-												(w: any) => w.site_code !== 'A522' && w.site_code !== 'A523',
-											).length
-										}
-										)
+										{editable ? '수정완료' : '등록완료'} ({product.registeredInfo.success.length})
 									</Typography>
 								</Box>
 							}
@@ -233,12 +227,7 @@ export const UploadModal = observer(() => {
 											ml: 1,
 										}}
 									>
-										{editable ? '수정실패' : '등록실패'} (
-										{
-											product.registeredInfo.failed.filter((w: any) => w.site_code !== 'A522' && w.site_code !== 'A523')
-												.length
-										}
-										)
+										{editable ? '수정실패' : '등록실패'} ({product.registeredInfo.failed.length})
 									</Typography>
 								</Box>
 							}
@@ -262,12 +251,7 @@ export const UploadModal = observer(() => {
 												ml: 1,
 											}}
 										>
-											{editable ? '수정중' : '등록중'} (
-											{
-												product.registeredInfo.wait.filter((w: any) => w.site_code !== 'A522' && w.site_code !== 'A523')
-													.length
-											}
-											)
+											{editable ? '수정중' : '등록중'} ({product.registeredInfo.wait.length})
 										</Typography>
 									</Box>
 								}
@@ -1489,177 +1473,151 @@ export const UploadModal = observer(() => {
 								overflowY: 'scroll',
 							}}
 						>
-							{product.registeredInfo.success
-								.filter((w: any) => w.site_code !== 'A522' && w.site_code !== 'A523')
-								.map((v: any) => (
-									<Box
-										sx={{
-											display: 'flex',
-											alignItems: 'center',
-											justifyContent: 'space-between',
-											p: 0,
-										}}
-									>
-										<Grid container spacing={1}>
-											<Grid
-												item
-												xs={6}
-												md={4}
+							{product.registeredInfo.success.map((v: any) => (
+								<Box
+									sx={{
+										display: 'flex',
+										alignItems: 'center',
+										justifyContent: 'space-between',
+										p: 0,
+									}}
+								>
+									<Grid container spacing={1}>
+										<Grid
+											item
+											xs={6}
+											md={4}
+											sx={{
+												m: 'auto',
+											}}
+										>
+											<Box
 												sx={{
-													m: 'auto',
+													display: 'flex',
+													alignItems: 'center',
 												}}
 											>
-												<Box
+												<IconButton
+													size='small'
 													sx={{
-														display: 'flex',
-														alignItems: 'center',
+														mr: 1,
+													}}
+													onClick={() => {
+														switch (v.site_code) {
+															case 'A077': {
+																window.open(`${user.userInfo.naverStoreUrl}/products/${v.error}`);
+																break;
+															}
+
+															case 'B378': {
+																break;
+															}
+
+															case 'A112': {
+																window.open(`https://www.11st.co.kr/products/${v.error}`);
+																break;
+															}
+
+															case 'A113': {
+																window.open(`https://www.11st.co.kr/products/${v.error}`);
+																break;
+															}
+
+															case 'A006': {
+																window.open(`http://item.gmarket.co.kr/Item?goodscode=${v.error}`);
+																break;
+															}
+
+															case 'A001': {
+																window.open(`http://itempage3.auction.co.kr/DetailView.aspx?ItemNo=${v.error}&frm3=V2`);
+																break;
+															}
+
+															case 'A027': {
+																window.open(`https://shopping.interpark.com/product/productInfo.do?prdNo=${v.error}`);
+																break;
+															}
+
+															case 'B719': {
+																window.open(`https://front.wemakeprice.com/product/${v.error}`);
+																break;
+															}
+															case 'A522': {
+																window.open(`http://itempage3.auction.co.kr/DetailView.aspx?ItemNo=${v.error}&frm3=V2`);
+																break;
+															}
+															case 'A523': {
+																window.open(`http://item.gmarket.co.kr/Item?goodscode=${v.error}`);
+																break;
+															}
+
+															case 'A524': {
+																window.open(`https://www.lotteon.com/p/product/${v.error}`);
+																break;
+															}
+
+															case 'A525': {
+																window.open(`https://www.lotteon.com/p/product/${v.error}`);
+																break;
+															}
+
+															case 'B956': {
+																window.open(`https://www.tmon.co.kr/deal/${v.error}`);
+																break;
+															}
+
+															default:
+																break;
+														}
 													}}
 												>
-													<IconButton
-														size='small'
-														sx={{
-															mr: 1,
-														}}
-														onClick={() => {
-															switch (v.site_code) {
-																case 'A077': {
-																	window.open(`${user.userInfo.naverStoreUrl}/products/${v.error}`);
-																	break;
-																}
+													{v.site_code === 'A077' ? (
+														<img src='/resources/icon-smartstore.png' />
+													) : v.site_code === 'B378' ? (
+														<img src='/resources/icon-coupang.png' />
+													) : v.site_code === 'A112' ? (
+														<img src='/resources/icon-street-global.png' />
+													) : v.site_code === 'A113' ? (
+														<img src='/resources/icon-street-normal.png' />
+													) : v.site_code === 'A006' ? (
+														<img src='/resources/icon-gmarket.png' />
+													) : v.site_code === 'A001' ? (
+														<img src='/resources/icon-auction.png' />
+													) : v.site_code === 'A027' ? (
+														<img src='/resources/icon-interpark.png' />
+													) : v.site_code === 'B719' ? (
+														<img src='/resources/icon-wemakeprice.png' />
+													) : v.site_code === 'A523' ? (
+														<img src='/resources/icon-gmarket.png' />
+													) : v.site_code === 'A522' ? (
+														<img src='/resources/icon-auction.png' />
+													) : v.site_code === 'A524' ? (
+														<img src='/resources/icon-lotteon-global.png' />
+													) : v.site_code === 'A525' ? (
+														<img src='/resources/icon-lotteon-normal.png' />
+													) : v.site_code === 'B956' ? (
+														<img src='/resources/icon-tmon.png' />
+													) : null}
+												</IconButton>
 
-																case 'B378': {
-																	break;
-																}
+												<Image
+													src={v.img1}
+													width={24}
+													height={24}
+													style={{
+														// border: "1px solid lightgray",
+														background: 'black',
+														objectFit: 'contain',
+													}}
+													onClick={(e) => {
+														product.setImagePopOver({
+															element: e.target,
+															data: { src: v.img1 },
+															open: true,
+														});
+													}}
+												/>
 
-																case 'A112': {
-																	window.open(`https://www.11st.co.kr/products/${v.error}`);
-																	break;
-																}
-
-																case 'A113': {
-																	window.open(`https://www.11st.co.kr/products/${v.error}`);
-																	break;
-																}
-
-																case 'A006': {
-																	window.open(`http://item.gmarket.co.kr/Item?goodscode=${v.error}`);
-																	break;
-																}
-
-																case 'A001': {
-																	window.open(
-																		`http://itempage3.auction.co.kr/DetailView.aspx?ItemNo=${v.error}&frm3=V2`,
-																	);
-																	break;
-																}
-
-																case 'A027': {
-																	window.open(`https://shopping.interpark.com/product/productInfo.do?prdNo=${v.error}`);
-																	break;
-																}
-
-																case 'B719': {
-																	window.open(`https://front.wemakeprice.com/product/${v.error}`);
-																	break;
-																}
-																case 'A522': {
-																	window.open(
-																		`http://itempage3.auction.co.kr/DetailView.aspx?ItemNo=${v.error}&frm3=V2`,
-																	);
-																	break;
-																}
-																case 'A523': {
-																	window.open(`http://item.gmarket.co.kr/Item?goodscode=${v.error}`);
-																	break;
-																}
-
-																case 'A524': {
-																	window.open(`https://www.lotteon.com/p/product/${v.error}`);
-																	break;
-																}
-
-																case 'A525': {
-																	window.open(`https://www.lotteon.com/p/product/${v.error}`);
-																	break;
-																}
-
-																case 'B956': {
-																	window.open(`https://www.tmon.co.kr/deal/${v.error}`);
-																	break;
-																}
-
-																default:
-																	break;
-															}
-														}}
-													>
-														{v.site_code === 'A077' ? (
-															<img src='/resources/icon-smartstore.png' />
-														) : v.site_code === 'B378' ? (
-															<img src='/resources/icon-coupang.png' />
-														) : v.site_code === 'A112' ? (
-															<img src='/resources/icon-street-global.png' />
-														) : v.site_code === 'A113' ? (
-															<img src='/resources/icon-street-normal.png' />
-														) : v.site_code === 'A006' ? (
-															<img src='/resources/icon-gmarket.png' />
-														) : v.site_code === 'A001' ? (
-															<img src='/resources/icon-auction.png' />
-														) : v.site_code === 'A027' ? (
-															<img src='/resources/icon-interpark.png' />
-														) : v.site_code === 'B719' ? (
-															<img src='/resources/icon-wemakeprice.png' />
-														) : v.site_code === 'A523' ? (
-															<img src='/resources/icon-gmarket.png' />
-														) : v.site_code === 'A522' ? (
-															<img src='/resources/icon-auction.png' />
-														) : v.site_code === 'A524' ? (
-															<img src='/resources/icon-lotteon-global.png' />
-														) : v.site_code === 'A525' ? (
-															<img src='/resources/icon-lotteon-normal.png' />
-														) : v.site_code === 'B956' ? (
-															<img src='/resources/icon-tmon.png' />
-														) : null}
-													</IconButton>
-
-													<Image
-														src={v.img1}
-														width={24}
-														height={24}
-														style={{
-															// border: "1px solid lightgray",
-															background: 'black',
-															objectFit: 'contain',
-														}}
-														onClick={(e) => {
-															product.setImagePopOver({
-																element: e.target,
-																data: { src: v.img1 },
-																open: true,
-															});
-														}}
-													/>
-
-													<Typography
-														noWrap
-														sx={{
-															ml: 1,
-															fontSize: 12,
-														}}
-													>
-														{v.name3}
-													</Typography>
-												</Box>
-											</Grid>
-
-											<Grid
-												item
-												xs={6}
-												md={2}
-												sx={{
-													m: 'auto',
-												}}
-											>
 												<Typography
 													noWrap
 													sx={{
@@ -1667,33 +1625,53 @@ export const UploadModal = observer(() => {
 														fontSize: 12,
 													}}
 												>
-													{v.code}
+													{v.name3}
 												</Typography>
-											</Grid>
+											</Box>
+										</Grid>
 
-											<Grid
-												item
-												xs={6}
-												md={6}
+										<Grid
+											item
+											xs={6}
+											md={2}
+											sx={{
+												m: 'auto',
+											}}
+										>
+											<Typography
+												noWrap
 												sx={{
-													m: 'auto',
-													justifyContent: 'right',
+													ml: 1,
+													fontSize: 12,
 												}}
 											>
-												<Typography
-													sx={{
-														ml: 1,
-														fontSize: 12,
-														textAlign: 'right',
-													}}
-												>
-													상품이 정상 {editable ? '수정' : '등록'}
-													되었습니다.
-												</Typography>
-											</Grid>
+												{v.code}
+											</Typography>
 										</Grid>
-									</Box>
-								))}
+
+										<Grid
+											item
+											xs={6}
+											md={6}
+											sx={{
+												m: 'auto',
+												justifyContent: 'right',
+											}}
+										>
+											<Typography
+												sx={{
+													ml: 1,
+													fontSize: 12,
+													textAlign: 'right',
+												}}
+											>
+												상품이 정상 {editable ? '수정' : '등록'}
+												되었습니다.
+											</Typography>
+										</Grid>
+									</Grid>
+								</Box>
+							))}
 						</Box>
 					</TabPanel>
 
