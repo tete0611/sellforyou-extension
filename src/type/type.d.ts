@@ -1,3 +1,5 @@
+import { ITextOptions, TextOptions } from 'fabric/fabric-impl';
+
 export type Product = {
 	id: number;
 	productCode: string;
@@ -17,7 +19,29 @@ export type Product = {
 export type Layer = {
 	index: number;
 	image: { current: string; origin: string };
-	object: any[];
+	object: {
+		angle?: any;
+		rect?: fabric.Rect;
+		text?: any;
+		object: string;
+		pos: { x: number; y: number }[];
+		foreground?: any;
+		original?: any;
+		background?: { R: number; G: number; B: number };
+		shapeOption?: { strokeWidth: number | null; rx: number | null; ry: number | null };
+		translated?: string;
+		copyX?: number;
+		copyY?: number;
+		textOption?: {
+			size?: number;
+			direction?: string;
+			bold: string;
+			font: string;
+			italic: string;
+			lineThrough: any;
+			underLine: any;
+		};
+	}[];
 	state: {
 		check: string;
 		current: any;
@@ -78,3 +102,5 @@ export type ModalInfo = {
 	myKeywarded: boolean;
 	userFilter?: boolean;
 };
+
+export type Nullable<T> = T | null | undefined;
