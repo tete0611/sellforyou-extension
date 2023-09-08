@@ -3287,10 +3287,13 @@ const toggleToolbar = async (element: any, mode: string) => {
 };
 
 const addShape = async () => {
+	const { width = 0, height = 0 } = myCanvas;
+	const shapeSize = 150;
+
 	let color = {
-		r: 0,
-		g: 0,
-		b: 0,
+		r: 255,
+		g: 255,
+		b: 255,
 	};
 
 	let info = {
@@ -3298,20 +3301,20 @@ const addShape = async () => {
 
 		pos: [
 			{
-				x: 0,
+				x: width / 2 + shapeSize / 2,
+				y: height / 2 + shapeSize / 2,
+			},
+			{
+				x: shapeSize,
 				y: 0,
 			},
 			{
-				x: 150,
-				y: 0,
-			},
-			{
-				x: 150,
-				y: 150,
+				x: shapeSize,
+				y: shapeSize,
 			},
 			{
 				x: 0,
-				y: 150,
+				y: shapeSize,
 			},
 		],
 
@@ -4704,6 +4707,12 @@ const setKeyEvents = () => {
 			case e.ctrlKey && 'x':
 			case e.ctrlKey && 'X': {
 				replayCanvas('redo');
+				break;
+			}
+
+			case e.shiftKey && 'q':
+			case e.shiftKey && 'Q': {
+				addShape();
 				break;
 			}
 
