@@ -713,9 +713,7 @@ const displayImage = async (index: number, customWidth: number) => {
 		myCanvas.add(text);
 	}
 
-	myCanvas.setBackgroundImage(currentImage, () => {
-		console.log('백그라운드 이미지발동1');
-	});
+	myCanvas.setBackgroundImage(currentImage, () => {});
 
 	switch (editorMode) {
 		case 'crop': {
@@ -789,9 +787,7 @@ const displayImage = async (index: number, customWidth: number) => {
 		}
 
 		default: {
-			myCanvas.setBackgroundImage(currentImage, () => {
-				console.log('백그라운드 이미지 발도옹2');
-			});
+			myCanvas.setBackgroundImage(currentImage, () => {});
 
 			break;
 		}
@@ -1000,9 +996,7 @@ const getMaskImage = async (itemList: any) => {
 		height: myCanvas.height! * (100 / percentage),
 	});
 
-	maskCanvas.setBackgroundImage(currentImage, () => {
-		console.log('백그라운드 이미지발동3');
-	});
+	maskCanvas.setBackgroundImage(currentImage, () => {});
 
 	let image = maskCanvas.toDataURL();
 
