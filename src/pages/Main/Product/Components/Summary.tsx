@@ -1063,7 +1063,7 @@ export const Summary = observer((props: any) => {
 									</MyButton>
 									{/* 주석필요 */}
 
-									{props.item.state === 6 ? (
+									{/* {props.item.state === 6 ? (
 										<MyButton
 											color='info'
 											sx={{
@@ -1078,7 +1078,7 @@ export const Summary = observer((props: any) => {
 										>
 											ESM2.0
 										</MyButton>
-									) : null}
+									) : null} */}
 
 									{props.item.state === 7 ? (
 										<MyButton
@@ -1126,7 +1126,7 @@ export const Summary = observer((props: any) => {
 								</Box>
 							</Box>
 
-							{props.item.state === 7 ? (
+							{/* {props.item.state === 7 ? (
 								<Box
 									style={{
 										display: 'flex',
@@ -1202,7 +1202,7 @@ export const Summary = observer((props: any) => {
 										)}
 									</Button>
 								</Box>
-							) : null}
+							) : null} */}
 						</Grid>
 					</Grid>
 				</StyledTableCell>

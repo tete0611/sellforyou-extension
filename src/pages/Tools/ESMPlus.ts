@@ -1,5 +1,7 @@
 // 지마켓/옥션 자체개발 API
 
+import { common } from '../../containers/stores/common';
+import { product } from '../../containers/stores/product';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import QUERIES from '../Main/GraphQL/Queries';
 import gql from '../Main/GraphQL/Requests';
@@ -17,7 +19,7 @@ import {
 } from './Common';
 
 // 지마켓/옥션 1.0 상품등록
-export async function uploadESMPlus(productStore: any, commonStore: any, data: any) {
+export async function uploadESMPlus(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -170,11 +172,14 @@ export async function uploadESMPlus(productStore: any, commonStore: any, data: a
 
 		// 반품지 조회
 		let delivery_return_code = '0';
+		try {
+			let delivery_return_resp = await fetch('https://www.esmplus.com/SELL/SYI/GetDefaultReturnMemberAddress');
+			let delivery_return_json = await delivery_return_resp.json();
 
-		let delivery_return_resp = await fetch('https://www.esmplus.com/SELL/SYI/GetDefaultReturnMemberAddress');
-		let delivery_return_json = await delivery_return_resp.json();
-
-		delivery_return_code = delivery_return_json.MembAddrNo.toString();
+			delivery_return_code = delivery_return_json.MembAddrNo.toString();
+		} catch (error) {
+			notificationByEveryTime(`(${shopName}) 업로드 도중 오류가 발생하였습니다. (반품지 조회실패)`);
+		}
 
 		// 루프 돌면서 상품정보 생성
 		for (let product in data.DShopInfo.prod_codes) {
@@ -255,7 +260,7 @@ export async function uploadESMPlus(productStore: any, commonStore: any, data: a
 					}
 				}
 
-				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code).video) {
+				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code)?.video) {
 					market_item.misc1 = '';
 				}
 

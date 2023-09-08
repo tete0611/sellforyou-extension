@@ -77,7 +77,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.naverUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A077').connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === 'A077')?.connected}
 												onChange={async (e) => {
 													const naverUseType = e.target.checked ? 'Y' : 'N';
 
@@ -127,7 +127,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_naver1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A077').connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === 'A077')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -154,7 +154,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v: any) => v.code === 'A077').connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === 'A077')?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -202,7 +202,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.coupangUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected}
 												onChange={async (e) => {
 													const coupangUseType = e.target.checked ? 'Y' : 'N';
 
@@ -252,7 +252,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_coupang1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -295,7 +295,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_coupang2'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -338,7 +338,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_coupang3'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -381,7 +381,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_coupang4'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -408,7 +408,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v: any) => v.code === 'B378').connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -534,7 +534,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.streetUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected}
 												onChange={async (e) => {
 													const streetUseType = e.target.checked ? 'Y' : 'N';
 
@@ -648,7 +648,7 @@ export const Connects = observer(() => {
 														<TextField
 															id='connects_streetGlobal1'
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected}
 															variant='outlined'
 															sx={{
 																width: '100%',
@@ -745,7 +745,7 @@ export const Connects = observer(() => {
 																<TextField
 																	id='connects_streetGlobal2'
 																	size='small'
-																	disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected}
+																	disabled={common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected}
 																	variant='outlined'
 																	sx={{
 																		width: '100%',
@@ -844,7 +844,7 @@ export const Connects = observer(() => {
 																<TextField
 																	id='connects_streetGlobal3'
 																	size='small'
-																	disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected}
+																	disabled={common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected}
 																	variant='outlined'
 																	sx={{
 																		width: '100%',
@@ -943,7 +943,7 @@ export const Connects = observer(() => {
 																<TextField
 																	id='connects_streetGlobal4'
 																	size='small'
-																	disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected}
+																	disabled={common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected}
 																	variant='outlined'
 																	sx={{
 																		width: '100%',
@@ -975,7 +975,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v: any) => v.code === 'A112').connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -1101,7 +1101,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.streetNormalUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected}
 												onChange={async (e) => {
 													const streetNormalUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1215,7 +1215,7 @@ export const Connects = observer(() => {
 														<TextField
 															id='connects_streetNormal1'
 															size='small'
-															disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected}
+															disabled={common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected}
 															variant='outlined'
 															sx={{
 																width: '100%',
@@ -1312,7 +1312,7 @@ export const Connects = observer(() => {
 																<TextField
 																	id='connects_streetNormal2'
 																	size='small'
-																	disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected}
+																	disabled={common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected}
 																	variant='outlined'
 																	sx={{
 																		width: '100%',
@@ -1411,7 +1411,7 @@ export const Connects = observer(() => {
 																<TextField
 																	id='connects_streetNormal3'
 																	size='small'
-																	disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected}
+																	disabled={common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected}
 																	variant='outlined'
 																	sx={{
 																		width: '100%',
@@ -1510,7 +1510,7 @@ export const Connects = observer(() => {
 																<TextField
 																	id='connects_streetNormal4'
 																	size='small'
-																	disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected}
+																	disabled={common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected}
 																	variant='outlined'
 																	sx={{
 																		width: '100%',
@@ -1542,7 +1542,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v: any) => v.code === 'A113').connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -1590,7 +1590,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.gmarketUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A006').connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === 'A006')?.connected}
 												onChange={async (e) => {
 													const gmarketUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1640,7 +1640,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_gmarket1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A006').connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === 'A006')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -1667,7 +1667,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v: any) => v.code === 'A006').connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === 'A006')?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -1715,7 +1715,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.auctionUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A001').connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === 'A001')?.connected}
 												onChange={async (e) => {
 													const auctionUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1765,7 +1765,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_auction1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A001').connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === 'A001')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -1792,7 +1792,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v: any) => v.code === 'A001').connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === 'A001')?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -1840,7 +1840,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.interparkUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected}
 												onChange={async (e) => {
 													const interparkUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1890,7 +1890,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_interpark1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -1933,7 +1933,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_interpark2'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -1976,7 +1976,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_interpark3'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -2019,7 +2019,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_interpark4'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -2046,7 +2046,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v: any) => v.code === 'A027').connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -2094,7 +2094,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.wemakepriceUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'B719').connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === 'B719')?.connected}
 												onChange={async (e) => {
 													const wemakepriceUseType = e.target.checked ? 'Y' : 'N';
 
@@ -2144,7 +2144,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_wemakeprice1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B719').connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === 'B719')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -2171,7 +2171,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v: any) => v.code === 'B719').connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === 'B719')?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -2221,8 +2221,8 @@ export const Connects = observer(() => {
 												checked={common.user.userInfo?.lotteonUseType === 'Y' ? true : false}
 												disabled={
 													!(
-														common.uploadInfo.markets.find((v: any) => v.code === 'A524').connected ||
-														common.uploadInfo.markets.find((v: any) => v.code === 'A525').connected
+														common.uploadInfo.markets.find((v) => v.code === 'A524')?.connected ||
+														common.uploadInfo.markets.find((v) => v.code === 'A525')?.connected
 													)
 												}
 												onChange={async (e) => {
@@ -2275,8 +2275,8 @@ export const Connects = observer(() => {
 														id='connects_lotteon1'
 														size='small'
 														disabled={
-															common.uploadInfo.markets.find((v: any) => v.code === 'A524').connected &&
-															common.uploadInfo.markets.find((v: any) => v.code === 'A525').connected
+															common.uploadInfo.markets.find((v) => v.code === 'A524')?.connected &&
+															common.uploadInfo.markets.find((v) => v.code === 'A525')?.connected
 														}
 														variant='outlined'
 														sx={{
@@ -2321,8 +2321,8 @@ export const Connects = observer(() => {
 														id='connects_lotteon2'
 														size='small'
 														disabled={
-															common.uploadInfo.markets.find((v: any) => v.code === 'A524').connected &&
-															common.uploadInfo.markets.find((v: any) => v.code === 'A525').connected
+															common.uploadInfo.markets.find((v) => v.code === 'A524')?.connected &&
+															common.uploadInfo.markets.find((v) => v.code === 'A525')?.connected
 														}
 														variant='outlined'
 														sx={{
@@ -2350,8 +2350,8 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v: any) => v.code === 'A524').connected &&
-											common.uploadInfo.markets.find((v: any) => v.code === 'A525').connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === 'A524')?.connected &&
+											common.uploadInfo.markets.find((v) => v.code === 'A525')?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -2399,7 +2399,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.tmonUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'B956').connected}
+												disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'B956')?.connected}
 												onChange={async (e) => {
 													const tmonUseType = e.target.checked ? 'Y' : 'N';
 
@@ -2449,7 +2449,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_tmon1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B956').connected}
+														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B956')?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -2476,7 +2476,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v: any) => v.code === 'B956').connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === 'B956')?.connected ? (
 												<Button
 													disabled
 													variant='contained'

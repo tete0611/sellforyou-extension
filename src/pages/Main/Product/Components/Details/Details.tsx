@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { TabBase } from './TabBase';
-import { TabESM2 } from './TabESM2';
+// import { TabESM2 } from './TabESM2';
 import { TabOption } from './TabOption';
 import { TabPrice } from './TabPrice';
 import { TabThumbnails } from './TabThumbnails';

@@ -21,6 +21,8 @@ import { deleteWemakeprice, uploadWemakeprice } from '../../pages/Tools/Wemakepr
 import { deleteLotteon, uploadLotteon } from '../../pages/Tools/Lotteon';
 import { deleteTmon, uploadTmon } from '../../pages/Tools/Tmon';
 import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from '../../pages/Tools/ChromeAsync';
+import { common } from './common';
+import { ItemInfo, ModalInfo } from '../../type/type';
 
 export class product {
 	gridView: boolean = false;
@@ -46,12 +48,12 @@ export class product {
 	uploadIndex: number = -1;
 
 	//todoesm2.0
-	Esm2uploadConsole: any = [];
-	Esm2uploadDisabledIndex: number = -1;
-	Esm2uploadFailedIndex: number = -1;
-	Esm2uploadIndex: number = -1;
+	// Esm2uploadConsole: any = [];
+	// Esm2uploadDisabledIndex: number = -1;
+	// Esm2uploadFailedIndex: number = -1;
+	// Esm2uploadIndex: number = -1;
 
-	itemInfo: any = {
+	itemInfo: ItemInfo = {
 		checkedAll: false,
 		current: 0,
 
@@ -164,7 +166,7 @@ export class product {
 		},
 	};
 
-	modalInfo: any = {
+	modalInfo: ModalInfo = {
 		addOptionName: false,
 		attribute: false,
 		category: false,
@@ -181,10 +183,10 @@ export class product {
 		uploadFailed: false,
 		locked: false,
 		myKeywarded: false,
-		Esm2upload: false,
-		Esm2uploadTabIndex: 0,
-		Esm2uploadDisabled: false,
-		Esm2uploadFailed: false,
+		// Esm2upload: false,
+		// Esm2uploadTabIndex: 0,
+		// Esm2uploadDisabled: false,
+		// Esm2uploadFailed: false,
 		// preview: false,
 	};
 
@@ -3397,10 +3399,10 @@ export class product {
 	};
 
 	// 2.0 상품등록 모달
-	toggleEsm2UploadModal = (index: number, value: boolean) => {
-		this.Esm2uploadIndex = index;
-		this.modalInfo.Esm2upload = value;
-	};
+	// toggleEsm2UploadModal = (index: number, value: boolean) => {
+	// 	this.Esm2uploadIndex = index;
+	// 	this.modalInfo.Esm2upload = value;
+	// };
 
 	// 상품등록 모달
 	toggleUploadModal = (index: number, value: boolean) => {
@@ -3409,17 +3411,17 @@ export class product {
 	};
 
 	// 상품 등록해제 모달
-	toggleUploadDisabledModal = (index: number, value: boolean, commonStore: any) => {
+	toggleUploadDisabledModal = (index: number, value: boolean, commonStore: common) => {
 		if (value) {
 			if (index > -1) {
-				commonStore.uploadDisabledInfo.markets.map((v: any) => {
-					const matched = this.itemInfo.items[index].activeProductStore.find((w: any) => w.siteCode === v.code);
+				commonStore.uploadDisabledInfo.markets.map((v) => {
+					const matched = this.itemInfo.items[index].activeProductStore.find((w) => w.siteCode === v.code);
 
 					v.disabled = !matched;
 					v.upload = matched;
 				});
 			} else {
-				commonStore.uploadDisabledInfo.markets.map((v: any) => {
+				commonStore.uploadDisabledInfo.markets.map((v) => {
 					v.disabled = false;
 					v.upload = true;
 				});
@@ -3431,35 +3433,35 @@ export class product {
 	};
 
 	// 상품 등록해제 모달
-	toggleEsm2UploadDisabledModal = (index: number, value: boolean, commonStore: any) => {
-		if (value) {
-			if (index > -1) {
-				commonStore.uploadDisabledInfo.markets.map((v: any) => {
-					const matched = this.itemInfo.items[index].activeProductStore.find((w: any) => w.siteCode === v.code);
+	// toggleEsm2UploadDisabledModal = (index: number, value: boolean, commonStore: any) => {
+	// 	if (value) {
+	// 		if (index > -1) {
+	// 			commonStore.uploadDisabledInfo.markets.map((v: any) => {
+	// 				const matched = this.itemInfo.items[index].activeProductStore.find((w: any) => w.siteCode === v.code);
 
-					v.disabled = !matched;
-					v.upload = matched;
-				});
-			} else {
-				commonStore.uploadDisabledInfo.markets.map((v: any) => {
-					v.disabled = false;
-					v.upload = true;
-				});
-			}
-		}
+	// 				v.disabled = !matched;
+	// 				v.upload = matched;
+	// 			});
+	// 		} else {
+	// 			commonStore.uploadDisabledInfo.markets.map((v: any) => {
+	// 				v.disabled = false;
+	// 				v.upload = true;
+	// 			});
+	// 		}
+	// 	}
 
-		this.Esm2uploadDisabledIndex = index;
-		this.modalInfo.Esm2uploadDisabled = value;
-	};
+	// 	this.Esm2uploadDisabledIndex = index;
+	// 	this.modalInfo.Esm2uploadDisabled = value;
+	// };
 
 	// esm2.0 상품 등록실패 모달
-	toggleEsm2UploadFailedModal = (index: number, value: boolean) => {
-		if (index > -1) {
-			this.Esm2uploadFailedIndex = index;
-		}
+	// toggleEsm2UploadFailedModal = (index: number, value: boolean) => {
+	// 	if (index > -1) {
+	// 		this.Esm2uploadFailedIndex = index;
+	// 	}
 
-		this.modalInfo.Esm2uploadFailed = value;
-	};
+	// 	this.modalInfo.Esm2uploadFailed = value;
+	// };
 	// 상품 등록실패 모달
 	toggleUploadFailedModal = (index: number, value: boolean) => {
 		if (index > -1) {
@@ -3534,10 +3536,9 @@ export class product {
 	setSearchWhereOrInput = (where: any) => (this.searchInfo.whereInput.OR = where);
 
 	// 상페 미리보기 모달
-	togglePreviewModal = (value: boolean, index: number) => {
-		this.modalInfo.preview = value;
-		this.itemInfo.current = index;
-	};
+	// togglePreviewModal = (value: boolean, index: number) => {
+	// 	this.itemInfo.current = index;
+	// };
 
 	// 검색결과 조회
 	getSearchResult = (commonStore: any) => {
@@ -3882,9 +3883,9 @@ export class product {
 	};
 
 	// Esm2.0 상품 등록 시 탭 이동
-	switchEsm2UploadTabs = (value: number) => {
-		this.modalInfo.Esm2uploadTabIndex = value;
-	};
+	// switchEsm2UploadTabs = (value: number) => {
+	// 	this.modalInfo.Esm2uploadTabIndex = value;
+	// };
 
 	// 상품 등록 - 등록중
 	addRegisteredQueue = (data: any) => {
@@ -3918,15 +3919,15 @@ export class product {
 	};
 
 	// 상품 등록해제
-	disableItems = async (commonStore: any) => {
-		let productIds: any = [];
+	disableItems = async (commonStore: common) => {
+		let productIds: number[] = [];
 		let lockProducts: any = [];
 		if (this.uploadDisabledIndex > -1) {
 			this.itemInfo.items[this.uploadDisabledIndex].delete = true;
 
 			productIds.push(this.itemInfo.items[this.uploadDisabledIndex].id);
 		} else {
-			this.itemInfo.items.map((v: any) => {
+			this.itemInfo.items.map((v) => {
 				if (v.myLock === 2 && v.checked) {
 					lockProducts.push(v.productCode);
 				}
@@ -3942,34 +3943,23 @@ export class product {
 		}
 
 		if (productIds.length < 1) {
-			if (lockProducts.length !== 0) {
-				alert('잠금 상품을 제외한 상품이 선택되지 않았습니다.');
-			} else {
-				alert('상품이 선택되지 않았습니다.');
-			}
+			if (lockProducts.length !== 0) alert('잠금 상품을 제외한 상품이 선택되지 않았습니다.');
+			else alert('상품이 선택되지 않았습니다.');
 
 			await commonStore.setUploadable(true);
 			return;
 		}
 
-		const markets = commonStore.uploadDisabledInfo.markets.filter((v: any) => v.upload).map((v: any) => v.code);
+		const markets = commonStore.uploadDisabledInfo.markets.filter((v) => v.upload).map((v) => v.code);
 
-		if (markets.length < 1) {
-			alert('오픈마켓이 선택되지 않았습니다.');
-
-			return;
-		}
+		if (markets.length < 1) return alert('오픈마켓이 선택되지 않았습니다.');
 
 		const response = await gql(QUERIES.GET_REGISTER_PRODUCTS_DATA_BY_USER, {
 			productIds,
 			siteCode: markets,
 		});
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		const data = JSON.parse(response.data.getRegisterProductsDataByUser);
 
@@ -4003,6 +3993,16 @@ export class product {
 				this,
 				commonStore,
 				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A001'),
+			),
+			deleteESMPlus2(
+				this,
+				commonStore,
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A522'),
+			),
+			deleteESMPlus2(
+				this,
+				commonStore,
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A523'),
 			),
 			deleteInterpark(
 				this,
@@ -4043,87 +4043,88 @@ export class product {
 	};
 
 	// Esm 2.0 상품 등록해제
-	Esm2DisableItems = async (commonStore: any) => {
-		let productIds: any = [];
-		let lockProducts: any = [];
-		if (this.Esm2uploadDisabledIndex > -1) {
-			this.itemInfo.items[this.Esm2uploadDisabledIndex].delete = true;
+	// Esm2DisableItems = async (commonStore: any) => {
+	// 	let productIds: any = [];
+	// 	let lockProducts: any = [];
+	// 	if (this.Esm2uploadDisabledIndex > -1) {
+	// 		this.itemInfo.items[this.Esm2uploadDisabledIndex].delete = true;
 
-			productIds.push(this.itemInfo.items[this.Esm2uploadDisabledIndex].id);
-		} else {
-			this.itemInfo.items.map((v: any) => {
-				if (v.myLock === 2 && v.checked) {
-					lockProducts.push(v.productCode);
-				}
-				if (v.myLock === 1 && v.checked) {
-					v.delete = true;
+	// 		productIds.push(this.itemInfo.items[this.Esm2uploadDisabledIndex].id);
+	// 	} else {
+	// 		this.itemInfo.items.map((v: any) => {
+	// 			if (v.myLock === 2 && v.checked) {
+	// 				lockProducts.push(v.productCode);
+	// 			}
+	// 			if (v.myLock === 1 && v.checked) {
+	// 				v.delete = true;
 
-					productIds.push(v.id);
-				}
-			});
-		}
-		if (lockProducts.length !== 0) {
-			alert(`[잠금상품목록] \n${lockProducts.join(',')} \n\n잠금 상품을 제외하고 등록해제 합니다`);
-		}
+	// 				productIds.push(v.id);
+	// 			}
+	// 		});
+	// 	}
+	// 	if (lockProducts.length !== 0) {
+	// 		alert(`[잠금상품목록] \n${lockProducts.join(',')} \n\n잠금 상품을 제외하고 등록해제 합니다`);
+	// 	}
 
-		if (productIds.length < 1) {
-			if (lockProducts.length !== 0) {
-				alert('잠금 상품을 제외한 상품이 선택되지 않았습니다.');
-			} else {
-				alert('상품이 선택되지 않았습니다.');
-			}
+	// 	if (productIds.length < 1) {
+	// 		if (lockProducts.length !== 0) {
+	// 			alert('잠금 상품을 제외한 상품이 선택되지 않았습니다.');
+	// 		} else {
+	// 			alert('상품이 선택되지 않았습니다.');
+	// 		}
 
-			await commonStore.setUploadable(true);
-			return;
-		}
+	// 		await commonStore.setUploadable(true);
+	// 		return;
+	// 	}
 
-		const markets = commonStore.uploadDisabledInfo.markets.filter((v: any) => v.upload).map((v: any) => v.code);
+	// 	const markets = commonStore.uploadDisabledInfo.markets.filter((v: any) => v.upload).map((v: any) => v.code);
 
-		if (markets.length < 1) {
-			alert('오픈마켓이 선택되지 않았습니다.');
+	// 	if (markets.length < 1) {
+	// 		alert('오픈마켓이 선택되지 않았습니다.');
 
-			return;
-		}
+	// 		return;
+	// 	}
 
-		const response = await gql(QUERIES.GET_REGISTER_PRODUCTS_DATA_BY_USER, {
-			productIds,
-			siteCode: markets,
-		});
+	// 	const response = await gql(QUERIES.GET_REGISTER_PRODUCTS_DATA_BY_USER, {
+	// 		productIds,
+	// 		siteCode: markets,
+	// 	});
 
-		if (response.errors) {
-			alert(response.errors[0].message);
+	// 	if (response.errors) {
+	// 		alert(response.errors[0].message);
 
-			return;
-		}
+	// 		return;
+	// 	}
 
-		const data = JSON.parse(response.data.getRegisterProductsDataByUser);
-		await Promise.all([
-			deleteESMPlus2(
-				this,
-				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A522'),
-			),
-			deleteESMPlus2(
-				this,
-				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A523'),
-			),
-		]);
+	// 	const data = JSON.parse(response.data.getRegisterProductsDataByUser);
+	// 	await Promise.all([
+	// 		deleteESMPlus2(
+	// 			this,
+	// 			commonStore,
+	// 			data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A522'),
+	// 		),
+	// 		deleteESMPlus2(
+	// 			this,
+	// 			commonStore,
+	// 			data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A523'),
+	// 		),
+	// 	]);
 
-		// if (commonStore.uploadInfo.stopped) {
-		//     alert("업로드가 중단되었습니다.");
-		// }
+	// 	// if (commonStore.uploadInfo.stopped) {
+	// 	//     alert("업로드가 중단되었습니다.");
+	// 	// }
 
-		// this.clearDisabledConsoleText();
-		this.refreshProduct(commonStore);
-		commonStore.initUploadDisabledMarketProgress();
-		commonStore.setUploadable(true);
-		commonStore.setStopped(true);
-	};
+	// 	// this.clearDisabledConsoleText();
+	// 	this.refreshProduct(commonStore);
+	// 	commonStore.initUploadDisabledMarketProgress();
+	// 	commonStore.setUploadable(true);
+	// 	commonStore.setStopped(true);
+	// };
 
 	// 상품 등록
-	uploadItems = async (commonStore: any, edit: boolean) => {
-		let productIds: any = [];
+	uploadItems = async (commonStore: common, edit: boolean) => {
+		let productIds: number[] = [];
+
 		if (this.uploadIndex > -1) {
 			productIds.push(this.itemInfo.items[this.uploadIndex].id);
 		} else {
@@ -4140,7 +4141,7 @@ export class product {
 			return;
 		}
 
-		const markets = commonStore.uploadInfo.markets.filter((v: any) => v.upload).map((v: any) => v.code);
+		const markets = commonStore.uploadInfo.markets.filter((v) => v.upload).map((v) => v.code);
 
 		if (markets.length < 1) {
 			alert('오픈마켓이 선택되지 않았습니다.');
@@ -4160,7 +4161,7 @@ export class product {
 		}
 
 		const data = JSON.parse(response.data.getRegisterProductsDataByUser);
-
+		console.log({ data });
 		if (edit) {
 			commonStore.setEditedUpload(true);
 
@@ -4196,6 +4197,18 @@ export class product {
 				commonStore,
 				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A113'),
 			),
+			/** ESM2.0 */
+			uploadESMPlus2(
+				this,
+				commonStore,
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A522'), //옥션2.0
+			),
+			uploadESMPlus2(
+				this,
+				commonStore,
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A523'), //지마켓2.0
+			),
+			/** ESM1.0 */
 			uploadESMPlus(
 				this,
 				commonStore,
@@ -4245,83 +4258,83 @@ export class product {
 	};
 
 	// 상품 등록 esm2.0
-	Esm2uploadItems = async (commonStore: any, edit: boolean) => {
-		let productIds: any = [];
+	// Esm2uploadItems = async (commonStore: any, edit: boolean) => {
+	// 	let productIds: any = [];
 
-		if (this.Esm2uploadIndex > -1) {
-			productIds.push(this.itemInfo.items[this.Esm2uploadIndex].id);
-		} else {
-			this.itemInfo.items.map((v: any) => {
-				if (v.checked) {
-					productIds.push(v.id);
-				}
-			});
-		}
+	// 	if (this.Esm2uploadIndex > -1) {
+	// 		productIds.push(this.itemInfo.items[this.Esm2uploadIndex].id);
+	// 	} else {
+	// 		this.itemInfo.items.map((v: any) => {
+	// 			if (v.checked) {
+	// 				productIds.push(v.id);
+	// 			}
+	// 		});
+	// 	}
 
-		if (productIds.length < 1) {
-			alert('상품이 선택되지 않았습니다.');
+	// 	if (productIds.length < 1) {
+	// 		alert('상품이 선택되지 않았습니다.');
 
-			return;
-		}
+	// 		return;
+	// 	}
 
-		const markets = commonStore.uploadInfo.markets.filter((v: any) => v.upload).map((v: any) => v.code);
+	// 	const markets = commonStore.uploadInfo.markets.filter((v: any) => v.upload).map((v: any) => v.code);
 
-		if (markets.length < 1) {
-			alert('오픈마켓이 선택되지 않았습니다.');
+	// 	if (markets.length < 1) {
+	// 		alert('오픈마켓이 선택되지 않았습니다.');
 
-			return;
-		}
+	// 		return;
+	// 	}
 
-		const response = await gql(QUERIES.GET_REGISTER_PRODUCTS_DATA_BY_USER, {
-			productIds,
-			siteCode: markets,
-		});
+	// 	const response = await gql(QUERIES.GET_REGISTER_PRODUCTS_DATA_BY_USER, {
+	// 		productIds,
+	// 		siteCode: markets,
+	// 	});
 
-		if (response.errors) {
-			alert(response.errors[0].message);
+	// 	if (response.errors) {
+	// 		alert(response.errors[0].message);
 
-			return;
-		}
+	// 		return;
+	// 	}
 
-		const data = JSON.parse(response.data.getRegisterProductsDataByUser);
+	// 	const data = JSON.parse(response.data.getRegisterProductsDataByUser);
 
-		if (edit) {
-			commonStore.setEditedUpload(true);
+	// 	if (edit) {
+	// 		commonStore.setEditedUpload(true);
 
-			this.Esm2AddConsoleText('상품 수정을 시작합니다.');
-		} else {
-			commonStore.setEditedUpload(false);
+	// 		this.Esm2AddConsoleText('상품 수정을 시작합니다.');
+	// 	} else {
+	// 		commonStore.setEditedUpload(false);
 
-			this.Esm2AddConsoleText('상품 등록을 시작합니다.');
-		}
+	// 		this.Esm2AddConsoleText('상품 등록을 시작합니다.');
+	// 	}
 
-		this.Esm2clearUploadResults();
+	// 	this.Esm2clearUploadResults();
 
-		commonStore.setStopped(false);
+	// 	commonStore.setStopped(false);
 
-		await Promise.all([
-			uploadESMPlus2(
-				this,
-				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A522'), //옥션2.0
-			),
-			uploadESMPlus2(
-				this,
-				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A523'), //지마켓2.0
-			),
-		]);
+	// 	await Promise.all([
+	// 		uploadESMPlus2(
+	// 			this,
+	// 			commonStore,
+	// 			data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A522'), //옥션2.0
+	// 		),
+	// 		uploadESMPlus2(
+	// 			this,
+	// 			commonStore,
+	// 			data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A523'), //지마켓2.0
+	// 		),
+	// 	]);
 
-		if (commonStore.uploadInfo.stopped) {
-			alert('업로드가 중단되었습니다.');
-		}
+	// 	if (commonStore.uploadInfo.stopped) {
+	// 		alert('업로드가 중단되었습니다.');
+	// 	}
 
-		this.refreshProduct(commonStore);
+	// 	this.refreshProduct(commonStore);
 
-		commonStore.initUploadMarketProgress();
-		commonStore.setUploadable(true);
-		commonStore.setStopped(true);
-	};
+	// 	commonStore.initUploadMarketProgress();
+	// 	commonStore.setUploadable(true);
+	// 	commonStore.setStopped(true);
+	// };
 
 	// 등록 진행상태 표시
 	addConsoleText = (text: string) => {
@@ -4332,23 +4345,23 @@ export class product {
 	};
 
 	// 등록 진행상태 표시 ok
-	Esm2AddConsoleText = (text: string) => {
-		const today = getClock();
-		const result = `[${today.hh}:${today.mm}:${today.ss}] ${text}`;
+	// Esm2AddConsoleText = (text: string) => {
+	// 	const today = getClock();
+	// 	const result = `[${today.hh}:${today.mm}:${today.ss}] ${text}`;
 
-		this.Esm2uploadConsole.push(result);
-	};
+	// 	this.Esm2uploadConsole.push(result);
+	// };
 
 	// 등록 결과 초기화 ok
-	Esm2clearUploadResults = () => {
-		this.registeredInfo = {
-			wait: [],
-			success: [],
-			failed: [],
-		};
+	// Esm2clearUploadResults = () => {
+	// 	this.registeredInfo = {
+	// 		wait: [],
+	// 		success: [],
+	// 		failed: [],
+	// 	};
 
-		this.Esm2uploadConsole = [];
-	};
+	// 	this.Esm2uploadConsole = [];
+	// };
 	// 등록 결과 초기화
 	clearUploadResults = () => {
 		this.registeredInfo = {
@@ -4519,7 +4532,7 @@ export class product {
 	};
 
 	// 옵션이미지 복구
-	initProductOptionImage = async (id: any, index: number) => {
+	initProductOptionImage = async (id: number, index: number) => {
 		const exit = () => {
 			this.itemInfo.items[index].edited.optionImages = 0;
 		};

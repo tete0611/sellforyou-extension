@@ -12,7 +12,7 @@ export const SearchFilterModal = observer(() => {
 	const { product } = React.useContext(AppContext);
 
 	return (
-		<Modal open={product.modalInfo.userFilter} onClose={() => product.toggleSearchFilterModal(false)}>
+		<Modal open={product.modalInfo.userFilter ?? false} onClose={() => product.toggleSearchFilterModal(false)}>
 			<Paper
 				className='uploadModal'
 				sx={{

@@ -10,6 +10,7 @@ import { coupangApiGateway } from '../../pages/Tools/Coupang';
 import { streetApiGateway } from '../../pages/Tools/Street';
 import { floatingToast, request } from '../../pages/Tools/Common';
 import { refreshToken } from '../../pages/Tools/Auth';
+import { UploadDisabledInfo, UploadInfo } from '../../type/type';
 
 export class common {
 	notionPage = null;
@@ -61,7 +62,7 @@ export class common {
 		tmonPolicyList: [],
 	};
 
-	uploadDisabledInfo: any = {
+	uploadDisabledInfo: UploadDisabledInfo = {
 		markets: [
 			{
 				code: 'A077',
@@ -144,11 +145,10 @@ export class common {
 		],
 	};
 
-	uploadInfo: any = {
+	uploadInfo: UploadInfo = {
 		stopped: true,
 		editable: false,
 		uploadable: true,
-
 		markets: [
 			{
 				code: 'A077',
@@ -159,7 +159,6 @@ export class common {
 				video: false,
 				progress: 0,
 			},
-
 			{
 				code: 'B378',
 				name: '쿠팡',
@@ -169,7 +168,6 @@ export class common {
 				video: false,
 				progress: 0,
 			},
-
 			{
 				code: 'A112',
 				name: '11번가 글로벌',
@@ -179,7 +177,6 @@ export class common {
 				video: false,
 				progress: 0,
 			},
-
 			{
 				code: 'A113',
 				name: '11번가 일반',
@@ -189,7 +186,6 @@ export class common {
 				video: false,
 				progress: 0,
 			},
-
 			{
 				code: 'A006',
 				name: '지마켓 1.0',
@@ -199,27 +195,24 @@ export class common {
 				video: false,
 				progress: 0,
 			},
-
 			{
 				code: 'A523',
-				name: '지마켓2.0',
+				name: '지마켓 2.0',
 				connected: false,
 				disabled: true,
 				upload: false,
 				video: false,
 				progress: 0,
 			},
-
 			{
 				code: 'A522',
-				name: '옥션2.0',
+				name: '옥션 2.0',
 				connected: false,
 				disabled: true,
 				upload: false,
 				video: false,
 				progress: 0,
 			},
-
 			{
 				code: 'A001',
 				name: '옥션 1.0',
@@ -229,7 +222,6 @@ export class common {
 				video: false,
 				progress: 0,
 			},
-
 			{
 				code: 'A027',
 				name: '인터파크',
@@ -239,7 +231,6 @@ export class common {
 				video: false,
 				progress: 0,
 			},
-
 			{
 				code: 'B719',
 				name: '위메프 2.0',
@@ -250,7 +241,6 @@ export class common {
 				progress: 0,
 				policyInfo: null,
 			},
-
 			{
 				code: 'A524',
 				name: '롯데온 글로벌',
@@ -261,7 +251,6 @@ export class common {
 				progress: 0,
 				policyInfo: null,
 			},
-
 			{
 				code: 'A525',
 				name: '롯데온 일반',
@@ -272,7 +261,6 @@ export class common {
 				progress: 0,
 				policyInfo: null,
 			},
-
 			{
 				code: 'B956',
 				name: '티몬',
@@ -444,14 +432,14 @@ export class common {
 
 			// 오픈마켓 연동상태 설정
 			if (this.user.userInfo.naverStoreUrl) {
-				let result = this.uploadInfo.markets.find((v: any) => v.code === 'A077');
+				let result = this.uploadInfo.markets.find((v) => v.code === 'A077');
 
-				result.connected = true;
+				result!.connected = true;
 
 				if (this.user.userInfo.naverUseType === 'Y') {
-					result.disabled = false;
-					result.upload = true;
-					result.video = true;
+					result!.disabled = false;
+					result!.upload = true;
+					result!.video = true;
 				}
 			}
 
@@ -461,14 +449,14 @@ export class common {
 				this.user.userInfo.coupangAccessKey &&
 				this.user.userInfo.coupangSecretKey
 			) {
-				let result = this.uploadInfo.markets.find((v: any) => v.code === 'B378');
+				let result = this.uploadInfo.markets.find((v) => v.code === 'B378');
 
-				result.connected = true;
+				result!.connected = true;
 
 				if (this.user.userInfo.coupangUseType === 'Y') {
-					result.disabled = false;
-					result.upload = true;
-					result.video = true;
+					result!.disabled = false;
+					result!.upload = true;
+					result!.video = true;
 				}
 			}
 
@@ -480,14 +468,14 @@ export class common {
 				(this.user.userInfo.streetApiKey3 && this.user.userInfo.streetUseKeyType === '3') ||
 				(this.user.userInfo.streetApiKey4 && this.user.userInfo.streetUseKeyType === '4')
 			) {
-				let result = this.uploadInfo.markets.find((v: any) => v.code === 'A112');
+				let result = this.uploadInfo.markets.find((v) => v.code === 'A112');
 
-				result.connected = true;
+				result!.connected = true;
 
 				if (this.user.userInfo.streetUseType === 'Y') {
-					result.disabled = false;
-					result.upload = true;
-					result.video = true;
+					result!.disabled = false;
+					result!.upload = true;
+					result!.video = true;
 				}
 			}
 
@@ -497,61 +485,61 @@ export class common {
 				(this.user.userInfo.streetNormalApiKey3 && this.user.userInfo.streetNormalUseKeyType === '3') ||
 				(this.user.userInfo.streetNormalApiKey4 && this.user.userInfo.streetNormalUseKeyType === '4')
 			) {
-				let result = this.uploadInfo.markets.find((v: any) => v.code === 'A113');
+				let result = this.uploadInfo.markets.find((v) => v.code === 'A113');
 
-				result.connected = true;
+				result!.connected = true;
 
 				if (this.user.userInfo.streetNormalUseType === 'Y') {
-					result.disabled = false;
-					result.upload = true;
-					result.video = true;
+					result!.disabled = false;
+					result!.upload = true;
+					result!.video = true;
 				}
 			}
 
 			if (this.user.userInfo.esmplusGmarketId) {
-				let result = this.uploadInfo.markets.find((v: any) => v.code === 'A006');
+				let result = this.uploadInfo.markets.find((v) => v.code === 'A006');
 
-				result.connected = true;
+				result!.connected = true;
 
 				if (this.user.userInfo.gmarketUseType === 'Y') {
-					result.disabled = false;
-					result.upload = true;
-					result.video = true;
+					result!.disabled = false;
+					result!.upload = false;
+					result!.video = false;
 				}
 			}
 
 			if (this.user.userInfo.esmplusGmarketId) {
-				let result = this.uploadInfo.markets.find((v: any) => v.code === 'A523');
+				let result = this.uploadInfo.markets.find((v) => v.code === 'A523');
 
-				result.connected = true;
+				result!.connected = true;
 
 				if (this.user.userInfo.gmarketUseType === 'Y') {
-					result.disabled = false;
-					result.upload = true;
-					result.video = true;
+					result!.disabled = false;
+					result!.upload = true;
+					result!.video = true;
 				}
 			}
 
 			if (this.user.userInfo.esmplusAuctionId) {
-				let result = this.uploadInfo.markets.find((v: any) => v.code === 'A522');
+				let result = this.uploadInfo.markets.find((v) => v.code === 'A522');
 
-				result.connected = true;
+				result!.connected = true;
 
 				if (this.user.userInfo.auctionUseType === 'Y') {
-					result.disabled = false;
-					result.upload = true;
-					result.video = true;
+					result!.disabled = false;
+					result!.upload = true;
+					result!.video = true;
 				}
 			}
 			if (this.user.userInfo.esmplusAuctionId) {
-				let result = this.uploadInfo.markets.find((v: any) => v.code === 'A001');
+				let result = this.uploadInfo.markets.find((v) => v.code === 'A001');
 
-				result.connected = true;
+				result!.connected = true;
 
 				if (this.user.userInfo.auctionUseType === 'Y') {
-					result.disabled = false;
-					result.upload = true;
-					result.video = true;
+					result!.disabled = false;
+					result!.upload = false;
+					result!.video = false;
 				}
 			}
 
@@ -561,37 +549,37 @@ export class common {
 				this.user.userInfo.interparkEditCertKey &&
 				this.user.userInfo.interparkEditSecretKey
 			) {
-				let result = this.uploadInfo.markets.find((v: any) => v.code === 'A027');
+				let result = this.uploadInfo.markets.find((v) => v.code === 'A027');
 
-				result.connected = true;
+				result!.connected = true;
 
 				if (this.user.userInfo.interparkUseType === 'Y') {
-					result.disabled = false;
-					result.upload = true;
-					result.video = true;
+					result!.disabled = false;
+					result!.upload = true;
+					result!.video = true;
 				}
 			}
 
 			if (this.user.userInfo.wemakepriceId) {
-				let result = this.uploadInfo.markets.find((v: any) => v.code === 'B719');
+				let result = this.uploadInfo.markets.find((v) => v.code === 'B719');
 
-				result.connected = true;
+				result!.connected = true;
 
 				if (this.user.userInfo.wemakepriceUseType === 'Y') {
-					result.disabled = false;
-					result.upload = true;
-					result.video = true;
+					result!.disabled = false;
+					result!.upload = true;
+					result!.video = true;
 				}
 			}
 
 			if (this.user.userInfo.lotteonVendorId && this.user.userInfo.lotteonApiKey) {
 				let result: any = null;
 
-				let result1 = this.uploadInfo.markets.find((v: any) => v.code === 'A524');
-				let result2 = this.uploadInfo.markets.find((v: any) => v.code === 'A525');
+				let result1 = this.uploadInfo.markets.find((v) => v.code === 'A524');
+				let result2 = this.uploadInfo.markets.find((v) => v.code === 'A525');
 
-				result1.connected = true;
-				result2.connected = true;
+				result1!.connected = true;
+				result2!.connected = true;
 
 				if (this.user.userInfo.lotteonSellerType === 'G') {
 					result = result1;
@@ -608,14 +596,14 @@ export class common {
 			}
 
 			if (this.user.userInfo.tmonId) {
-				let result = this.uploadInfo.markets.find((v: any) => v.code === 'B956');
+				let result = this.uploadInfo.markets.find((v) => v.code === 'B956');
 
-				result.connected = true;
+				result!.connected = true;
 
 				if (this.user.userInfo.tmonUseType === 'Y') {
-					result.disabled = false;
-					result.upload = true;
-					result.video = true;
+					result!.disabled = false;
+					result!.upload = true;
+					result!.video = true;
 				}
 			}
 
@@ -665,7 +653,7 @@ export class common {
 
 	// 연동 초기화
 	initConnectedInfo = (marketCode: string) => {
-		this.uploadInfo.markets.find((v: any) => v.code === marketCode).connected = false;
+		this.uploadInfo.markets.find((v) => v.code === marketCode)!.connected = false;
 	};
 
 	// 연동정보 검증
@@ -696,7 +684,7 @@ export class common {
 					return 0;
 				}
 
-				this.uploadInfo.markets.find((v: any) => v.code === 'A077').connected = true;
+				this.uploadInfo.markets.find((v) => v.code === 'A077')!.connected = true;
 				this.testUserInfo({
 					naverStoreUrl: this.user.userInfo.naverStoreUrl,
 				});
@@ -758,7 +746,7 @@ export class common {
 					return;
 				}
 
-				this.uploadInfo.markets.find((v: any) => v.code === 'B378').connected = true;
+				this.uploadInfo.markets.find((v) => v.code === 'B378')!.connected = true;
 				this.testUserInfo({
 					coupangLoginId: this.user.userInfo.coupangLoginId,
 					coupangVendorId: this.user.userInfo.coupangVendorId,
@@ -821,7 +809,7 @@ export class common {
 					return;
 				}
 
-				this.uploadInfo.markets.find((v: any) => v.code === 'A112').connected = true;
+				this.uploadInfo.markets.find((v) => v.code === 'A112')!.connected = true;
 
 				this.testUserInfo({
 					streetUseKeyType: this.user.userInfo.streetUseKeyType,
@@ -888,7 +876,7 @@ export class common {
 					return;
 				}
 
-				this.uploadInfo.markets.find((v: any) => v.code === 'A113').connected = true;
+				this.uploadInfo.markets.find((v) => v.code === 'A113')!.connected = true;
 
 				this.testUserInfo({
 					streetNormalUseKeyType: this.user.userInfo.streetNormalUseKeyType,
@@ -943,7 +931,7 @@ export class common {
 					return;
 				}
 
-				this.uploadInfo.markets.find((v: any) => v.code === 'A006').connected = true;
+				this.uploadInfo.markets.find((v) => v.code === 'A006')!.connected = true;
 				this.testUserInfo({
 					esmplusGmarketId: this.user.userInfo.esmplusGmarketId,
 				});
@@ -991,7 +979,7 @@ export class common {
 					return;
 				}
 
-				this.uploadInfo.markets.find((v: any) => v.code === 'A001').connected = true;
+				this.uploadInfo.markets.find((v) => v.code === 'A001')!.connected = true;
 				this.testUserInfo({
 					esmplusAuctionId: this.user.userInfo.esmplusAuctionId,
 				});
@@ -1024,7 +1012,7 @@ export class common {
 					return;
 				}
 
-				this.uploadInfo.markets.find((v: any) => v.code === 'A027').connected = true;
+				this.uploadInfo.markets.find((v) => v.code === 'A027')!.connected = true;
 				this.testUserInfo({
 					interparkCertKey: this.user.userInfo.interparkCertKey,
 					interparkSecretKey: this.user.userInfo.interparkSecretKey,
@@ -1055,7 +1043,7 @@ export class common {
 					alert('(위메프) 위메프 파트너 로그인 후 재시도 바랍니다.');
 				}
 
-				this.uploadInfo.markets.find((v: any) => v.code === 'B719').connected = true;
+				this.uploadInfo.markets.find((v) => v.code === 'B719')!.connected = true;
 				this.testUserInfo({
 					wemakepriceId: this.user.userInfo.wemakepriceId,
 				});
@@ -1076,8 +1064,8 @@ export class common {
 					return;
 				}
 
-				this.uploadInfo.markets.find((v: any) => v.code === 'A524').connected = true;
-				this.uploadInfo.markets.find((v: any) => v.code === 'A525').connected = true;
+				this.uploadInfo.markets.find((v) => v.code === 'A524')!.connected = true;
+				this.uploadInfo.markets.find((v) => v.code === 'A525')!.connected = true;
 				this.testUserInfo({
 					lotteonVendorId: this.user.userInfo.lotteonVendorId,
 					lotteonApiKey: this.user.userInfo.lotteonApiKey,
@@ -1116,7 +1104,7 @@ export class common {
 					return;
 				}
 
-				this.uploadInfo.markets.find((v: any) => v.code === 'B956').connected = true;
+				this.uploadInfo.markets.find((v) => v.code === 'B956')!.connected = true;
 				this.testUserInfo({
 					tmonId: this.user.userInfo.tmonId,
 				});
@@ -1140,7 +1128,7 @@ export class common {
 	// 배송정보 조회
 	getDeliveryInfo = async () => {
 		try {
-			if (this.uploadInfo.markets.find((v: any) => v.code === 'B378').connected) {
+			if (this.uploadInfo.markets.find((v) => v.code === 'B378')!.connected) {
 				let body = {
 					accesskey: this.user.userInfo.coupangAccessKey,
 					secretkey: this.user.userInfo.coupangSecretKey,
@@ -1168,7 +1156,7 @@ export class common {
 			console.log('error', e);
 		}
 		try {
-			if (this.uploadInfo.markets.find((v: any) => v.code === 'A112').connected) {
+			if (this.uploadInfo.markets.find((v) => v.code === 'A112')!.connected) {
 				let apiKey = null;
 
 				switch (this.user.userInfo.streetUseKeyType) {
@@ -1222,7 +1210,7 @@ export class common {
 		}
 
 		try {
-			if (this.uploadInfo.markets.find((v: any) => v.code === 'A113').connected) {
+			if (this.uploadInfo.markets.find((v) => v.code === 'A113')!.connected) {
 				let apiKey = null;
 
 				switch (this.user.userInfo.streetNormalUseKeyType) {
@@ -1342,17 +1330,17 @@ export class common {
 
 	// 배송정책 설정
 	setPolicyInfo = (marketCode: string, value: any) => {
-		this.uploadInfo.markets.find((v: any) => v.code === marketCode).policyInfo = value;
+		this.uploadInfo.markets.find((v) => v.code === marketCode)!.policyInfo = value;
 	};
 
 	// 등록해제 시 퍼센테이지
 	setDisabledProgressValue = (marketCode: string, value: number) => {
-		this.uploadDisabledInfo.markets.find((v: any) => v.code === marketCode).progress = value;
+		this.uploadDisabledInfo.markets.find((v) => v.code === marketCode)!.progress = value;
 	};
 
 	// 등록 시 퍼센테이지
 	setProgressValue = (marketCode: string, value: number) => {
-		this.uploadInfo.markets.find((v: any) => v.code === marketCode).progress = value;
+		this.uploadInfo.markets.find((v) => v.code === marketCode)!.progress = value;
 	};
 
 	// 팝업 기준위치
@@ -1373,32 +1361,36 @@ export class common {
 
 	// 오픈마켓 등록해제 여부 설정
 	toggleUploadDisabledInfoMarket = (marketCode: string, value: boolean) => {
-		this.uploadDisabledInfo.markets.find((v: any) => v.code === marketCode).upload = value;
+		this.uploadDisabledInfo.markets.find((v) => v.code === marketCode)!.upload = value;
 	};
 
 	// 전체마켓 등록해제 여부 설정
 	toggleUploadDisabledInfoMarketAll = (value: boolean) => {
-		this.uploadDisabledInfo.markets.filter((v: any) => !v.disabled).map((v: any) => (v.upload = value));
+		this.uploadDisabledInfo.markets.filter((v) => !v.disabled).map((v) => (v.upload = value));
 	};
 
 	// 오픈마켓 등록 여부 설정
 	toggleUploadInfoMarket = (marketCode: string, value: boolean) => {
-		this.uploadInfo.markets.find((v: any) => v.code === marketCode).upload = value;
+		this.uploadInfo.markets.find((v) => v.code === marketCode)!.upload = value;
 	};
 
 	// 전체마켓 등록 여부 설정
 	toggleUploadInfoMarketAll = (value: boolean) => {
-		this.uploadInfo.markets.filter((v: any) => !v.disabled).map((v: any) => (v.upload = value));
+		this.uploadInfo.markets
+			.filter((v) => !v.disabled)
+			.map((v) => (v.code === 'A006' || v.code === 'A001' ? (v.upload = false) : (v.upload = value)));
 	};
 
 	// 오픈마켓 동영상 업로드 여부 설정
 	toggleUploadInfoVideo = (marketCode: string, value: boolean) => {
-		this.uploadInfo.markets.find((v: any) => v.code === marketCode).video = value;
+		this.uploadInfo.markets.find((v) => v.code === marketCode)!.video = value;
 	};
 
 	// 전체마켓 동영상 업로드 여부 설정
 	toggleUploadInfoVideoAll = (value: boolean) => {
-		this.uploadInfo.markets.filter((v: any) => !v.disabled).map((v: any) => (v.video = value));
+		this.uploadInfo.markets
+			.filter((v) => !v.disabled)
+			.map((v) => (v.code === 'A006' || v.code === 'A001' ? (v.video = false) : (v.video = value)));
 	};
 
 	// 수정모드 설정
@@ -1418,7 +1410,7 @@ export class common {
 
 	// 등록해제 퍼센테이지 초기설정
 	initUploadDisabledMarketProgress = () => {
-		this.uploadDisabledInfo.markets.map((v: any) => (v.progress = 0));
+		this.uploadDisabledInfo.markets.map((v) => (v.progress = 0));
 	};
 
 	// 등록 퍼센테이지 초기설정

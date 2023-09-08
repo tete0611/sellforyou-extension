@@ -30,7 +30,7 @@ import { SetProductSillDataPopOver } from '../../PopOver/SetProductSillDataPopOv
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { UpdateManyProductPopOver } from '../../PopOver/UpdateManyProductPopOver';
 import { ReplaceOptionNamePopOver } from '../../PopOver/ReplaceOptionNamePopOver';
-import { Esm2UploadModal } from '../../Modals/Esm2UploadModal';
+// import { Esm2UploadModal } from '../../Modals/Esm2UploadModal';
 // import { PreviewModal } from '../../Modals/PreviewModal';
 
 // 상품수집관리 목록 테이블 뷰
@@ -287,7 +287,7 @@ export const Collected = observer(() => {
 				<MyKeywardModal />
 				<SearchFilterModal />
 				<UploadModal />
-				<Esm2UploadModal />
+				{/* <Esm2UploadModal /> */}
 				<UploadFailedModal />
 				{/* <PreviewModal /> */}
 			</Frame>
