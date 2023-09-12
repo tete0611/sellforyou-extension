@@ -4,11 +4,14 @@ import { fabric } from 'fabric';
 import gql from '../Main/GraphQL/Requests';
 import { getLocalStorage } from '../Tools/ChromeAsync';
 import { floatingToast, getClock, readFileDataURL, sleep } from '../Tools/Common';
-import { Layer, Product } from '../../type/type';
+import { Layer, Nullable, Product } from '../../type/type';
+import { Image as FabricImage } from 'fabric/fabric-impl';
 
 const ENDPOINT_IMAGE = 'https://img.sellforyou.co.kr';
 const FLASK_URL = 'http://www.sellforyou.co.kr:5003/trangers/';
 let papagoApiKey = '';
+
+type Customfabricobject = fabric.Object & { id: number; text: any; isEditing: boolean };
 
 /** 크롬스토리지 파파고 키 가져오기 */
 getLocalStorage('ppgKey').then((apiKey) => {
@@ -55,8 +58,8 @@ let mainCrop: any = document.getElementById('mainCrop');
 let mainTextEditor: any = document.getElementById('mainTextEditor');
 let mainWaterMark: any = document.getElementById('mainWaterMark');
 let mainDownload: any = document.getElementById('mainDownload');
-let originWidthPCLayout: any = document.getElementById('originWidthPCLayout');
-let originWidthURLLayout: any = document.getElementById('originWidthURLLayout');
+// let originWidthPCLayout: any = document.getElementById('originWidthPCLayout');
+// let originWidthURLLayout: any = document.getElementById('originWidthURLLayout');
 let multipleTranslation: any = document.getElementById('multipleTranslation');
 let singleTranslation: any = document.getElementById('singleTranslation');
 let areaTranslation: any = document.getElementById('areaTranslation');
@@ -151,7 +154,7 @@ let cropRatioType: any = '3';
 let currentImageIndex: any = null;
 let currentType: any = null;
 
-let dragImage: any = null;
+let dragImage: null | FabricImage = null;
 
 let editorMode = 'idle';
 
@@ -159,10 +162,10 @@ let isShapeFill = true;
 let isDrag = false;
 let isOriginal = false;
 
-let layers: Layer[] = [];
+let layers: any = [];
 
-let maskCanvas: any = new fabric.Canvas('mask');
-let myCanvas: any = new fabric.Canvas('main');
+let maskCanvas = new fabric.Canvas('mask');
+let myCanvas = new fabric.Canvas('main');
 
 let orgCanvas: any = new fabric.Canvas('original');
 
@@ -303,7 +306,7 @@ const getCurrentLayer = () => {
 	return layer[0];
 };
 
-const mergeImage = (dataUrl: any) => {
+const mergeImage = (dataUrl: string) => {
 	return new Promise((resolve, reject) => {
 		let cropped = new Image();
 
@@ -399,8 +402,8 @@ const replayCanvas = (type: string) => {
 	myCanvas.clear();
 	myCanvas.loadFromJSON(stateCanvas, async () => {
 		myCanvas.renderAll();
-
-		layer.image.current = myCanvas.backgroundImage?.src ?? myCanvas.overlayImage.src;
+		// @ts-ignore
+		layer.image.current = myCanvas.backgroundImage?.src ?? myCanvas.overlayImage?.src;
 		layer.object = [];
 
 		let object = JSON.parse(stateObject);
@@ -710,7 +713,7 @@ const displayImage = async (index: number, customWidth: number) => {
 		myCanvas.add(text);
 	}
 
-	myCanvas.setBackgroundImage(currentImage);
+	myCanvas.setBackgroundImage(currentImage, () => {});
 
 	switch (editorMode) {
 		case 'crop': {
@@ -784,7 +787,7 @@ const displayImage = async (index: number, customWidth: number) => {
 		}
 
 		default: {
-			myCanvas.setBackgroundImage(currentImage);
+			myCanvas.setBackgroundImage(currentImage, () => {});
 
 			break;
 		}
@@ -989,11 +992,11 @@ const getMaskImage = async (itemList: any) => {
 
 	maskCanvas.clear();
 	maskCanvas.setDimensions({
-		width: myCanvas.width * (100 / percentage),
-		height: myCanvas.height * (100 / percentage),
+		width: myCanvas.width! * (100 / percentage),
+		height: myCanvas.height! * (100 / percentage),
 	});
 
-	maskCanvas.setBackgroundImage(currentImage);
+	maskCanvas.setBackgroundImage(currentImage, () => {});
 
 	let image = maskCanvas.toDataURL();
 
@@ -1021,7 +1024,7 @@ const getMaskImage = async (itemList: any) => {
 	});
 
 	let dataBlob = await dataResp.blob();
-	let dataBase64 = await readFileDataURL(dataBlob);
+	let dataBase64 = (await readFileDataURL(dataBlob)) as string;
 	let dataMerged: any = await mergeImage(dataBase64);
 	let result: any = new fabric.Image(dataMerged);
 
@@ -1577,8 +1580,9 @@ const canvasSetting = () => {
 		transparentCorners: false,
 	});
 
+	// @ts-ignore
 	myCanvas.on({
-		'text:changed': (e: any) => {
+		'text:changed': (e) => {
 			let object = e.target;
 			let layer = getCurrentLayer();
 			let objectDirection = layer.object[object.id].textOption.direction;
@@ -2041,7 +2045,7 @@ const canvasSetting = () => {
 		'object:moving': (e: any) => {
 			let object = e.target;
 			let layer = getCurrentLayer();
-			let objects = myCanvas.getActiveObject();
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 			let percentage = Math.round(parseInt(previewSize.value) / 10) * 10 + 10;
 
 			let left = Math.floor(object.left / (100 / percentage));
@@ -2055,9 +2059,9 @@ const canvasSetting = () => {
 				});
 			}
 
-			if (left + width > myCanvas.width) {
+			if (left + width > myCanvas.width!) {
 				object.set({
-					left: (myCanvas.width - width) * (100 / percentage),
+					left: (myCanvas.width! - width) * (100 / percentage),
 				});
 			}
 
@@ -2067,9 +2071,9 @@ const canvasSetting = () => {
 				});
 			}
 
-			if (top + height > myCanvas.height) {
+			if (top + height > myCanvas.height!) {
 				object.set({
-					top: (myCanvas.height - height) * (100 / percentage),
+					top: (myCanvas.height! - height) * (100 / percentage),
 				});
 			}
 
@@ -2079,13 +2083,14 @@ const canvasSetting = () => {
 						let object = objects['_objects'][i];
 
 						objects.set({
-							left: parseInt(objects.left),
-							top: parseInt(objects.top),
+							left: parseInt(String(objects.left)),
+							top: parseInt(String(objects.top)),
 						});
 					}
 				} else {
-					layer.object[objects.id].pos[0].x = parseInt(object.left);
-					layer.object[objects.id].pos[0].y = parseInt(object.top);
+					const objectId = objects.id;
+					layer.object[objectId].pos[0].x = parseInt(object.left);
+					layer.object[objectId].pos[0].y = parseInt(object.top);
 				}
 			}
 
@@ -2097,7 +2102,7 @@ const canvasSetting = () => {
 		'object:scaling': (e: any) => {
 			let object = e.target;
 			let layer = getCurrentLayer();
-			let objects = myCanvas.getActiveObject();
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 			let objectType = e.target.get('type');
 
 			let height = object.getScaledHeight();
@@ -2113,9 +2118,8 @@ const canvasSetting = () => {
 					});
 
 					toolTextSize.value = size;
-					if (objects.text !== undefined) {
-						layer.object[objects.id].textOption.size = size;
-					}
+					if (objects.text !== undefined) layer.object[objects.id].textOption.size = size;
+
 					saveCanvas();
 					break;
 				}
@@ -2132,23 +2136,22 @@ const canvasSetting = () => {
 				let width = Math.floor((object.width * object.scaleX) / (100 / percentage));
 				let height = Math.floor((object.height * object.scaleY) / (100 / percentage));
 
-				if (left < 0 || left + width > myCanvas.width) {
+				if (left < 0 || left + width > myCanvas.width!) {
 					object.set({
 						left: 0,
-						width: myCanvas.width * (100 / percentage),
+						width: myCanvas.width! * (100 / percentage),
 						scaleX: 1.0,
 					});
 				}
 
-				if (top < 0 || top + height > myCanvas.height) {
+				if (top < 0 || top + height > myCanvas.height!) {
 					object.set({
 						top: 0,
-						height: myCanvas.height * (100 / percentage),
+						height: myCanvas.height! * (100 / percentage),
 						scaleY: 1.0,
 					});
 				}
 			}
-
 			if (objects.id !== -1) {
 				if (objects['_objects']) {
 					//
@@ -2167,8 +2170,7 @@ const canvasSetting = () => {
 		'object:rotating': (e) => {
 			let object = e.target;
 			let layer = getCurrentLayer();
-			let objects = myCanvas.getActiveObject();
-
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 			if (objects.id !== -1) {
 				if (objects['_objects']) {
 				} else {
@@ -2303,13 +2305,13 @@ const canvasSetting = () => {
 					let yMin = Math.min(...test['y']);
 
 					let rect = new fabric.Rect({
-						left: xMin - dragImage.width / 2,
-						top: yMin - dragImage.height / 2,
+						left: xMin - dragImage?.width! / 2,
+						top: yMin - dragImage?.height! / 2,
 						width: xMax - xMin,
 						height: yMax - yMin,
 					});
 
-					dragImage.set({
+					dragImage?.set({
 						clipPath: rect,
 						selectable: false,
 						visible: true,
@@ -2467,8 +2469,8 @@ const canvasSetting = () => {
 
 					myCanvas.zoomToPoint(new fabric.Point(0, 0), 1.0);
 					myCanvas.setDimensions({
-						width: myCanvas.width * (100 / percentage),
-						height: myCanvas.height * (100 / percentage),
+						width: myCanvas.width! * (100 / percentage),
+						height: myCanvas.height! * (100 / percentage),
 					});
 
 					let dataUrl = myCanvas.toDataURL();
@@ -2534,8 +2536,8 @@ const canvasSetting = () => {
 
 					myCanvas.zoomToPoint(new fabric.Point(0, 0), 1.0);
 					myCanvas.setDimensions({
-						width: myCanvas.width * (100 / percentage),
-						height: myCanvas.height * (100 / percentage),
+						width: myCanvas.width! * (100 / percentage),
+						height: myCanvas.height! * (100 / percentage),
 					});
 
 					let dataUrl = myCanvas.toDataURL();
@@ -2561,7 +2563,7 @@ const canvasSetting = () => {
 };
 
 const setTextFont = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	let layer = getCurrentLayer();
 
@@ -2587,7 +2589,7 @@ const setTextFont = async (e: any) => {
 };
 
 const setTextSize = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	let layer = getCurrentLayer();
 
@@ -2616,7 +2618,7 @@ const setTextSize = async (e: any) => {
 
 const setTextColor = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	if (!objects) {
 		return;
@@ -2657,7 +2659,7 @@ const setTextColor = async (e: any) => {
 
 const setTextBackground = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	if (!objects) {
 		return;
@@ -2698,7 +2700,7 @@ const setTextBackground = async (e: any) => {
 
 const setShapeColor = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	if (!objects) {
 		return;
@@ -2738,7 +2740,7 @@ const setShapeColor = async (e: any) => {
 };
 
 const setShapeStrokeWidth = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	if (!objects) {
 		return;
@@ -2770,7 +2772,7 @@ const setShapeStrokeWidth = async (e: any) => {
 };
 
 const setShapeStrokeShape = async (e) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 	let layer = getCurrentLayer();
 
 	if (!objects) {
@@ -2796,6 +2798,7 @@ const setShapeStrokeShape = async (e) => {
 		layer.object[objects.id].shapeOption.ry = parseInt(e.target.value);
 
 		objects.set({
+			// @ts-ignore
 			rx: parseInt(e.target.value),
 			ry: parseInt(e.target.value),
 		});
@@ -2805,7 +2808,7 @@ const setShapeStrokeShape = async (e) => {
 
 const setShapeBackground = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	if (!objects) {
 		return;
@@ -2845,7 +2848,7 @@ const setShapeBackground = async (e: any) => {
 };
 
 const setTextBold = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	let layer = getCurrentLayer();
 
@@ -2879,7 +2882,7 @@ const setTextBold = async (e: any) => {
 };
 
 const setTextItalic = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	let layer = getCurrentLayer();
 
@@ -2913,7 +2916,7 @@ const setTextItalic = async (e: any) => {
 };
 
 const setTextLineThrough = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	let layer = getCurrentLayer();
 
@@ -2947,7 +2950,7 @@ const setTextLineThrough = async (e: any) => {
 };
 
 const setTextUnderLine = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	let layer = getCurrentLayer();
 
@@ -2993,6 +2996,7 @@ const setTextAlign = async (direction: any) => {
 		}
 	} else {
 		objects.set({
+			// @ts-ignore
 			textAlign: direction,
 		});
 	}
@@ -3003,7 +3007,7 @@ const setTextAlign = async (direction: any) => {
 };
 
 const setGroupAlign = async (direction: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	if (objects['_objects']) {
 		for (let i in objects['_objects']) {
@@ -3012,7 +3016,7 @@ const setGroupAlign = async (direction: any) => {
 			switch (direction) {
 				case 'left': {
 					object.set({
-						left: 0 - objects.width / 2,
+						left: 0 - objects.width! / 2,
 					});
 
 					break;
@@ -3028,7 +3032,7 @@ const setGroupAlign = async (direction: any) => {
 
 				case 'right': {
 					object.set({
-						left: objects.width / 2 - object.width,
+						left: objects.width! / 2 - object.width,
 					});
 
 					break;
@@ -3036,7 +3040,7 @@ const setGroupAlign = async (direction: any) => {
 
 				case 'top': {
 					object.set({
-						top: 0 - objects.height / 2,
+						top: 0 - objects.height! / 2,
 					});
 
 					break;
@@ -3052,7 +3056,7 @@ const setGroupAlign = async (direction: any) => {
 
 				case 'bottom': {
 					object.set({
-						top: objects.height / 2 - object.height,
+						top: objects.height! / 2 - object.height,
 					});
 
 					break;
@@ -3277,10 +3281,13 @@ const toggleToolbar = async (element: any, mode: string) => {
 };
 
 const addShape = async () => {
+	const { width = 0, height = 0 } = myCanvas;
+	const shapeSize = 150;
+
 	let color = {
-		r: 0,
-		g: 0,
-		b: 0,
+		r: 255,
+		g: 255,
+		b: 255,
 	};
 
 	let info = {
@@ -3288,20 +3295,20 @@ const addShape = async () => {
 
 		pos: [
 			{
-				x: 0,
+				x: width / 2 + shapeSize / 2,
+				y: height / 2 + shapeSize / 2,
+			},
+			{
+				x: shapeSize,
 				y: 0,
 			},
 			{
-				x: 150,
-				y: 0,
-			},
-			{
-				x: 150,
-				y: 150,
+				x: shapeSize,
+				y: shapeSize,
 			},
 			{
 				x: 0,
-				y: 150,
+				y: shapeSize,
 			},
 		],
 
@@ -3381,7 +3388,7 @@ const addText = async () => {
 };
 
 const setTextTab = () => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 	let layer = getCurrentLayer();
 	let length = Object.keys(objects['_objects']).length;
 
@@ -3455,7 +3462,7 @@ const addTextVertical = async () => {
 };
 
 const setShapeTab = () => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 	let layer = getCurrentLayer();
 	let length = Object.keys(objects['_objects']).length;
 
@@ -3649,7 +3656,7 @@ const saveBadImage = async () => {
 
 	let layer = getCurrentLayer();
 
-	let dataUrl = null;
+	let dataUrl: Nullable<string> = null;
 	switch (currentType) {
 		case '1': {
 			if (applyOriginWidthThumbnail.value === 'N') {
@@ -3780,7 +3787,7 @@ const saveSingle = async () => {
 
 	let layer = getCurrentLayer();
 
-	let dataUrl = null;
+	let dataUrl: Nullable<string> = null;
 
 	switch (currentType) {
 		case '1': {
@@ -3915,7 +3922,7 @@ const saveMultiple = async () => {
 	let filtered = layers.filter((v: any) => v.type === currentType && v.image.origin !== '');
 
 	for (let i = 0; i < filtered.length; i++) {
-		let dataUrl = null;
+		let dataUrl: Nullable<string> = null;
 
 		switch (currentType) {
 			case '1': {
@@ -4042,7 +4049,7 @@ const imageToolHelper = () => {
 	}
 
 	textTranslated.addEventListener('keyup', (e: any) => {
-		let objects = myCanvas.getActiveObject();
+		let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 		let layer = getCurrentLayer();
 
@@ -4160,6 +4167,7 @@ const imageToolHelper = () => {
 			top: cropRectangle.top + 1,
 			width: croppedWidth - 1,
 			height: croppedHeight - 1,
+			//@ts-ignore
 			globalCompositeOperation: 'source-over',
 		});
 
@@ -4506,7 +4514,7 @@ const imageToolHelper = () => {
 		mainDownload.style.display = 'none';
 
 		for (let i = 0; i < filtered.length; i++) {
-			let dataUrl: any = null;
+			let dataUrl: Nullable<string> = null;
 
 			switch (currentType) {
 				case '0': {
@@ -4581,7 +4589,7 @@ const imageToolHelper = () => {
 			}
 
 			chrome.downloads.download({
-				url: dataUrl,
+				url: dataUrl!,
 				filename: dataPath,
 				saveAs: false,
 			});
@@ -4616,7 +4624,7 @@ const setKeyEvents = () => {
 	});
 
 	window.addEventListener('keydown', (e) => {
-		let objects = myCanvas.getActiveObject();
+		let objects = myCanvas.getActiveObject() as Customfabricobject;
 		let layer = getCurrentLayer();
 
 		if (objects == null) {
@@ -4696,6 +4704,12 @@ const setKeyEvents = () => {
 				break;
 			}
 
+			case e.shiftKey && 'q':
+			case e.shiftKey && 'Q': {
+				addShape();
+				break;
+			}
+
 			case e.shiftKey && 't':
 			case e.shiftKey && 'T': {
 				addText();
@@ -4742,7 +4756,7 @@ const setKeyEvents = () => {
 			// }
 
 			case 'Delete': {
-				let objects = myCanvas.getActiveObject();
+				let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 				if (objects) {
 					if (objects['_objects']) {
@@ -4810,7 +4824,7 @@ const setKeyEvents = () => {
 		if (e.key === 'ArrowUp') {
 			e.preventDefault();
 
-			let objects = myCanvas.getActiveObject();
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 			if (objects) {
 				if (objects['_objects']) {
@@ -4845,7 +4859,7 @@ const setKeyEvents = () => {
 					switch (objectType) {
 						case 'rect': {
 							objects.set({
-								top: objects.top - 5,
+								top: objects.top! - 5,
 							});
 
 							break;
@@ -4854,7 +4868,7 @@ const setKeyEvents = () => {
 						case 'i-text': {
 							if (!objects.isEditing) {
 								objects.set({
-									top: objects.top - 5,
+									top: objects.top! - 5,
 								});
 							}
 
@@ -4875,7 +4889,7 @@ const setKeyEvents = () => {
 		if (e.key === 'ArrowDown') {
 			e.preventDefault();
 
-			let objects = myCanvas.getActiveObject();
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 			if (objects) {
 				if (objects['_objects']) {
@@ -4910,7 +4924,7 @@ const setKeyEvents = () => {
 					switch (objectType) {
 						case 'rect': {
 							objects.set({
-								top: objects.top + 5,
+								top: objects.top! + 5,
 							});
 
 							break;
@@ -4919,7 +4933,7 @@ const setKeyEvents = () => {
 						case 'i-text': {
 							if (!objects.isEditing) {
 								objects.set({
-									top: objects.top + 5,
+									top: objects.top! + 5,
 								});
 							}
 
@@ -4940,7 +4954,7 @@ const setKeyEvents = () => {
 		if (e.key === 'ArrowLeft') {
 			e.preventDefault();
 
-			let objects = myCanvas.getActiveObject();
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 			if (objects) {
 				if (objects['_objects']) {
@@ -4975,7 +4989,7 @@ const setKeyEvents = () => {
 					switch (objectType) {
 						case 'rect': {
 							objects.set({
-								left: objects.left - 5,
+								left: objects.left! - 5,
 							});
 
 							break;
@@ -4984,7 +4998,7 @@ const setKeyEvents = () => {
 						case 'i-text': {
 							if (!objects.isEditing) {
 								objects.set({
-									left: objects.left - 5,
+									left: objects.left! - 5,
 								});
 							}
 
@@ -5005,7 +5019,7 @@ const setKeyEvents = () => {
 		if (e.key === 'ArrowRight') {
 			e.preventDefault();
 
-			let objects = myCanvas.getActiveObject();
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 			if (objects) {
 				if (objects['_objects']) {
@@ -5040,7 +5054,7 @@ const setKeyEvents = () => {
 					switch (objectType) {
 						case 'rect': {
 							objects.set({
-								left: objects.left + 5,
+								left: objects.left! + 5,
 							});
 
 							break;
@@ -5049,7 +5063,7 @@ const setKeyEvents = () => {
 						case 'i-text': {
 							if (!objects.isEditing) {
 								objects.set({
-									left: objects.left + 5,
+									left: objects.left! + 5,
 								});
 							}
 
