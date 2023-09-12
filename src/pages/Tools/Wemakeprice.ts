@@ -314,7 +314,7 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 					'certList[4].isCert': 'N',
 					'certList[4].certGroup': 'LC',
 					'cert.KD.isCert': 'N',
-					'labelList[0].useYn': 'Y',
+					// 'labelList[0].useYn': 'Y',
 					'labelList[0].labelGroup': 'P',
 					'labelList[0].labelNo': '19',
 					'labelList[1].labelGroup': 'P',
