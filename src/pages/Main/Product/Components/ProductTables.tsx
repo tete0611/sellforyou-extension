@@ -2,13 +2,13 @@ import React from 'react';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import ReorderIcon from '@mui/icons-material/Reorder';
-import * as XLSX from 'xlsx';
-import path from 'path-browserify';
+// import * as XLSX from 'xlsx';
+// import path from 'path-browserify';
 import { byteSlice } from '../../../Tools/Common';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
-import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
+// import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
 
 import {
 	styled,
@@ -93,7 +93,7 @@ export const ProductTables = observer(() => {
 						<TableRow>
 							{array.map((v, i) =>
 								product.itemInfo.items[v] ? (
-									<ImageSummary tableRef={tableRef} item={product.itemInfo.items[v]} index={v} />
+									<ImageSummary tableRef={tableRef} item={product.itemInfo.items[v]} index={v} key={i} />
 								) : null,
 							)}
 
