@@ -3757,32 +3757,26 @@ const saveBadImage = async () => {
 };
 const saveSingle = async () => {
 	if (!product) return;
-	let accept = confirm('적용 시 이미지를 되돌릴 수 없습니다.');
-
-	if (!accept) {
-		return;
-	}
+	if (!confirm('적용 시 이미지를 되돌릴 수 없습니다.')) return;
 
 	loading.style.display = '';
 
 	let uploadData: any = {
-		productId: product.id,
+		productId: product?.id,
 		thumbnails: [],
 		optionValues: [],
 	};
 
-	let description: any = null;
+	let description: string | null = null;
 
 	if (currentType === '3') {
-		let matched = /product\/[0-9]+\/description.html/.test(product.description);
+		const matched = /product\/[0-9]+\/description.html/.test(product.description);
 
-		if (matched) {
-			let desc_resp = await fetch(`${ENDPOINT_IMAGE}/sellforyou/${product.description}?${new Date().getTime()}`);
-
-			description = await desc_resp.text();
-		} else {
-			description = product.description;
-		}
+		if (matched)
+			await fetch(`${ENDPOINT_IMAGE}/sellforyou/${product.description}?${new Date().getTime()}`).then(
+				async (desc_resp) => (description = await desc_resp.text()),
+			);
+		else description = product.description;
 	}
 
 	let layer = getCurrentLayer();
@@ -3791,11 +3785,9 @@ const saveSingle = async () => {
 
 	switch (currentType) {
 		case '1': {
-			if (applyOriginWidthThumbnail.value === 'N') {
+			if (applyOriginWidthThumbnail.value === 'N')
 				dataUrl = await displayImage(currentImageIndex, originWidthThumbnail.value);
-			} else {
-				dataUrl = await displayImage(currentImageIndex, 0);
-			}
+			else dataUrl = await displayImage(currentImageIndex, 0);
 
 			uploadData.thumbnails.push({
 				index: currentImageIndex,
@@ -3806,42 +3798,35 @@ const saveSingle = async () => {
 		}
 
 		case '2': {
-			if (applyOriginWidthOption.value === 'N') {
+			console.log(applyOriginWidthOption.value);
+			if (applyOriginWidthOption.value === 'N')
 				dataUrl = await displayImage(currentImageIndex, originWidthOption.value);
-			} else {
-				dataUrl = await displayImage(currentImageIndex, 0);
-			}
-
-			for (let j in product.productOptionName) {
+			else dataUrl = await displayImage(currentImageIndex, 0);
+			for (let j in product.productOptionName)
 				for (let k in product.productOptionName[j].productOptionValue) {
-					let option = product.productOptionName[j].productOptionValue[k];
-					let optionImage = /product\/[0-9]+\/option/.test(option.image ?? '')
+					const option = product.productOptionName[j].productOptionValue[k];
+					const optionImage = /product\/[0-9]+\/[option]*/.test(option.image ?? '')
 						? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
 						: option.image;
-
-					if (layer.image.origin === optionImage) {
+					if (layer.image.origin === optionImage)
 						uploadData.optionValues.push({
 							id: option.id,
 							image: optionImage,
 							newImageBase64: dataUrl,
 						});
-					}
 				}
-			}
 
 			break;
 		}
 
 		case '3': {
-			if (applyOriginWidthDescription.value === 'N') {
+			if (applyOriginWidthDescription.value === 'N')
 				dataUrl = await displayImage(currentImageIndex, originWidthDescription.value);
-			} else {
-				dataUrl = await displayImage(currentImageIndex, 0);
-			}
+			else dataUrl = await displayImage(currentImageIndex, 0);
 
-			if (description.includes('&amp;')) description = description.replaceAll('&amp;', '&');
+			if (description?.includes('&amp;')) description = description.replaceAll('&amp;', '&');
 
-			description = description.replaceAll(layer.image.origin, dataUrl);
+			description = description?.replaceAll(layer.image.origin, dataUrl ?? '')!;
 
 			break;
 		}
@@ -3850,11 +3835,7 @@ const saveSingle = async () => {
 			break;
 	}
 
-	if (currentType === '3') {
-		if (description) {
-			uploadData.description = description;
-		}
-	}
+	if (currentType === '3') if (description) uploadData.description = description;
 
 	let uploadQuery = `mutation TEST($productId: Int!, $thumbnails: [ProductNewThumbnailImageUpdateInput!], $optionValues: [ProductOptionValueImageUpdateInput!]!, $description:String) {
         updateNewProductImageBySomeone(
@@ -3864,16 +3845,13 @@ const saveSingle = async () => {
             optionValues: $optionValues
         )
     }`;
+	console.log(uploadData.optionValues);
 
 	let upload_json = await gql(uploadQuery, uploadData, false);
 
 	loading.style.display = 'none';
 
-	if (upload_json.errors) {
-		alert(upload_json.errors[0].message);
-
-		return;
-	}
+	if (upload_json.errors) return alert(upload_json.errors[0].message);
 
 	if (upload_json.data) {
 		chrome.runtime.sendMessage(
@@ -3882,16 +3860,12 @@ const saveSingle = async () => {
 				source: JSON.parse(upload_json.data.updateNewProductImageBySomeone),
 			},
 			() => {
-				if (thisImageSave.getAttribute('key') == '5') {
-					window.close();
-				}
+				// if (thisImageSave.getAttribute('key') == '5') window.close();
 			},
 		);
 
 		floatingToast(`현재 이미지가 셀포유에 적용되었습니다.`, 'success');
-	} else {
-		alert(upload_json.errors[0].message);
-	}
+	} else alert(upload_json.errors[0].message);
 };
 
 const saveMultiple = async () => {
