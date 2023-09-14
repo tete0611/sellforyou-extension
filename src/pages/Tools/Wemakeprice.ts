@@ -1,3 +1,5 @@
+import { common } from '../../containers/stores/common';
+import { product } from '../../containers/stores/product';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import QUERIES from '../Main/GraphQL/Queries';
 import gql from '../Main/GraphQL/Requests';
@@ -87,15 +89,21 @@ export async function uploadWemakeprice2(data: any) {
 		mode: 'cors',
 		credentials: 'include',
 	});
-	let test: any = JSON.parse(productResp);
-	return test;
+	return JSON.parse(productResp);
 }
 
 // 위메프 상품등록
-export async function uploadWemakeprice(productStore: any, commonStore: any, data: any) {
-	if (!data) {
-		return false;
-	}
+export async function uploadWemakeprice(productStore: product, commonStore: common, data: any) {
+	if (!data) return false;
+
+	const {
+		addConsoleText,
+		addRegisteredFailed,
+		itemInfo: storeItemInfo,
+		addRegisteredQueue,
+		addRegisteredSuccess,
+	} = productStore;
+	const { user, uploadInfo } = commonStore;
 
 	let newTab: any = {};
 	let shopName = data.DShopInfo.site_name;
@@ -109,7 +117,7 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 		let login_json = await login_resp.json();
 
 		if (!login_json.userId) {
-			productStore.addConsoleText(`(${shopName}) 파트너 로그인 실패`);
+			addConsoleText(`(${shopName}) 파트너 로그인 실패`);
 			notificationByEveryTime(`(${shopName}) 파트너 로그인 후 재시도 바랍니다.`);
 
 			return false;
@@ -118,14 +126,14 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 		newTab = await createTabCompletely({ active: false, url: 'https://wpartner.wemakeprice.com/' }, 10);
 
 		if (!newTab.id) {
-			productStore.addConsoleText(`(${shopName}) 위메프 접속 실패`);
+			addConsoleText(`(${shopName}) 위메프 접속 실패`);
 			notificationByEveryTime(`(${shopName}) 위메프 접속에 실패하였습니다.`);
 
 			return false;
 		}
 
-		if (login_json.userId !== commonStore.user.userInfo.wemakepriceId) {
-			productStore.addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
+		if (login_json.userId !== user.userInfo.wemakepriceId) {
+			addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
 			chrome.tabs.remove(newTab.id);
@@ -133,11 +141,10 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 			return false;
 		}
 
-		const policy =
-			commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code)?.policyInfo ?? null;
+		const policy = uploadInfo.markets.find((v) => v.code === data.DShopInfo.site_code)?.policyInfo ?? null;
 
 		if (!policy) {
-			productStore.addConsoleText(`(${shopName}) 발송정책 조회 실패`);
+			addConsoleText(`(${shopName}) 발송정책 조회 실패`);
 			notificationByEveryTime(`(${shopName}) 발송정책 조회에 실패하였습니다.`);
 
 			return false;
@@ -154,32 +161,32 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 				let market_item = data.DShopInfo.DataDataSet.data[product];
 				let market_optn = data.DShopInfo.DataDataSet.data_opt;
 
-				if (commonStore.uploadInfo.stopped) {
-					productStore.addConsoleText(`(${shopName}) [${market_code}] 업로드 중단`);
+				if (uploadInfo.stopped) {
+					addConsoleText(`(${shopName}) [${market_code}] 업로드 중단`);
 
 					chrome.tabs.remove(newTab.id);
 					return false;
 				}
 
 				if (!market_item.cert) {
-					if (!commonStore.uploadInfo.editable) {
-						productStore.addRegisteredFailed(
+					if (!uploadInfo.editable) {
+						addRegisteredFailed(
 							Object.assign(market_item, {
 								error: '스토어에 이미 등록된 상품입니다.',
 							}),
 						);
-						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
+						addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
 
 						continue;
 					}
 				} else {
-					if (commonStore.uploadInfo.editable) {
-						productStore.addRegisteredFailed(
+					if (uploadInfo.editable) {
+						addRegisteredFailed(
 							Object.assign(market_item, {
 								error: '상품 신규등록을 먼저 진행해주세요.',
 							}),
 						);
-						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
+						addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
 
 						continue;
 					}
@@ -331,13 +338,13 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 					prodDesc: `
         ${getStoreTraceCodeV1(market_item.id, data.DShopInfo.site_code)}
         ${market_item.content2}${
-						commonStore.user.userInfo.descriptionShowTitle === 'Y'
+						user.userInfo.descriptionShowTitle === 'Y'
 							? `<br /><br /><div style="text-align: center;">${market_item.name3}</div><br /><br />`
 							: `<br /><br />`
 					}${transformContent(market_item.content1)}${market_item.content3}`,
 				};
 
-				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
+				const itemInfo = storeItemInfo.items.find((v) => v.productCode === market_code);
 
 				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
 					? itemInfo[`sillCode${data.DShopInfo.site_code}`]
@@ -411,8 +418,8 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 						message += i + '에서 금지어(' + words_restrict[i] + ')가 발견되었습니다. ';
 					}
 
-					productStore.addRegisteredFailed(Object.assign(market_item, { error: message }));
-					productStore.addConsoleText(`(${shopName}) [${market_code}] 금지어 발견됨`);
+					addRegisteredFailed(Object.assign(market_item, { error: message }));
+					addConsoleText(`(${shopName}) [${market_code}] 금지어 발견됨`);
 
 					await sendCallback(commonStore, data, market_code, parseInt(product), 2, message);
 
@@ -420,12 +427,12 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 				}
 
 				if (option_length > 200) {
-					productStore.addRegisteredFailed(
+					addRegisteredFailed(
 						Object.assign(market_item, {
 							error: '옵션 개수가 200개를 초과하는 상품은 등록하실 수 없습니다.',
 						}),
 					);
-					productStore.addConsoleText(`(${shopName}) 상품 등록 실패`);
+					addConsoleText(`(${shopName}) 상품 등록 실패`);
 
 					await sendCallback(
 						commonStore,
@@ -496,20 +503,20 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 					productData['optSelUseYn'] = 'N';
 				}
 
-				if (commonStore.uploadInfo.stopped) {
-					productStore.addConsoleText(`(${shopName}) [${market_code}] 업로드 중단`);
+				if (uploadInfo.stopped) {
+					addConsoleText(`(${shopName}) [${market_code}] 업로드 중단`);
 
 					chrome.tabs.remove(newTab.id);
 
 					return false;
 				}
 
-				if (!market_item.cert && commonStore.uploadInfo.editable) {
+				if (!market_item.cert && uploadInfo.editable) {
 					let productId = market_item.name2;
 
 					if (!productId) {
-						productStore.addRegisteredFailed(Object.assign(market_item, { error: '상품 ID를 찾을 수 없습니다.' }));
-						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 실패`);
+						addRegisteredFailed(Object.assign(market_item, { error: '상품 ID를 찾을 수 없습니다.' }));
+						addConsoleText(`(${shopName}) [${market_code}] 상품 수정 실패`);
 
 						await sendCallback(commonStore, data, market_code, parseInt(product), 2, '상품 ID를 찾을 수 없습니다.');
 
@@ -539,7 +546,6 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 							credentials: 'include',
 						},
 					);
-
 					const searchJson = await searchResp.json();
 
 					productData['action'] = 'update';
@@ -557,8 +563,8 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 
 					productContent = productContent.join('&');
 
-					productStore.addConsoleText(`(${shopName}) 상품 수정 중...`);
-					productStore.addRegisteredQueue(market_item);
+					addConsoleText(`(${shopName}) 상품 수정 중...`);
+					addRegisteredQueue(market_item);
 
 					let editdata: any = {
 						productId,
@@ -595,13 +601,13 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 					// let productJson = await productResp.json();
 
 					if (productJson.errors) {
-						productStore.addRegisteredFailed(Object.assign(market_item, { error: productJson.errors[0].detail }));
-						productStore.addConsoleText(`(${shopName}) 상품 수정 실패`);
+						addRegisteredFailed(Object.assign(market_item, { error: productJson.errors[0].detail }));
+						addConsoleText(`(${shopName}) 상품 수정 실패`);
 
 						await sendCallback(commonStore, data, market_code, parseInt(product), 2, productJson.errors[0].detail);
 					} else {
-						productStore.addRegisteredSuccess(Object.assign(market_item, { error: productJson[0].returnKey }));
-						productStore.addConsoleText(`(${shopName}) 상품 수정 성공`);
+						addRegisteredSuccess(Object.assign(market_item, { error: productJson[0].returnKey }));
+						addConsoleText(`(${shopName}) 상품 수정 성공`);
 
 						await sendCallback(commonStore, data, market_code, parseInt(product), 1, productJson[0].returnKey);
 					}
@@ -617,8 +623,8 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 
 					productContent = productContent.join('&');
 
-					productStore.addConsoleText(`(${shopName}) 상품 등록 중...`);
-					productStore.addRegisteredQueue(market_item);
+					addConsoleText(`(${shopName}) 상품 등록 중...`);
+					addRegisteredQueue(market_item);
 
 					let productJson: any = await sendTabMessage(newTab.id, {
 						action: 'upload-B719',
@@ -650,13 +656,13 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 					// let productJson = await productResp.json();
 
 					if (productJson.errors) {
-						productStore.addRegisteredFailed(Object.assign(market_item, { error: productJson.errors[0].detail }));
-						productStore.addConsoleText(`(${shopName}) 상품 등록 실패`);
+						addRegisteredFailed(Object.assign(market_item, { error: productJson.errors[0].detail }));
+						addConsoleText(`(${shopName}) 상품 등록 실패`);
 
 						await sendCallback(commonStore, data, market_code, parseInt(product), 2, productJson.errors[0].detail);
 					} else {
-						productStore.addRegisteredSuccess(Object.assign(market_item, { error: productJson[0].returnKey }));
-						productStore.addConsoleText(`(${shopName}) 상품 등록 성공`);
+						addRegisteredSuccess(Object.assign(market_item, { error: productJson[0].returnKey }));
+						addConsoleText(`(${shopName}) 상품 등록 성공`);
 
 						await sendCallback(commonStore, data, market_code, parseInt(product), 1, productJson[0].returnKey);
 					}
@@ -669,24 +675,25 @@ export async function uploadWemakeprice(productStore: any, commonStore: any, dat
 			}
 		}
 	} catch (e: any) {
-		productStore.addConsoleText(`(${shopName}) 업로드 중단`);
+		addConsoleText(`(${shopName}) 업로드 중단`);
 		notificationByEveryTime(`(${shopName}) 업로드 도중 오류가 발생하였습니다. (${e.toString()}`);
 		chrome.tabs.remove(newTab.id);
 
 		return false;
 	}
 
-	productStore.addConsoleText(`(${shopName}) 업로드 완료`);
+	addConsoleText(`(${shopName}) 업로드 종료`);
 	chrome.tabs.remove(newTab.id);
 
 	return true;
 }
 
 // 위메프 상품 등록해제
-export async function deleteWemakeprice(productStore: any, commonStore: any, data: any) {
-	if (!data) {
-		return false;
-	}
+export async function deleteWemakeprice(productStore: product, commonStore: common, data: any) {
+	if (!data) return false;
+
+	const { addConsoleText } = productStore;
+	const { user, setDisabledProgressValue } = commonStore;
 
 	let newTab: any = {};
 	let shopName = data.DShopInfo.site_name;
@@ -698,7 +705,7 @@ export async function deleteWemakeprice(productStore: any, commonStore: any, dat
 		let login_json = await login_resp.json();
 
 		if (!login_json.userId) {
-			productStore.addConsoleText(`(${shopName}) 파트너 로그인 실패`);
+			addConsoleText(`(${shopName}) 파트너 로그인 실패`);
 			notificationByEveryTime(`(${shopName}) 파트너 로그인 후 재시도 바랍니다.`);
 
 			return false;
@@ -707,14 +714,14 @@ export async function deleteWemakeprice(productStore: any, commonStore: any, dat
 		newTab = await createTabCompletely({ active: false, url: 'https://wpartner.wemakeprice.com/' }, 10);
 
 		if (!newTab.id) {
-			productStore.addConsoleText(`(${shopName}) 위메프 접속 실패`);
+			addConsoleText(`(${shopName}) 위메프 접속 실패`);
 			notificationByEveryTime(`(${shopName}) 위메프 접속에 실패하였습니다.`);
 
 			return false;
 		}
 
-		if (login_json.userId !== commonStore.user.userInfo.wemakepriceId) {
-			productStore.addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
+		if (login_json.userId !== user.userInfo.wemakepriceId) {
+			addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
 			return false;
@@ -766,7 +773,7 @@ export async function deleteWemakeprice(productStore: any, commonStore: any, dat
 				if (!deleteJson.errors) {
 					const progressValue = Math.round(((parseInt(product) + 1) * 100) / data.DShopInfo.prod_codes.length);
 
-					commonStore.setDisabledProgressValue(data.DShopInfo.site_code, progressValue);
+					setDisabledProgressValue(data.DShopInfo.site_code, progressValue);
 
 					await gql(MUTATIONS.UNLINK_PRODUCT_STORE, {
 						productId: market_item.id,
@@ -776,7 +783,7 @@ export async function deleteWemakeprice(productStore: any, commonStore: any, dat
 					if (deleteJson.errors[0].code === '1027') {
 						const progressValue = Math.round(((parseInt(product) + 1) * 100) / data.DShopInfo.prod_codes.length);
 
-						commonStore.setDisabledProgressValue(data.DShopInfo.site_code, progressValue);
+						setDisabledProgressValue(data.DShopInfo.site_code, progressValue);
 
 						await gql(MUTATIONS.UNLINK_PRODUCT_STORE, {
 							productId: market_item.id,
@@ -792,21 +799,22 @@ export async function deleteWemakeprice(productStore: any, commonStore: any, dat
 			}
 		}
 	} catch (e: any) {
-		productStore.addConsoleText(`(${shopName}) 상품 등록해제 중단`);
+		addConsoleText(`(${shopName}) 상품 등록해제 중단`);
 		notificationByEveryTime(`(${shopName}) 상품 등록해제 도중 오류가 발생하였습니다. (${e.toString()})`);
 
 		chrome.tabs.remove(newTab.id);
 		return false;
 	}
 	chrome.tabs.remove(newTab.id);
-	productStore.addConsoleText(`(${shopName}) 상품 등록해제 완료`);
+	addConsoleText(`(${shopName}) 상품 등록해제 완료`);
 
 	return true;
 }
 
 // 위메프 신규주문조회
-export async function newOrderWemakeprice(commonStore: any, shopInfo: any) {
+export async function newOrderWemakeprice(commonStore: common, shopInfo: any) {
 	const shopName = shopInfo.name;
+	const { user } = commonStore;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
 		return [];
@@ -822,7 +830,7 @@ export async function newOrderWemakeprice(commonStore: any, shopInfo: any) {
 			return [];
 		}
 
-		if (login_json.userId !== commonStore.user.userInfo.wemakepriceId) {
+		if (login_json.userId !== user.userInfo.wemakepriceId) {
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
 			return [];
@@ -891,7 +899,8 @@ export async function newOrderWemakeprice(commonStore: any, shopInfo: any) {
 }
 
 // 위메프 발주확인 처리
-export async function productPreparedWemakeprice(commonStore: any, shopInfo: any, props: any) {
+export async function productPreparedWemakeprice(commonStore: common, shopInfo: any, props: any) {
+	const { user } = commonStore;
 	let productshipNo: any = [];
 	if (props !== '' && props.item.marketCode === 'B719') {
 		productshipNo.push(props.item.shipNo);
@@ -912,7 +921,7 @@ export async function productPreparedWemakeprice(commonStore: any, shopInfo: any
 			return [];
 		}
 
-		if (login_json.userId !== commonStore.user.userInfo.wemakepriceId) {
+		if (login_json.userId !== user.userInfo.wemakepriceId) {
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
 			return [];
@@ -954,7 +963,8 @@ export async function productPreparedWemakeprice(commonStore: any, shopInfo: any
 }
 
 // 위메프 발송처리주문조회
-export async function deliveryOrderWemakeprice(commonStore: any, shopInfo: any) {
+export async function deliveryOrderWemakeprice(commonStore: common, shopInfo: any) {
+	const { user } = commonStore;
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) {
@@ -971,7 +981,7 @@ export async function deliveryOrderWemakeprice(commonStore: any, shopInfo: any) 
 			return [];
 		}
 
-		if (login_json.userId !== commonStore.user.userInfo.wemakepriceId) {
+		if (login_json.userId !== user.userInfo.wemakepriceId) {
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
 			return [];
