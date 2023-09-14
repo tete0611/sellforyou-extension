@@ -3884,13 +3884,11 @@ const saveMultiple = async () => {
 	if (currentType === '3') {
 		let matched = /product\/[0-9]+\/description.html/.test(product.description);
 
-		if (matched) {
-			let desc_resp = await fetch(`${ENDPOINT_IMAGE}/sellforyou/${product.description}?${new Date().getTime()}`);
-
-			description = await desc_resp.text();
-		} else {
-			description = product.description;
-		}
+		if (matched)
+			await fetch(`${ENDPOINT_IMAGE}/sellforyou/${product.description}?${new Date().getTime()}`).then(
+				async (desc_resp) => (description = await desc_resp.text()),
+			);
+		else description = product.description;
 	}
 
 	let filtered = layers.filter((v: any) => v.type === currentType && v.image.origin !== '');
@@ -3900,11 +3898,9 @@ const saveMultiple = async () => {
 
 		switch (currentType) {
 			case '1': {
-				if (applyOriginWidthThumbnail.value === 'N') {
+				if (applyOriginWidthThumbnail.value === 'N')
 					dataUrl = await displayImage(filtered[i].index, originWidthThumbnail.value);
-				} else {
-					dataUrl = await displayImage(filtered[i].index, 0);
-				}
+				else dataUrl = await displayImage(filtered[i].index, 0);
 
 				uploadData.thumbnails.push({
 					index: filtered[i].index,
@@ -3915,38 +3911,32 @@ const saveMultiple = async () => {
 			}
 
 			case '2': {
-				if (applyOriginWidthOption.value === 'N') {
+				if (applyOriginWidthOption.value === 'N')
 					dataUrl = await displayImage(filtered[i].index, originWidthOption.value);
-				} else {
-					dataUrl = await displayImage(filtered[i].index, 0);
-				}
+				else dataUrl = await displayImage(filtered[i].index, 0);
 
-				for (let j in product?.productOptionName) {
+				for (let j in product?.productOptionName)
 					for (let k in product.productOptionName[j].productOptionValue) {
 						let option = product.productOptionName[j].productOptionValue[k];
-						let optionImage = /product\/[0-9]+\/option/.test(option.image ?? '')
+						let optionImage = /product\/[0-9]+\/[option]*/.test(option.image ?? '')
 							? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
 							: option.image;
 
-						if (filtered[i].image.origin === optionImage) {
+						if (filtered[i].image.origin === optionImage)
 							uploadData.optionValues.push({
 								id: option.id,
 								image: optionImage,
 								newImageBase64: dataUrl,
 							});
-						}
 					}
-				}
 
 				break;
 			}
 
 			case '3': {
-				if (applyOriginWidthDescription.value === 'N') {
+				if (applyOriginWidthDescription.value === 'N')
 					dataUrl = await displayImage(filtered[i].index, originWidthDescription.value);
-				} else {
-					dataUrl = await displayImage(filtered[i].index, 0);
-				}
+				else dataUrl = await displayImage(filtered[i].index, 0);
 
 				if (description.includes('&amp;')) description = description.replaceAll('&amp;', '&');
 
@@ -3960,11 +3950,7 @@ const saveMultiple = async () => {
 		}
 	}
 
-	if (currentType === '3') {
-		if (description) {
-			uploadData.description = description;
-		}
-	}
+	if (currentType === '3') if (description) uploadData.description = description;
 
 	let uploadQuery = `mutation TEST($productId: Int!, $thumbnails: [ProductNewThumbnailImageUpdateInput!], $optionValues: [ProductOptionValueImageUpdateInput!]!, $description:String) {
         updateNewProductImageBySomeone(
