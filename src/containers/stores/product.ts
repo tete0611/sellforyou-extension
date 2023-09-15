@@ -4496,17 +4496,11 @@ export class product {
 		this.getProduct(commonStore, this.page);
 	};
 
-	// 썸네일이미지 복구
-	initProductThumbnailImage = async (id: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.thumbnailImages = 0;
-		};
+	// 썸네일이미지 복구 - imageIndex가 있을경우 단일 복구로 동작
+	initProductThumbnailImage = async (id: number, index: number, imageIndex?: number) => {
+		const exit = () => (this.itemInfo.items[index].edited.thumbnailImages = 0);
 
-		let accept = confirm('원본 이미지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.');
-
-		if (!accept) {
-			return;
-		}
+		if (!confirm('원본 이미지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.')) return;
 
 		this.itemInfo.items[index].edited.thumbnailImages = 2;
 
@@ -4514,34 +4508,25 @@ export class product {
 
 		if (response.errors) {
 			alert(response.errors[0].message);
-
 			exit();
-
 			return;
 		}
 
 		const thumbnailList = JSON.parse(response.data.initProductThumbnailImageByUser);
 
-		this.itemInfo.items[index].imageThumbnail = thumbnailList;
+		if (imageIndex === undefined) this.itemInfo.items[index].imageThumbnail = thumbnailList;
+		else this.itemInfo.items[index].imageThumbnail[imageIndex] = thumbnailList[imageIndex];
 
 		floatingToast('원본 이미지로 복구되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 옵션이미지 복구
 	initProductOptionImage = async (id: number, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.optionImages = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.optionImages = 0);
 
-		let accept = confirm('원본 이미지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.');
-
-		if (!accept) {
-			return;
-		}
+		if (!confirm('원본 이미지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.')) return;
 
 		this.itemInfo.items[index].edited.optionImages = 2;
 
@@ -4549,9 +4534,7 @@ export class product {
 
 		if (response.errors) {
 			alert(response.errors[0].message);
-
 			exit();
-
 			return;
 		}
 
@@ -4560,16 +4543,12 @@ export class product {
 		this.itemInfo.items[index].productOptionName.map((v: any) => {
 			const resultOptionName = optionList.find((w: any) => w.id === v.id);
 
-			if (!resultOptionName) {
-				return;
-			}
+			if (!resultOptionName) return;
 
 			v.productOptionValue.map((x: any) => {
 				const resultOptionValue = resultOptionName.optionValues.find((y: any) => y.id === x.id);
 
-				if (!resultOptionValue) {
-					return;
-				}
+				if (!resultOptionValue) return;
 
 				x.image = resultOptionValue.img;
 			});
@@ -4577,22 +4556,14 @@ export class product {
 
 		floatingToast('원본 이미지로 복구되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 상세페이지 이미지 복구
-	initProductDescription = async (id: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.descriptions = 0;
-		};
+	initProductDescription = async (id: number, index: number) => {
+		const exit = () => (this.itemInfo.items[index].edited.descriptions = 0);
 
-		let accept = confirm('원본 상세페이지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.');
-
-		if (!accept) {
-			return;
-		}
+		if (!confirm('원본 상세페이지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.')) return;
 
 		this.itemInfo.items[index].edited.descriptions = 2;
 
@@ -4600,9 +4571,7 @@ export class product {
 
 		if (response.errors) {
 			alert(response.errors[0].message);
-
 			exit();
-
 			return;
 		}
 
@@ -4618,9 +4587,7 @@ export class product {
 
 			descHtml = new DOMParser().parseFromString(descText, 'text/html');
 
-			runInAction(() => {
-				this.itemInfo.items[index].description = descText ?? this.itemInfo.items[index].description;
-			});
+			runInAction(() => (this.itemInfo.items[index].description = descText ?? this.itemInfo.items[index].description));
 		} else {
 			descHtml = new DOMParser().parseFromString(this.itemInfo.items[index].description, 'text/html');
 		}

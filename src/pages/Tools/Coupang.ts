@@ -28,8 +28,8 @@ export async function coupangApiGateway(body: any) {
 
 	const message = datetime + method + path + queried;
 
-	const urlpath = path + '?' + queried;
-
+	let urlpath = path + '?' + queried;
+	urlpath = urlpath.replaceAll('/(\xE2\x80\x8B|&#8203;)/', ''); // U+200b 불필요 문자 제거
 	const accesskey = body.accesskey;
 	const secretkey = body.secretkey;
 	const signature = CryptoJS.HmacSHA256(message, secretkey).toString(CryptoJS.enc.Hex);
