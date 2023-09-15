@@ -3845,7 +3845,6 @@ const saveSingle = async () => {
             optionValues: $optionValues
         )
     }`;
-	console.log(uploadData.optionValues);
 
 	let upload_json = await gql(uploadQuery, uploadData, false);
 
@@ -3860,7 +3859,7 @@ const saveSingle = async () => {
 				source: JSON.parse(upload_json.data.updateNewProductImageBySomeone),
 			},
 			() => {
-				// if (thisImageSave.getAttribute('key') == '5') window.close();
+				if (thisImageSave.getAttribute('key') == '5') window.close();
 			},
 		);
 
