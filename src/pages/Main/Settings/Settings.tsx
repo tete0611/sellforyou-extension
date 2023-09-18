@@ -24,6 +24,7 @@ import {
 } from '@mui/material';
 import { Frame, Title } from '../Common/UI';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { REG_EXP } from '../../../../common/regex';
 
 // 다른 GQL과 달리 formData 형식으로 백엔드에 요청해야 해서 별도로 구현
 async function uploadImage(data: any) {
@@ -1562,13 +1563,9 @@ export const Settings = observer(() => {
 															size='small'
 															component='span'
 															onClick={async () => {
-																const url = prompt('이미지 URL을 입력해주세요.') ?? '';
-
-																if (url === '') {
-																	alert('주소가 올바르지 않습니다.');
-
-																	return 0;
-																}
+																const url = prompt('이미지 URL을 입력해주세요.');
+																if (!url) return;
+																else if (!REG_EXP.url.test(url)) return alert('주소가 올바르지 않습니다.');
 
 																await uploadImageFromUrl({ fixImageTop: url });
 
@@ -1687,13 +1684,9 @@ export const Settings = observer(() => {
 															size='small'
 															component='span'
 															onClick={async () => {
-																const url = prompt('이미지 URL을 입력해주세요.') ?? '';
-
-																if (url === '') {
-																	alert('주소가 올바르지 않습니다.');
-
-																	return 0;
-																}
+																const url = prompt('이미지 URL을 입력해주세요.');
+																if (!url) return;
+																else if (!REG_EXP.url.test(url)) return alert('주소가 올바르지 않습니다.');
 
 																await uploadImageFromUrl({ fixImageSubTop: url });
 
@@ -1812,13 +1805,9 @@ export const Settings = observer(() => {
 															size='small'
 															component='span'
 															onClick={async () => {
-																const url = prompt('이미지 URL을 입력해주세요.') ?? '';
-
-																if (url === '') {
-																	alert('주소가 올바르지 않습니다.');
-
-																	return 0;
-																}
+																const url = prompt('이미지 URL을 입력해주세요.');
+																if (!url) return;
+																else if (!REG_EXP.url.test(url)) return alert('주소가 올바르지 않습니다.');
 
 																await uploadImageFromUrl({ fixImageBottom: url });
 
@@ -1937,13 +1926,9 @@ export const Settings = observer(() => {
 															size='small'
 															component='span'
 															onClick={async () => {
-																const url = prompt('이미지 URL을 입력해주세요.') ?? '';
-
-																if (url === '') {
-																	alert('주소가 올바르지 않습니다.');
-
-																	return 0;
-																}
+																const url = prompt('이미지 URL을 입력해주세요.');
+																if (!url) return;
+																else if (!REG_EXP.url.test(url)) return alert('주소가 올바르지 않습니다.');
 
 																await uploadImageFromUrl({ fixImageSubBottom: url });
 

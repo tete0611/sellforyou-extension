@@ -242,7 +242,7 @@ async function scrape(items: any, user: any) {
 	if (items.ipageType === 2) {
 		let subs = JSON.parse(items.offerDomain ?? items.iDetailData.offerDomain);
 
-		subs.offerDetail.featureAttributes.map((v: any) => {
+		subs.offerDetail.featureAttributes?.map((v: any) => {
 			result['item']['attr'].push(`${v.name}:${v.values[0]}`);
 		});
 
@@ -482,9 +482,7 @@ async function scrape(items: any, user: any) {
 export class alibaba {
 	constructor() {
 		checkLogin('alibaba').then((auth) => {
-			if (!auth) {
-				return null;
-			}
+			if (!auth) return null;
 		});
 	}
 
@@ -497,11 +495,10 @@ export class alibaba {
 		let timeout = 0;
 
 		while (true) {
-			if (timeout === user.userInfo.collectTimeout) {
+			if (timeout === user.userInfo.collectTimeout)
 				return {
 					error: '1688 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
 				};
-			}
 
 			let data = sessionStorage.getItem('sfy-alibaba-item');
 			if (data) {

@@ -1788,7 +1788,7 @@ const main = async () => {
 	} else if (/guang.taobao.com/.test(currentUrl)) {
 		skip();
 
-		/** */
+		/** 티몰 상세페이지 */
 	} else if (
 		/detail.tmall.com/.test(currentUrl) ||
 		/chaoshi.detail.tmall.com/.test(currentUrl) ||
@@ -1798,7 +1798,7 @@ const main = async () => {
 		const result = await new tmall().get(info.user);
 		floatingButton(info, null, result, false);
 
-		/**  */
+		/** 티몰 리스트페이지 */
 	} else if (/tmall.com/.test(currentUrl)) {
 		const info = await initInfo(false);
 		if (/list.tmall.com/.test(currentUrl)) {
