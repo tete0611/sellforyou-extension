@@ -221,16 +221,12 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 		if (!info.isBulk && result.error) {
 			const accept = confirm(`${result.error}\n[확인]을 누르시면 수집상품목록으로 이동합니다.`);
 
-			if (accept) {
-				window.open(chrome.runtime.getURL('product/collected.html'));
-			}
+			if (accept) window.open(chrome.runtime.getURL('product/collected.html'));
 
 			return;
 		}
 
-		if (isCollecting) {
-			return;
-		}
+		if (isCollecting) return;
 
 		if (bulk) {
 			let categoryResp = await fetch(chrome.runtime.getURL('resources/category.json'));
@@ -467,25 +463,19 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 				let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
 
 				collectInfo = collectInfo.filter((v: any) => {
-					if (v.sender.tab.id === info.tabInfo.tab.id) {
-						return false;
-					}
+					if (v.sender.tab.id === info.tabInfo.tab.id) return false;
 
 					const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
 
-					if (!matched) {
-						return false;
-					}
+					if (!matched) return false;
 
 					return true;
 				});
 
-				if (!sfyCategoryEnabled.checked) {
-					sfyCategoryInput.setAttribute('data-category-id', '');
-				}
-				if (!sfyMyKeywardEnabled.checked) {
-					sfyMyKeywardInput.setAttribute('data-myKeyward-id', '');
-				}
+				if (!sfyCategoryEnabled.checked) sfyCategoryInput.setAttribute('data-category-id', '');
+
+				if (!sfyMyKeywardEnabled.checked) sfyMyKeywardInput.setAttribute('data-myKeyward-id', '');
+
 				collectInfo.push({
 					categoryId: sfyCategoryInput.getAttribute('data-category-id'),
 					myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
@@ -522,11 +512,9 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 				source: result,
 			});
 
-			if (!response) {
-				return;
-			}
+			if (!response) return;
 
-			if (response.status === 'success') {
+			if (response.status === 'success')
 				buttonCollect.innerHTML = `
                     <img src=${chrome.runtime.getURL(
 											'resources/icon-success.png',
@@ -534,7 +522,7 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 
                     수집완료
                 `;
-			} else {
+			else
 				buttonCollect.innerHTML = `
                     <img src=${chrome.runtime.getURL(
 											'resources/icon-failed.png',
@@ -542,20 +530,15 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 
                     수집실패
                 `;
-			}
 
 			result.error = response.statusMessage;
 
-			if (info.isBulk) {
-				sendRuntimeMessage({ action: 'collect-finish' });
-			}
+			if (info.isBulk) sendRuntimeMessage({ action: 'collect-finish' });
 		}
 	});
 
 	buttonCollect.addEventListener('mouseenter', () => {
-		if (isCollecting) {
-			return;
-		}
+		if (isCollecting) return;
 
 		buttonCollect.innerHTML = `
             <div style="font-size: 12px;">
@@ -581,9 +564,7 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 	});
 
 	buttonCollect.addEventListener('mouseleave', () => {
-		if (isCollecting) {
-			return;
-		}
+		if (isCollecting) return;
 
 		buttonCollect.innerHTML = buttonCollectDefault;
 	});
@@ -876,9 +857,8 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 					!sfyPageStart ||
 					!sfyPageEnd ||
 					!sfyMyKeywardEnabled
-				) {
+				)
 					return;
-				}
 
 				sfyCategoryEnabled.addEventListener('change', (e: any) => {
 					sfyCategoryInput.disabled = !e.target.checked;
