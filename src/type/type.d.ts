@@ -104,3 +104,14 @@ export type ModalInfo = {
 };
 
 export type Nullable<T> = T | null | undefined;
+
+export type ManyPriceInfo = {
+	price?: number;
+	cnyRate: number;
+	marginRate: number;
+	marginUnitType: string;
+	localShippingFee: number;
+	localShippingCode?: string;
+	shippingFee: number;
+	returnShippingFee: number;
+};

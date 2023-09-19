@@ -22,7 +22,7 @@ import { deleteLotteon, uploadLotteon } from '../../pages/Tools/Lotteon';
 import { deleteTmon, uploadTmon } from '../../pages/Tools/Tmon';
 import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from '../../pages/Tools/ChromeAsync';
 import { common } from './common';
-import { ItemInfo, ModalInfo } from '../../type/type';
+import { ItemInfo, ManyPriceInfo, ModalInfo } from '../../type/type';
 
 export class product {
 	gridView: boolean = false;
@@ -313,12 +313,13 @@ export class product {
 	ManymyKeyward: any = {
 		myKeyward: '',
 	};
-	manyPriceInfo: any = {
+	manyPriceInfo: ManyPriceInfo = {
 		cnyRate: 185,
 		marginRate: 25,
 		marginUnitType: 'PERCENT',
 		localShippingFee: 6000,
 		shippingFee: 0,
+		returnShippingFee: 0,
 	};
 
 	manyFeeInfo: any = {
@@ -2280,22 +2281,19 @@ export class product {
 	};
 
 	// 옵션가 업데이트
-	updateProductOptionPrice = async (commonStore: any, data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.price = 0;
-		};
+	updateProductOptionPrice = async (commonStore: common, data: any, index: number) => {
+		const exit = () => (this.itemInfo.items[index].edited.price = 0);
 
-		if (!this.itemInfo.items[index].edited.price) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.price) return;
 
 		this.itemInfo.items[index].edited.price = 2;
 
-		let priceInfo: any = {
+		let priceInfo: ManyPriceInfo = {
 			cnyRate: this.itemInfo.items[index].cnyRate,
 			marginRate: this.itemInfo.items[index].marginRate,
 			marginUnitType: this.itemInfo.items[index].marginUnitType,
 			shippingFee: this.itemInfo.items[index].shippingFee,
+			returnShippingFee: this.itemInfo.items[index].returnShippingFee,
 			localShippingFee: this.itemInfo.items[index].localShippingFee,
 			localShippingCode: this.itemInfo.items[index].localShippingCode,
 		};

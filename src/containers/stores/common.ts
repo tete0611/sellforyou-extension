@@ -642,11 +642,7 @@ export class common {
 	testUserInfo = async (data: any) => {
 		const response = await gql(MUTATIONS.UPDATE_MY_DATA_BY_USER, data, false);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		floatingToast('기본설정이 저장되었습니다.', 'success');
 	};
