@@ -15,10 +15,7 @@ export const Dashboard = observer(() => {
 	const { common, dashboard, inflow } = React.useContext(AppContext);
 
 	React.useEffect(() => {
-		if (!common.loaded) {
-			return;
-		}
-
+		if (!common.loaded) return;
 		// 관리상품수 가져오기
 		dashboard.getProductCount();
 
@@ -86,9 +83,7 @@ export const Dashboard = observer(() => {
 													? common.banner01Image + `?${Date.now()}`
 													: 'https://ai.esmplus.com/koozapas/banner01.jpg?' + Date.now()
 											}
-											onClick={() => {
-												window.open(`${common.banner01Url}`);
-											}}
+											onClick={() => window.open(`${common.banner01Url}`)}
 										/>
 									</Paper>
 								</Grid>
@@ -293,9 +288,7 @@ export const Dashboard = observer(() => {
 																fontWeight: 'bold',
 																textDecoration: 'underline',
 															}}
-															onClick={() => {
-																window.location.href = '/product/collected.html';
-															}}
+															onClick={() => (window.location.href = '/product/collected.html')}
 														>
 															{dashboard.countInfo.product.collected}
 														</Typography>
@@ -333,9 +326,7 @@ export const Dashboard = observer(() => {
 																fontWeight: 'bold',
 																textDecoration: 'underline',
 															}}
-															onClick={() => {
-																window.location.href = '/product/registered.html';
-															}}
+															onClick={() => (window.location.href = '/product/registered.html')}
 														>
 															{dashboard.countInfo.product.registered}
 														</Typography>
@@ -373,9 +364,7 @@ export const Dashboard = observer(() => {
 																fontWeight: 'bold',
 																textDecoration: 'underline',
 															}}
-															onClick={() => {
-																window.location.href = '/product/locked.html';
-															}}
+															onClick={() => (window.location.href = '/product/locked.html')}
 														>
 															{dashboard.countInfo.product.locked}
 														</Typography>
@@ -439,9 +428,7 @@ export const Dashboard = observer(() => {
 																fontWeight: 'bold',
 																textDecoration: 'underline',
 															}}
-															onClick={() => {
-																window.location.href = '/order/new.html';
-															}}
+															onClick={() => (window.location.href = '/order/new.html')}
 														>
 															{dashboard.countInfo.order.countAll}
 														</Typography>
@@ -465,7 +452,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A077' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A077' && v.connected) ? (
 														<img src='/resources/icon-smartstore.png' />
 													) : (
 														<img src='/resources/icon-smartstore-gray.png' />
@@ -501,7 +488,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'B378' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'B378' && v.connected) ? (
 														<img src='/resources/icon-coupang.png' />
 													) : (
 														<img src='/resources/icon-coupang-gray.png' />
@@ -537,7 +524,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A112' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A112' && v.connected) ? (
 														<img src='/resources/icon-street-global.png' />
 													) : (
 														<img src='/resources/icon-street-global-gray.png' />
@@ -573,7 +560,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A113' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A113' && v.connected) ? (
 														<img src='/resources/icon-street-normal.png' />
 													) : (
 														<img src='/resources/icon-street-normal-gray.png' />
@@ -609,7 +596,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A006' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A006' && v.connected) ? (
 														<img src='/resources/icon-gmarket.png' />
 													) : (
 														<img src='/resources/icon-gmarket-gray.png' />
@@ -645,7 +632,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A001' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A001' && v.connected) ? (
 														<img src='/resources/icon-auction.png' />
 													) : (
 														<img src='/resources/icon-auction-gray.png' />
@@ -681,7 +668,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A027' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A027' && v.connected) ? (
 														<img src='/resources/icon-interpark.png' />
 													) : (
 														<img src='/resources/icon-interpark-gray.png' />
@@ -717,7 +704,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'B719' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'B719' && v.connected) ? (
 														<img src='/resources/icon-wemakeprice.png' />
 													) : (
 														<img src='/resources/icon-wemakeprice-gray.png' />
@@ -753,7 +740,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A524' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A524' && v.connected) ? (
 														<img src='/resources/icon-lotteon-global.png' />
 													) : (
 														<img src='/resources/icon-lotteon-global-gray.png' />
@@ -789,7 +776,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A525' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A525' && v.connected) ? (
 														<img src='/resources/icon-lotteon-normal.png' />
 													) : (
 														<img src='/resources/icon-lotteon-normal-gray.png' />
@@ -825,7 +812,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'B956' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'B956' && v.connected) ? (
 														<img src='/resources/icon-tmon.png' />
 													) : (
 														<img src='/resources/icon-tmon-gray.png' />
@@ -920,9 +907,7 @@ export const Dashboard = observer(() => {
 																fontWeight: 'bold',
 																textDecoration: 'underline',
 															}}
-															onClick={() => {
-																window.location.href = '/inflow.html';
-															}}
+															onClick={() => (window.location.href = '/inflow.html')}
 														>
 															{common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.total : '-'}
 														</Typography>
@@ -946,7 +931,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A077' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A077' && v.connected) ? (
 														<img src='/resources/icon-smartstore.png' />
 													) : (
 														<img src='/resources/icon-smartstore-gray.png' />
@@ -982,7 +967,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'B378' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'B378' && v.connected) ? (
 														<img src='/resources/icon-coupang.png' />
 													) : (
 														<img src='/resources/icon-coupang-gray.png' />
@@ -1018,7 +1003,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A112' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A112' && v.connected) ? (
 														<img src='/resources/icon-street-global.png' />
 													) : (
 														<img src='/resources/icon-street-global-gray.png' />
@@ -1054,7 +1039,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A113' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A113' && v.connected) ? (
 														<img src='/resources/icon-street-normal.png' />
 													) : (
 														<img src='/resources/icon-street-normal-gray.png' />
@@ -1126,7 +1111,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A001' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A001' && v.connected) ? (
 														<img src='/resources/icon-auction.png' />
 													) : (
 														<img src='/resources/icon-auction-gray.png' />
@@ -1162,7 +1147,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A027' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A027' && v.connected) ? (
 														<img src='/resources/icon-interpark.png' />
 													) : (
 														<img src='/resources/icon-interpark-gray.png' />
@@ -1198,7 +1183,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'B719' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'B719' && v.connected) ? (
 														<img src='/resources/icon-wemakeprice.png' />
 													) : (
 														<img src='/resources/icon-wemakeprice-gray.png' />
@@ -1234,7 +1219,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A524' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A524' && v.connected) ? (
 														<img src='/resources/icon-lotteon-global.png' />
 													) : (
 														<img src='/resources/icon-lotteon-global-gray.png' />
@@ -1270,7 +1255,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A525' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A525' && v.connected) ? (
 														<img src='/resources/icon-lotteon-normal.png' />
 													) : (
 														<img src='/resources/icon-lotteon-normal-gray.png' />
@@ -1306,7 +1291,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'B956' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'B956' && v.connected) ? (
 														<img src='/resources/icon-tmon.png' />
 													) : (
 														<img src='/resources/icon-tmon-gray.png' />
@@ -1352,7 +1337,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A523' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A523' && v.connected) ? (
 														<Tooltip title='ESM2.0'>
 															<img src='/resources/icon-gmarket.png' />
 														</Tooltip>
@@ -1392,7 +1377,7 @@ export const Dashboard = observer(() => {
 														textAlign: 'center',
 													}}
 												>
-													{common.uploadInfo.markets.find((v: any) => v.code === 'A522' && v.connected) ? (
+													{common.uploadInfo.markets.find((v) => v.code === 'A522' && v.connected) ? (
 														<Tooltip title='ESM2.0'>
 															<img src='/resources/icon-auction.png' />
 														</Tooltip>
@@ -1553,9 +1538,7 @@ export const Dashboard = observer(() => {
 														sx={{
 															width: '100%',
 														}}
-														onClick={() => {
-															window.location.href = '/keyword/analysis.html';
-														}}
+														onClick={() => (window.location.href = '/keyword/analysis.html')}
 													>
 														키워드분석 바로가기
 													</Button>
@@ -1622,9 +1605,7 @@ export const Dashboard = observer(() => {
 														sx={{
 															width: '100%',
 														}}
-														onClick={() => {
-															window.location.href = '/sourcing.html';
-														}}
+														onClick={() => (window.location.href = '/sourcing.html')}
 													>
 														소싱기 바로가기
 													</Button>
