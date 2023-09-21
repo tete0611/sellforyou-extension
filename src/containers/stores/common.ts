@@ -10,7 +10,7 @@ import { coupangApiGateway } from '../../pages/Tools/Coupang';
 import { streetApiGateway } from '../../pages/Tools/Street';
 import { floatingToast, request } from '../../pages/Tools/Common';
 import { refreshToken } from '../../pages/Tools/Auth';
-import { UploadDisabledInfo, UploadInfo } from '../../type/type';
+import { UploadDisabledInfo, UploadInfo, User } from '../../type/type';
 
 export class common {
 	notionPage = null;
@@ -28,7 +28,13 @@ export class common {
 	loaded: boolean = false;
 
 	chips: any = [];
-	user: any = {};
+	user: User = {
+		productCount: 0,
+		email: '',
+		id: 0,
+		refCode: null,
+		refAvailable: false,
+	};
 
 	sideBar: any = false;
 
@@ -310,37 +316,27 @@ export class common {
 
 	// 11번가 복수아이디 개수 체크
 	getMaximumLimitsStreet = () => {
-		if (this.user.userInfo.streetApiKey) {
-			this.streetMaxmumCount += 1;
-		}
+		const { user } = this;
+		const { userInfo } = user;
+		const {
+			streetApiKey,
+			streetApiKey2,
+			streetApiKey3,
+			streetApiKey4,
+			streetNormalApiKey,
+			streetNormalApiKey2,
+			streetNormalApiKey3,
+			streetNormalApiKey4,
+		} = userInfo;
 
-		if (this.user.userInfo.streetApiKey2) {
-			this.streetMaxmumCount += 1;
-		}
-
-		if (this.user.userInfo.streetApiKey3) {
-			this.streetMaxmumCount += 1;
-		}
-
-		if (this.user.userInfo.streetApiKey4) {
-			this.streetMaxmumCount += 1;
-		}
-
-		if (this.user.userInfo.streetNormalApiKey) {
-			this.streetMaxmumCount += 1;
-		}
-
-		if (this.user.userInfo.streetNormalApiKey2) {
-			this.streetMaxmumCount += 1;
-		}
-
-		if (this.user.userInfo.streetNormalApiKey3) {
-			this.streetMaxmumCount += 1;
-		}
-
-		if (this.user.userInfo.streetNormalApiKey4) {
-			this.streetMaxmumCount += 1;
-		}
+		if (streetApiKey) this.streetMaxmumCount += 1;
+		if (streetApiKey2) this.streetMaxmumCount += 1;
+		if (streetApiKey3) this.streetMaxmumCount += 1;
+		if (streetApiKey4) this.streetMaxmumCount += 1;
+		if (streetNormalApiKey) this.streetMaxmumCount += 1;
+		if (streetNormalApiKey2) this.streetMaxmumCount += 1;
+		if (streetNormalApiKey3) this.streetMaxmumCount += 1;
+		if (streetNormalApiKey4) this.streetMaxmumCount += 1;
 	};
 
 	// 사용자 정보 조회
@@ -349,17 +345,12 @@ export class common {
 			window.location.href === chrome.runtime.getURL('/signin.html') ||
 			window.location.href === chrome.runtime.getURL('/signup.html') ||
 			window.location.href === chrome.runtime.getURL('/lostandfound.html')
-		) {
+		)
 			return;
-		}
 
 		const response = await gql(QUERIES.SELECT_MY_INFO_BY_USER, {}, false);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		// 상하단 이미지 사전수정
 		let fixImageTop = response.data.selectMyInfoByUser.userInfo.fixImageTop;
@@ -367,29 +358,25 @@ export class common {
 		let fixImageBottom = response.data.selectMyInfoByUser.userInfo.fixImageBottom;
 		let fixImageSubBottom = response.data.selectMyInfoByUser.userInfo.fixImageSubBottom;
 
-		if (fixImageTop) {
+		if (fixImageTop)
 			fixImageTop = /^https?/.test(fixImageTop)
 				? fixImageTop
 				: `${process.env.SELLFORYOU_MINIO_HTTPS}/${fixImageTop}?${new Date().getTime()}`;
-		}
 
-		if (fixImageSubTop) {
+		if (fixImageSubTop)
 			fixImageSubTop = /^https?/.test(fixImageSubTop)
 				? fixImageSubTop
 				: `${process.env.SELLFORYOU_MINIO_HTTPS}/${fixImageSubTop}?${new Date().getTime()}`;
-		}
 
-		if (fixImageBottom) {
+		if (fixImageBottom)
 			fixImageBottom = /^https?/.test(fixImageBottom)
 				? fixImageBottom
 				: `${process.env.SELLFORYOU_MINIO_HTTPS}/${fixImageBottom}?${new Date().getTime()}`;
-		}
 
-		if (fixImageSubBottom) {
+		if (fixImageSubBottom)
 			fixImageSubBottom = /^https?/.test(fixImageSubBottom)
 				? fixImageSubBottom
 				: `${process.env.SELLFORYOU_MINIO_HTTPS}/${fixImageSubBottom}?${new Date().getTime()}`;
-		}
 
 		response.data.selectMyInfoByUser.userInfo = {
 			...response.data.selectMyInfoByUser.userInfo,
@@ -413,14 +400,12 @@ export class common {
 				return;
 			}
 
-			if (window.location.href !== chrome.runtime.getURL('/payments.html')) {
+			if (window.location.href !== chrome.runtime.getURL('/payments.html'))
 				if (
 					(this.user.purchaseInfo2.level < 2 && this.user.userInfo.productCollectCount > 100) ||
 					this.user.purchaseInfo2.level === 0
 				) {
-					const accept = confirm('해당 계정의 이용기간이 만료되었습니다.\n결제를 진행하시겠습니까?');
-
-					if (!accept) {
+					if (!confirm('해당 계정의 이용기간이 만료되었습니다.\n결제를 진행하시겠습니까?')) {
 						this.signOut();
 
 						return;
@@ -428,7 +413,6 @@ export class common {
 
 					window.location.href = '/payments.html';
 				}
-			}
 
 			// 오픈마켓 연동상태 설정
 			if (this.user.userInfo.naverStoreUrl) {
@@ -581,11 +565,8 @@ export class common {
 				result1!.connected = true;
 				result2!.connected = true;
 
-				if (this.user.userInfo.lotteonSellerType === 'G') {
-					result = result1;
-				} else {
-					result = result2;
-				}
+				if (this.user.userInfo.lotteonSellerType === 'G') result = result1;
+				else result = result2;
 
 				if (result && this.user.userInfo.lotteonUseType === 'Y') {
 					result.connected = true;
@@ -634,9 +615,7 @@ export class common {
 	};
 
 	// 사용자 정보 설정
-	setUserInfo = (data: any) => {
-		this.user.userInfo = data;
-	};
+	setUserInfo = (data: any) => (this.user.userInfo = data);
 
 	// 사용자 정보 업데이트(DB적용)
 	testUserInfo = async (data: any) => {
@@ -648,9 +627,8 @@ export class common {
 	};
 
 	// 연동 초기화
-	initConnectedInfo = (marketCode: string) => {
-		this.uploadInfo.markets.find((v) => v.code === marketCode)!.connected = false;
-	};
+	initConnectedInfo = (marketCode: string) =>
+		(this.uploadInfo.markets.find((v) => v.code === marketCode)!.connected = false);
 
 	// 연동정보 검증
 	verifyConnectedInfo = async (marketCode: string) => {
@@ -731,13 +709,11 @@ export class common {
 					outbound_json.hasOwnProperty('code') &&
 					outbound_json.code === 'ERROR'
 				) {
-					if (outbound_json.message === 'Specified key is not registered.') {
+					if (outbound_json.message === 'Specified key is not registered.')
 						alert('(쿠팡) 연동에 실패하였습니다.\n액세스키가 잘못되었습니다.');
-					} else if (outbound_json.message === 'Invalid signature.') {
+					else if (outbound_json.message === 'Invalid signature.')
 						alert('(쿠팡) 연동에 실패하였습니다.\n시크릿키가 잘못되었습니다.');
-					} else {
-						alert(outbound_json.message);
-					}
+					else alert(outbound_json.message);
 
 					return;
 				}
@@ -799,11 +775,8 @@ export class common {
 
 				const sgoList: any = await streetApiGateway(body);
 
-				if (!sgoList['ns2:inOutAddresss']) {
-					alert('(11번가 글로벌) 연동에 실패하였습니다.\n오픈 API 키를 확인해주세요.');
-
-					return;
-				}
+				if (!sgoList['ns2:inOutAddresss'])
+					return alert('(11번가 글로벌) 연동에 실패하였습니다.\n오픈 API 키를 확인해주세요.');
 
 				this.uploadInfo.markets.find((v) => v.code === 'A112')!.connected = true;
 
@@ -866,11 +839,8 @@ export class common {
 
 				const sgoList: any = await streetApiGateway(body);
 
-				if (!sgoList['ns2:inOutAddresss']) {
-					alert('(11번가 일반) 연동에 실패하였습니다.\n오픈 API 키를 확인해주세요.');
-
-					return;
-				}
+				if (!sgoList['ns2:inOutAddresss'])
+					return alert('(11번가 일반) 연동에 실패하였습니다.\n오픈 API 키를 확인해주세요.');
 
 				this.uploadInfo.markets.find((v) => v.code === 'A113')!.connected = true;
 
@@ -904,9 +874,8 @@ export class common {
 
 					let matched = false;
 
-					if (this.user.userInfo.esmplusGmarketId === user_g_json.sellerid) {
-						matched = true;
-					} else {
+					if (this.user.userInfo.esmplusGmarketId === user_g_json.sellerid) matched = true;
+					else
 						for (let i in gg_json) {
 							if (gg_json[i].SiteId === 2 && this.user.userInfo.esmplusGmarketId === gg_json[i].SellerId) {
 								matched = true;
@@ -914,17 +883,10 @@ export class common {
 								break;
 							}
 						}
-					}
 
-					if (!matched) {
-						alert('(지마켓) 입력된 정보가 로그인 정보와 일치하지 않습니다.');
-
-						return;
-					}
+					if (!matched) return alert('(지마켓) 입력된 정보가 로그인 정보와 일치하지 않습니다.');
 				} catch (e) {
-					alert('(지마켓) ESMPLUS 로그인 후 재시도 바랍니다.');
-
-					return;
+					return alert('(지마켓) ESMPLUS 로그인 후 재시도 바랍니다.');
 				}
 
 				this.uploadInfo.markets.find((v) => v.code === 'A006')!.connected = true;
@@ -952,9 +914,8 @@ export class common {
 
 					let matched = false;
 
-					if (this.user.userInfo.esmplusAuctionId === user_a_json.sellerid) {
-						matched = true;
-					} else {
+					if (this.user.userInfo.esmplusAuctionId === user_a_json.sellerid) matched = true;
+					else
 						for (let i in gg_json) {
 							if (gg_json[i].SiteId === 1 && this.user.userInfo.esmplusAuctionId === gg_json[i].SellerId) {
 								matched = true;
@@ -962,17 +923,10 @@ export class common {
 								break;
 							}
 						}
-					}
 
-					if (!matched) {
-						alert('(옥션) 입력된 정보가 로그인 정보와 일치하지 않습니다.');
-
-						return;
-					}
+					if (!matched) return alert('(옥션) 입력된 정보가 로그인 정보와 일치하지 않습니다.');
 				} catch (e) {
-					alert('(옥션) ESMPLUS 로그인 후 재시도 바랍니다.');
-
-					return;
+					return alert('(옥션) ESMPLUS 로그인 후 재시도 바랍니다.');
 				}
 
 				this.uploadInfo.markets.find((v) => v.code === 'A001')!.connected = true;
@@ -984,29 +938,11 @@ export class common {
 			}
 
 			case 'A027': {
-				if (!this.user.userInfo.interparkCertKey) {
-					alert('(인터파크) 상품등록 인증키가 입력되지 않았습니다.');
-
-					return;
-				}
-
-				if (!this.user.userInfo.interparkSecretKey) {
-					alert('(인터파크) 상품등록 비밀키가 입력되지 않았습니다.');
-
-					return;
-				}
-
-				if (!this.user.userInfo.interparkEditCertKey) {
-					alert('(인터파크) 상품수정 인증키가 입력되지 않았습니다.');
-
-					return;
-				}
-
-				if (!this.user.userInfo.interparkEditSecretKey) {
-					alert('(인터파크) 상품수정 비밀키가 입력되지 않았습니다.');
-
-					return;
-				}
+				if (!this.user.userInfo.interparkCertKey) return alert('(인터파크) 상품등록 인증키가 입력되지 않았습니다.');
+				if (!this.user.userInfo.interparkSecretKey) return alert('(인터파크) 상품등록 비밀키가 입력되지 않았습니다.');
+				if (!this.user.userInfo.interparkEditCertKey) return alert('(인터파크) 상품수정 인증키가 입력되지 않았습니다.');
+				if (!this.user.userInfo.interparkEditSecretKey)
+					return alert('(인터파크) 상품수정 비밀키가 입력되지 않았습니다.');
 
 				this.uploadInfo.markets.find((v) => v.code === 'A027')!.connected = true;
 				this.testUserInfo({
@@ -1020,21 +956,14 @@ export class common {
 			}
 
 			case 'B719': {
-				if (!this.user.userInfo.wemakepriceId) {
-					alert('(위메프) ID가 입력되지 않았습니다.');
-
-					return;
-				}
+				if (!this.user.userInfo.wemakepriceId) return alert('(위메프) ID가 입력되지 않았습니다.');
 
 				try {
 					let login_resp = await fetch('https://wpartner.wemakeprice.com/getLoginUser.json?_=1651030385673');
 					let login_json = await login_resp.json();
 
-					if (login_json.userId !== this.user.userInfo.wemakepriceId) {
-						alert('(위메프) 입력된 정보가 로그인 정보와 일치하지 않습니다.');
-
-						return;
-					}
+					if (login_json.userId !== this.user.userInfo.wemakepriceId)
+						return alert('(위메프) 입력된 정보가 로그인 정보와 일치하지 않습니다.');
 				} catch (e) {
 					alert('(위메프) 위메프 파트너 로그인 후 재시도 바랍니다.');
 				}
@@ -1048,17 +977,8 @@ export class common {
 			}
 
 			case 'A524/A525': {
-				if (!this.user.userInfo.lotteonVendorId) {
-					alert('(롯데온) 거래처번호가 입력되지 않았습니다.');
-
-					return;
-				}
-
-				if (!this.user.userInfo.lotteonApiKey) {
-					alert('(롯데온) 인증키가 입력되지 않았습니다.');
-
-					return;
-				}
+				if (!this.user.userInfo.lotteonVendorId) return alert('(롯데온) 거래처번호가 입력되지 않았습니다.');
+				if (!this.user.userInfo.lotteonApiKey) return alert('(롯데온) 인증키가 입력되지 않았습니다.');
 
 				this.uploadInfo.markets.find((v) => v.code === 'A524')!.connected = true;
 				this.uploadInfo.markets.find((v) => v.code === 'A525')!.connected = true;
@@ -1071,11 +991,7 @@ export class common {
 			}
 
 			case 'B956': {
-				if (!this.user.userInfo.tmonId) {
-					alert('(티몬) 파트너번호가 입력되지 않았습니다.');
-
-					return;
-				}
+				if (!this.user.userInfo.tmonId) return alert('(티몬) 파트너번호가 입력되지 않았습니다.');
 
 				let loginResp: any = await request('https://spc-om.tmon.co.kr/api/partner/creatable-deal-count', {
 					method: 'GET',
@@ -1088,17 +1004,9 @@ export class common {
 					//
 				}
 
-				if (!loginJson) {
-					alert('(티몬) 파트너센터 로그인 후 재시도 바랍니다.');
-
-					return;
-				}
-
-				if (loginJson.data.partnerNo.toString() !== this.user.userInfo.tmonId) {
-					alert('(티몬) 입력된 정보가 로그인 정보와 일치하지 않습니다.');
-
-					return;
-				}
+				if (!loginJson) return alert('(티몬) 파트너센터 로그인 후 재시도 바랍니다.');
+				if (loginJson.data.partnerNo.toString() !== this.user.userInfo.tmonId)
+					return alert('(티몬) 입력된 정보가 로그인 정보와 일치하지 않습니다.');
 
 				this.uploadInfo.markets.find((v) => v.code === 'B956')!.connected = true;
 				this.testUserInfo({
@@ -1109,17 +1017,13 @@ export class common {
 			}
 
 			default: {
-				alert('해당 쇼핑몰은 현재 연동하실 수 없습니다.');
-
-				return;
+				return alert('해당 쇼핑몰은 현재 연동하실 수 없습니다.');
 			}
 		}
 	};
 
 	// 배송정책 설정
-	setDeliveryPolicy = (data: any) => {
-		this.deliveryPolicy = data;
-	};
+	setDeliveryPolicy = (data: any) => (this.deliveryPolicy = data);
 
 	// 배송정보 조회
 	getDeliveryInfo = async () => {
@@ -1264,22 +1168,16 @@ export class common {
 	loadTheme = async () => {
 		let appInfo: any = (await getLocalStorage('appInfo')) ?? null;
 
-		if (!appInfo) {
-			return;
-		}
+		if (!appInfo) return;
 
-		runInAction(() => {
-			this.darkTheme = appInfo.darkTheme;
-		});
+		runInAction(() => (this.darkTheme = appInfo.darkTheme));
 	};
 
 	// 상단 열려있는 탭 상태
 	loadStack = async () => {
 		const stack: any = (await getLocalStorage('stack')) ?? [];
 
-		runInAction(() => {
-			this.chips = stack;
-		});
+		runInAction(() => (this.chips = stack));
 	};
 
 	// 탭 추가
@@ -1289,14 +1187,10 @@ export class common {
 		let found = false;
 
 		this.chips.map((v: any) => {
-			if (v.url === data.url) {
-				found = true;
-			}
+			if (v.url === data.url) found = true;
 		});
 
-		if (found) {
-			return;
-		}
+		if (found) return;
 
 		this.chips.push(data);
 
@@ -1309,13 +1203,7 @@ export class common {
 
 	// 탭 삭제
 	deleteFromStack = (index: number) => {
-		this.chips = this.chips.filter((v: any, i: number) => {
-			if (i === index) {
-				return false;
-			}
-
-			return true;
-		});
+		this.chips = this.chips.filter((v: any, i: number) => (i === index ? false : true));
 
 		const stack = JSON.parse(JSON.stringify(this.chips));
 
@@ -1325,95 +1213,65 @@ export class common {
 	};
 
 	// 배송정책 설정
-	setPolicyInfo = (marketCode: string, value: any) => {
-		this.uploadInfo.markets.find((v) => v.code === marketCode)!.policyInfo = value;
-	};
-
+	setPolicyInfo = (marketCode: string, value: any) =>
+		(this.uploadInfo.markets.find((v) => v.code === marketCode)!.policyInfo = value);
 	// 등록해제 시 퍼센테이지
-	setDisabledProgressValue = (marketCode: string, value: number) => {
-		this.uploadDisabledInfo.markets.find((v) => v.code === marketCode)!.progress = value;
-	};
+	setDisabledProgressValue = (marketCode: string, value: number) =>
+		(this.uploadDisabledInfo.markets.find((v) => v.code === marketCode)!.progress = value);
 
 	// 등록 시 퍼센테이지
-	setProgressValue = (marketCode: string, value: number) => {
-		this.uploadInfo.markets.find((v) => v.code === marketCode)!.progress = value;
-	};
+	setProgressValue = (marketCode: string, value: number) =>
+		(this.uploadInfo.markets.find((v) => v.code === marketCode)!.progress = value);
 
 	// 팝업 기준위치
 	setPopOverAnchor = (target: any) => {
-		if (target) {
-			this.popOver = true;
-		} else {
-			this.popOver = false;
-		}
+		if (target) this.popOver = true;
+		else this.popOver = false;
 
 		this.popOverAnchor = target;
 	};
 
 	// 메뉴바 ON/OFF
-	toggleSideBar = () => {
-		this.sideBar = !this.sideBar;
-	};
+	toggleSideBar = () => (this.sideBar = !this.sideBar);
 
 	// 오픈마켓 등록해제 여부 설정
-	toggleUploadDisabledInfoMarket = (marketCode: string, value: boolean) => {
-		this.uploadDisabledInfo.markets.find((v) => v.code === marketCode)!.upload = value;
-	};
+	toggleUploadDisabledInfoMarket = (marketCode: string, value: boolean) =>
+		(this.uploadDisabledInfo.markets.find((v) => v.code === marketCode)!.upload = value);
 
 	// 전체마켓 등록해제 여부 설정
-	toggleUploadDisabledInfoMarketAll = (value: boolean) => {
+	toggleUploadDisabledInfoMarketAll = (value: boolean) =>
 		this.uploadDisabledInfo.markets.filter((v) => !v.disabled).map((v) => (v.upload = value));
-	};
 
 	// 오픈마켓 등록 여부 설정
-	toggleUploadInfoMarket = (marketCode: string, value: boolean) => {
-		this.uploadInfo.markets.find((v) => v.code === marketCode)!.upload = value;
-	};
+	toggleUploadInfoMarket = (marketCode: string, value: boolean) =>
+		(this.uploadInfo.markets.find((v) => v.code === marketCode)!.upload = value);
 
 	// 전체마켓 등록 여부 설정
-	toggleUploadInfoMarketAll = (value: boolean) => {
+	toggleUploadInfoMarketAll = (value: boolean) =>
 		this.uploadInfo.markets
 			.filter((v) => !v.disabled)
 			.map((v) => (v.code === 'A006' || v.code === 'A001' ? (v.upload = false) : (v.upload = value)));
-	};
 
 	// 오픈마켓 동영상 업로드 여부 설정
-	toggleUploadInfoVideo = (marketCode: string, value: boolean) => {
-		this.uploadInfo.markets.find((v) => v.code === marketCode)!.video = value;
-	};
+	toggleUploadInfoVideo = (marketCode: string, value: boolean) =>
+		(this.uploadInfo.markets.find((v) => v.code === marketCode)!.video = value);
 
 	// 전체마켓 동영상 업로드 여부 설정
-	toggleUploadInfoVideoAll = (value: boolean) => {
+	toggleUploadInfoVideoAll = (value: boolean) =>
 		this.uploadInfo.markets
 			.filter((v) => !v.disabled)
 			.map((v) => (v.code === 'A006' || v.code === 'A001' ? (v.video = false) : (v.video = value)));
-	};
 
 	// 수정모드 설정
-	setEditedUpload = (value: boolean) => {
-		this.uploadInfo.editable = value;
-	};
-
+	setEditedUpload = (value: boolean) => (this.uploadInfo.editable = value);
 	// 업로드가능여부 설정
-	setUploadable = (value: boolean) => {
-		this.uploadInfo.uploadable = value;
-	};
-
+	setUploadable = (value: boolean) => (this.uploadInfo.uploadable = value);
 	// 업로드 중단여부 설정
-	setStopped = (value: boolean) => {
-		this.uploadInfo.stopped = value;
-	};
-
+	setStopped = (value: boolean) => (this.uploadInfo.stopped = value);
 	// 등록해제 퍼센테이지 초기설정
-	initUploadDisabledMarketProgress = () => {
-		this.uploadDisabledInfo.markets.map((v) => (v.progress = 0));
-	};
-
+	initUploadDisabledMarketProgress = () => this.uploadDisabledInfo.markets.map((v) => (v.progress = 0));
 	// 등록 퍼센테이지 초기설정
-	initUploadMarketProgress = () => {
-		this.uploadInfo.markets.map((v: any) => (v.progress = 0));
-	};
-
+	initUploadMarketProgress = () => this.uploadInfo.markets.map((v) => (v.progress = 0));
 	// 결제내역 모달 ON/OFF
 	togglePayHistoryModal = (userId: any, value: boolean) => {
 		this.payHistoryInfo.userId = userId;
@@ -1421,20 +1279,9 @@ export class common {
 	};
 
 	// 윈도우 창 크기
-	setInnerSize = (data: any) => {
-		this.innerSize = data;
-	};
-
+	setInnerSize = (data: any) => (this.innerSize = data);
 	// 노션 페이지 설정
-	setNotionPage = (data: any) => {
-		this.notionPage = data;
-	};
-
-	setBanner01Image = (data: any) => {
-		this.banner01Image = data;
-	};
-
-	setBanner01Url = (data: any) => {
-		this.banner01Url = data;
-	};
+	setNotionPage = (data: any) => (this.notionPage = data);
+	setBanner01Image = (data: any) => (this.banner01Image = data);
+	setBanner01Url = (data: any) => (this.banner01Url = data);
 }
