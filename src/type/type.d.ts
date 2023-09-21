@@ -115,3 +115,17 @@ export type ManyPriceInfo = {
 	shippingFee: number;
 	returnShippingFee: number;
 };
+
+export type User = {
+	userInfo?: any;
+	createdToken?: any;
+	purchaseInfo2?: any;
+	productCount: number;
+	email: string;
+	credit?: any;
+	id: number;
+	refCode: string | null;
+	connectedUsers?: any;
+	refAvailable: boolean;
+	keywardMemo?: any;
+};
