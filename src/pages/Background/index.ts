@@ -10,13 +10,14 @@ import papagoTranslation from '../Tools/Translation';
 import { coupangApiGateway } from '../Tools/Coupang';
 import { createTabCompletely, getLocalStorage, queryTabs, sendTabMessage, setLocalStorage } from '../Tools/ChromeAsync';
 import { getRandomIntInclusive } from '../Tools/Common';
+import { RuntimeMessage } from '../../type/type';
 
 // 티몰 상세페이지 요청 시 CORS 이슈 발생
 // 이를 해결하기 위해 서비스워커에서 처리하지 않고 메시지 채널로 콘텐츠 스크립트에서 처리하도록 구현
 // 티몰에 상품 수집하려고 페이지 들어가면 탭이 생겼다가 사라지는게 이 기능
-const tmallCORS = async (url) => {
-	const tab = await createTabCompletely({ active: false, url }, 5);
-	const res = await sendTabMessage(tab.id, { action: 'fetch', source: url });
+const tmallCORS = async (args: RuntimeMessage['form']) => {
+	const tab = await createTabCompletely({ active: false, url: args?.url }, 5);
+	const res = await sendTabMessage(tab.id, { action: 'fetch', form: args });
 
 	chrome.tabs.remove(tab.id);
 
@@ -489,7 +490,7 @@ const isBulk = async (sender) => {
 // 확장프로그램에서 async/await 지원 안하므로 구문 사용 금지 (Promise로 구현)
 // 사용법 예시 addToInventory 함수를 외부에 async로 선언 후 promise 형태로 await (x) .then()형태로 사용해야함
 // 안에서 async/ await 지원 안함
-chrome.runtime.onMessage.addListener((request, sender: any, sendResponse) => {
+chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender: any, sendResponse) => {
 	switch (request.action) {
 		// 상품 수집 액션
 		case 'collect': {
@@ -555,17 +556,17 @@ chrome.runtime.onMessage.addListener((request, sender: any, sendResponse) => {
 		}
 
 		// 타오바오 상세페이지 데이터 요청
-		case 'description': {
-			fetch(request.source)
-				.then((res) => res.text())
-				.then(sendResponse);
+		// case 'description': {
+		// 	fetch(request.source?.data)
+		// 		.then((res) => res.text())
+		// 		.then(sendResponse);
 
-			return true;
-		}
+		// 	return true;
+		// }
 
 		// 티몰 상세페이지 데이터 요청
 		case 'fetch': {
-			tmallCORS(request.source).then(sendResponse);
+			tmallCORS(request.form).then(sendResponse);
 
 			return true;
 		}

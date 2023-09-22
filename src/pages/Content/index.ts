@@ -16,6 +16,7 @@ import {
 	uploadA077Resources,
 } from '../Tools/SmartStore';
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
+import { RuntimeMessage } from '../../type/type';
 const iconv = require('iconv-lite');
 
 const pageRefresh = async (shop, page) => {
@@ -1490,7 +1491,7 @@ const main = async () => {
 
 	document.documentElement.insertBefore(link, null);
 
-	chrome.runtime.onMessage.addListener((request: { action: string; source: any }, sender, sendResponse) => {
+	chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender, sendResponse) => {
 		switch (request.action) {
 			case 'set_info': {
 				getsetPage(request.source).then(sendResponse);
@@ -1515,12 +1516,12 @@ const main = async () => {
 			}
 
 			case 'fetch': {
-				const url = request.source;
+				const url = request?.form?.url!;
+				const requestInit = request.form?.requestInit;
 
-				fetch(url)
+				fetch(url, requestInit)
 					.then((res) => res.text())
 					.then((data) => sendResponse(data));
-
 				return true;
 			}
 

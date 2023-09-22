@@ -16,40 +16,40 @@ export type Product = {
 	};
 };
 
-export type Layer = {
-	index: number;
-	image: { current: string; origin: string };
-	object: {
-		angle?: any;
-		rect?: fabric.Rect;
-		text?: any;
-		object: string;
-		pos: { x: number; y: number }[];
-		foreground?: any;
-		original?: any;
-		background?: { R: number; G: number; B: number };
-		shapeOption?: { strokeWidth: number | null; rx: number | null; ry: number | null };
-		translated?: string;
-		copyX?: number;
-		copyY?: number;
-		textOption?: {
-			size?: number;
-			direction?: string;
-			bold: string;
-			font: string;
-			italic: string;
-			lineThrough: any;
-			underLine: any;
-		};
-	}[];
-	state: {
-		check: string;
-		current: any;
-		redo: { canvas: any[]; object: any[] };
-		undo: { canvas: any[]; object: any[] };
-	};
-	type: string;
-};
+// export type Layer = {
+// 	index: number;
+// 	image: { current: string; origin: string };
+// 	object: {
+// 		angle?: any;
+// 		rect?: fabric.Rect;
+// 		text?: any;
+// 		object: string;
+// 		pos: { x: number; y: number }[];
+// 		foreground?: any;
+// 		original?: any;
+// 		background?: { R: number; G: number; B: number };
+// 		shapeOption?: { strokeWidth: number | null; rx: number | null; ry: number | null };
+// 		translated?: string;
+// 		copyX?: number;
+// 		copyY?: number;
+// 		textOption?: {
+// 			size?: number;
+// 			direction?: string;
+// 			bold: string;
+// 			font: string;
+// 			italic: string;
+// 			lineThrough: any;
+// 			underLine: any;
+// 		};
+// 	}[];
+// 	state: {
+// 		check: string;
+// 		current: any;
+// 		redo: { canvas: any[]; object: any[] };
+// 		undo: { canvas: any[]; object: any[] };
+// 	};
+// 	type: string;
+// };
 
 export type UploadInfo = {
 	stopped: boolean;
@@ -128,4 +128,11 @@ export type User = {
 	connectedUsers?: any;
 	refAvailable: boolean;
 	keywardMemo?: any;
+};
+
+/** ChromeAsync 런타임메시지 파라미터 타입 */
+export type RuntimeMessage = {
+	action: string;
+	source?: { data: any; retry?: boolean };
+	form?: { url: string; requestInit?: RequestInit }; // fetch요청시 사용
 };
