@@ -940,7 +940,7 @@ export class product {
 	};
 
 	// 상품 정보
-	getProduct = async (commonStore: any, p: number) => {
+	getProduct = async (commonStore: common, p: number) => {
 		this.itemInfo.loading = true;
 
 		// Backup

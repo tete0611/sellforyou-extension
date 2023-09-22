@@ -4,7 +4,7 @@ import { fabric } from 'fabric';
 import gql from '../Main/GraphQL/Requests';
 import { getLocalStorage } from '../Tools/ChromeAsync';
 import { floatingToast, getClock, readFileDataURL, sleep } from '../Tools/Common';
-import { Layer, Nullable, Product } from '../../type/type';
+import { Nullable, Product } from '../../type/type';
 import { Image as FabricImage } from 'fabric/fabric-impl';
 
 const ENDPOINT_IMAGE = 'https://img.sellforyou.co.kr';
