@@ -787,7 +787,7 @@ export async function uploadSmartStore(productStore: product, commonStore: commo
 
 				let name = market_item.name3.slice(0, 100);
 
-				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
+				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code)!;
 
 				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
 					? itemInfo[`sillCode${data.DShopInfo.site_code}`]

@@ -319,7 +319,7 @@ export class product {
 		marginUnitType: 'PERCENT',
 		localShippingFee: 6000,
 		shippingFee: 0,
-		returnShippingFee: 0,
+		refundShippingFee: 0,
 	};
 
 	manyFeeInfo: any = {
@@ -1421,7 +1421,7 @@ export class product {
 				return;
 			}
 
-			this.itemInfo.items.find((v: any) => v.id === productId).delete = true;
+			this.itemInfo.items.find((v) => v.id === productId)!.delete = true;
 		}
 
 		await gql(MUTATIONS.DELETE_PRODUCT_BY_USER, { productId: productIds }, false);
@@ -2293,7 +2293,7 @@ export class product {
 			marginRate: this.itemInfo.items[index].marginRate,
 			marginUnitType: this.itemInfo.items[index].marginUnitType,
 			shippingFee: this.itemInfo.items[index].shippingFee,
-			returnShippingFee: this.itemInfo.items[index].returnShippingFee,
+			refundShippingFee: this.itemInfo.items[index].refundShippingFee,
 			localShippingFee: this.itemInfo.items[index].localShippingFee,
 			localShippingCode: this.itemInfo.items[index].localShippingCode,
 		};
@@ -4613,7 +4613,7 @@ export class product {
 
 	// 이미지번역결과 적용
 	updateImageTranslatedData = async (data: any) => {
-		const product = this.itemInfo.items.find((v: any) => v.id === data.productId);
+		const product = this.itemInfo.items.find((v: any) => v.id === data.productId)!;
 
 		if (data.thumbnails.length > 0) {
 			product.imageThumbnail = product.imageThumbnail.map((v: any, i: number) => {

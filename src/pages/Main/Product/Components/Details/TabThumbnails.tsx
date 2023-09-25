@@ -96,6 +96,7 @@ export const TabThumbnails = observer((props: any) => {
 						}}
 					>
 						<Button
+							//@ts-ignore
 							disabled={itemInfo.items.find((v) => v.translate)}
 							disableElevation
 							variant='contained'

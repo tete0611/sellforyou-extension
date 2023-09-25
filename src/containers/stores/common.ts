@@ -29,6 +29,7 @@ export class common {
 
 	chips: any = [];
 	user: User = {
+		userInfo: null,
 		productCount: 0,
 		email: '',
 		id: 0,
@@ -349,7 +350,6 @@ export class common {
 			return;
 
 		const response = await gql(QUERIES.SELECT_MY_INFO_BY_USER, {}, false);
-
 		if (response.errors) return alert(response.errors[0].message);
 
 		// 상하단 이미지 사전수정

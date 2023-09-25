@@ -79,7 +79,7 @@ export type UploadDisabledInfo = {
 export type ItemInfo = {
 	checkedAll: boolean;
 	current: number;
-	items: any[];
+	items: Item[];
 	loading: boolean;
 };
 
@@ -113,11 +113,11 @@ export type ManyPriceInfo = {
 	localShippingFee: number;
 	localShippingCode?: string;
 	shippingFee: number;
-	returnShippingFee: number;
+	refundShippingFee: number;
 };
 
 export type User = {
-	userInfo?: any;
+	userInfo: any;
 	createdToken?: any;
 	purchaseInfo2?: any;
 	productCount: number;
@@ -135,4 +135,100 @@ export type RuntimeMessage = {
 	action: string;
 	source?: { data: any; retry?: boolean };
 	form?: { url: string; requestInit?: RequestInit }; // fetch요청시 사용
+};
+
+type Item = {
+	id: number;
+	tagInfo: any;
+	categoryInfoA077: any;
+	categoryInfoB378: any;
+	categoryInfoA112: any;
+	categoryInfoA113: any;
+	categoryInfoA006: any;
+	categoryInfoA001: any;
+	categoryInfoA027: any;
+	categoryInfoB719: any;
+	categoryInfoA524: any;
+	categoryInfoA525: any;
+	categoryInfoB956: any;
+	edited: any;
+	checked: boolean;
+	name: string;
+	delete: boolean;
+	searchTags: any;
+	immSearchTags: any;
+	immSearchTagsTemp: any;
+	imageThumbnail: string[];
+	price: number;
+	cnyRate: number;
+	marginRate: number;
+	marginUnitType: any;
+	productOption: any;
+	activeTaobaoProduct: any;
+	productOptionName: {
+		productOptionValue: {
+			id: number;
+			image: string | null | undefined;
+		}[];
+	}[];
+	localShippingFee: number;
+	shippingFee: number;
+	refundShippingFee: number;
+	localShippingCode: string;
+	descriptionImages: any;
+	description: any;
+	naverFee: number;
+	coupangFee: number;
+	streetFee: number;
+	streetNormalFee: number;
+	auctionFee: number;
+	gmarketFee: number;
+	interparkFee: number;
+	wemakepriceFee: number;
+	lotteonFee: number;
+	lotteonNormalFee: number;
+	tmonFee: number;
+	collapse: any;
+	optionCollapse: any;
+	activeProductStore: any;
+	myLock: any;
+	productCode: string;
+	tabs: any;
+	productStore: any;
+	isImageTranslated: boolean;
+	error: boolean;
+	optionPriceError: boolean;
+	thumbnailImageError: boolean;
+	optionImageError: boolean;
+	descriptionImageError: boolean;
+	imageCheckList: any;
+	myKeyward: any;
+	manuFacturer: any;
+	brandName: string;
+	modelName: string;
+	translate: boolean;
+	thumbData: any;
+	sillCodeA077: string;
+	sillCodeB378: string;
+	sillCodeA112: string;
+	sillCodeA113: string;
+	sillCodeA001: string;
+	sillCodeA006: string;
+	sillCodeA027: string;
+	sillCodeB719: string;
+	sillCodeA524: string;
+	sillCodeA525: string;
+	sillCodeB956: string;
+
+	sillDataA077: any;
+	sillDataB378: any;
+	sillDataA112: any;
+	sillDataA113: any;
+	sillDataA001: any;
+	sillDataA006: any;
+	sillDataA027: any;
+	sillDataB719: any;
+	sillDataA524: any;
+	sillDataA525: any;
+	sillDataB956: any;
 };
