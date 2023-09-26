@@ -25,7 +25,12 @@ import { TabOptionImages } from './TabOptionImages';
 import { TabDescriptions } from './TabDescriptions';
 import { TabAttribute } from './TabAttribute';
 import { Title } from '../../../Common/UI';
+import { Item } from '../../../../../type/type';
 
+interface Props {
+	item: Item;
+	index: number;
+}
 interface TabPanelProps {
 	children?: React.ReactNode;
 	dir?: string;
@@ -69,7 +74,7 @@ function tabProps(index: number) {
 }
 
 // 상품관리 페이지에서 상품 상세보기(펼치기) 했을 경우
-export const Details = observer((props: any) => {
+export const Details = observer((props: Props) => {
 	const theme = useTheme();
 
 	// MobX 스토리지 로드

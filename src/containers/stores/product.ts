@@ -2932,7 +2932,7 @@ export class product {
 	};
 
 	// 판매가 일괄설정
-	setManyPriceInfo = (data: any) => {
+	setManyPriceInfo = (data: ManyPriceInfo) => {
 		this.manyPriceInfo = data;
 	};
 
