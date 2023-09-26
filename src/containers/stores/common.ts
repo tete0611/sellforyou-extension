@@ -10,7 +10,7 @@ import { coupangApiGateway } from '../../pages/Tools/Coupang';
 import { streetApiGateway } from '../../pages/Tools/Street';
 import { floatingToast, request } from '../../pages/Tools/Common';
 import { refreshToken } from '../../pages/Tools/Auth';
-import { UploadDisabledInfo, UploadInfo, User } from '../../type/type';
+import { UploadDisabledInfo, UploadInfo, User, UserInfo } from '../../type/type';
 
 export class common {
 	notionPage = null;
@@ -29,7 +29,7 @@ export class common {
 
 	chips: any = [];
 	user: User = {
-		userInfo: null,
+		userInfo: {} as UserInfo,
 		productCount: 0,
 		email: '',
 		id: 0,
@@ -405,11 +405,7 @@ export class common {
 					(this.user.purchaseInfo2.level < 2 && this.user.userInfo.productCollectCount > 100) ||
 					this.user.purchaseInfo2.level === 0
 				) {
-					if (!confirm('해당 계정의 이용기간이 만료되었습니다.\n결제를 진행하시겠습니까?')) {
-						this.signOut();
-
-						return;
-					}
+					if (!confirm('해당 계정의 이용기간이 만료되었습니다.\n결제를 진행하시겠습니까?')) return this.signOut();
 
 					window.location.href = '/payments.html';
 				}
@@ -730,7 +726,7 @@ export class common {
 			}
 
 			case 'A112': {
-				let apiKey = null;
+				let apiKey: string | null = null;
 
 				switch (this.user.userInfo.streetUseKeyType) {
 					case '1': {
@@ -794,7 +790,7 @@ export class common {
 			}
 
 			case 'A113': {
-				let apiKey = null;
+				let apiKey: string | null = null;
 
 				switch (this.user.userInfo.streetNormalUseKeyType) {
 					case '1': {
@@ -1057,7 +1053,7 @@ export class common {
 		}
 		try {
 			if (this.uploadInfo.markets.find((v) => v.code === 'A112')!.connected) {
-				let apiKey = null;
+				let apiKey: string | null = null;
 
 				switch (this.user.userInfo.streetUseKeyType) {
 					case '1': {
@@ -1111,7 +1107,7 @@ export class common {
 
 		try {
 			if (this.uploadInfo.markets.find((v) => v.code === 'A113')!.connected) {
-				let apiKey = null;
+				let apiKey: string | null = null;
 
 				switch (this.user.userInfo.streetNormalUseKeyType) {
 					case '1': {
