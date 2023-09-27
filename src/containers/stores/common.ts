@@ -29,7 +29,7 @@ export class common {
 
 	chips: any = [];
 	user: User = {
-		userInfo: {} as UserInfo,
+		userInfo: null as any,
 		productCount: 0,
 		email: '',
 		id: 0,
@@ -630,29 +630,18 @@ export class common {
 	verifyConnectedInfo = async (marketCode: string) => {
 		switch (marketCode) {
 			case 'A077': {
-				if (!this.user.userInfo.naverStoreUrl) {
-					alert('(스마트스토어) 주소가 입력되지 않았습니다.');
-
-					return 0;
-				}
-
-				if (!this.user.userInfo.naverStoreUrl.includes('https://smartstore.naver.com/')) {
-					alert(
+				if (!this.user.userInfo.naverStoreUrl) return alert('(스마트스토어) 주소가 입력되지 않았습니다.');
+				if (!this.user.userInfo.naverStoreUrl.includes('https://smartstore.naver.com/'))
+					return alert(
 						'(스마트스토어) 주소가 올바르지 않습니다.\n아래 형식에 맞게 입력해주세요.\n(https://smartstore.naver.com/example)',
 					);
-
-					return 0;
-				}
 
 				let storeResp = await fetch('https://sell.smartstore.naver.com/api/clone-accounts?_action=init');
 				let storeJson = await storeResp.json();
 				let storeId = storeJson.simpleAccountInfo.creatableChannelInfoListMap.STOREFARM[0].url;
 
-				if (this.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + storeId) {
-					alert('(스마트스토어) 입력된 정보가 로그인 정보와 일치하지 않습니다.');
-
-					return 0;
-				}
+				if (this.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + storeId)
+					return alert('(스마트스토어) 입력된 정보가 로그인 정보와 일치하지 않습니다.');
 
 				this.uploadInfo.markets.find((v) => v.code === 'A077')!.connected = true;
 				this.testUserInfo({
@@ -663,38 +652,17 @@ export class common {
 			}
 
 			case 'B378': {
-				if (!this.user.userInfo.coupangLoginId) {
-					alert('(쿠팡) 아이디가 입력되지 않았습니다.');
-
-					return 0;
-				}
-
-				if (!this.user.userInfo.coupangVendorId) {
-					alert('(쿠팡) 업체코드가 입력되지 않았습니다.');
-
-					return 0;
-				}
-
-				if (!this.user.userInfo.coupangAccessKey) {
-					alert('(쿠팡) 액세스키가 입력되지 않았습니다.');
-
-					return 0;
-				}
-
-				if (!this.user.userInfo.coupangSecretKey) {
-					alert('(쿠팡) 시크릿키가 입력되지 않았습니다.');
-
-					return 0;
-				}
+				if (!this.user.userInfo.coupangLoginId) return alert('(쿠팡) 아이디가 입력되지 않았습니다.');
+				if (!this.user.userInfo.coupangVendorId) return alert('(쿠팡) 업체코드가 입력되지 않았습니다.');
+				if (!this.user.userInfo.coupangAccessKey) return alert('(쿠팡) 액세스키가 입력되지 않았습니다.');
+				if (!this.user.userInfo.coupangSecretKey) return alert('(쿠팡) 시크릿키가 입력되지 않았습니다.');
 
 				const outbound_body = {
 					accesskey: this.user.userInfo.coupangAccessKey,
 					secretkey: this.user.userInfo.coupangSecretKey,
-
 					path: '/v2/providers/marketplace_openapi/apis/api/v1/vendor/shipping-place/outbound',
 					query: 'pageSize=50&pageNum=1',
 					method: 'GET',
-
 					data: {},
 				};
 
@@ -754,18 +722,12 @@ export class common {
 					}
 				}
 
-				if (!apiKey) {
-					alert('(11번가 글로벌) 오픈 API 키가 입력되지 않았습니다.');
-
-					return 0;
-				}
+				if (!apiKey) return alert('(11번가 글로벌) 오픈 API 키가 입력되지 않았습니다.');
 
 				let body = {
 					apikey: apiKey,
-
 					path: 'areaservice/outboundarea',
 					method: 'GET',
-
 					data: {},
 				};
 
@@ -818,18 +780,12 @@ export class common {
 					}
 				}
 
-				if (!apiKey) {
-					alert('(11번가 일반) 오픈 API 키가 입력되지 않았습니다.');
-
-					return 0;
-				}
+				if (!apiKey) return alert('(11번가 일반) 오픈 API 키가 입력되지 않았습니다.');
 
 				let body = {
 					apikey: apiKey,
-
 					path: 'areaservice/outboundarea',
 					method: 'GET',
-
 					data: {},
 				};
 
@@ -854,11 +810,7 @@ export class common {
 			}
 
 			case 'A006': {
-				if (!this.user.userInfo.esmplusGmarketId) {
-					alert('(지마켓) ID가 입력되지 않았습니다.');
-
-					return 0;
-				}
+				if (!this.user.userInfo.esmplusGmarketId) return alert('(지마켓) ID가 입력되지 않았습니다.');
 
 				try {
 					let gg_resp = await fetch('https://www.esmplus.com/Member/AntiMoneyLaundering/GetAMLSellerList');
@@ -894,11 +846,7 @@ export class common {
 			}
 
 			case 'A001': {
-				if (!this.user.userInfo.esmplusAuctionId) {
-					alert('(옥션) ID가 입력되지 않았습니다.');
-
-					return 0;
-				}
+				if (!this.user.userInfo.esmplusAuctionId) return alert('(옥션) ID가 입력되지 않았습니다.');
 
 				try {
 					let gg_resp = await fetch('https://www.esmplus.com/Member/AntiMoneyLaundering/GetAMLSellerList');
@@ -1028,11 +976,9 @@ export class common {
 				let body = {
 					accesskey: this.user.userInfo.coupangAccessKey,
 					secretkey: this.user.userInfo.coupangSecretKey,
-
 					path: '/v2/providers/marketplace_openapi/apis/api/v1/vendor/shipping-place/outbound',
 					query: 'pageSize=50&pageNum=1',
 					method: 'GET',
-
 					data: {},
 				};
 
@@ -1083,10 +1029,8 @@ export class common {
 
 				let body = {
 					apikey: apiKey,
-
 					path: 'areaservice/outboundarea',
 					method: 'GET',
-
 					data: {},
 				};
 
@@ -1137,10 +1081,8 @@ export class common {
 
 				let body = {
 					apikey: apiKey,
-
 					path: 'areaservice/outboundarea',
 					method: 'GET',
-
 					data: {},
 				};
 
