@@ -1,8 +1,7 @@
 import React from 'react';
-
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
-import { Box, Button, Grid, MenuItem, Popover, Select, TextField, Typography } from '@mui/material';
+import { Box, Grid, MenuItem, Popover, TextField, Typography } from '@mui/material';
 import { ComboBox, MyButton } from '../Common/UI';
 
 // 판매가격 일괄인하 팝업
@@ -11,21 +10,18 @@ export const SubtractOptionPricePopOver = observer(() => {
 	const { product } = React.useContext(AppContext);
 
 	// 팝업이 닫힐 경우 데이터 초기화
-	const onClose = () => {
+	const onClose = () =>
 		product.setSubtractOptionPricePopOver({
 			...product.popOverInfo.setSubtractOptionPrice,
-
 			index: -1,
 			element: null,
 			open: false,
-
 			data: {
 				nameIndex: -1,
 				valueIndex: -1,
 				price: '',
 			},
 		});
-	};
 
 	return (
 		<Popover
@@ -55,7 +51,6 @@ export const SubtractOptionPricePopOver = observer(() => {
 						>
 							<Typography fontSize={14}>적용할 옵션명</Typography>
 						</Grid>
-
 						<Grid
 							item
 							xs={6}
@@ -69,22 +64,18 @@ export const SubtractOptionPricePopOver = observer(() => {
 									width: '100%',
 								}}
 								value={product.popOverInfo.subtractOptionPrice.data.nameIndex}
-								onChange={(e) => {
+								onChange={(e) =>
 									product.setSubtractOptionPricePopOver({
 										...product.popOverInfo.subtractOptionPrice,
-
 										data: {
 											...product.popOverInfo.subtractOptionPrice.data,
-
 											nameIndex: e.target.value,
 										},
-									});
-								}}
+									})
+								}
 							>
 								<MenuItem value={-2}>{'<체크된 옵션>'}</MenuItem>
-
 								<MenuItem value={-1}>{'<모든 옵션명>'}</MenuItem>
-
 								{product.popOverInfo.subtractOptionPrice.index > -1
 									? product.itemInfo.items[product.popOverInfo.subtractOptionPrice.index].productOptionName.map(
 											(v: any, i: number) => <MenuItem value={i}>{v.name}</MenuItem>,
@@ -92,7 +83,6 @@ export const SubtractOptionPricePopOver = observer(() => {
 									: null}
 							</ComboBox>
 						</Grid>
-
 						{product.popOverInfo.subtractOptionPrice.data.nameIndex < 0 ? null : (
 							<>
 								<Grid
@@ -105,7 +95,6 @@ export const SubtractOptionPricePopOver = observer(() => {
 								>
 									<Typography fontSize={14}>적용할 옵션값</Typography>
 								</Grid>
-
 								<Grid
 									item
 									xs={6}
@@ -119,20 +108,17 @@ export const SubtractOptionPricePopOver = observer(() => {
 											width: '100%',
 										}}
 										value={product.popOverInfo.subtractOptionPrice.data.valueIndex}
-										onChange={(e) => {
+										onChange={(e) =>
 											product.setSubtractOptionPricePopOver({
 												...product.popOverInfo.subtractOptionPrice,
-
 												data: {
 													...product.popOverInfo.subtractOptionPrice.data,
-
 													valueIndex: e.target.value,
 												},
-											});
-										}}
+											})
+										}
 									>
 										<MenuItem value={-1}>{'<옵션값 선택>'}</MenuItem>
-
 										{product.popOverInfo.subtractOptionPrice.index > -1
 											? product.itemInfo.items[product.popOverInfo.subtractOptionPrice.index].productOptionName[
 													product.popOverInfo.subtractOptionPrice.data.nameIndex
@@ -142,7 +128,6 @@ export const SubtractOptionPricePopOver = observer(() => {
 								</Grid>
 							</>
 						)}
-
 						<Grid
 							item
 							xs={6}
@@ -153,7 +138,6 @@ export const SubtractOptionPricePopOver = observer(() => {
 						>
 							<Typography fontSize={14}>인하할 가격</Typography>
 						</Grid>
-
 						<Grid
 							item
 							xs={6}
@@ -174,7 +158,7 @@ export const SubtractOptionPricePopOver = observer(() => {
 										padding: 5,
 									},
 								}}
-								onBlur={(e) => {
+								onBlur={(e) =>
 									product.setSubtractOptionPricePopOver({
 										...product.popOverInfo.subtractOptionPrice,
 
@@ -183,13 +167,12 @@ export const SubtractOptionPricePopOver = observer(() => {
 
 											price: e.target.value,
 										},
-									});
-								}}
+									})
+								}
 							/>
 						</Grid>
 					</Grid>
 				</Box>
-
 				<Box
 					sx={{
 						display: 'flex',
@@ -205,30 +188,16 @@ export const SubtractOptionPricePopOver = observer(() => {
 						}}
 						onClick={() => {
 							const index = product.popOverInfo.subtractOptionPrice.index;
-
-							const price = parseInt(product.popOverInfo.subtractOptionPrice.data.price);
-
+							const price = Number(product.popOverInfo.subtractOptionPrice.data.price);
 							const nameIndex = parseInt(product.popOverInfo.subtractOptionPrice.data.nameIndex);
 							const valueIndex = parseInt(product.popOverInfo.subtractOptionPrice.data.valueIndex);
 
-							if (!price || isNaN(price)) {
-								alert('인하할 가격은 숫자 형식으로만 입력 가능합니다.');
-
-								return;
-							}
-
+							if (!price || isNaN(price)) return alert('인하할 가격은 숫자 형식으로만 입력 가능합니다.');
 							if (nameIndex < 0) {
-								if (nameIndex === -1) {
-									product.calcProductOptionPrice(price, 'subPrice', index, null, false);
-								} else if (nameIndex === -2) {
-									product.calcProductOptionPrice(price, 'subPrice', index, null, true);
-								}
+								if (nameIndex === -1) product.calcProductOptionPrice(price, 'subPrice', index, null, false);
+								else if (nameIndex === -2) product.calcProductOptionPrice(price, 'subPrice', index, null, true);
 							} else {
-								if (valueIndex === -1) {
-									alert('적용할 옵션값을 선택해주세요.');
-
-									return;
-								}
+								if (valueIndex === -1) return alert('적용할 옵션값을 선택해주세요.');
 
 								const valueId =
 									product.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].id;

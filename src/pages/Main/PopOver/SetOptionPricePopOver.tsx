@@ -1,8 +1,7 @@
 import React from 'react';
-
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
-import { Box, Button, Grid, MenuItem, Popover, Select, TextField, Typography } from '@mui/material';
+import { Box, Grid, MenuItem, Popover, TextField, Typography } from '@mui/material';
 import { ComboBox, MyButton } from '../Common/UI';
 
 // 옵션가격 일괄설정 팝업
@@ -11,21 +10,18 @@ export const SetOptionPricePopOver = observer(() => {
 	const { product } = React.useContext(AppContext);
 
 	// 팝업이 닫혔을 경우 데이터를 초기화
-	const onClose = () => {
+	const onClose = () =>
 		product.setOptionPricePopOver({
 			...product.popOverInfo.setOptionPrice,
-
 			index: -1,
 			element: null,
 			open: false,
-
 			data: {
 				nameIndex: -1,
 				valueIndex: -1,
 				price: '',
 			},
 		});
-	};
 
 	return (
 		<Popover
@@ -69,22 +65,18 @@ export const SetOptionPricePopOver = observer(() => {
 									width: '100%',
 								}}
 								value={product.popOverInfo.setOptionPrice.data.nameIndex}
-								onChange={(e) => {
+								onChange={(e) =>
 									product.setOptionPricePopOver({
 										...product.popOverInfo.setOptionPrice,
-
 										data: {
 											...product.popOverInfo.setOptionPrice.data,
-
 											nameIndex: e.target.value,
 										},
-									});
-								}}
+									})
+								}
 							>
 								<MenuItem value={-2}>{'<체크된 옵션>'}</MenuItem>
-
 								<MenuItem value={-1}>{'<모든 옵션명>'}</MenuItem>
-
 								{product.popOverInfo.setOptionPrice.index > -1
 									? product.itemInfo.items[product.popOverInfo.setOptionPrice.index].productOptionName.map(
 											(v: any, i: number) => <MenuItem value={i}>{v.name}</MenuItem>,
@@ -119,24 +111,22 @@ export const SetOptionPricePopOver = observer(() => {
 											width: '100%',
 										}}
 										value={product.popOverInfo.setOptionPrice.data.valueIndex}
-										onChange={(e) => {
+										onChange={(e) =>
 											product.setOptionPricePopOver({
 												...product.popOverInfo.setOptionPrice,
-
 												data: {
 													...product.popOverInfo.setOptionPrice.data,
-
 													valueIndex: e.target.value,
 												},
-											});
-										}}
+											})
+										}
 									>
 										<MenuItem value={-1}>{'<옵션값 선택>'}</MenuItem>
 
 										{product.popOverInfo.setOptionPrice.index > -1
 											? product.itemInfo.items[product.popOverInfo.setOptionPrice.index].productOptionName[
 													product.popOverInfo.setOptionPrice.data.nameIndex
-											  ].productOptionValue.map((v: any, i: number) => <MenuItem value={i}>{v.name}</MenuItem>)
+											  ].productOptionValue.map((v, i: number) => <MenuItem value={i}>{v.name}</MenuItem>)
 											: null}
 									</ComboBox>
 								</Grid>
@@ -174,17 +164,15 @@ export const SetOptionPricePopOver = observer(() => {
 										padding: 5,
 									},
 								}}
-								onBlur={(e) => {
+								onBlur={(e) =>
 									product.setOptionPricePopOver({
 										...product.popOverInfo.setOptionPrice,
-
 										data: {
 											...product.popOverInfo.setOptionPrice.data,
-
 											price: e.target.value,
 										},
-									});
-								}}
+									})
+								}
 							/>
 						</Grid>
 					</Grid>
@@ -205,30 +193,16 @@ export const SetOptionPricePopOver = observer(() => {
 						}}
 						onClick={() => {
 							const index = product.popOverInfo.setOptionPrice.index;
-
-							const price = parseInt(product.popOverInfo.setOptionPrice.data.price);
-
+							const price = Number(product.popOverInfo.setOptionPrice.data.price);
 							const nameIndex = parseInt(product.popOverInfo.setOptionPrice.data.nameIndex);
 							const valueIndex = parseInt(product.popOverInfo.setOptionPrice.data.valueIndex);
 
-							if (!price || isNaN(price)) {
-								alert('설정할 가격은 숫자 형식으로만 입력 가능합니다.');
-
-								return;
-							}
-
+							if (!price || isNaN(price)) return alert('설정할 가격은 숫자 형식으로만 입력 가능합니다.');
 							if (nameIndex < 0) {
-								if (nameIndex === -1) {
-									product.calcProductOptionPrice(price, 'setPrice', index, null, false);
-								} else if (nameIndex === -2) {
-									product.calcProductOptionPrice(price, 'setPrice', index, null, true);
-								}
+								if (nameIndex === -1) product.calcProductOptionPrice(price, 'setPrice', index, null, false);
+								else if (nameIndex === -2) product.calcProductOptionPrice(price, 'setPrice', index, null, true);
 							} else {
-								if (valueIndex === -1) {
-									alert('적용할 옵션값을 선택해주세요.');
-
-									return;
-								}
+								if (valueIndex === -1) return alert('적용할 옵션값을 선택해주세요.');
 
 								const valueId =
 									product.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].id;
