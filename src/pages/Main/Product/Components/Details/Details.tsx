@@ -100,9 +100,7 @@ export const Details = observer((props: Props) => {
 									background: common.darkTheme ? '#2a2a2a' : 'ghostwhite',
 								}}
 								value={props.item.tabs}
-								onChange={(e, value) => {
-									product.switchTabs(props.index, value);
-								}}
+								onChange={(e, value) => product.switchTabs(props.index, value)}
 							>
 								<Tab
 									label={
@@ -119,7 +117,6 @@ export const Details = observer((props: Props) => {
 									}
 									{...tabProps(0)}
 								/>
-
 								<Tab
 									label={
 										<Typography
@@ -133,9 +130,7 @@ export const Details = observer((props: Props) => {
 									}
 									{...tabProps(1)}
 								/>
-
 								<Tab disabled={!props.item.productOptionName.length} label={'옵션'} {...tabProps(2)} />
-
 								<Tab
 									label={
 										<Badge badgeContent={props.item.optionPriceError ? 1 : 0} color='error' variant='dot'>
@@ -151,7 +146,6 @@ export const Details = observer((props: Props) => {
 									}
 									{...tabProps(3)}
 								/>
-
 								<Tab
 									label={
 										<Badge badgeContent={props.item.thumbnailImageError ? 1 : 0} color='error' variant='dot'>
@@ -167,7 +161,6 @@ export const Details = observer((props: Props) => {
 									}
 									{...tabProps(4)}
 								/>
-
 								<Tab
 									disabled={!props.item.productOptionName.length}
 									label={
@@ -184,7 +177,6 @@ export const Details = observer((props: Props) => {
 									}
 									{...tabProps(5)}
 								/>
-
 								<Tab
 									label={
 										<Badge badgeContent={props.item.descriptionImageError ? 1 : 0} color='error' variant='dot'>
