@@ -130,7 +130,22 @@ export const Details = observer((props: Props) => {
 									}
 									{...tabProps(1)}
 								/>
-								<Tab disabled={!props.item.productOptionName.length} label={'옵션'} {...tabProps(2)} />
+								<Tab
+									disabled={!props.item.productOptionName.length}
+									label={
+										<Badge badgeContent={props.item.optionNameError ? 1 : 0} color='error' variant='dot'>
+											<Typography
+												fontSize={14}
+												sx={{
+													px: 1,
+												}}
+											>
+												옵션
+											</Typography>
+										</Badge>
+									}
+									{...tabProps(2)}
+								/>
 								<Tab
 									label={
 										<Badge badgeContent={props.item.optionPriceError ? 1 : 0} color='error' variant='dot'>

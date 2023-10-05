@@ -202,6 +202,7 @@ type Item = {
 	isImageTranslated: boolean;
 	error: boolean;
 	optionPriceError: boolean;
+	optionNameError: boolean; // 옵션이름이 같은것이 있을경우 에러 (추가사항)
 	thumbnailImageError: boolean;
 	optionImageError: boolean;
 	descriptionImageError: boolean;

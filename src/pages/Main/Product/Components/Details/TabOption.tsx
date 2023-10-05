@@ -1,5 +1,6 @@
 import React from 'react';
 import EditIcon from '@mui/icons-material/Edit';
+import ErrorIcon from '@mui/icons-material/Error';
 
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../../containers/AppContext';
@@ -26,6 +27,7 @@ import { Image, Input, Title } from '../../../Common/UI';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import RestoreIcon from '@mui/icons-material/Restore';
 import { byteLength } from '../../../../Tools/Common';
+import { Item } from '../../../../../type/type';
 
 // 커스텀 테이블 컬럼 스타일
 const CollapsedTableCell = styled(TableCell)({
@@ -36,8 +38,13 @@ const CollapsedTableCell = styled(TableCell)({
 	fontSize: 14,
 });
 
+interface Props {
+	item: Item;
+	index: number;
+}
+
 // 옵션 탭 하위 컴포넌트
-export const TabOption = observer((props: any) => {
+export const TabOption = observer((props: Props) => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
 
@@ -60,8 +67,40 @@ export const TabOption = observer((props: any) => {
 			{props.item.edited.option === 2 ? loading : null}
 
 			<Paper variant='outlined'>
-				<Title dark={common.darkTheme} subTitle>
-					옵션목록
+				<Title dark={common.darkTheme} subTitle error={props.item.optionNameError}>
+					<Box
+						sx={{
+							display: 'flex',
+							alignItems: 'center',
+						}}
+					>
+						옵션목록 &nbsp;
+						{props.item.optionNameError ? (
+							<>
+								<Paper
+									sx={{
+										color: common.darkTheme ? 'error.light' : 'error.main',
+
+										display: 'flex',
+										alignItems: 'center',
+
+										p: 0.5,
+
+										textAlign: 'left',
+									}}
+								>
+									<ErrorIcon
+										color='error'
+										sx={{
+											fontSize: 18,
+											mx: 0.5,
+										}}
+									/>
+									&nbsp; 이름이 동일한 옵션값이 있습니다.
+								</Paper>
+							</>
+						) : null}
+					</Box>
 					<Box
 						sx={{
 							display: 'flex',

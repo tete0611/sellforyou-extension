@@ -4066,12 +4066,23 @@ export class product {
 		let errorFound = false;
 		this.itemInfo.items[index].error = true;
 		this.itemInfo.items[index].optionPriceError = false;
+		this.itemInfo.items[index].optionNameError = false;
 		this.itemInfo.items[index].thumbnailImageError = false;
 		this.itemInfo.items[index].optionImageError = false;
 		this.itemInfo.items[index].descriptionImageError = false;
 		this.itemInfo.items[index].imageCheckList = {};
 
 		const activeProductOption = this.itemInfo.items[index].productOption.filter((v: any) => v.isActive);
+		const activeProductOptionName = this.itemInfo.items[index].productOptionName.map((v) =>
+			v.productOptionValue.map((v2) => v2.name),
+		);
+		/** 옵션명 중복체크 추가 */
+		activeProductOptionName.forEach((v) => {
+			if (new Set(v).size !== v.length) {
+				this.itemInfo.items[index].optionNameError = true;
+				errorFound = true;
+			}
+		});
 
 		if (activeProductOption.length > 0) {
 			const priceList = activeProductOption.map((v: any) => v.price);
@@ -4079,7 +4090,6 @@ export class product {
 
 			if (price !== this.itemInfo.items[index].price) {
 				this.itemInfo.items[index].optionPriceError = true;
-
 				errorFound = true;
 			}
 		}
