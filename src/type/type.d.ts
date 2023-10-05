@@ -109,7 +109,7 @@ export type ManyPriceInfo = {
 	price?: number;
 	cnyRate: number;
 	marginRate: number;
-	marginUnitType: string;
+	marginUnitType: number | string;
 	localShippingFee: number;
 	localShippingCode?: string;
 	shippingFee: number;
@@ -140,6 +140,9 @@ export type RuntimeMessage = {
 type Item = {
 	id: number;
 	tagInfo: any;
+	state: number;
+	createdAt: Date;
+	stockUpdatedAt: Date;
 	categoryInfoA077: any;
 	categoryInfoB378: any;
 	categoryInfoA112: any;
@@ -169,6 +172,7 @@ type Item = {
 		productOptionValue: {
 			id: number;
 			image: string | null | undefined;
+			name?: string;
 		}[];
 	}[];
 	localShippingFee: number;
