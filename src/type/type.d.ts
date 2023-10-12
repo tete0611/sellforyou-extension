@@ -209,6 +209,7 @@ type Item = {
 	searchTagError: any;
 	imageCheckList: any;
 	myKeyward: any;
+	attribute: any;
 	manuFacturer: any;
 	brandName: string;
 	modelName: string;
