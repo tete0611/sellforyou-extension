@@ -1,13 +1,11 @@
 // 페이지 삽입 스크립트를 실제로 넣어주기 위한 구문
 // 스크립트 삽입 시 외부 링크 사용불가 (인라인 스크립트만 사용 가능)
-export async function injectScript(type: string) {
+export const injectScript = async (type: string) => {
 	sessionStorage.removeItem(`${type}-item`);
 
 	let oldScript = document.getElementById('sellforyou');
 
-	if (oldScript) {
-		oldScript.remove();
-	}
+	if (oldScript) oldScript.remove();
 
 	let script = document.createElement('script');
 
@@ -55,4 +53,4 @@ export async function injectScript(type: string) {
 	}
 
 	document.documentElement.appendChild(script);
-}
+};

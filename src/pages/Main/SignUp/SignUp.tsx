@@ -6,18 +6,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
-import {
-	Box,
-	Button,
-	Checkbox,
-	Container,
-	FormGroup,
-	FormControlLabel,
-	Grid,
-	Link,
-	Paper,
-	TextField,
-} from '@mui/material';
+import { Box, Button, Checkbox, Container, FormGroup, FormControlLabel, Grid, Link, TextField } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Frame, SignPaper } from '../Common/UI';
 
@@ -79,30 +68,17 @@ export const SignUp = observer(() => {
 
 	// 사용자의 결제내역을 가져옴
 	const getUserPurchaseInfo = async (id: string) => {
-		if (!id) {
-			alert('공백은 입력하실 수 없습니다.');
-
-			return;
-		}
+		if (!id) return alert('공백은 입력하실 수 없습니다.');
 
 		const response = await gql(QUERIES.SELECT_EXIST_PURCHASE_LOG, { email: id }, false);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		setSignInfo({ ...signInfo, refCodeVerified: true });
 	};
 
 	// 엔터 키를 누르면 회원가입 기능 동작
-	const keyHandler = (e: any) => {
-		if (e.key === 'Enter') {
-			signUp();
-		}
-	};
-
+	const keyHandler = (e: any) => e.key === 'Enter' && signUp();
 	// 인증번호 발송 기능
 	const phoneVerify = async () => {
 		const response = await gql(
@@ -113,11 +89,7 @@ export const SignUp = observer(() => {
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		alert('인증번호가 발송되었습니다.');
 
@@ -125,9 +97,7 @@ export const SignUp = observer(() => {
 
 		let interval = setInterval(() => {
 			setVerifyInfo((state) => {
-				if (state.process > 1) {
-					clearInterval(interval);
-				}
+				if (state.process > 1) clearInterval(interval);
 
 				if (state.timer === 0) {
 					alert('입력 시간이 초과되었습니다.');
@@ -159,70 +129,34 @@ export const SignUp = observer(() => {
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		setVerifyInfo({ ...verifyInfo, process: 2 });
 	};
 
 	// 회원가입 버튼을 눌렀을 때
 	const signUp = async () => {
-		if (!signInfo.email) {
-			alert('이메일 주소를 입력해주세요.');
+		if (!signInfo.email) return alert('이메일 주소를 입력해주세요.');
 
-			return;
-		}
+		if (!signInfo.password) return alert('비밀번호를 입력해주세요.');
 
-		if (!signInfo.password) {
-			alert('비밀번호를 입력해주세요.');
+		if (signInfo.password !== signInfo.passwordConfirm) return alert('비밀번호가 일치하지 않습니다.');
 
-			return;
-		}
+		if (!signInfo.phone) return alert('연락처를 입력해주세요.');
 
-		if (signInfo.password !== signInfo.passwordConfirm) {
-			alert('비밀번호가 일치하지 않습니다.');
+		if (verifyInfo.process < 2) return alert('연락처 인증을 완료해주세요.');
 
-			return;
-		}
-
-		if (!signInfo.phone) {
-			alert('연락처를 입력해주세요.');
-
-			return;
-		}
-
-		if (verifyInfo.process < 2) {
-			alert('연락처 인증을 완료해주세요.');
-
-			return;
-		}
-
-		if (!signInfo.serviceAgreed) {
-			alert('서비스 이용약관에 동의해주세요.');
-
-			return;
-		}
+		if (!signInfo.serviceAgreed) return alert('서비스 이용약관에 동의해주세요.');
 
 		let refSkip = false;
 
 		if (!signInfo.refCode) {
-			let accept = confirm('추천인코드가 입력되지 않았습니다. 가입을 계속 진행하시겠습니까?');
-
-			if (!accept) {
-				return;
-			}
+			if (!confirm('추천인코드가 입력되지 않았습니다. 가입을 계속 진행하시겠습니까?')) return;
 
 			refSkip = true;
 		}
 
-		if (!refSkip && !signInfo.refCodeVerified) {
-			alert('추천인 코드를 등록해주세요.');
-
-			return;
-		}
+		if (!refSkip && !signInfo.refCodeVerified) return alert('추천인 코드를 등록해주세요.');
 
 		setSignInfo({ ...signInfo, loading: true });
 
@@ -254,9 +188,7 @@ export const SignUp = observer(() => {
 	};
 
 	// 로그인으로 돌아가기 버튼을 클릭했을 때
-	const signIn = () => {
-		window.location.href = '/signin.html';
-	};
+	const signIn = () => (window.location.href = '/signin.html');
 
 	// 다크모드 지원 설정
 	const theme = React.useMemo(

@@ -12,9 +12,7 @@ export const ManyAttributeModal = observer(() => {
 
 	// 사용자 정보를 불러온 뒤
 	React.useEffect(() => {
-		if (!common.loaded) {
-			return;
-		}
+		if (!common.loaded) return;
 
 		// 기본설정에 저장된 값을 토대로 초기값 설정
 		product.setManyPriceInfo({
@@ -23,6 +21,7 @@ export const ManyAttributeModal = observer(() => {
 			marginUnitType: common.user.userInfo.marginUnitType,
 			localShippingFee: common.user.userInfo.defaultShippingFee,
 			shippingFee: common.user.userInfo.extraShippingFee,
+			refundShippingFee: common.user.userInfo.refundShippingFee,
 		});
 	}, [common.loaded]);
 
@@ -51,9 +50,7 @@ export const ManyAttributeModal = observer(() => {
 								sx={{
 									minWidth: 60,
 								}}
-								onClick={() => {
-									product.updateManyAttribute(common);
-								}}
+								onClick={() => product.updateManyAttribute(common)}
 							>
 								적용
 							</MyButton>
@@ -63,9 +60,7 @@ export const ManyAttributeModal = observer(() => {
 								sx={{
 									minWidth: 60,
 								}}
-								onClick={() => {
-									product.toggleManyAttributeModal(false);
-								}}
+								onClick={() => product.toggleManyAttributeModal(false)}
 							>
 								취소
 							</MyButton>
@@ -112,13 +107,13 @@ export const ManyAttributeModal = observer(() => {
 											},
 										}}
 										defaultValue={product.manyAttributeInfo.manufacturer}
-										onBlur={(e) => {
+										onBlur={(e) =>
 											product.setManyAttributeInfo({
 												...product.manyAttributeInfo,
 
 												manufacturer: e.target.value,
-											});
-										}}
+											})
+										}
 									/>
 								</Grid>
 
@@ -155,13 +150,13 @@ export const ManyAttributeModal = observer(() => {
 											},
 										}}
 										defaultValue={product.manyAttributeInfo.brandName}
-										onBlur={(e) => {
+										onBlur={(e) =>
 											product.setManyAttributeInfo({
 												...product.manyAttributeInfo,
 
 												brandName: e.target.value,
-											});
-										}}
+											})
+										}
 									/>
 								</Grid>
 
@@ -198,13 +193,13 @@ export const ManyAttributeModal = observer(() => {
 											},
 										}}
 										defaultValue={product.manyAttributeInfo.modelName}
-										onBlur={(e) => {
+										onBlur={(e) =>
 											product.setManyAttributeInfo({
 												...product.manyAttributeInfo,
 
 												modelName: e.target.value,
-											});
-										}}
+											})
+										}
 									/>
 								</Grid>
 							</Grid>

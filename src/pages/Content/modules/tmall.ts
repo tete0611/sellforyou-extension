@@ -331,7 +331,7 @@ async function scrape(items: any, user: any) {
 		// let descText: any = await fetch(descUrl, { credentials: "include" });
 		let descText: any = await sendRuntimeMessage({
 			action: 'fetch',
-			source: descUrl,
+			form: { url: descUrl },
 		});
 		// let descJson = JSON.parse(descText.split("mtopjsonp1(")[1].slice(0, -1)); 이거 너무오래걸려서 위에 api로 쏴보니 data2변경해서 잘됨
 		let descJson = JSON.parse(descText);
@@ -625,7 +625,7 @@ export class tmall {
 				if (originalData.pageType === 1 && originalData.descUrl) {
 					let desc: any = await sendRuntimeMessage({
 						action: 'fetch',
-						source: originalData.descUrl,
+						form: { url: originalData.descUrl },
 					});
 
 					if (!desc) {

@@ -498,7 +498,7 @@ export async function uploadESMPlus(productStore: product, commonStore: common, 
 				let MM2 = (date.getMonth() + 1).toString().padStart(2, '0');
 				let DD2 = date.getDate().toString().padStart(2, '0');
 
-				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
+				const itemInfo = productStore.itemInfo.items.find((v) => v.productCode === market_code)!;
 
 				// 고시정보 생성
 				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]

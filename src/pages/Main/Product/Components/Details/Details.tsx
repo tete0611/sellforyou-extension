@@ -25,7 +25,12 @@ import { TabOptionImages } from './TabOptionImages';
 import { TabDescriptions } from './TabDescriptions';
 import { TabAttribute } from './TabAttribute';
 import { Title } from '../../../Common/UI';
+import { Item } from '../../../../../type/type';
 
+interface Props {
+	item: Item;
+	index: number;
+}
 interface TabPanelProps {
 	children?: React.ReactNode;
 	dir?: string;
@@ -69,7 +74,7 @@ function tabProps(index: number) {
 }
 
 // 상품관리 페이지에서 상품 상세보기(펼치기) 했을 경우
-export const Details = observer((props: any) => {
+export const Details = observer((props: Props) => {
 	const theme = useTheme();
 
 	// MobX 스토리지 로드
@@ -95,9 +100,7 @@ export const Details = observer((props: any) => {
 									background: common.darkTheme ? '#2a2a2a' : 'ghostwhite',
 								}}
 								value={props.item.tabs}
-								onChange={(e, value) => {
-									product.switchTabs(props.index, value);
-								}}
+								onChange={(e, value) => product.switchTabs(props.index, value)}
 							>
 								<Tab
 									label={
@@ -114,7 +117,6 @@ export const Details = observer((props: any) => {
 									}
 									{...tabProps(0)}
 								/>
-
 								<Tab
 									label={
 										<Typography
@@ -128,9 +130,22 @@ export const Details = observer((props: any) => {
 									}
 									{...tabProps(1)}
 								/>
-
-								<Tab disabled={!props.item.productOptionName.length} label={'옵션'} {...tabProps(2)} />
-
+								<Tab
+									disabled={!props.item.productOptionName.length}
+									label={
+										<Badge badgeContent={props.item.optionNameError ? 1 : 0} color='error' variant='dot'>
+											<Typography
+												fontSize={14}
+												sx={{
+													px: 1,
+												}}
+											>
+												옵션
+											</Typography>
+										</Badge>
+									}
+									{...tabProps(2)}
+								/>
 								<Tab
 									label={
 										<Badge badgeContent={props.item.optionPriceError ? 1 : 0} color='error' variant='dot'>
@@ -146,7 +161,6 @@ export const Details = observer((props: any) => {
 									}
 									{...tabProps(3)}
 								/>
-
 								<Tab
 									label={
 										<Badge badgeContent={props.item.thumbnailImageError ? 1 : 0} color='error' variant='dot'>
@@ -162,7 +176,6 @@ export const Details = observer((props: any) => {
 									}
 									{...tabProps(4)}
 								/>
-
 								<Tab
 									disabled={!props.item.productOptionName.length}
 									label={
@@ -179,7 +192,6 @@ export const Details = observer((props: any) => {
 									}
 									{...tabProps(5)}
 								/>
-
 								<Tab
 									label={
 										<Badge badgeContent={props.item.descriptionImageError ? 1 : 0} color='error' variant='dot'>

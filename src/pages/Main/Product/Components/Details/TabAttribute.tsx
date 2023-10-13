@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../../containers/AppContext';
 import {
@@ -9,15 +8,14 @@ import {
 	Grid,
 	MenuItem,
 	Paper,
-	Select,
 	Table,
-	TableHead,
 	TableBody,
 	TableRow,
 	TableCell,
 	Typography,
 } from '@mui/material';
 import { ComboBox, Input, Title } from '../../../Common/UI';
+import { Item } from '../../../../../type/type';
 
 // 커스텀 테이블 컬럼 스타일 설정
 const StyledTableCell = styled(TableCell)({
@@ -27,8 +25,13 @@ const StyledTableCell = styled(TableCell)({
 	fontSize: 14,
 });
 
+interface Props {
+	item: Item;
+	index: number;
+}
+
 // 상품속성 탭 하위 컴포넌트
-export const TabAttribute = observer((props: any) => {
+export const TabAttribute = observer((props: Props) => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
 
@@ -64,7 +67,6 @@ export const TabAttribute = observer((props: any) => {
 									<Title dark={common.darkTheme} subTitle>
 										제조사
 									</Title>
-
 									<Box
 										sx={{
 											display: 'flex',
@@ -77,34 +79,32 @@ export const TabAttribute = observer((props: any) => {
 											color={props.item.edited.attribute ? 'warning' : 'info'}
 											id={`product_row_manufacturer_${props.index}`}
 											value={props.item.manuFacturer}
-											onChange={(e: any) => {
+											onChange={(e: any) =>
 												product.setProductAttribute(
 													{
 														manufacturer: e.target.value,
 													},
 													props.index,
-												);
-											}}
-											onBlur={(e: any) => {
+												)
+											}
+											onBlur={(e: any) =>
 												product.updateProductAttribute(
 													{
 														productId: props.item.id,
 														manufacturer: e.target.value,
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>
 									</Box>
 								</Paper>
 							</Grid>
-
 							<Grid item xs={6} md={4}>
 								<Paper variant='outlined'>
 									<Title dark={common.darkTheme} subTitle>
 										브랜드
 									</Title>
-
 									<Box
 										sx={{
 											display: 'flex',
@@ -117,34 +117,32 @@ export const TabAttribute = observer((props: any) => {
 											color={props.item.edited.attribute ? 'warning' : 'info'}
 											id={`product_row_brand_name_${props.index}`}
 											defaultValue={props.item.brandName}
-											onChange={(e: any) => {
+											onChange={(e: any) =>
 												product.setProductAttribute(
 													{
 														brandName: e.target.value,
 													},
 													props.index,
-												);
-											}}
-											onBlur={(e: any) => {
+												)
+											}
+											onBlur={(e: any) =>
 												product.updateProductAttribute(
 													{
 														productId: props.item.id,
 														brandName: e.target.value,
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>
 									</Box>
 								</Paper>
 							</Grid>
-
 							<Grid item xs={6} md={4}>
 								<Paper variant='outlined'>
 									<Title dark={common.darkTheme} subTitle>
 										모델명
 									</Title>
-
 									<Box
 										sx={{
 											display: 'flex',
@@ -157,28 +155,27 @@ export const TabAttribute = observer((props: any) => {
 											color={props.item.edited.attribute ? 'warning' : 'info'}
 											id={`product_row_model_name_${props.index}`}
 											defaultValue={props.item.modelName}
-											onChange={(e: any) => {
+											onChange={(e: any) =>
 												product.setProductAttribute(
 													{
 														modelName: e.target.value,
 													},
 													props.index,
-												);
-											}}
-											onBlur={(e: any) => {
+												)
+											}
+											onBlur={(e: any) =>
 												product.updateProductAttribute(
 													{
 														productId: props.item.id,
 														modelName: e.target.value,
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>
 									</Box>
 								</Paper>
 							</Grid>
-
 							<Grid item xs={6} md={12}>
 								<Paper variant='outlined'>
 									<Title dark={common.darkTheme} subTitle>
@@ -198,13 +195,10 @@ export const TabAttribute = observer((props: any) => {
 													fontSize: 13,
 													height: 26,
 												}}
-												onClick={() => {
-													product.updateProdutSillsAuto('AUTO', props.index);
-												}}
+												onClick={() => product.updateProdutSillsAuto('AUTO', props.index)}
 											>
 												카테고리에 따라 지정
 											</Button>
-
 											<Button
 												disableElevation
 												variant='contained'
@@ -214,15 +208,12 @@ export const TabAttribute = observer((props: any) => {
 													fontSize: 13,
 													height: 26,
 												}}
-												onClick={() => {
-													product.updateProdutSillsAuto('ETC', props.index);
-												}}
+												onClick={() => product.updateProdutSillsAuto('ETC', props.index)}
 											>
 												기타재화로 일괄 지정
 											</Button>
 										</Box>
 									</Title>
-
 									<Box
 										sx={{
 											fontSize: 13,
@@ -271,7 +262,6 @@ export const TabAttribute = observer((props: any) => {
 																<img src='/resources/icon-smartstore.png' width={16} height={16} />
 															</Box>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -285,24 +275,22 @@ export const TabAttribute = observer((props: any) => {
 																	width: '100%',
 																}}
 																value={props.item.sillCodeA077}
-																onChange={(e) => {
+																onChange={(e) =>
 																	product.updateProdutSillCodes(
 																		'A077',
 																		{
 																			productIds: [props.item.id],
-
 																			value: e.target.value,
 																		},
 																		props.index,
-																	);
-																}}
+																	)
+																}
 															>
 																{props.item.categoryInfoA077.activeSillDataA077.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -321,10 +309,9 @@ export const TabAttribute = observer((props: any) => {
 																	height: 30,
 																	p: 0,
 																}}
-																onClick={(e) => {
+																onClick={(e) =>
 																	product.setProductSillDataPopOver({
 																		...product.popOverInfo.setProductSillData,
-
 																		index: props.index,
 																		element: e.target,
 																		open: true,
@@ -333,8 +320,8 @@ export const TabAttribute = observer((props: any) => {
 																			sillCode: props.item.sillCodeA077,
 																			sillData: props.item.sillDataA077,
 																		},
-																	});
-																}}
+																	})
+																}
 															>
 																상세설정
 															</Button>
@@ -342,7 +329,6 @@ export const TabAttribute = observer((props: any) => {
 													</Grid>
 												</Paper>
 											</Grid>
-
 											<Grid
 												item
 												xs={6}
@@ -378,7 +364,6 @@ export const TabAttribute = observer((props: any) => {
 																<img src='/resources/icon-coupang.png' width={16} height={16} />
 															</Box>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -392,24 +377,22 @@ export const TabAttribute = observer((props: any) => {
 																	width: '100%',
 																}}
 																value={props.item.sillCodeB378}
-																onChange={(e) => {
+																onChange={(e) =>
 																	product.updateProdutSillCodes(
 																		'B378',
 																		{
 																			productIds: [props.item.id],
-
 																			value: e.target.value,
 																		},
 																		props.index,
-																	);
-																}}
+																	)
+																}
 															>
 																{props.item.categoryInfoB378.activeSillDataB378.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -428,10 +411,9 @@ export const TabAttribute = observer((props: any) => {
 																	height: 30,
 																	p: 0,
 																}}
-																onClick={(e) => {
+																onClick={(e) =>
 																	product.setProductSillDataPopOver({
 																		...product.popOverInfo.setProductSillData,
-
 																		index: props.index,
 																		element: e.target,
 																		open: true,
@@ -440,8 +422,8 @@ export const TabAttribute = observer((props: any) => {
 																			sillCode: props.item.sillCodeB378,
 																			sillData: props.item.sillDataB378,
 																		},
-																	});
-																}}
+																	})
+																}
 															>
 																상세설정
 															</Button>
@@ -449,7 +431,6 @@ export const TabAttribute = observer((props: any) => {
 													</Grid>
 												</Paper>
 											</Grid>
-
 											<Grid
 												item
 												xs={6}
@@ -485,7 +466,6 @@ export const TabAttribute = observer((props: any) => {
 																<img src='/resources/icon-street-global.png' width={16} height={16} />
 															</Box>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -499,24 +479,22 @@ export const TabAttribute = observer((props: any) => {
 																	width: '100%',
 																}}
 																value={props.item.sillCodeA112}
-																onChange={(e) => {
+																onChange={(e) =>
 																	product.updateProdutSillCodes(
 																		'A112',
 																		{
 																			productIds: [props.item.id],
-
 																			value: e.target.value,
 																		},
 																		props.index,
-																	);
-																}}
+																	)
+																}
 															>
 																{props.item.categoryInfoA112.activeSillDataA112.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -535,10 +513,9 @@ export const TabAttribute = observer((props: any) => {
 																	height: 30,
 																	p: 0,
 																}}
-																onClick={(e) => {
+																onClick={(e) =>
 																	product.setProductSillDataPopOver({
 																		...product.popOverInfo.setProductSillData,
-
 																		index: props.index,
 																		element: e.target,
 																		open: true,
@@ -547,8 +524,8 @@ export const TabAttribute = observer((props: any) => {
 																			sillCode: props.item.sillCodeA112,
 																			sillData: props.item.sillDataA112,
 																		},
-																	});
-																}}
+																	})
+																}
 															>
 																상세설정
 															</Button>
@@ -556,7 +533,6 @@ export const TabAttribute = observer((props: any) => {
 													</Grid>
 												</Paper>
 											</Grid>
-
 											<Grid
 												item
 												xs={6}
@@ -592,7 +568,6 @@ export const TabAttribute = observer((props: any) => {
 																<img src='/resources/icon-street-normal.png' width={16} height={16} />
 															</Box>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -606,24 +581,22 @@ export const TabAttribute = observer((props: any) => {
 																	width: '100%',
 																}}
 																value={props.item.sillCodeA113}
-																onChange={(e) => {
+																onChange={(e) =>
 																	product.updateProdutSillCodes(
 																		'A113',
 																		{
 																			productIds: [props.item.id],
-
 																			value: e.target.value,
 																		},
 																		props.index,
-																	);
-																}}
+																	)
+																}
 															>
 																{props.item.categoryInfoA113.activeSillDataA113.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -642,10 +615,9 @@ export const TabAttribute = observer((props: any) => {
 																	height: 30,
 																	p: 0,
 																}}
-																onClick={(e) => {
+																onClick={(e) =>
 																	product.setProductSillDataPopOver({
 																		...product.popOverInfo.setProductSillData,
-
 																		index: props.index,
 																		element: e.target,
 																		open: true,
@@ -654,8 +626,8 @@ export const TabAttribute = observer((props: any) => {
 																			sillCode: props.item.sillCodeA113,
 																			sillData: props.item.sillDataA113,
 																		},
-																	});
-																}}
+																	})
+																}
 															>
 																상세설정
 															</Button>
@@ -663,7 +635,6 @@ export const TabAttribute = observer((props: any) => {
 													</Grid>
 												</Paper>
 											</Grid>
-
 											<Grid
 												item
 												xs={6}
@@ -713,24 +684,22 @@ export const TabAttribute = observer((props: any) => {
 																	width: '100%',
 																}}
 																value={props.item.sillCodeA006}
-																onChange={(e) => {
+																onChange={(e) =>
 																	product.updateProdutSillCodes(
 																		'A006',
 																		{
 																			productIds: [props.item.id],
-
 																			value: e.target.value,
 																		},
 																		props.index,
-																	);
-																}}
+																	)
+																}
 															>
 																{props.item.categoryInfoA006.activeSillDataA006.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -749,10 +718,9 @@ export const TabAttribute = observer((props: any) => {
 																	height: 30,
 																	p: 0,
 																}}
-																onClick={(e) => {
+																onClick={(e) =>
 																	product.setProductSillDataPopOver({
 																		...product.popOverInfo.setProductSillData,
-
 																		index: props.index,
 																		element: e.target,
 																		open: true,
@@ -761,8 +729,8 @@ export const TabAttribute = observer((props: any) => {
 																			sillCode: props.item.sillCodeA006,
 																			sillData: props.item.sillDataA006,
 																		},
-																	});
-																}}
+																	})
+																}
 															>
 																상세설정
 															</Button>
@@ -770,7 +738,6 @@ export const TabAttribute = observer((props: any) => {
 													</Grid>
 												</Paper>
 											</Grid>
-
 											<Grid
 												item
 												xs={6}
@@ -806,7 +773,6 @@ export const TabAttribute = observer((props: any) => {
 																<img src='/resources/icon-auction.png' width={16} height={16} />
 															</Box>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -820,24 +786,22 @@ export const TabAttribute = observer((props: any) => {
 																	width: '100%',
 																}}
 																value={props.item.sillCodeA001}
-																onChange={(e) => {
+																onChange={(e) =>
 																	product.updateProdutSillCodes(
 																		'A001',
 																		{
 																			productIds: [props.item.id],
-
 																			value: e.target.value,
 																		},
 																		props.index,
-																	);
-																}}
+																	)
+																}
 															>
 																{props.item.categoryInfoA001.activeSillDataA001.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -856,10 +820,9 @@ export const TabAttribute = observer((props: any) => {
 																	height: 30,
 																	p: 0,
 																}}
-																onClick={(e) => {
+																onClick={(e) =>
 																	product.setProductSillDataPopOver({
 																		...product.popOverInfo.setProductSillData,
-
 																		index: props.index,
 																		element: e.target,
 																		open: true,
@@ -868,8 +831,8 @@ export const TabAttribute = observer((props: any) => {
 																			sillCode: props.item.sillCodeA001,
 																			sillData: props.item.sillDataA001,
 																		},
-																	});
-																}}
+																	})
+																}
 															>
 																상세설정
 															</Button>
@@ -877,7 +840,6 @@ export const TabAttribute = observer((props: any) => {
 													</Grid>
 												</Paper>
 											</Grid>
-
 											<Grid
 												item
 												xs={6}
@@ -913,7 +875,6 @@ export const TabAttribute = observer((props: any) => {
 																<img src='/resources/icon-interpark.png' width={16} height={16} />
 															</Box>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -927,24 +888,22 @@ export const TabAttribute = observer((props: any) => {
 																	width: '100%',
 																}}
 																value={props.item.sillCodeA027}
-																onChange={(e) => {
+																onChange={(e) =>
 																	product.updateProdutSillCodes(
 																		'A027',
 																		{
 																			productIds: [props.item.id],
-
 																			value: e.target.value,
 																		},
 																		props.index,
-																	);
-																}}
+																	)
+																}
 															>
 																{props.item.categoryInfoA027.activeSillDataA027.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -963,10 +922,9 @@ export const TabAttribute = observer((props: any) => {
 																	height: 30,
 																	p: 0,
 																}}
-																onClick={(e) => {
+																onClick={(e) =>
 																	product.setProductSillDataPopOver({
 																		...product.popOverInfo.setProductSillData,
-
 																		index: props.index,
 																		element: e.target,
 																		open: true,
@@ -975,8 +933,8 @@ export const TabAttribute = observer((props: any) => {
 																			sillCode: props.item.sillCodeA027,
 																			sillData: props.item.sillDataA027,
 																		},
-																	});
-																}}
+																	})
+																}
 															>
 																상세설정
 															</Button>
@@ -984,7 +942,6 @@ export const TabAttribute = observer((props: any) => {
 													</Grid>
 												</Paper>
 											</Grid>
-
 											<Grid
 												item
 												xs={6}
@@ -1020,7 +977,6 @@ export const TabAttribute = observer((props: any) => {
 																<img src='/resources/icon-wemakeprice.png' width={16} height={16} />
 															</Box>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -1034,24 +990,22 @@ export const TabAttribute = observer((props: any) => {
 																	width: '100%',
 																}}
 																value={props.item.sillCodeB719}
-																onChange={(e) => {
+																onChange={(e) =>
 																	product.updateProdutSillCodes(
 																		'B719',
 																		{
 																			productIds: [props.item.id],
-
 																			value: e.target.value,
 																		},
 																		props.index,
-																	);
-																}}
+																	)
+																}
 															>
 																{props.item.categoryInfoB719.activeSillDataB719.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -1070,10 +1024,9 @@ export const TabAttribute = observer((props: any) => {
 																	height: 30,
 																	p: 0,
 																}}
-																onClick={(e) => {
+																onClick={(e) =>
 																	product.setProductSillDataPopOver({
 																		...product.popOverInfo.setProductSillData,
-
 																		index: props.index,
 																		element: e.target,
 																		open: true,
@@ -1082,8 +1035,8 @@ export const TabAttribute = observer((props: any) => {
 																			sillCode: props.item.sillCodeB719,
 																			sillData: props.item.sillDataB719,
 																		},
-																	});
-																}}
+																	})
+																}
 															>
 																상세설정
 															</Button>
@@ -1091,7 +1044,6 @@ export const TabAttribute = observer((props: any) => {
 													</Grid>
 												</Paper>
 											</Grid>
-
 											<Grid
 												item
 												xs={6}
@@ -1127,7 +1079,6 @@ export const TabAttribute = observer((props: any) => {
 																<img src='/resources/icon-lotteon-global.png' width={16} height={16} />
 															</Box>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -1141,24 +1092,22 @@ export const TabAttribute = observer((props: any) => {
 																	width: '100%',
 																}}
 																value={props.item.sillCodeA524}
-																onChange={(e) => {
+																onChange={(e) =>
 																	product.updateProdutSillCodes(
 																		'A524',
 																		{
 																			productIds: [props.item.id],
-
 																			value: e.target.value,
 																		},
 																		props.index,
-																	);
-																}}
+																	)
+																}
 															>
 																{props.item.categoryInfoA524.activeSillDataA524.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -1177,10 +1126,9 @@ export const TabAttribute = observer((props: any) => {
 																	height: 30,
 																	p: 0,
 																}}
-																onClick={(e) => {
+																onClick={(e) =>
 																	product.setProductSillDataPopOver({
 																		...product.popOverInfo.setProductSillData,
-
 																		index: props.index,
 																		element: e.target,
 																		open: true,
@@ -1189,8 +1137,8 @@ export const TabAttribute = observer((props: any) => {
 																			sillCode: props.item.sillCodeA524,
 																			sillData: props.item.sillDataA524,
 																		},
-																	});
-																}}
+																	})
+																}
 															>
 																상세설정
 															</Button>
@@ -1198,7 +1146,6 @@ export const TabAttribute = observer((props: any) => {
 													</Grid>
 												</Paper>
 											</Grid>
-
 											<Grid
 												item
 												xs={6}
@@ -1234,7 +1181,6 @@ export const TabAttribute = observer((props: any) => {
 																<img src='/resources/icon-lotteon-normal.png' width={16} height={16} />
 															</Box>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -1248,7 +1194,7 @@ export const TabAttribute = observer((props: any) => {
 																	width: '100%',
 																}}
 																value={props.item.sillCodeA525}
-																onChange={(e) => {
+																onChange={(e) =>
 																	product.updateProdutSillCodes(
 																		'A525',
 																		{
@@ -1257,15 +1203,14 @@ export const TabAttribute = observer((props: any) => {
 																			value: e.target.value,
 																		},
 																		props.index,
-																	);
-																}}
+																	)
+																}
 															>
 																{props.item.categoryInfoA525.activeSillDataA525.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -1284,10 +1229,9 @@ export const TabAttribute = observer((props: any) => {
 																	height: 30,
 																	p: 0,
 																}}
-																onClick={(e) => {
+																onClick={(e) =>
 																	product.setProductSillDataPopOver({
 																		...product.popOverInfo.setProductSillData,
-
 																		index: props.index,
 																		element: e.target,
 																		open: true,
@@ -1296,8 +1240,8 @@ export const TabAttribute = observer((props: any) => {
 																			sillCode: props.item.sillCodeA525,
 																			sillData: props.item.sillDataA525,
 																		},
-																	});
-																}}
+																	})
+																}
 															>
 																상세설정
 															</Button>
@@ -1305,7 +1249,6 @@ export const TabAttribute = observer((props: any) => {
 													</Grid>
 												</Paper>
 											</Grid>
-
 											<Grid
 												item
 												xs={6}
@@ -1341,7 +1284,6 @@ export const TabAttribute = observer((props: any) => {
 																<img src='/resources/icon-tmon.png' width={16} height={16} />
 															</Box>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -1355,24 +1297,22 @@ export const TabAttribute = observer((props: any) => {
 																	width: '100%',
 																}}
 																value={props.item.sillCodeB956}
-																onChange={(e) => {
+																onChange={(e) =>
 																	product.updateProdutSillCodes(
 																		'B956',
 																		{
 																			productIds: [props.item.id],
-
 																			value: e.target.value,
 																		},
 																		props.index,
-																	);
-																}}
+																	)
+																}
 															>
 																{props.item.categoryInfoB956.activeSillDataB956.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
 														</Grid>
-
 														<Grid
 															item
 															xs={6}
@@ -1391,10 +1331,9 @@ export const TabAttribute = observer((props: any) => {
 																	height: 30,
 																	p: 0,
 																}}
-																onClick={(e) => {
+																onClick={(e) =>
 																	product.setProductSillDataPopOver({
 																		...product.popOverInfo.setProductSillData,
-
 																		index: props.index,
 																		element: e.target,
 																		open: true,
@@ -1403,8 +1342,8 @@ export const TabAttribute = observer((props: any) => {
 																			sillCode: props.item.sillCodeB956,
 																			sillData: props.item.sillDataB956,
 																		},
-																	});
-																}}
+																	})
+																}
 															>
 																상세설정
 															</Button>
@@ -1412,7 +1351,6 @@ export const TabAttribute = observer((props: any) => {
 													</Grid>
 												</Paper>
 											</Grid>
-
 											<Grid item xs={6} md={4}></Grid>
 											{common?.user?.purchaseInfo2?.level >= 3 ? (
 												<Grid item xs={6} md={12}>
@@ -1420,7 +1358,6 @@ export const TabAttribute = observer((props: any) => {
 														<Title dark={common.darkTheme} subTitle>
 															[{props.item.productCode}] 개인 분류
 														</Title>
-
 														<Box
 															sx={{
 																display: 'flex',
@@ -1432,21 +1369,19 @@ export const TabAttribute = observer((props: any) => {
 															<Input
 																color={props.item.edited.attribute ? 'warning' : 'info'}
 																id={`product_keyward_name_${props.index}`}
-																defaultValue={props.item.mykeyward === null ? '' : props.item.myKeyward}
-																onChange={(e: any) => {
+																defaultValue={props.item.myKeyward === null ? '' : props.item.myKeyward}
+																onChange={(e: any) =>
 																	product.setProductKeyward(
 																		{
 																			myKeyward: e.target.value,
 																		},
 																		props.index,
-																	);
-																}}
+																	)
+																}
 																onBlur={(e: any) => {
-																	if (common.user.purchaseInfo2.level < 3) {
-																		alert('[프로] 등급부터 사용 가능한 기능입니다.');
+																	if (common.user.purchaseInfo2.level < 3)
+																		return alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
-																		return;
-																	}
 																	product.updateProductMyKeyward(
 																		{
 																			productId: props.item.id,
@@ -1466,14 +1401,12 @@ export const TabAttribute = observer((props: any) => {
 							</Grid>
 						</Grid>
 					</Grid>
-
 					{/* 삽입테스트 todo */}
 					<Grid item xs={4} md={3}>
 						<Paper variant='outlined'>
 							<Title dark={common.darkTheme} subTitle>
 								추가속성정보
 							</Title>
-
 							<Box
 								sx={{
 									fontSize: 13,
@@ -1489,7 +1422,6 @@ export const TabAttribute = observer((props: any) => {
 													<StyledTableCell width={'40%'}>
 														<Typography fontSize={13}>{v.split(':')[0]}</Typography>
 													</StyledTableCell>
-
 													<StyledTableCell
 														width={'60%'}
 														sx={{

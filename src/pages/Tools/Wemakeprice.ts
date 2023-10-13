@@ -344,7 +344,7 @@ export async function uploadWemakeprice(productStore: product, commonStore: comm
 					}${transformContent(market_item.content1)}${market_item.content3}`,
 				};
 
-				const itemInfo = storeItemInfo.items.find((v) => v.productCode === market_code);
+				const itemInfo = storeItemInfo.items.find((v) => v.productCode === market_code)!;
 
 				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
 					? itemInfo[`sillCode${data.DShopInfo.site_code}`]

@@ -24,6 +24,7 @@ import {
 } from '@mui/material';
 import { Frame, Title } from '../Common/UI';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { REG_EXP } from '../../../../common/regex';
 
 // 다른 GQL과 달리 formData 형식으로 백엔드에 요청해야 해서 별도로 구현
 async function uploadImage(data: any) {
@@ -104,53 +105,45 @@ async function uploadImage(data: any) {
 	// 폼데이터 전송
 	const response = await gql(null, formData, true);
 
-	if (response.errors) {
-		alert(response.errors[0].message);
-
-		return;
-	}
+	if (response.errors) return alert(response.errors[0].message);
 }
 
 // 상하단이미지 URL 업로드 방식
 async function uploadImageFromUrl(data: any) {
 	const response = await gql(MUTATIONS.UPDATE_MY_IMAGE_URL_BY_USER, data, false);
 
-	if (response.errors) {
-		alert(response.errors[0].message);
-
-		return;
-	}
+	if (response.errors) return alert(response.errors[0].message);
 }
 
 // 기본설정 뷰
 export const Settings = observer(() => {
 	// MobX 스토리지 로드
 	const { common, delivery } = React.useContext(AppContext);
+	const { darkTheme, loaded, user, testUserInfo, setUserInfo, deliveryPolicy } = common;
+	const { getDeliveryInfo, deliveryList, deliveryData, initDeliveryInfo } = delivery;
 
 	// 사용자 정보 로드
 	React.useEffect(() => {
-		if (!common.loaded) {
-			return;
-		}
+		if (!loaded) return;
 
 		// 출고지/반품지 정보 가져오기
-		delivery.getDeliveryInfo();
-	}, [common.loaded]);
+		getDeliveryInfo();
+	}, [loaded]);
 
 	// 다크모드 지원 설정
 	const theme = React.useMemo(
 		() =>
 			createTheme({
 				palette: {
-					mode: common.darkTheme ? 'dark' : 'light',
+					mode: darkTheme ? 'dark' : 'light',
 				},
 			}),
-		[common.darkTheme],
+		[darkTheme],
 	);
 
 	return (
 		<ThemeProvider theme={theme}>
-			<Frame dark={common.darkTheme}>
+			<Frame dark={darkTheme}>
 				<Header />
 
 				<Container
@@ -159,11 +152,10 @@ export const Settings = observer(() => {
 						py: '10px',
 					}}
 				>
-					{common.user.userInfo ? (
+					{user.userInfo ? (
 						<>
 							<Paper variant='outlined'>
-								<Title dark={common.darkTheme}>개인 분류</Title>
-
+								<Title dark={darkTheme}>개인 분류</Title>
 								<Grid
 									container
 									spacing={1}
@@ -229,9 +221,7 @@ export const Settings = observer(() => {
 																},
 															}}
 															defaultValue={`${
-																common.user.keywardMemo === null
-																	? '설정된 키워드가 없습니다. '
-																	: common.user.keywardMemo
+																user.keywardMemo === null ? '설정된 키워드가 없습니다. ' : user.keywardMemo
 															}`}
 														/>
 													</Box>
@@ -247,7 +237,7 @@ export const Settings = observer(() => {
 									mb: 1,
 								}}
 							>
-								<Title dark={common.darkTheme}>구매처 환율 설정</Title>
+								<Title dark={darkTheme}>구매처 환율 설정</Title>
 
 								<Grid
 									container
@@ -321,21 +311,16 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.cnyRate}`}
+															defaultValue={`${user.userInfo?.cnyRate}`}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value))) return alert('[환율] 숫자만 입력하실 수 있습니다.');
+
 																const cnyRate = parseInt(e.target.value);
 
-																if (isNaN(cnyRate)) {
-																	alert('[환율] 숫자만 입력하실 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ cnyRate });
-																common.setUserInfo({ ...common.user.userInfo, cnyRate });
+																await testUserInfo({ cnyRate });
+																setUserInfo({ ...user.userInfo, cnyRate });
 															}}
 														/>
-
 														<Typography fontSize={14}>원</Typography>
 													</Box>
 												</Grid>
@@ -407,21 +392,16 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.cnyRateDollar}`}
+															defaultValue={`${user.userInfo?.cnyRateDollar}`}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value))) return alert('[환율] 숫자만 입력하실 수 있습니다.');
+
 																const cnyRateDollar = parseInt(e.target.value);
 
-																if (isNaN(cnyRateDollar)) {
-																	alert('[환율] 숫자만 입력하실 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ cnyRateDollar });
-																common.setUserInfo({ ...common.user.userInfo, cnyRateDollar });
+																await testUserInfo({ cnyRateDollar });
+																setUserInfo({ ...user.userInfo, cnyRateDollar });
 															}}
 														/>
-
 														<Typography fontSize={14}>원</Typography>
 													</Box>
 												</Grid>
@@ -493,21 +473,16 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.cnyRateEuro}`}
+															defaultValue={`${user.userInfo?.cnyRateEuro}`}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value))) return alert('[환율] 숫자만 입력하실 수 있습니다.');
+
 																const cnyRateEuro = parseInt(e.target.value);
 
-																if (isNaN(cnyRateEuro)) {
-																	alert('[환율] 숫자만 입력하실 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ cnyRateEuro });
-																common.setUserInfo({ ...common.user.userInfo, cnyRateEuro });
+																await testUserInfo({ cnyRateEuro });
+																setUserInfo({ ...user.userInfo, cnyRateEuro });
 															}}
 														/>
-
 														<Typography fontSize={14}>원</Typography>
 													</Box>
 												</Grid>
@@ -579,21 +554,16 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.cnyRateYen}`}
+															defaultValue={`${user.userInfo?.cnyRateYen}`}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value))) return alert('[환율] 숫자만 입력하실 수 있습니다.');
+
 																const cnyRateYen = parseInt(e.target.value);
 
-																if (isNaN(cnyRateYen)) {
-																	alert('[환율] 숫자만 입력하실 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ cnyRateYen });
-																common.setUserInfo({ ...common.user.userInfo, cnyRateYen });
+																await testUserInfo({ cnyRateYen });
+																setUserInfo({ ...user.userInfo, cnyRateYen });
 															}}
 														/>
-
 														<Typography fontSize={14}>원</Typography>
 													</Box>
 												</Grid>
@@ -609,7 +579,7 @@ export const Settings = observer(() => {
 									mb: 1,
 								}}
 							>
-								<Title dark={common.darkTheme}>공통 설정</Title>
+								<Title dark={darkTheme}>공통 설정</Title>
 
 								<Grid
 									container
@@ -683,21 +653,17 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.defaultShippingFee}`}
+															defaultValue={`${user.userInfo?.defaultShippingFee}`}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[배대지배송비] 숫자만 입력하실 수 있습니다.');
+
 																const defaultShippingFee = parseInt(e.target.value);
 
-																if (isNaN(defaultShippingFee)) {
-																	alert('[배대지배송비] 숫자만 입력하실 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ defaultShippingFee });
-																common.setUserInfo({ ...common.user.userInfo, defaultShippingFee });
+																await testUserInfo({ defaultShippingFee });
+																setUserInfo({ ...user.userInfo, defaultShippingFee });
 															}}
 														/>
-
 														<Typography fontSize={14}>원</Typography>
 													</Box>
 												</Grid>
@@ -769,18 +735,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.marginRate}`}
+															defaultValue={`${user.userInfo?.marginRate}`}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[마진율] 숫자만 입력하실 수 있습니다.');
+
 																const marginRate = parseInt(e.target.value);
 
-																if (isNaN(marginRate)) {
-																	alert('[마진율] 숫자만 입력하실 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ marginRate });
-																common.setUserInfo({ ...common.user.userInfo, marginRate });
+																await testUserInfo({ marginRate });
+																setUserInfo({ ...user.userInfo, marginRate });
 															}}
 														/>
 														&nbsp;
@@ -790,22 +753,17 @@ export const Settings = observer(() => {
 																fontSize: 14,
 																width: 60,
 															}}
-															value={common.user.userInfo?.marginUnitType}
+															value={user.userInfo?.marginUnitType}
 															onChange={async (e) => {
 																const marginUnitType = e.target.value;
 
-																if (!marginUnitType) {
-																	alert('[마진단위] 입력이 잘못되었습니다.');
+																if (!marginUnitType) return alert('[마진단위] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ marginUnitType });
-																common.setUserInfo({ ...common.user.userInfo, marginUnitType });
+																await testUserInfo({ marginUnitType });
+																setUserInfo({ ...user.userInfo, marginUnitType });
 															}}
 														>
 															<MenuItem value='PERCENT'>%</MenuItem>
-
 															<MenuItem value='WON'>원</MenuItem>
 														</Select>
 													</Box>
@@ -878,18 +836,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.discountAmount}`}
+															defaultValue={`${user.userInfo?.discountAmount}`}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[기본할인가] 숫자만 입력하실 수 있습니다.');
+
 																const discountAmount = parseInt(e.target.value);
 
-																if (isNaN(discountAmount)) {
-																	alert('[기본할인가] 숫자만 입력하실 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ discountAmount });
-																common.setUserInfo({ ...common.user.userInfo, discountAmount });
+																await testUserInfo({ discountAmount });
+																setUserInfo({ ...user.userInfo, discountAmount });
 															}}
 														/>
 														&nbsp;
@@ -899,22 +854,17 @@ export const Settings = observer(() => {
 																fontSize: 14,
 																width: 60,
 															}}
-															value={common.user.userInfo?.discountUnitType}
+															value={user.userInfo?.discountUnitType}
 															onChange={async (e) => {
+																if (!e.target.value) return alert('[기본할인가단위] 입력이 잘못되었습니다.');
+
 																const discountUnitType = e.target.value;
 
-																if (!discountUnitType) {
-																	alert('[기본할인가단위] 입력이 잘못되었습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ discountUnitType });
-																common.setUserInfo({ ...common.user.userInfo, discountUnitType });
+																await testUserInfo({ discountUnitType });
+																setUserInfo({ ...user.userInfo, discountUnitType });
 															}}
 														>
 															<MenuItem value='PERCENT'>%</MenuItem>
-
 															<MenuItem value='WON'>원</MenuItem>
 														</Select>
 													</Box>
@@ -987,21 +937,17 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.extraShippingFee}`}
+															defaultValue={`${user.userInfo?.extraShippingFee}`}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[유료배송비] 숫자만 입력하실 수 있습니다.');
+
 																const extraShippingFee = parseInt(e.target.value);
 
-																if (isNaN(extraShippingFee)) {
-																	alert('[유료배송비] 숫자만 입력하실 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ extraShippingFee });
-																common.setUserInfo({ ...common.user.userInfo, extraShippingFee });
+																await testUserInfo({ extraShippingFee });
+																setUserInfo({ ...user.userInfo, extraShippingFee });
 															}}
 														/>
-
 														<Typography fontSize={14}>원</Typography>
 													</Box>
 												</Grid>
@@ -1064,21 +1010,17 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.refundShippingFee}`}
+															defaultValue={`${user.userInfo?.refundShippingFee}`}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[반품배송비] 숫자만 입력하실 수 있습니다.');
+
 																const refundShippingFee = parseInt(e.target.value);
 
-																if (isNaN(refundShippingFee)) {
-																	alert('[반품배송비] 숫자만 입력하실 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ refundShippingFee });
-																common.setUserInfo({ ...common.user.userInfo, refundShippingFee });
+																await testUserInfo({ refundShippingFee });
+																setUserInfo({ ...user.userInfo, refundShippingFee });
 															}}
 														/>
-
 														<Typography fontSize={14}>원</Typography>
 													</Box>
 												</Grid>
@@ -1141,21 +1083,17 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.exchangeShippingFee}`}
+															defaultValue={`${user.userInfo?.exchangeShippingFee}`}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[교환배송비] 숫자만 입력하실 수 있습니다.');
+
 																const exchangeShippingFee = parseInt(e.target.value);
 
-																if (isNaN(exchangeShippingFee)) {
-																	alert('[교환배송비] 숫자만 입력하실 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ exchangeShippingFee });
-																common.setUserInfo({ ...common.user.userInfo, exchangeShippingFee });
+																await testUserInfo({ exchangeShippingFee });
+																setUserInfo({ ...user.userInfo, exchangeShippingFee });
 															}}
 														/>
-
 														<Typography fontSize={14}>원</Typography>
 													</Box>
 												</Grid>
@@ -1218,21 +1156,17 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.additionalShippingFeeJeju}`}
+															defaultValue={`${user.userInfo?.additionalShippingFeeJeju}`}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[제주/도서배송비] 숫자만 입력하실 수 있습니다.');
+
 																const additionalShippingFeeJeju = parseInt(e.target.value);
 
-																if (isNaN(additionalShippingFeeJeju)) {
-																	alert('[제주/도서배송비] 숫자만 입력하실 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ additionalShippingFeeJeju });
-																common.setUserInfo({ ...common.user.userInfo, additionalShippingFeeJeju });
+																await testUserInfo({ additionalShippingFeeJeju });
+																setUserInfo({ ...user.userInfo, additionalShippingFeeJeju });
 															}}
 														/>
-
 														<Typography fontSize={14}>원</Typography>
 													</Box>
 												</Grid>
@@ -1264,7 +1198,6 @@ export const Settings = observer(() => {
 														}}
 													>
 														<Typography fontSize={14}>재고수량</Typography>
-
 														<Tooltip title='상품 수집 시 고정 재고수량을 설정합니다. (0 입력 시 자동설정)'>
 															<HelpOutlineIcon
 																color='info'
@@ -1304,21 +1237,16 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.collectStock}`}
+															defaultValue={`${user.userInfo?.collectStock}`}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value))) return alert('[재고수량] 입력이 잘못되었습니다.');
+
 																const collectStock = parseInt(e.target.value);
 
-																if (isNaN(collectStock)) {
-																	alert('[재고수량] 입력이 잘못되었습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ collectStock });
-																common.setUserInfo({ ...common.user.userInfo, collectStock });
+																await testUserInfo({ collectStock });
+																setUserInfo({ ...user.userInfo, collectStock });
 															}}
 														/>
-
 														<Typography fontSize={14}>개</Typography>
 													</Box>
 												</Grid>
@@ -1380,18 +1308,14 @@ export const Settings = observer(() => {
 																	fontSize: 14,
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.asTel}`}
+															defaultValue={`${user.userInfo?.asTel}`}
 															onBlur={async (e) => {
+																if (!e.target.value) return alert('[A/S전화번호] 입력이 잘못되었습니다.');
+
 																const asTel = e.target.value;
 
-																if (!asTel) {
-																	alert('[A/S전화번호] 입력이 잘못되었습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ asTel });
-																common.setUserInfo({ ...common.user.userInfo, asTel });
+																await testUserInfo({ asTel });
+																setUserInfo({ ...user.userInfo, asTel });
 															}}
 														/>
 													</Box>
@@ -1454,18 +1378,14 @@ export const Settings = observer(() => {
 																	fontSize: 14,
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.asInformation}`}
+															defaultValue={`${user.userInfo?.asInformation}`}
 															onBlur={async (e) => {
+																if (!e.target.value) return alert('[A/S안내내용] 입력이 잘못되었습니다.');
+
 																const asInformation = e.target.value;
 
-																if (!asInformation) {
-																	alert('[A/S안내내용] 입력이 잘못되었습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ asInformation });
-																common.setUserInfo({ ...common.user.userInfo, asInformation });
+																await testUserInfo({ asInformation });
+																setUserInfo({ ...user.userInfo, asInformation });
 															}}
 														/>
 													</Box>
@@ -1514,9 +1434,9 @@ export const Settings = observer(() => {
 															display: 'flex',
 														}}
 													>
-														<a target='_blank' href={common.user.userInfo?.fixImageTop}>
+														<a target='_blank' href={user.userInfo?.fixImageTop}>
 															<img
-																src={common.user.userInfo?.fixImageTop}
+																src={user.userInfo?.fixImageTop}
 																width={126}
 																height={126}
 																style={{
@@ -1547,8 +1467,8 @@ export const Settings = observer(() => {
 
 																	await uploadImage({ fixImageTop: fileList[0] });
 
-																	common.setUserInfo({
-																		...common.user.userInfo,
+																	setUserInfo({
+																		...user.userInfo,
 																		fixImageTop: fileData,
 																	});
 																}}
@@ -1562,18 +1482,14 @@ export const Settings = observer(() => {
 															size='small'
 															component='span'
 															onClick={async () => {
-																const url = prompt('이미지 URL을 입력해주세요.') ?? '';
-
-																if (url === '') {
-																	alert('주소가 올바르지 않습니다.');
-
-																	return 0;
-																}
+																const url = prompt('이미지 URL을 입력해주세요.');
+																if (!url) return;
+																else if (!REG_EXP.url.test(url)) return alert('주소가 올바르지 않습니다.');
 
 																await uploadImageFromUrl({ fixImageTop: url });
 
-																common.setUserInfo({
-																	...common.user.userInfo,
+																setUserInfo({
+																	...user.userInfo,
 																	fixImageTop: url,
 																});
 															}}
@@ -1586,9 +1502,9 @@ export const Settings = observer(() => {
 															color='error'
 															component='span'
 															onClick={async () => {
-																await common.testUserInfo({ fixImageTop: null });
+																await testUserInfo({ fixImageTop: null });
 
-																common.setUserInfo({ ...common.user.userInfo, fixImageTop: null });
+																setUserInfo({ ...user.userInfo, fixImageTop: null });
 															}}
 														>
 															<DeleteIcon />
@@ -1639,9 +1555,9 @@ export const Settings = observer(() => {
 															display: 'flex',
 														}}
 													>
-														<a target='_blank' href={common.user.userInfo?.fixImageSubTop}>
+														<a target='_blank' href={user.userInfo?.fixImageSubTop}>
 															<img
-																src={common.user.userInfo?.fixImageSubTop}
+																src={user.userInfo?.fixImageSubTop}
 																width={126}
 																height={126}
 																style={{
@@ -1672,8 +1588,8 @@ export const Settings = observer(() => {
 
 																	await uploadImage({ fixImageSubTop: fileList[0] });
 
-																	common.setUserInfo({
-																		...common.user.userInfo,
+																	setUserInfo({
+																		...user.userInfo,
 																		fixImageSubTop: fileData,
 																	});
 																}}
@@ -1687,18 +1603,14 @@ export const Settings = observer(() => {
 															size='small'
 															component='span'
 															onClick={async () => {
-																const url = prompt('이미지 URL을 입력해주세요.') ?? '';
-
-																if (url === '') {
-																	alert('주소가 올바르지 않습니다.');
-
-																	return 0;
-																}
+																const url = prompt('이미지 URL을 입력해주세요.');
+																if (!url) return;
+																else if (!REG_EXP.url.test(url)) return alert('주소가 올바르지 않습니다.');
 
 																await uploadImageFromUrl({ fixImageSubTop: url });
 
-																common.setUserInfo({
-																	...common.user.userInfo,
+																setUserInfo({
+																	...user.userInfo,
 																	fixImageSubTop: url,
 																});
 															}}
@@ -1711,9 +1623,9 @@ export const Settings = observer(() => {
 															color='error'
 															component='span'
 															onClick={async () => {
-																await common.testUserInfo({ fixImageSubTop: null });
+																await testUserInfo({ fixImageSubTop: null });
 
-																common.setUserInfo({ ...common.user.userInfo, fixImageSubTop: null });
+																setUserInfo({ ...user.userInfo, fixImageSubTop: null });
 															}}
 														>
 															<DeleteIcon />
@@ -1764,9 +1676,9 @@ export const Settings = observer(() => {
 															display: 'flex',
 														}}
 													>
-														<a target='_blank' href={common.user.userInfo?.fixImageBottom}>
+														<a target='_blank' href={user.userInfo?.fixImageBottom}>
 															<img
-																src={common.user.userInfo?.fixImageBottom}
+																src={user.userInfo?.fixImageBottom}
 																width={126}
 																height={126}
 																style={{
@@ -1797,8 +1709,8 @@ export const Settings = observer(() => {
 
 																	await uploadImage({ fixImageBottom: fileList[0] });
 
-																	common.setUserInfo({
-																		...common.user.userInfo,
+																	setUserInfo({
+																		...user.userInfo,
 																		fixImageBottom: fileData,
 																	});
 																}}
@@ -1812,18 +1724,14 @@ export const Settings = observer(() => {
 															size='small'
 															component='span'
 															onClick={async () => {
-																const url = prompt('이미지 URL을 입력해주세요.') ?? '';
-
-																if (url === '') {
-																	alert('주소가 올바르지 않습니다.');
-
-																	return 0;
-																}
+																const url = prompt('이미지 URL을 입력해주세요.');
+																if (!url) return;
+																else if (!REG_EXP.url.test(url)) return alert('주소가 올바르지 않습니다.');
 
 																await uploadImageFromUrl({ fixImageBottom: url });
 
-																common.setUserInfo({
-																	...common.user.userInfo,
+																setUserInfo({
+																	...user.userInfo,
 																	fixImageBottom: url,
 																});
 															}}
@@ -1836,9 +1744,9 @@ export const Settings = observer(() => {
 															color='error'
 															component='span'
 															onClick={async () => {
-																await common.testUserInfo({ fixImageBottom: null });
+																await testUserInfo({ fixImageBottom: null });
 
-																common.setUserInfo({ ...common.user.userInfo, fixImageBottom: null });
+																setUserInfo({ ...user.userInfo, fixImageBottom: null });
 															}}
 														>
 															<DeleteIcon />
@@ -1889,9 +1797,9 @@ export const Settings = observer(() => {
 															display: 'flex',
 														}}
 													>
-														<a target='_blank' href={common.user.userInfo?.fixImageSubBottom}>
+														<a target='_blank' href={user.userInfo?.fixImageSubBottom}>
 															<img
-																src={common.user.userInfo?.fixImageSubBottom}
+																src={user.userInfo?.fixImageSubBottom}
 																width={126}
 																height={126}
 																style={{
@@ -1922,8 +1830,8 @@ export const Settings = observer(() => {
 
 																	await uploadImage({ fixImageSubBottom: fileList[0] });
 
-																	common.setUserInfo({
-																		...common.user.userInfo,
+																	setUserInfo({
+																		...user.userInfo,
 																		fixImageSubBottom: fileData,
 																	});
 																}}
@@ -1937,18 +1845,14 @@ export const Settings = observer(() => {
 															size='small'
 															component='span'
 															onClick={async () => {
-																const url = prompt('이미지 URL을 입력해주세요.') ?? '';
-
-																if (url === '') {
-																	alert('주소가 올바르지 않습니다.');
-
-																	return 0;
-																}
+																const url = prompt('이미지 URL을 입력해주세요.');
+																if (!url) return;
+																else if (!REG_EXP.url.test(url)) return alert('주소가 올바르지 않습니다.');
 
 																await uploadImageFromUrl({ fixImageSubBottom: url });
 
-																common.setUserInfo({
-																	...common.user.userInfo,
+																setUserInfo({
+																	...user.userInfo,
 																	fixImageSubBottom: url,
 																});
 															}}
@@ -1961,9 +1865,9 @@ export const Settings = observer(() => {
 															color='error'
 															component='span'
 															onClick={async () => {
-																await common.testUserInfo({ fixImageSubBottom: null });
+																await testUserInfo({ fixImageSubBottom: null });
 
-																common.setUserInfo({ ...common.user.userInfo, fixImageSubBottom: null });
+																setUserInfo({ ...user.userInfo, fixImageSubBottom: null });
 															}}
 														>
 															<DeleteIcon />
@@ -2035,18 +1939,14 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.optionAlignTop ?? ''}
+															value={user.userInfo?.optionAlignTop ?? ''}
 															onChange={async (e) => {
 																const optionAlignTop = e.target.value;
 
-																if (!optionAlignTop) {
-																	alert('[상세페이지옵션위치] 입력이 잘못되었습니다.');
+																if (!optionAlignTop) return alert('[상세페이지옵션위치] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ optionAlignTop });
-																common.setUserInfo({ ...common.user.userInfo, optionAlignTop });
+																await testUserInfo({ optionAlignTop });
+																setUserInfo({ ...user.userInfo, optionAlignTop });
 															}}
 														>
 															<MenuItem value={'Y'}>상단</MenuItem>
@@ -2119,18 +2019,15 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.descriptionShowTitle ?? ''}
+															value={user.userInfo?.descriptionShowTitle ?? ''}
 															onChange={async (e) => {
 																const descriptionShowTitle = e.target.value;
 
-																if (!descriptionShowTitle) {
-																	alert('[상세페이지상품명표시] 입력이 잘못되었습니다.');
+																if (!descriptionShowTitle)
+																	return alert('[상세페이지상품명표시] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ descriptionShowTitle });
-																common.setUserInfo({ ...common.user.userInfo, descriptionShowTitle });
+																await testUserInfo({ descriptionShowTitle });
+																setUserInfo({ ...user.userInfo, descriptionShowTitle });
 															}}
 														>
 															<MenuItem value={'Y'}>사용</MenuItem>
@@ -2203,18 +2100,15 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.useDetailInformation ?? ''}
+															value={user.userInfo?.useDetailInformation ?? ''}
 															onChange={async (e) => {
 																const useDetailInformation = e.target.value;
 
-																if (!useDetailInformation) {
-																	alert('[옵션정보안내문구표시] 입력이 잘못되었습니다.');
+																if (!useDetailInformation)
+																	return alert('[옵션정보안내문구표시] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ useDetailInformation });
-																common.setUserInfo({ ...common.user.userInfo, useDetailInformation });
+																await testUserInfo({ useDetailInformation });
+																setUserInfo({ ...user.userInfo, useDetailInformation });
 															}}
 														>
 															<MenuItem value={'Y'}>사용</MenuItem>
@@ -2287,18 +2181,14 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.optionIndexType ?? ''}
+															value={user.userInfo?.optionIndexType ?? ''}
 															onChange={async (e) => {
 																const optionIndexType = e.target.value;
 
-																if (!optionIndexType) {
-																	alert('[옵션정보표기방식] 입력이 잘못되었습니다.');
+																if (!optionIndexType) return alert('[옵션정보표기방식] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ optionIndexType });
-																common.setUserInfo({ ...common.user.userInfo, optionIndexType });
+																await testUserInfo({ optionIndexType });
+																setUserInfo({ ...user.userInfo, optionIndexType });
 															}}
 														>
 															<MenuItem value={1}>숫자 + 옵션명</MenuItem>
@@ -2371,18 +2261,15 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.optionTwoWays ?? ''}
+															value={user.userInfo?.optionTwoWays ?? ''}
 															onChange={async (e) => {
 																const optionTwoWays = e.target.value;
 
-																if (!optionTwoWays) {
-																	alert('[옵션정보배치형식] 입력이 잘못되었습니다.');
+																if (!optionTwoWays) return;
+																alert('[옵션정보배치형식] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ optionTwoWays });
-																common.setUserInfo({ ...common.user.userInfo, optionTwoWays });
+																await testUserInfo({ optionTwoWays });
+																setUserInfo({ ...user.userInfo, optionTwoWays });
 															}}
 														>
 															<MenuItem value={'N'}>1열</MenuItem>
@@ -2455,18 +2342,14 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.autoPrice ?? ''}
+															value={user.userInfo?.autoPrice ?? ''}
 															onChange={async (e) => {
 																const autoPrice = e.target.value;
 
-																if (!autoPrice) {
-																	alert('[옵션가격자동설정] 입력이 잘못되었습니다.');
+																if (!autoPrice) return alert('[옵션가격자동설정] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ autoPrice });
-																common.setUserInfo({ ...common.user.userInfo, autoPrice });
+																await testUserInfo({ autoPrice });
+																setUserInfo({ ...user.userInfo, autoPrice });
 															}}
 														>
 															<MenuItem value={'Y'}>사용</MenuItem>
@@ -2539,18 +2422,14 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.defaultPrice ?? ''}
+															value={user.userInfo?.defaultPrice ?? ''}
 															onChange={async (e) => {
 																const defaultPrice = e.target.value;
 
-																if (!defaultPrice) {
-																	alert('[판매가격노출설정] 입력이 잘못되었습니다.');
+																if (!defaultPrice) return alert('[판매가격노출설정] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ defaultPrice });
-																common.setUserInfo({ ...common.user.userInfo, defaultPrice });
+																await testUserInfo({ defaultPrice });
+																setUserInfo({ ...user.userInfo, defaultPrice });
 															}}
 														>
 															<MenuItem value={'L'}>최저가격</MenuItem>
@@ -2623,18 +2502,14 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.calculateWonType ?? ''}
+															value={user.userInfo?.calculateWonType ?? ''}
 															onChange={async (e) => {
 																const calculateWonType = e.target.value;
 
-																if (!calculateWonType) {
-																	alert('[판매가격설정단위] 입력이 잘못되었습니다.');
+																if (!calculateWonType) return alert('[판매가격설정단위] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ calculateWonType });
-																common.setUserInfo({ ...common.user.userInfo, calculateWonType });
+																await testUserInfo({ calculateWonType });
+																setUserInfo({ ...user.userInfo, calculateWonType });
 															}}
 														>
 															<MenuItem value={'100'}>100원</MenuItem>
@@ -2655,7 +2530,7 @@ export const Settings = observer(() => {
 									mb: 1,
 								}}
 							>
-								<Title dark={common.darkTheme}>수집 설정</Title>
+								<Title dark={darkTheme}>수집 설정</Title>
 
 								<Grid
 									container
@@ -2733,18 +2608,14 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.collectTimeout}`}
+															defaultValue={`${user.userInfo?.collectTimeout}`}
 															onBlur={async (e) => {
 																const collectTimeout = parseInt(e.target.value);
 
-																if (isNaN(collectTimeout)) {
-																	alert('[상품수집제한시간] 입력이 잘못되었습니다.');
+																if (isNaN(collectTimeout)) return alert('[상품수집제한시간] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ collectTimeout });
-																common.setUserInfo({ ...common.user.userInfo, collectTimeout });
+																await testUserInfo({ collectTimeout });
+																setUserInfo({ ...user.userInfo, collectTimeout });
 															}}
 														/>
 
@@ -2816,18 +2687,14 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.collectCheckPosition ?? ''}
+															value={user.userInfo?.collectCheckPosition ?? ''}
 															onChange={async (e) => {
 																const collectCheckPosition = e.target.value;
 
-																if (!collectCheckPosition) {
-																	alert('[대량수집체크위치] 입력이 잘못되었습니다.');
+																if (!collectCheckPosition) return alert('[대량수집체크위치] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ collectCheckPosition });
-																common.setUserInfo({ ...common.user.userInfo, collectCheckPosition });
+																await testUserInfo({ collectCheckPosition });
+																setUserInfo({ ...user.userInfo, collectCheckPosition });
 															}}
 														>
 															<MenuItem value={'L'}>왼쪽</MenuItem>
@@ -2900,18 +2767,14 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.sillFromCategory ?? ''}
+															value={user.userInfo?.sillFromCategory ?? ''}
 															onChange={async (e) => {
 																const sillFromCategory = e.target.value;
 
-																if (!sillFromCategory) {
-																	alert('[고시정보자동설정] 입력이 잘못되었습니다.');
+																if (!sillFromCategory) return alert('[고시정보자동설정] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ sillFromCategory });
-																common.setUserInfo({ ...common.user.userInfo, sillFromCategory });
+																await testUserInfo({ sillFromCategory });
+																setUserInfo({ ...user.userInfo, sillFromCategory });
 															}}
 														>
 															<MenuItem value={'Y'}>카테고리에 따라 지정</MenuItem>
@@ -2984,26 +2847,20 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.thumbnailRepresentNo}
+															value={user.userInfo?.thumbnailRepresentNo}
 															onChange={async (e) => {
-																if (common.user.purchaseInfo2.level < 3) {
-																	alert('[프로] 등급부터 사용 가능한 기능입니다.');
-
-																	return;
-																}
+																if (user.purchaseInfo2.level < 3)
+																	return alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
 																const thumbnailRepresentNo = parseInt(e.target.value);
 
-																if (isNaN(thumbnailRepresentNo)) {
-																	alert('[대표이미지기준값설정] 입력이 잘못되었습니다.');
-
-																	return;
-																}
+																if (isNaN(thumbnailRepresentNo))
+																	return alert('[대표이미지기준값설정] 입력이 잘못되었습니다.');
 
 																const converted = thumbnailRepresentNo.toString();
 
-																await common.testUserInfo({ thumbnailRepresentNo: converted });
-																common.setUserInfo({ ...common.user.userInfo, thumbnailRepresentNo: converted });
+																await testUserInfo({ thumbnailRepresentNo: converted });
+																setUserInfo({ ...user.userInfo, thumbnailRepresentNo: converted });
 															}}
 														>
 															<MenuItem value={'0'}>랜덤</MenuItem>
@@ -3027,7 +2884,7 @@ export const Settings = observer(() => {
 									mb: 1,
 								}}
 							>
-								<Title dark={common.darkTheme}>배대지 설정</Title>
+								<Title dark={darkTheme}>배대지 설정</Title>
 
 								<Grid
 									container
@@ -3094,34 +2951,30 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.orderToDeliveryName}
+															value={user.userInfo?.orderToDeliveryName}
 															onChange={async (e) => {
 																const orderToDeliveryName = e.target.value;
 
-																if (!orderToDeliveryName) {
-																	alert('[기본배대지] 입력이 잘못되었습니다.');
+																if (!orderToDeliveryName) return alert('[기본배대지] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({
+																await testUserInfo({
 																	orderToDeliveryName,
 																	orderToDeliveryMembership: '',
 																	orderToDeliveryMethod: '',
 																});
 
-																common.setUserInfo({
-																	...common.user.userInfo,
+																setUserInfo({
+																	...user.userInfo,
 
 																	orderToDeliveryName,
 																	orderToDeliveryMembership: '',
 																	orderToDeliveryMethod: '',
 																});
 
-																delivery.initDeliveryInfo();
+																initDeliveryInfo();
 															}}
 														>
-															{delivery.deliveryList.map((v) => (
+															{deliveryList.map((v) => (
 																<MenuItem value={v.name}>{v.name}</MenuItem>
 															))}
 														</Select>
@@ -3131,9 +2984,7 @@ export const Settings = observer(() => {
 										</Paper>
 									</Grid>
 
-									{delivery.deliveryList.find(
-										(v) => v.name === common.user.userInfo?.orderToDeliveryName && v.membership,
-									) ? (
+									{deliveryList.find((v) => v.name === user.userInfo?.orderToDeliveryName && v.membership) ? (
 										<Grid item xs={6} md={3}>
 											<Paper
 												variant='outlined'
@@ -3191,22 +3042,18 @@ export const Settings = observer(() => {
 																	width: '100%',
 																	fontSize: 14,
 																}}
-																value={common.user.userInfo?.orderToDeliveryMembership}
+																value={user.userInfo?.orderToDeliveryMembership}
 																onChange={async (e) => {
 																	const orderToDeliveryMembership = e.target.value;
 
-																	if (!orderToDeliveryMembership) {
-																		alert('[배송등급] 입력이 잘못되었습니다.');
+																	if (!orderToDeliveryMembership) return alert('[배송등급] 입력이 잘못되었습니다.');
 
-																		return;
-																	}
-
-																	await common.testUserInfo({ orderToDeliveryMembership });
-																	common.setUserInfo({ ...common.user.userInfo, orderToDeliveryMembership });
+																	await testUserInfo({ orderToDeliveryMembership });
+																	setUserInfo({ ...user.userInfo, orderToDeliveryMembership });
 																}}
 															>
-																{delivery.deliveryData
-																	.find((v) => v.company === common.user.userInfo?.orderToDeliveryName)
+																{deliveryData
+																	.find((v) => v.company === user.userInfo?.orderToDeliveryName)
 																	?.membership.map((v) => <MenuItem value={v.code}>{v.name}</MenuItem>) ?? null}
 															</Select>
 														</Box>
@@ -3216,9 +3063,7 @@ export const Settings = observer(() => {
 										</Grid>
 									) : null}
 
-									{delivery.deliveryList.find(
-										(v) => v.name === common.user.userInfo?.orderToDeliveryName && v.method,
-									) ? (
+									{deliveryList.find((v) => v.name === user.userInfo?.orderToDeliveryName && v.method) ? (
 										<Grid item xs={6} md={3}>
 											<Paper
 												variant='outlined'
@@ -3276,22 +3121,18 @@ export const Settings = observer(() => {
 																	width: '100%',
 																	fontSize: 14,
 																}}
-																value={common.user.userInfo?.orderToDeliveryMethod}
+																value={user.userInfo?.orderToDeliveryMethod}
 																onChange={async (e) => {
 																	const orderToDeliveryMethod = e.target.value;
 
-																	if (!orderToDeliveryMethod) {
-																		alert('[배송방법] 입력이 잘못되었습니다.');
+																	if (!orderToDeliveryMethod) return alert('[배송방법] 입력이 잘못되었습니다.');
 
-																		return;
-																	}
-
-																	await common.testUserInfo({ orderToDeliveryMethod });
-																	common.setUserInfo({ ...common.user.userInfo, orderToDeliveryMethod });
+																	await testUserInfo({ orderToDeliveryMethod });
+																	setUserInfo({ ...user.userInfo, orderToDeliveryMethod });
 																}}
 															>
-																{delivery.deliveryData
-																	.find((v) => v.company === common.user.userInfo?.orderToDeliveryName)
+																{deliveryData
+																	.find((v) => v.company === user.userInfo?.orderToDeliveryName)
 																	?.method.map((v) => <MenuItem value={v.code}>{v.name}</MenuItem>) ?? null}
 															</Select>
 														</Box>
@@ -3309,7 +3150,7 @@ export const Settings = observer(() => {
 									mb: 1,
 								}}
 							>
-								<Title dark={common.darkTheme}>오픈마켓수수료 설정</Title>
+								<Title dark={darkTheme}>오픈마켓수수료 설정</Title>
 
 								<Grid
 									container
@@ -3366,18 +3207,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.naverFee}
+															defaultValue={user.userInfo?.naverFee}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[스마트스토어 수수료] 숫자만 입력할 수 있습니다.');
+
 																const naverFee = parseFloat(e.target.value);
 
-																if (isNaN(naverFee)) {
-																	alert('[스마트스토어 수수료] 숫자만 입력할 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ naverFee });
-																common.setUserInfo({ ...common.user.userInfo, naverFee });
+																await testUserInfo({ naverFee });
+																setUserInfo({ ...user.userInfo, naverFee });
 															}}
 														/>
 
@@ -3435,18 +3273,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.coupangFee}
+															defaultValue={user.userInfo?.coupangFee}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[쿠팡 수수료] 숫자만 입력할 수 있습니다.');
+
 																const coupangFee = parseFloat(e.target.value);
 
-																if (isNaN(coupangFee)) {
-																	alert('[쿠팡 수수료] 숫자만 입력할 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ coupangFee });
-																common.setUserInfo({ ...common.user.userInfo, coupangFee });
+																await testUserInfo({ coupangFee });
+																setUserInfo({ ...user.userInfo, coupangFee });
 															}}
 														/>
 
@@ -3504,18 +3339,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.streetFee}
+															defaultValue={user.userInfo?.streetFee}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[11번가(글로벌) 수수료] 숫자만 입력할 수 있습니다.');
+
 																const streetFee = parseFloat(e.target.value);
 
-																if (isNaN(streetFee)) {
-																	alert('[11번가(글로벌) 수수료] 숫자만 입력할 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ streetFee });
-																common.setUserInfo({ ...common.user.userInfo, streetFee });
+																await testUserInfo({ streetFee });
+																setUserInfo({ ...user.userInfo, streetFee });
 															}}
 														/>
 
@@ -3573,18 +3405,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.streetNormalFee}
+															defaultValue={user.userInfo?.streetNormalFee}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[11번가(일반) 수수료] 숫자만 입력할 수 있습니다.');
+
 																const streetNormalFee = parseFloat(e.target.value);
 
-																if (isNaN(streetNormalFee)) {
-																	alert('[11번가(일반) 수수료] 숫자만 입력할 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ streetNormalFee });
-																common.setUserInfo({ ...common.user.userInfo, streetNormalFee });
+																await testUserInfo({ streetNormalFee });
+																setUserInfo({ ...user.userInfo, streetNormalFee });
 															}}
 														/>
 
@@ -3642,18 +3471,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.gmarketFee}
+															defaultValue={user.userInfo?.gmarketFee}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[지마켓 수수료] 숫자만 입력할 수 있습니다.');
+
 																const gmarketFee = parseFloat(e.target.value);
 
-																if (isNaN(gmarketFee)) {
-																	alert('[지마켓 수수료] 숫자만 입력할 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ gmarketFee });
-																common.setUserInfo({ ...common.user.userInfo, gmarketFee });
+																await testUserInfo({ gmarketFee });
+																setUserInfo({ ...user.userInfo, gmarketFee });
 															}}
 														/>
 
@@ -3711,18 +3537,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.auctionFee}
+															defaultValue={user.userInfo?.auctionFee}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[옥션 수수료] 숫자만 입력할 수 있습니다.');
+
 																const auctionFee = parseFloat(e.target.value);
 
-																if (isNaN(auctionFee)) {
-																	alert('[옥션 수수료] 숫자만 입력할 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ auctionFee });
-																common.setUserInfo({ ...common.user.userInfo, auctionFee });
+																await testUserInfo({ auctionFee });
+																setUserInfo({ ...user.userInfo, auctionFee });
 															}}
 														/>
 
@@ -3780,18 +3603,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.interparkFee}
+															defaultValue={user.userInfo?.interparkFee}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[인터파크 수수료] 숫자만 입력할 수 있습니다.');
+
 																const interparkFee = parseFloat(e.target.value);
 
-																if (isNaN(interparkFee)) {
-																	alert('[인터파크 수수료] 숫자만 입력할 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ interparkFee });
-																common.setUserInfo({ ...common.user.userInfo, interparkFee });
+																await testUserInfo({ interparkFee });
+																setUserInfo({ ...user.userInfo, interparkFee });
 															}}
 														/>
 
@@ -3849,18 +3669,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.wemakepriceFee}
+															defaultValue={user.userInfo?.wemakepriceFee}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[위메프 수수료] 숫자만 입력할 수 있습니다.');
+
 																const wemakepriceFee = parseFloat(e.target.value);
 
-																if (isNaN(wemakepriceFee)) {
-																	alert('[위메프 수수료] 숫자만 입력할 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ wemakepriceFee });
-																common.setUserInfo({ ...common.user.userInfo, wemakepriceFee });
+																await testUserInfo({ wemakepriceFee });
+																setUserInfo({ ...user.userInfo, wemakepriceFee });
 															}}
 														/>
 
@@ -3918,18 +3735,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.lotteonFee}
+															defaultValue={user.userInfo?.lotteonFee}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[롯데온(글로벌) 수수료] 숫자만 입력할 수 있습니다.');
+
 																const lotteonFee = parseFloat(e.target.value);
 
-																if (isNaN(lotteonFee)) {
-																	alert('[롯데온(글로벌) 수수료] 숫자만 입력할 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ lotteonFee });
-																common.setUserInfo({ ...common.user.userInfo, lotteonFee });
+																await testUserInfo({ lotteonFee });
+																setUserInfo({ ...user.userInfo, lotteonFee });
 															}}
 														/>
 
@@ -3987,18 +3801,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.lotteonNormalFee}
+															defaultValue={user.userInfo?.lotteonNormalFee}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[롯데온(일반) 수수료] 숫자만 입력할 수 있습니다.');
+
 																const lotteonNormalFee = parseFloat(e.target.value);
 
-																if (isNaN(lotteonNormalFee)) {
-																	alert('[롯데온(일반) 수수료] 숫자만 입력할 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ lotteonNormalFee });
-																common.setUserInfo({ ...common.user.userInfo, lotteonNormalFee });
+																await testUserInfo({ lotteonNormalFee });
+																setUserInfo({ ...user.userInfo, lotteonNormalFee });
 															}}
 														/>
 
@@ -4056,18 +3867,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.tmonFee}
+															defaultValue={user.userInfo?.tmonFee}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[티몬 수수료] 숫자만 입력할 수 있습니다.');
+
 																const tmonFee = parseFloat(e.target.value);
 
-																if (isNaN(tmonFee)) {
-																	alert('[티몬 수수료] 숫자만 입력할 수 있습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ tmonFee });
-																common.setUserInfo({ ...common.user.userInfo, tmonFee });
+																await testUserInfo({ tmonFee });
+																setUserInfo({ ...user.userInfo, tmonFee });
 															}}
 														/>
 
@@ -4086,7 +3894,7 @@ export const Settings = observer(() => {
 									mb: 1,
 								}}
 							>
-								<Title dark={common.darkTheme}>스마트스토어 설정</Title>
+								<Title dark={darkTheme}>스마트스토어 설정</Title>
 
 								<Grid
 									container
@@ -4144,18 +3952,14 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.naverOriginCode ?? ''}
+															value={user.userInfo?.naverOriginCode ?? ''}
 															onChange={async (e) => {
 																const naverOriginCode = e.target.value;
 
-																if (!naverOriginCode) {
-																	alert('[원산지] 입력이 잘못되었습니다.');
+																if (!naverOriginCode) return alert('[원산지] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ naverOriginCode });
-																common.setUserInfo({ ...common.user.userInfo, naverOriginCode });
+																await testUserInfo({ naverOriginCode });
+																setUserInfo({ ...user.userInfo, naverOriginCode });
 															}}
 														>
 															<MenuItem value={'0200037'}>중국</MenuItem>
@@ -4223,18 +4027,14 @@ export const Settings = observer(() => {
 																	fontSize: 14,
 																},
 															}}
-															defaultValue={`${common.user.userInfo?.naverOrigin}`}
+															defaultValue={`${user.userInfo?.naverOrigin}`}
 															onBlur={async (e) => {
 																const naverOrigin = e.target.value;
 
-																if (!naverOrigin) {
-																	alert('[수입사] 입력이 잘못되었습니다.');
+																if (!naverOrigin) return alert('[수입사] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ naverOrigin });
-																common.setUserInfo({ ...common.user.userInfo, naverOrigin });
+																await testUserInfo({ naverOrigin });
+																setUserInfo({ ...user.userInfo, naverOrigin });
 															}}
 														/>
 													</Box>
@@ -4291,18 +4091,14 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.naverStoreOnly ?? ''}
+															value={user.userInfo?.naverStoreOnly ?? ''}
 															onChange={async (e) => {
 																const naverStoreOnly = e.target.value;
 
-																if (!naverStoreOnly) {
-																	alert('[스토어상품명] 입력이 잘못되었습니다.');
+																if (!naverStoreOnly) return alert('[스토어상품명] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ naverStoreOnly });
-																common.setUserInfo({ ...common.user.userInfo, naverStoreOnly });
+																await testUserInfo({ naverStoreOnly });
+																setUserInfo({ ...user.userInfo, naverStoreOnly });
 															}}
 														>
 															<MenuItem value={'Y'}>사용</MenuItem>
@@ -4371,18 +4167,14 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={`${common.user.userInfo?.naverAutoSearchTag}`}
+															value={`${user.userInfo?.naverAutoSearchTag}`}
 															onChange={async (e) => {
 																const naverAutoSearchTag = e.target.value;
 
-																if (!naverAutoSearchTag) {
-																	alert('[태그자동입력] 입력이 잘못되었습니다.');
+																if (!naverAutoSearchTag) return alert('[태그자동입력] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ naverAutoSearchTag });
-																common.setUserInfo({ ...common.user.userInfo, naverAutoSearchTag });
+																await testUserInfo({ naverAutoSearchTag });
+																setUserInfo({ ...user.userInfo, naverAutoSearchTag });
 															}}
 														>
 															<MenuItem value='Y'>사용</MenuItem>
@@ -4403,7 +4195,7 @@ export const Settings = observer(() => {
 									mb: 1,
 								}}
 							>
-								<Title dark={common.darkTheme}>쿠팡 설정</Title>
+								<Title dark={darkTheme}>쿠팡 설정</Title>
 
 								<Grid
 									container
@@ -4461,21 +4253,17 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={`${common.user.userInfo?.coupangDefaultOutbound}`}
+															value={`${user.userInfo?.coupangDefaultOutbound}`}
 															onChange={async (e) => {
 																const coupangDefaultOutbound = e.target.value;
 
-																if (!coupangDefaultOutbound) {
-																	alert('[기본출고지] 입력이 잘못되었습니다.');
+																if (!coupangDefaultOutbound) return alert('[기본출고지] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ coupangDefaultOutbound });
-																common.setUserInfo({ ...common.user.userInfo, coupangDefaultOutbound });
+																await testUserInfo({ coupangDefaultOutbound });
+																setUserInfo({ ...user.userInfo, coupangDefaultOutbound });
 															}}
 														>
-															{common.deliveryPolicy.coupangOutboundList?.map((v: any) => (
+															{deliveryPolicy.coupangOutboundList?.map((v: any) => (
 																<MenuItem value={`${v.outboundShippingPlaceCode}`}>
 																	[{v.shippingPlaceName}] {v.placeAddresses[0].returnAddress}{' '}
 																	{v.placeAddresses[0].returnAddressDetail}
@@ -4536,21 +4324,17 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={`${common.user.userInfo?.coupangDefaultInbound}`}
+															value={`${user.userInfo?.coupangDefaultInbound}`}
 															onChange={async (e) => {
 																const coupangDefaultInbound = e.target.value;
 
-																if (!coupangDefaultInbound) {
-																	alert('[기본반품지] 입력이 잘못되었습니다.');
+																if (!coupangDefaultInbound) return alert('[기본반품지] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ coupangDefaultInbound });
-																common.setUserInfo({ ...common.user.userInfo, coupangDefaultInbound });
+																await testUserInfo({ coupangDefaultInbound });
+																setUserInfo({ ...user.userInfo, coupangDefaultInbound });
 															}}
 														>
-															{common.deliveryPolicy.coupangInboundList?.map((v: any) => (
+															{deliveryPolicy.coupangInboundList?.map((v: any) => (
 																<MenuItem value={`${v.returnCenterCode}`}>
 																	[{v.shippingPlaceName}] {v.placeAddresses[0].returnAddress}{' '}
 																	{v.placeAddresses[0].returnAddressDetail}
@@ -4622,18 +4406,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.coupangOutboundShippingTimeDay}
+															defaultValue={user.userInfo?.coupangOutboundShippingTimeDay}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[배송출고소요기간] 입력이 잘못되었습니다.');
+
 																const coupangOutboundShippingTimeDay = parseInt(e.target.value);
 
-																if (isNaN(coupangOutboundShippingTimeDay)) {
-																	alert('[배송출고소요기간] 입력이 잘못되었습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ coupangOutboundShippingTimeDay });
-																common.setUserInfo({ ...common.user.userInfo, coupangOutboundShippingTimeDay });
+																await testUserInfo({ coupangOutboundShippingTimeDay });
+																setUserInfo({ ...user.userInfo, coupangOutboundShippingTimeDay });
 															}}
 														/>
 
@@ -4696,18 +4477,14 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={common.user.userInfo?.coupangUnionDeliveryType ?? ''}
+															value={user.userInfo?.coupangUnionDeliveryType ?? ''}
 															onChange={async (e) => {
 																const coupangUnionDeliveryType = e.target.value;
 
-																if (!coupangUnionDeliveryType) {
-																	alert('[묶음배송] 입력이 잘못되었습니다.');
+																if (!coupangUnionDeliveryType) return alert('[묶음배송] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ coupangUnionDeliveryType });
-																common.setUserInfo({ ...common.user.userInfo, coupangUnionDeliveryType });
+																await testUserInfo({ coupangUnionDeliveryType });
+																setUserInfo({ ...user.userInfo, coupangUnionDeliveryType });
 															}}
 														>
 															<MenuItem value={'Y'}>사용</MenuItem>
@@ -4787,18 +4564,15 @@ export const Settings = observer(() => {
 																	textAlign: 'right',
 																},
 															}}
-															defaultValue={common.user.userInfo?.coupangMaximumBuyForPerson}
+															defaultValue={user.userInfo?.coupangMaximumBuyForPerson}
 															onBlur={async (e) => {
+																if (isNaN(Number(e.target.value)))
+																	return alert('[1인당최대구매수량] 입력이 잘못되었습니다.');
+
 																const coupangMaximumBuyForPerson = parseInt(e.target.value);
 
-																if (isNaN(coupangMaximumBuyForPerson)) {
-																	alert('[1인당최대구매수량] 입력이 잘못되었습니다.');
-
-																	return;
-																}
-
-																await common.testUserInfo({ coupangMaximumBuyForPerson });
-																common.setUserInfo({ ...common.user.userInfo, coupangMaximumBuyForPerson });
+																await testUserInfo({ coupangMaximumBuyForPerson });
+																setUserInfo({ ...user.userInfo, coupangMaximumBuyForPerson });
 															}}
 														/>
 
@@ -4870,7 +4644,7 @@ export const Settings = observer(() => {
                                 width: "100%",
                                 fontSize: 14,
                               }}
-                              value={common.user.userInfo?.coupangImageOpt ?? ""}
+                              value={user.userInfo?.coupangImageOpt ?? ""}
                               onChange={async (e) => {
                                 const coupangImageOpt = e.target.value;
 
@@ -4880,8 +4654,8 @@ export const Settings = observer(() => {
                                   return;
                                 }
 
-                                await common.testUserInfo({ coupangImageOpt });
-                                common.setUserInfo({ ...common.user.userInfo, coupangImageOpt });
+                                await testUserInfo({ coupangImageOpt });
+                                setUserInfo({ ...user.userInfo, coupangImageOpt });
                               }}
                             >
                               <MenuItem value={"Y"}>사용</MenuItem>
@@ -4901,7 +4675,7 @@ export const Settings = observer(() => {
 									mb: 1,
 								}}
 							>
-								<Title dark={common.darkTheme}>11번가 설정</Title>
+								<Title dark={darkTheme}>11번가 설정</Title>
 
 								<Grid
 									container
@@ -4959,21 +4733,17 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={`${common.user.userInfo?.streetDefaultOutbound}`}
+															value={`${user.userInfo?.streetDefaultOutbound}`}
 															onChange={async (e) => {
 																const streetDefaultOutbound = e.target.value;
 
-																if (!streetDefaultOutbound) {
-																	alert('[기본출고지(글로벌)] 입력이 잘못되었습니다.');
+																if (!streetDefaultOutbound) return alert('[기본출고지(글로벌)] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ streetDefaultOutbound });
-																common.setUserInfo({ ...common.user.userInfo, streetDefaultOutbound });
+																await testUserInfo({ streetDefaultOutbound });
+																setUserInfo({ ...user.userInfo, streetDefaultOutbound });
 															}}
 														>
-															{common.deliveryPolicy.streetGlobalOutboundList?.map((v: any) => (
+															{deliveryPolicy.streetGlobalOutboundList?.map((v: any) => (
 																<MenuItem value={`${v.addrSeq[0]}`}>
 																	[{v.addrNm[0]}] {v.addr[0]}
 																</MenuItem>
@@ -5033,21 +4803,17 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={`${common.user.userInfo?.streetDefaultInbound}`}
+															value={`${user.userInfo?.streetDefaultInbound}`}
 															onChange={async (e) => {
 																const streetDefaultInbound = e.target.value;
 
-																if (!streetDefaultInbound) {
-																	alert('[기본반품지(글로벌)] 입력이 잘못되었습니다.');
+																if (!streetDefaultInbound) return alert('[기본반품지(글로벌)] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ streetDefaultInbound });
-																common.setUserInfo({ ...common.user.userInfo, streetDefaultInbound });
+																await testUserInfo({ streetDefaultInbound });
+																setUserInfo({ ...user.userInfo, streetDefaultInbound });
 															}}
 														>
-															{common.deliveryPolicy.streetGlobalInboundList?.map((v: any) => (
+															{deliveryPolicy.streetGlobalInboundList?.map((v: any) => (
 																<MenuItem value={`${v.addrSeq[0]}`}>
 																	[{v.addrNm[0]}] {v.addr[0]}
 																</MenuItem>
@@ -5107,21 +4873,17 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={`${common.user.userInfo?.streetNormalOutbound}`}
+															value={`${user.userInfo?.streetNormalOutbound}`}
 															onChange={async (e) => {
 																const streetNormalOutbound = e.target.value;
 
-																if (!streetNormalOutbound) {
-																	alert('[기본출고지(일반)] 입력이 잘못되었습니다.');
+																if (!streetNormalOutbound) return alert('[기본출고지(일반)] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ streetNormalOutbound });
-																common.setUserInfo({ ...common.user.userInfo, streetNormalOutbound });
+																await testUserInfo({ streetNormalOutbound });
+																setUserInfo({ ...user.userInfo, streetNormalOutbound });
 															}}
 														>
-															{common.deliveryPolicy.streetNormalOutboundList?.map((v: any) => (
+															{deliveryPolicy.streetNormalOutboundList?.map((v: any) => (
 																<MenuItem value={`${v.addrSeq[0]}`}>
 																	[{v.addrNm[0]}] {v.addr[0]}
 																</MenuItem>
@@ -5181,21 +4943,17 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={`${common.user.userInfo?.streetNormalInbound}`}
+															value={`${user.userInfo?.streetNormalInbound}`}
 															onChange={async (e) => {
 																const streetNormalInbound = e.target.value;
 
-																if (!streetNormalInbound) {
-																	alert('[기본반품지(일반)] 입력이 잘못되었습니다.');
+																if (!streetNormalInbound) return alert('[기본반품지(일반)] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ streetNormalInbound });
-																common.setUserInfo({ ...common.user.userInfo, streetNormalInbound });
+																await testUserInfo({ streetNormalInbound });
+																setUserInfo({ ...user.userInfo, streetNormalInbound });
 															}}
 														>
-															{common.deliveryPolicy.streetNormalInboundList?.map((v: any) => (
+															{deliveryPolicy.streetNormalInboundList?.map((v: any) => (
 																<MenuItem value={`${v.addrSeq[0]}`}>
 																	[{v.addrNm[0]}] {v.addr[0]}
 																</MenuItem>
@@ -5210,7 +4968,7 @@ export const Settings = observer(() => {
 							</Paper>
 
 							<Paper variant='outlined'>
-								<Title dark={common.darkTheme}>롯데온 설정</Title>
+								<Title dark={darkTheme}>롯데온 설정</Title>
 
 								<Grid
 									container
@@ -5277,18 +5035,14 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={`${common.user.userInfo?.lotteonSellerType}`}
+															value={`${user.userInfo?.lotteonSellerType}`}
 															onChange={async (e) => {
 																const lotteonSellerType = e.target.value;
 
-																if (!lotteonSellerType) {
-																	alert('[기본반품지(일반)] 입력이 잘못되었습니다.');
+																if (!lotteonSellerType) return alert('[기본반품지(일반)] 입력이 잘못되었습니다.');
 
-																	return;
-																}
-
-																await common.testUserInfo({ lotteonSellerType });
-																common.setUserInfo({ ...common.user.userInfo, lotteonSellerType });
+																await testUserInfo({ lotteonSellerType });
+																setUserInfo({ ...user.userInfo, lotteonSellerType });
 															}}
 														>
 															<MenuItem value={'G'}>글로벌</MenuItem>

@@ -105,6 +105,7 @@ export const TabDescriptions = observer((props: any) => {
 									}}
 								>
 									<Button
+										//@ts-ignore
 										disabled={product.itemInfo.items.find((v) => v.translate)}
 										disableElevation
 										variant='contained'
