@@ -104,9 +104,7 @@ export const TabPrice = observer((props: Props) => {
 									color='info'
 									checked={v.isActive}
 									onChange={(e) => {
-										const isActive = e.target.checked;
-
-										setProductOption(common, { ...v, isActive }, props.index, x.index, true);
+										setProductOption(common, { ...v, isActive: e.target.checked }, props.index, x.index, true);
 										updateManyProductOption(props.index, [v.id]);
 									}}
 								/>
@@ -129,9 +127,9 @@ export const TabPrice = observer((props: Props) => {
 									borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
 								}}
 							>
-								{props.item.productOptionName.map((w: any) => {
+								{props.item.productOptionName.map((w) => {
 									const matched = w.productOptionValue.find(
-										(x: any) =>
+										(x) =>
 											x.image &&
 											(x.id === v.optionValue1Id ||
 												x.id === v.optionValue2Id ||
@@ -149,13 +147,13 @@ export const TabPrice = observer((props: Props) => {
 												style={{
 													objectFit: 'contain',
 												}}
-												onClick={(e) => {
+												onClick={(e) =>
 													setImagePopOver({
 														element: e.target,
 														data: { src: matched.image },
 														open: true,
-													});
-												}}
+													})
+												}
 											/>
 										);
 								})}
@@ -314,16 +312,17 @@ export const TabPrice = observer((props: Props) => {
 										textAlign: 'right',
 									}}
 									value={v.defaultShippingFee}
-									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-										const input = e.target.value;
-
-										if (!input) return;
-										else if (isNaN(Number(input))) return alert('배대지배송비는 숫자만 입력 가능합니다.');
-
-										const defaultShippingFee = parseInt(input);
-
-										setProductOption(common, { ...v, defaultShippingFee }, props.index, x.index, false);
-									}}
+									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+										e.target.value
+											? setProductOption(
+													common,
+													{ ...v, defaultShippingFee: parseInt(e.target.value.replace(/[^0-9]/g, '')) },
+													props.index,
+													x.index,
+													false,
+											  )
+											: setProductOption(common, { ...v, defaultShippingFee: 0 }, props.index, x.index, false)
+									}
 									onBlur={(e: any) => updateManyProductOption(props.index, [v.id])}
 								/>
 							</TableCell>
@@ -373,19 +372,18 @@ export const TabPrice = observer((props: Props) => {
 										textAlign: 'right',
 									}}
 									value={v.price}
-									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-										const input = e.target.value;
-
-										if (!input) return;
-										else if (isNaN(Number(input))) return alert('옵션판매가는 숫자만 입력 가능합니다.');
-
-										const price = parseInt(input);
-
-										setProductOption(common, { ...v, price }, props.index, x.index, true);
-									}}
-									onBlur={(e: any) => {
-										updateManyProductOption(props.index, [v.id]);
-									}}
+									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+										e.target.value
+											? setProductOption(
+													common,
+													{ ...v, price: parseInt(e.target.value.replace(/[^0-9]/g, '')) },
+													props.index,
+													x.index,
+													true,
+											  )
+											: setProductOption(common, { ...v, price: 0 }, props.index, x.index, true)
+									}
+									onBlur={(e: any) => updateManyProductOption(props.index, [v.id])}
 								/>
 							</TableCell>
 
@@ -411,19 +409,18 @@ export const TabPrice = observer((props: Props) => {
 										textAlign: 'right',
 									}}
 									value={v.stock}
-									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-										const input = e.target.value;
-
-										if (!input) return;
-										else if (isNaN(Number(input))) return alert('재고수량은 숫자만 입력 가능합니다.');
-
-										const stock = parseInt(input);
-
-										setProductOption(common, { ...v, stock }, props.index, x.index, true);
-									}}
-									onBlur={(e: any) => {
-										updateManyProductOption(props.index, [v.id]);
-									}}
+									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+										e.target.value
+											? setProductOption(
+													common,
+													{ ...v, stock: parseInt(e.target.value.replace(/[^0-9]/g, '')) },
+													props.index,
+													x.index,
+													true,
+											  )
+											: setProductOption(common, { ...v, stock: 0 }, props.index, x.index, true)
+									}
+									onBlur={(e: any) => updateManyProductOption(props.index, [v.id])}
 								/>
 							</TableCell>
 
@@ -552,7 +549,7 @@ export const TabPrice = observer((props: Props) => {
 								}}
 							></TableCell>
 
-							<TableCell
+							{/* <TableCell
 								width={120}
 								style={{
 									background: darkTheme ? '#303030' : '#ebebeb',
@@ -562,7 +559,7 @@ export const TabPrice = observer((props: Props) => {
 								}}
 							>
 								반품배송비
-							</TableCell>
+							</TableCell> */}
 
 							<TableCell
 								width={120}
@@ -662,12 +659,19 @@ export const TabPrice = observer((props: Props) => {
 									disabled={props.item.activeTaobaoProduct.shopName === 'express'}
 									value={props.item.cnyRate}
 									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-										setProductOptionPrice(
-											{
-												cnyRate: parseFloat(e.target.value),
-											},
-											props.index,
-										)
+										e.target.value
+											? setProductOptionPrice(
+													{
+														cnyRate: parseFloat(e.target.value.replace(/[^0-9\.]/g, '').replace(/(\..*)\./g, '$1')),
+													},
+													props.index,
+											  )
+											: setProductOptionPrice(
+													{
+														cnyRate: 0,
+													},
+													props.index,
+											  )
 									}
 									onBlur={(e: any) =>
 										updateProductOptionPrice(
@@ -727,12 +731,21 @@ export const TabPrice = observer((props: Props) => {
 										}}
 										value={props.item.localShippingFee}
 										onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-											setProductOptionPrice(
-												{
-													localShippingFee: parseFloat(e.target.value),
-												},
-												props.index,
-											)
+											e.target.value
+												? setProductOptionPrice(
+														{
+															localShippingFee: parseFloat(
+																e.target.value.replace(/[^0-9\.]/g, '').replace(/(\..*)\./g, '$1'),
+															),
+														},
+														props.index,
+												  )
+												: setProductOptionPrice(
+														{
+															localShippingFee: 0,
+														},
+														props.index,
+												  )
 										}
 										onBlur={(e: any) =>
 											updateProductOptionPrice(
@@ -763,12 +776,19 @@ export const TabPrice = observer((props: Props) => {
 									}}
 									value={props.item.marginRate}
 									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-										setProductOptionPrice(
-											{
-												marginRate: parseFloat(e.target.value),
-											},
-											props.index,
-										)
+										e.target.value
+											? setProductOptionPrice(
+													{
+														marginRate: parseFloat(e.target.value.replace(/[^0-9\.]/g, '').replace(/(\..*)\./g, '$1')),
+													},
+													props.index,
+											  )
+											: setProductOptionPrice(
+													{
+														marginRate: 0,
+													},
+													props.index,
+											  )
 									}
 									onBlur={(e: any) =>
 										updateProductOptionPrice(
@@ -821,37 +841,40 @@ export const TabPrice = observer((props: Props) => {
 							<TableCell sx={{ fontSize: 13, padding: '5px', textAlign: 'right' }}></TableCell>
 
 							{/* 반품배송비 인풋 */}
-							<TableCell sx={{ fontSize: 13, padding: '5px', textAlign: 'right' }}>
+							{/* <TableCell sx={{ fontSize: 13, padding: '5px', textAlign: 'right' }}>
 								<Input
 									color={props.item.edited.option ? 'warning' : 'info'}
-									// id={`product_row_price_${props.index}`}
+									id={`product_row_refundShippingFee_${props.index}`}
 									options={{
 										textAlign: 'right',
 									}}
 									value={props.item.refundShippingFee}
-									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-										if (isNaN(Number(e.target.value))) return alert('[반품배송비] 숫자만 입력하실 수 있습니다.');
-
-										setProductOptionPrice(
+									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+										e.target.value
+											? setProductOptionPrice(
+													{
+														refundShippingFee: parseInt(e.target.value.replace(/[^0-9]/g, '')),
+													},
+													props.index,
+											  )
+											: setProductOptionPrice(
+													{
+														refundShippingFee: 0,
+													},
+													props.index,
+											  )
+									}
+									onBlur={(e) =>
+										updateProductOptionPrice(
+											common,
 											{
 												refundShippingFee: parseInt(e.target.value),
 											},
 											props.index,
-										);
-									}}
-									onBlur={(e) => {
-										const refundShippingFee = parseInt(e.target.value);
-
-										updateProductOptionPrice(
-											common,
-											{
-												refundShippingFee,
-											},
-											props.index,
-										);
-									}}
+										)
+									}
 								/>
-							</TableCell>
+							</TableCell> */}
 
 							{/* 기본판매가 인풋 */}
 							<TableCell sx={{ fontSize: 13, padding: '5px', textAlign: 'right' }}>
@@ -863,14 +886,12 @@ export const TabPrice = observer((props: Props) => {
 									}}
 									disabled={props.item.productOption.length > 0}
 									value={props.item.price}
-									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-										if (isNaN(Number(e.target.value))) return alert('기본판매가는 숫자만 입력 가능합니다.');
-
-										const price = parseInt(e.target.value);
-
-										setProductPrice(price, props.index);
-									}}
-									onBlur={(e: any) => updateProductPrice(props.index)}
+									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+										e.target.value
+											? setProductPrice(parseInt(e.target.value.replace(/[^0-9]/g, '')), props.index)
+											: setProductPrice(0, props.index)
+									}
+									onBlur={(e) => updateProductPrice(props.index)}
 								/>
 							</TableCell>
 
@@ -883,27 +904,30 @@ export const TabPrice = observer((props: Props) => {
 										textAlign: 'right',
 									}}
 									value={props.item.shippingFee}
-									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-										if (isNaN(Number(e.target.value))) return alert('유료배송비는 숫자만 입력 가능합니다.');
-
-										setProductOptionPrice(
+									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+										e.target.value
+											? setProductOptionPrice(
+													{
+														shippingFee: parseInt(e.target.value.replace(/[^0-9]/g, '')),
+													},
+													props.index,
+											  )
+											: setProductOptionPrice(
+													{
+														shippingFee: 0,
+													},
+													props.index,
+											  )
+									}
+									onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) =>
+										updateProductOptionPrice(
+											common,
 											{
 												shippingFee: parseInt(e.target.value),
 											},
 											props.index,
-										);
-									}}
-									onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
-										const shippingFee = parseInt(e.target.value);
-
-										updateProductOptionPrice(
-											common,
-											{
-												shippingFee,
-											},
-											props.index,
-										);
-									}}
+										)
+									}
 								/>
 							</TableCell>
 
@@ -999,11 +1023,10 @@ export const TabPrice = observer((props: Props) => {
 								}}
 								onClick={() => {
 									const input = prompt('기본판매가대비 최대 허용치를 설정해주세요. (%)');
-									const active = input ? parseInt(input) : null;
+									if (!input) return;
+									else if (isNaN(Number(input))) return alert('숫자만 입력해주세요');
 
-									if (!active || isNaN(active)) return;
-
-									calcProductOptionPrice(active, 'setActive', props.index, null, null);
+									calcProductOptionPrice(parseInt(input), 'setActive', props.index, null, null);
 								}}
 							>
 								옵션가 범위설정

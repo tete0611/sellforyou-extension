@@ -47,16 +47,12 @@ const addBulkInfo = async (source: any, sender: any, isExcel: boolean) => {
 	bulkInfo.push({
 		current: 0,
 		currentPage: 1,
-
 		inputs: source.data,
-
 		isBulk: true,
 		isCancel: false,
 		isComplete: false,
 		isExcel,
-
 		results: [],
-
 		sender,
 	});
 
@@ -193,25 +189,21 @@ const addToInventory = async (sender: any, origin: any) => {
 
 		case 'amazon-us': {
 			textdict = await papagoTranslation(textdict, 'en', 'ko', null);
-
 			break;
 		}
 
 		case 'amazon-jp': {
 			textdict = await papagoTranslation(textdict, 'ja', 'ko', null);
-
 			break;
 		}
 
 		case 'amazon-de': {
 			textdict = await papagoTranslation(textdict, 'de', 'ko', null);
-
 			break;
 		}
 
 		default: {
 			textdict = await papagoTranslation(textdict, 'zh-CN', 'ko', null);
-
 			break;
 		}
 	}
@@ -397,9 +389,7 @@ const bulkNext = async (sender) => {
 		});
 
 		// 상품목록 리프레쉬
-		tabs.map((v: any) => {
-			sendTabMessage(v.id, { action: 'refresh' });
-		});
+		tabs.map((v: any) => sendTabMessage(v.id, { action: 'refresh' }));
 
 		// 상품 수집 완료 알림
 		sendTabMessage(bulk.sender.tab.id, {

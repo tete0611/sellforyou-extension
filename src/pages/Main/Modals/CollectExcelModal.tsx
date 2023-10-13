@@ -66,9 +66,9 @@ export const CollectExcelModal = observer(() => {
 										width: '100%',
 										height: 30,
 									}}
-									onClick={() => {
-										window.open(`${process.env.SELLFORYOU_MINIO_HTTPS}/data/셀포유 상품단위 대량등록 양식.xlsx`);
-									}}
+									onClick={() =>
+										window.open(`${process.env.SELLFORYOU_MINIO_HTTPS}/data/셀포유 상품단위 대량등록 양식.xlsx`)
+									}
 								>
 									XLSX 양식
 								</Button>
@@ -104,7 +104,7 @@ export const CollectExcelModal = observer(() => {
 											let workbook = XLSX.read(fileData, { type: 'binary' });
 											let excelData = workbook.SheetNames.map((name: any) => {
 												return XLSX.utils.sheet_to_json(workbook.Sheets[name], {
-													header: ['url', 'productName', 'productTags'],
+													header: ['url', 'productName', 'productTags', 'keywardMemo'],
 													defval: '',
 													range: 2,
 												});
@@ -159,9 +159,9 @@ export const CollectExcelModal = observer(() => {
 										width: '100%',
 										height: 30,
 									}}
-									onClick={() => {
-										window.open(`${process.env.SELLFORYOU_MINIO_HTTPS}/data/셀포유 페이지단위 대량등록 양식.xlsx`);
-									}}
+									onClick={() =>
+										window.open(`${process.env.SELLFORYOU_MINIO_HTTPS}/data/셀포유 페이지단위 대량등록 양식.xlsx`)
+									}
 								>
 									XLSX 양식
 								</Button>
@@ -195,13 +195,13 @@ export const CollectExcelModal = observer(() => {
 											const fileData = await readFileBinary(fileList[0]);
 
 											let workbook = XLSX.read(fileData, { type: 'binary' });
-											let excelData = workbook.SheetNames.map((name: any) => {
-												return XLSX.utils.sheet_to_json(workbook.Sheets[name], {
+											let excelData = workbook.SheetNames.map((name: any) =>
+												XLSX.utils.sheet_to_json(workbook.Sheets[name], {
 													header: ['url'],
 													defval: '',
 													range: 2,
-												});
-											})[0];
+												}),
+											)[0];
 
 											const tab = await createTabCompletely({ active: false, url: 'https://www.google.com/' }, 10);
 

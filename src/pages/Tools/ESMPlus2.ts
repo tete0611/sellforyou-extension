@@ -5,19 +5,8 @@ import { product } from '../../containers/stores/product';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import QUERIES from '../Main/GraphQL/Queries';
 import gql from '../Main/GraphQL/Requests';
-import { createTabCompletely, sendTabMessage } from './ChromeAsync';
 
-import {
-	byteSlice,
-	extractContent,
-	getClock,
-	getClockOffset,
-	getStoreTraceCodeV1,
-	notificationByEveryTime,
-	sendCallback,
-	transformContent,
-	urlEncodedObject,
-} from './Common';
+import { byteSlice, getStoreTraceCodeV1, notificationByEveryTime, sendCallback, transformContent } from './Common';
 
 // 지마켓/옥션 2.0 상품등록
 export async function uploadESMPlus2(productStore: product, commonStore: common, data: any) {
@@ -101,7 +90,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 				);
 				let delivery_policy_json = await delivery_policy_resp.json();
 
-				delivery_policy_code = delivery_policy_json[0].TransPolicyNo.toString();
+				delivery_policy_json = delivery_policy_json[0].TransPolicyNo.toString();
 
 				break;
 			}
@@ -878,7 +867,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 						IsGMKTEnvironmentFriendlyCertType: false, //esm2.0추가
 						IsIACEnvironmentFriendlyCertType: false, //esm2.0추가
 						//원산지항목추가
-
 						Price: {
 							InputType: '1',
 							GoodsPrice: market_item.sprice.toString(),
@@ -980,36 +968,19 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 								Url: market_item.img1,
 								BigImage: 'false',
 							},
-
-							//   ListImage: {//esm2.0제거
-							//     Operation: "1",
-							//     Url: market_item.img1,
-							//     BigImage: "false",
-							//   },
-
 							FixedImage: {
 								Operation: '1',
 								Url: market_item.img1,
 								BigImage: 'false',
 							},
-
-							//   ExpandedImage: {//esm2.0제거
-							//     Operation: "1",
-							//     Url: market_item.img1,
-							//     BigImage: "false",
-							//   },
-
 							AdditionalImagesSite: '0',
 							AdditionalImagesStr: JSON.stringify(image_list),
 						},
-
 						DescriptionTypeSpecified: true,
-
 						NewDescription: {
 							InputType: '1',
 							Text: desc,
 						},
-
 						ItemCode: market_code,
 						CustCategoryNo: '0', //esm2.0추가
 						CustCategory: null, //esm2.0추가
@@ -1075,35 +1046,36 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 							IsCustomerNameView: false,
 						},
 						DeliveryInfo: {
-							CommonDeliveryUseYn: true,
-							InvalidDeliveryInfo: false,
-							CommonDeliveryWayOPTSEL: '1',
-							GmktDeliveryWayOPTSEL: '0',
-							IsCommonGmktUnifyDelivery: false,
-							GmktDeliveryCOMP: '100000244',
-							IacDeliveryCOMP: '10034',
-							IsCommonVisitTake: false,
-							IsCommonQuickService: false,
-							IsCommonIACPost: false,
-							CommonIACPostType: '0',
-							CommonIACPostPaidPrice: '0',
-							IsGmktVisitTake: false,
-							IsGmktQuickService: false,
-							IsGmktTodayDEPAR: false,
-							IsGmktTodayDEPARAgree: false,
-							IsGmktVisitReceiptTier: false,
-							MountBranchGroupSeq: '0',
-							CommonVisitTakeType: '0',
-							CommonVisitTakePriceDcAmnt: '0',
-							CommonVisitTakeFreeGiftName: null,
-							CommonVisitTakeADDRNo: null,
-							CommonQuickServiceCOMPName: null,
-							CommonQuickServicePhone: null,
-							CommonQuickServiceDeliveryEnableRegionNo: null,
-							ShipmentPlaceNo: delivery_shipping_code.toString(),
-							DeliveryFeeType: '2',
-							EachDeliveryFeeType: market_item.deliv_fee > 0 ? '2' : '1',
-							EachDeliveryFeeQTYEachGradeType: null,
+							CommonDeliveryUseYn: true, // 1
+							InvalidDeliveryInfo: false, // 1
+							CommonDeliveryWayOPTSEL: '0', // 1
+							GmktDeliveryWayOPTSEL: '1', // 1
+							IsCommonGmktUnifyDelivery: false, // 1
+							GmktDeliveryCOMP: '100000012', // 1
+							IacDeliveryCOMP: null, // 1
+							IsCommonVisitTake: false, // 1
+							IsCommonQuickService: false, // 1
+							IsCommonIACPost: false, // 1
+							CommonIACPostType: '0', // 1
+							CommonIACPostPaidPrice: '0', // 1
+							IsGmktVisitTake: false, // 1
+							IsGmktQuickService: false, // 1
+							IsGmktTodayDEPAR: false, // 1
+							IsGmktTodayDEPARAgree: false, // 1
+							IsGmktVisitReceiptTier: false, // 1
+							MountBranchGroupSeq: '0', // 1
+							CommonVisitTakeType: '0', // 1
+							CommonVisitTakePriceDcAmnt: '0', // 1
+							CommonVisitTakeFreeGiftName: null, // 1
+							CommonVisitTakeADDRNo: null, // 1
+							CommonQuickServiceCOMPName: null, // 1
+							CommonQuickServicePhone: null, // 1
+							CommonQuickServiceDeliveryEnableRegionNo: null, // 1
+							ShipmentPlaceNo: delivery_shipping_code.toString(), // 1
+							DeliveryFeeType: '2', // 0 -> 1임
+							EachDeliveryFeeType: market_item.deliv_fee > 0 ? '2' : '1', // 1 :null로 같음
+							EachDeliveryFeeQTYEachGradeType: null, // 1
+							// 맞겟지 뭐
 							DeliveryFeeTemplateJSON:
 								market_item.deliv_fee > 0
 									? JSON.stringify({
@@ -1128,23 +1100,23 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 											ShipmentPlaceNo: delivery_shipping_code,
 											DetailList: [],
 									  }),
-							EachDeliveryFeePayYn: '2',
-							IsCommonGmktEachADDR: false,
-							ReturnExchangeADDRNo: delivery_return_code,
-							OldReturnExchangeADDR: null,
-							OldReturnExchangeADDRTel: null,
-							OldReturnExchangeSetupDeliveryCOMPName: null,
-							OldReturnExchangeDeliveryFeeStr: null,
-							ExchangeADDRNo: '',
-							ReturnExchangeSetupDeliveryCOMP: null,
-							ReturnExchangeSetupDeliveryCOMPName: null,
-							ReturnExchangeDeliveryFee: '0',
-							ReturnExchangeDeliveryFeeStr: commonStore.user.userInfo.refundShippingFee.toString(),
-							IacTransPolicyNo: delivery_policy_code,
-							GmktTransPolicyNo: delivery_policy_code,
-							BackwoodsDeliveryYn: null,
-							IsTplConvertible: false,
-							IsGmktIACPost: false,
+							EachDeliveryFeePayYn: '2', // null로 같음
+							IsCommonGmktEachADDR: false, // 1
+							ReturnExchangeADDRNo: delivery_return_code, // 1
+							OldReturnExchangeADDR: null, // 1
+							OldReturnExchangeADDRTel: null, // 1
+							OldReturnExchangeSetupDeliveryCOMPName: null, // 1
+							OldReturnExchangeDeliveryFeeStr: null, // 1
+							ExchangeADDRNo: '', // 1
+							ReturnExchangeSetupDeliveryCOMP: null, // 1
+							ReturnExchangeSetupDeliveryCOMPName: null, // 1
+							ReturnExchangeDeliveryFee: '0', // 1
+							ReturnExchangeDeliveryFeeStr: commonStore.user.userInfo.refundShippingFee.toString(), // 1
+							IacTransPolicyNo: delivery_policy_code, //  1
+							GmktTransPolicyNo: delivery_policy_code, // 1
+							BackwoodsDeliveryYn: null, // 1 : Y로같음
+							IsTplConvertible: false, // 1
+							IsGmktIACPost: false, // 1
 						},
 
 						IsAdultProduct: 'False',
@@ -1220,10 +1192,8 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 								ChangeType: '0',
 								SafeCertDetailInfoList: [],
 							},
-
 							IntegrateSafeCert: {
 								ItemNo: null,
-
 								IntegrateSafeCertGroupList: [
 									{
 										SafeCertGroupNo: '1',
@@ -1240,7 +1210,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 								],
 							},
 						},
-
 						CertificationNoGMKT: '', //esm2.0추가
 						LicenseSeqGMKT: null, //esm2.0추가
 						OfficialNotice: sillResult,
@@ -1256,8 +1225,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 						IsGift: true, //esm2.0추가
 						ConsultingDetailList: [], //esm2.0추가
 					},
-
-					//
 					SYIStep3: {
 						G9RegisterCommand: '0',
 						IsG9Goods: false,
@@ -1681,6 +1648,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 							...test_body,
 						},
 					};
+
 					// 상품 등록 API
 					let test_resp = await fetch('https://www.esmplus.com/Sell/SingleGoods/Save', {
 						headers: {
@@ -1854,9 +1822,7 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 					`https://www.esmplus.com/SELL/SYI/GetTransPolicyList?siteId=2&sellerId=${esmplusGmarketId}`,
 				);
 				let delivery_policy_json = await delivery_policy_resp.json();
-
 				delivery_policy_code = delivery_policy_json[0].TransPolicyNo.toString();
-
 				break;
 			}
 
@@ -2717,7 +2683,7 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 								CommonDeliveryWayOPTSEL: '1',
 								GmktDeliveryWayOPTSEL: '1',
 								IsCommonGmktUnifyDelivery: false,
-								GmktDeliveryCOMP: data.DShopInfo.site_code === 'A522' ? null : '100000244',
+								GmktDeliveryCOMP: data.DShopInfo.site_code === 'A522' ? null : '100000012',
 								IacDeliveryCOMP: '10034',
 								IsCommonVisitTake: false,
 								IsCommonQuickService: false,
@@ -3560,11 +3526,11 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 							DeliveryInfo: {
 								CommonDeliveryUseYn: true,
 								InvalidDeliveryInfo: false,
-								CommonDeliveryWayOPTSEL: '1',
-								GmktDeliveryWayOPTSEL: '0',
+								CommonDeliveryWayOPTSEL: '0', // 2023-10-10변경
+								GmktDeliveryWayOPTSEL: '1', // 2023-10-10변경
 								IsCommonGmktUnifyDelivery: false,
-								GmktDeliveryCOMP: '100000244',
-								IacDeliveryCOMP: '10034',
+								GmktDeliveryCOMP: '100000012', // 2023-10-10변경
+								IacDeliveryCOMP: null, // 2023-10-10변경
 								IsCommonVisitTake: false,
 								IsCommonQuickService: false,
 								IsCommonIACPost: false,
@@ -3623,7 +3589,7 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 								ReturnExchangeSetupDeliveryCOMPName: null,
 								ReturnExchangeDeliveryFee: '0',
 								ReturnExchangeDeliveryFeeStr: commonStore.user.userInfo.refundShippingFee.toString(),
-								IacTransPolicyNo: delivery_policy_code,
+								IacTransPolicyNo: '0', // 2023-10-10변경
 								GmktTransPolicyNo: delivery_policy_code,
 								BackwoodsDeliveryYn: null,
 								IsTplConvertible: false,

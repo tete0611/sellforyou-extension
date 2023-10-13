@@ -1057,10 +1057,8 @@ const resultDetails = async (data: any) => {
 
 	if (!paper) {
 		paper = document.createElement('div');
-
 		paper.id = 'sfyPaper';
 		paper.className = 'SELLFORYOU-INFORM';
-
 		document.documentElement.appendChild(paper);
 	}
 
