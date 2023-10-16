@@ -1,11 +1,9 @@
 // 지마켓/옥션 자체개발 API
-
 import { common } from '../../containers/stores/common';
 import { product } from '../../containers/stores/product';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import QUERIES from '../Main/GraphQL/Queries';
 import gql from '../Main/GraphQL/Requests';
-
 import { byteSlice, getStoreTraceCodeV1, notificationByEveryTime, sendCallback, transformContent } from './Common';
 
 // 지마켓/옥션 2.0 상품등록
@@ -24,7 +22,8 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 
 		let upload_type: any = [];
 
-		let delivery_policy_code = '0';
+		let delivery_policy_code_gmk = '0';
+		let delivery_policy_code_iac = '0';
 
 		let gg_text = null;
 
@@ -48,6 +47,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 
 		// 지마켓2.0/옥션2.0 구분
 		switch (data.DShopInfo.site_code) {
+			/** 지마켓 */
 			case 'A523': {
 				let user_g_resp = await fetch('https://www.esmplus.com/Home/HomeSellerActivityBalanceGmktData?sellerid=', {
 					body: null,
@@ -90,11 +90,15 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 				);
 				let delivery_policy_json = await delivery_policy_resp.json();
 
-				delivery_policy_json = delivery_policy_json[0].TransPolicyNo.toString();
+				/** 발송정책변경 (23년10월경) */
+				delivery_policy_json.forEach((v) => {
+					if (v.DefaultIs) delivery_policy_code_gmk = v.TransPolicyNo.toString();
+				});
 
 				break;
 			}
 
+			/** 옥션 */
 			case 'A522': {
 				let user_a_resp = await fetch('https://www.esmplus.com/Home/HomeSellerActivityBalanceIacData?sellerid=', {
 					body: null,
@@ -137,7 +141,10 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 				);
 				let delivery_policy_json = await delivery_policy_resp.json();
 
-				delivery_policy_code = delivery_policy_json[0].TransPolicyNo.toString();
+				/** 발송정책변경 (23년10월경) */
+				delivery_policy_json.forEach((v) => {
+					if (v.DefaultIs) delivery_policy_code_iac = v.TransPolicyNo.toString();
+				});
 
 				break;
 			}
@@ -1046,12 +1053,14 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 							IsCustomerNameView: false,
 						},
 						DeliveryInfo: {
+							// BundleDeliveryTempNo: '13864417',
+							// BundleDeliveryYNType: '1',
 							CommonDeliveryUseYn: true, // 1
 							InvalidDeliveryInfo: false, // 1
 							CommonDeliveryWayOPTSEL: '0', // 1
 							GmktDeliveryWayOPTSEL: '1', // 1
 							IsCommonGmktUnifyDelivery: false, // 1
-							GmktDeliveryCOMP: '100000012', // 1
+							GmktDeliveryCOMP: '10034', // 1
 							IacDeliveryCOMP: null, // 1
 							IsCommonVisitTake: false, // 1
 							IsCommonQuickService: false, // 1
@@ -1112,9 +1121,9 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 							ReturnExchangeSetupDeliveryCOMPName: null, // 1
 							ReturnExchangeDeliveryFee: '0', // 1
 							ReturnExchangeDeliveryFeeStr: commonStore.user.userInfo.refundShippingFee.toString(), // 1
-							IacTransPolicyNo: delivery_policy_code, //  1
-							GmktTransPolicyNo: delivery_policy_code, // 1
-							BackwoodsDeliveryYn: null, // 1 : Y로같음
+							IacTransPolicyNo: delivery_policy_code_iac, //  1
+							GmktTransPolicyNo: delivery_policy_code_gmk, // 1
+							BackwoodsDeliveryYn: 'Y', // 1 : Y로같음
 							IsTplConvertible: false, // 1
 							IsGmktIACPost: false, // 1
 						},
@@ -1649,6 +1658,10 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 						},
 					};
 
+					// console.log('최종 제이슨');
+					// console.log({ product_body });
+					// return false;
+
 					// 상품 등록 API
 					let test_resp = await fetch('https://www.esmplus.com/Sell/SingleGoods/Save', {
 						headers: {
@@ -1759,7 +1772,8 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 
 		let upload_type: any = [];
 
-		let delivery_policy_code = '0';
+		let delivery_policy_code_gmk = '0';
+		let delivery_policy_code_iac = '0';
 
 		let gg_text = null;
 
@@ -1781,6 +1795,7 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 		let gg_json = JSON.parse(gg_text);
 
 		switch (data.DShopInfo.site_code) {
+			/** 지마켓 */
 			case 'A523': {
 				let user_g_resp = await fetch('https://www.esmplus.com/Home/HomeSellerActivityBalanceGmktData?sellerid=', {
 					body: null,
@@ -1822,10 +1837,15 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 					`https://www.esmplus.com/SELL/SYI/GetTransPolicyList?siteId=2&sellerId=${esmplusGmarketId}`,
 				);
 				let delivery_policy_json = await delivery_policy_resp.json();
-				delivery_policy_code = delivery_policy_json[0].TransPolicyNo.toString();
+
+				delivery_policy_json.forEach((v) => {
+					if (v.DefaultIs) delivery_policy_code_gmk = v.TransPolicyNo.toString();
+				});
+
 				break;
 			}
 
+			/** 옥션 */
 			case 'A522': {
 				let user_a_resp = await fetch('https://www.esmplus.com/Home/HomeSellerActivityBalanceIacData?sellerid=', {
 					body: null,
@@ -1868,7 +1888,9 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 				);
 				let delivery_policy_json = await delivery_policy_resp.json();
 
-				delivery_policy_code = delivery_policy_json[0].TransPolicyNo.toString();
+				delivery_policy_json.forEach((v) => {
+					if (v.DefaultIs) delivery_policy_code_iac = v.TransPolicyNo.toString();
+				});
 
 				break;
 			}
@@ -2745,8 +2767,8 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 								ReturnExchangeSetupDeliveryCOMPName: null,
 								ReturnExchangeDeliveryFee: '0',
 								ReturnExchangeDeliveryFeeStr: commonStore.user.userInfo.refundShippingFee.toString(),
-								IacTransPolicyNo: delivery_policy_code,
-								GmktTransPolicyNo: delivery_policy_code,
+								IacTransPolicyNo: delivery_policy_code_iac,
+								GmktTransPolicyNo: delivery_policy_code_gmk,
 								BackwoodsDeliveryYn: 'Y',
 								IsTplConvertible: false,
 								IsGmktIACPost: false,
@@ -3589,8 +3611,8 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 								ReturnExchangeSetupDeliveryCOMPName: null,
 								ReturnExchangeDeliveryFee: '0',
 								ReturnExchangeDeliveryFeeStr: commonStore.user.userInfo.refundShippingFee.toString(),
-								IacTransPolicyNo: '0', // 2023-10-10변경
-								GmktTransPolicyNo: delivery_policy_code,
+								IacTransPolicyNo: delivery_policy_code_iac, // 2023-10-10변경
+								GmktTransPolicyNo: delivery_policy_code_gmk,
 								BackwoodsDeliveryYn: null,
 								IsTplConvertible: false,
 								IsGmktIACPost: false,
@@ -4007,7 +4029,7 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 				});
 
 				const productJson = await productResp.json();
-				// console.log("productJson", productJson);
+
 				if (productJson.data.length < 1) {
 					const progressValue = Math.round(((parseInt(product) + 1) * 100) / data.DShopInfo.prod_codes.length);
 

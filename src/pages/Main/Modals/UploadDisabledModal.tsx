@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import {
@@ -17,7 +16,6 @@ import {
 	TableCell,
 	Typography,
 } from '@mui/material';
-
 import CloseIcon from '@mui/icons-material/Close';
 
 // 커스텀 테이블 열 스타일 설정
@@ -97,7 +95,6 @@ export const UploadDisabledModal = observer(() => {
 					<Typography fontSize={16} sx={{}}>
 						상품 등록해제
 					</Typography>
-
 					<IconButton
 						size='small'
 						onClick={() => {
@@ -107,7 +104,6 @@ export const UploadDisabledModal = observer(() => {
 						<CloseIcon />
 					</IconButton>
 				</Box>
-
 				<Paper variant='outlined'>
 					<Box
 						sx={{
@@ -124,12 +120,7 @@ export const UploadDisabledModal = observer(() => {
 								>
 									<FormControlLabel
 										control={
-											<Checkbox
-												size='small'
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarketAll(e.target.checked);
-												}}
-											/>
+											<Checkbox size='small' onChange={(e) => toggleUploadDisabledInfoMarketAll(e.target.checked)} />
 										}
 										label={
 											<Box
@@ -144,10 +135,8 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell colSpan={2}></StyledTableCell>
 							</TableRow>
-
 							<TableRow>
 								<StyledTableCell
 									width={'35%'}
@@ -157,9 +146,7 @@ export const UploadDisabledModal = observer(() => {
 								>
 									오픈마켓
 								</StyledTableCell>
-
 								<StyledTableCell width={'15%'}>상태</StyledTableCell>
-
 								<StyledTableCell
 									width={'35%'}
 									sx={{
@@ -168,10 +155,8 @@ export const UploadDisabledModal = observer(() => {
 								>
 									오픈마켓
 								</StyledTableCell>
-
 								<StyledTableCell width={'15%'}>상태</StyledTableCell>
 							</TableRow>
-
 							<TableRow>
 								<StyledTableCell
 									sx={{
@@ -184,9 +169,7 @@ export const UploadDisabledModal = observer(() => {
 												size='small'
 												disabled={markets.find((v) => v.code === 'A077')?.disabled}
 												checked={markets.find((v) => v.code === 'A077')?.upload}
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarket('A077', e.target.checked);
-												}}
+												onChange={(e) => toggleUploadDisabledInfoMarket('A077', e.target.checked)}
 											/>
 										}
 										label={
@@ -203,7 +186,6 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell>
 									{markets.find((v) => v.code === 'A077')?.progress ?? 0 > 0 ? (
 										<CircularProgressWithLabel color='error' value={markets.find((v) => v.code === 'A077')?.progress} />
@@ -227,7 +209,6 @@ export const UploadDisabledModal = observer(() => {
 										</Typography>
 									)}
 								</StyledTableCell>
-
 								<StyledTableCell
 									sx={{
 										textAlign: 'left',
@@ -239,9 +220,7 @@ export const UploadDisabledModal = observer(() => {
 												size='small'
 												disabled={markets.find((v) => v.code === 'B378')?.disabled}
 												checked={markets.find((v) => v.code === 'B378')?.upload}
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarket('B378', e.target.checked);
-												}}
+												onChange={(e) => toggleUploadDisabledInfoMarket('B378', e.target.checked)}
 											/>
 										}
 										label={
@@ -258,7 +237,6 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell>
 									{markets.find((v) => v.code === 'B378')?.progress ?? 0 > 0 ? (
 										<CircularProgressWithLabel color='error' value={markets.find((v) => v.code === 'B378')?.progress} />
@@ -283,7 +261,6 @@ export const UploadDisabledModal = observer(() => {
 									)}
 								</StyledTableCell>
 							</TableRow>
-
 							<TableRow>
 								<StyledTableCell
 									sx={{
@@ -296,9 +273,7 @@ export const UploadDisabledModal = observer(() => {
 												size='small'
 												disabled={markets.find((v) => v.code === 'A112')?.disabled}
 												checked={markets.find((v) => v.code === 'A112')?.upload}
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarket('A112', e.target.checked);
-												}}
+												onChange={(e) => toggleUploadDisabledInfoMarket('A112', e.target.checked)}
 											/>
 										}
 										label={
@@ -315,7 +290,6 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell>
 									{markets.find((v) => v.code === 'A112')?.progress ?? 0 > 0 ? (
 										<CircularProgressWithLabel color='error' value={markets.find((v) => v.code === 'A112')?.progress} />
@@ -339,7 +313,6 @@ export const UploadDisabledModal = observer(() => {
 										</Typography>
 									)}
 								</StyledTableCell>
-
 								<StyledTableCell
 									sx={{
 										textAlign: 'left',
@@ -351,9 +324,7 @@ export const UploadDisabledModal = observer(() => {
 												size='small'
 												disabled={markets.find((v) => v.code === 'A113')?.disabled}
 												checked={markets.find((v) => v.code === 'A113')?.upload}
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarket('A113', e.target.checked);
-												}}
+												onChange={(e) => toggleUploadDisabledInfoMarket('A113', e.target.checked)}
 											/>
 										}
 										label={
@@ -370,7 +341,6 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell>
 									{markets.find((v) => v.code === 'A113')?.progress ?? 0 > 0 ? (
 										<CircularProgressWithLabel color='error' value={markets.find((v) => v.code === 'A113')?.progress} />
@@ -395,7 +365,6 @@ export const UploadDisabledModal = observer(() => {
 									)}
 								</StyledTableCell>
 							</TableRow>
-
 							<TableRow>
 								<StyledTableCell
 									sx={{
@@ -408,9 +377,7 @@ export const UploadDisabledModal = observer(() => {
 												size='small'
 												disabled={markets.find((v) => v.code === 'A523')?.disabled}
 												checked={markets.find((v) => v.code === 'A523')?.upload}
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarket('A523', e.target.checked);
-												}}
+												onChange={(e) => toggleUploadDisabledInfoMarket('A523', e.target.checked)}
 											/>
 										}
 										label={
@@ -427,7 +394,6 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell>
 									{markets.find((v) => v.code === 'A523')?.progress ?? 0 > 0 ? (
 										<CircularProgressWithLabel color='error' value={markets.find((v) => v.code === 'A523')?.progress} />
@@ -463,9 +429,7 @@ export const UploadDisabledModal = observer(() => {
 												size='small'
 												disabled={markets.find((v) => v.code === 'A522')?.disabled}
 												checked={markets.find((v) => v.code === 'A522')?.upload}
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarket('A522', e.target.checked);
-												}}
+												onChange={(e) => toggleUploadDisabledInfoMarket('A522', e.target.checked)}
 											/>
 										}
 										label={
@@ -482,7 +446,6 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell>
 									{markets.find((v) => v.code === 'A522')?.progress ?? 0 > 0 ? (
 										<CircularProgressWithLabel color='error' value={markets.find((v) => v.code === 'A522')?.progress} />
@@ -507,8 +470,7 @@ export const UploadDisabledModal = observer(() => {
 									)}
 								</StyledTableCell>
 							</TableRow>
-
-							<TableRow>
+							{/* <TableRow>
 								<StyledTableCell
 									sx={{
 										textAlign: 'left',
@@ -520,9 +482,9 @@ export const UploadDisabledModal = observer(() => {
 												size='small'
 												disabled={markets.find((v) => v.code === 'A006')?.disabled}
 												checked={markets.find((v) => v.code === 'A006')?.upload}
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarket('A006', e.target.checked);
-												}}
+												onChange={(e) => 
+													toggleUploadDisabledInfoMarket('A006', e.target.checked)
+												}
 											/>
 										}
 										label={
@@ -539,7 +501,6 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell>
 									{markets.find((v) => v.code === 'A006')?.progress ?? 0 > 0 ? (
 										<CircularProgressWithLabel color='error' value={markets.find((v) => v.code === 'A006')?.progress} />
@@ -618,8 +579,7 @@ export const UploadDisabledModal = observer(() => {
 										</Typography>
 									)}
 								</StyledTableCell>
-							</TableRow>
-
+							</TableRow> */}
 							<TableRow>
 								<StyledTableCell
 									sx={{
@@ -632,9 +592,7 @@ export const UploadDisabledModal = observer(() => {
 												size='small'
 												disabled={markets.find((v) => v.code === 'A027')?.disabled}
 												checked={markets.find((v) => v.code === 'A027')?.upload}
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarket('A027', e.target.checked);
-												}}
+												onChange={(e) => toggleUploadDisabledInfoMarket('A027', e.target.checked)}
 											/>
 										}
 										label={
@@ -651,7 +609,6 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell>
 									{markets.find((v) => v.code === 'A027')?.progress ?? 0 > 0 ? (
 										<CircularProgressWithLabel color='error' value={markets.find((v) => v.code === 'A027')?.progress} />
@@ -675,7 +632,6 @@ export const UploadDisabledModal = observer(() => {
 										</Typography>
 									)}
 								</StyledTableCell>
-
 								<StyledTableCell
 									sx={{
 										textAlign: 'left',
@@ -687,9 +643,7 @@ export const UploadDisabledModal = observer(() => {
 												size='small'
 												disabled={markets.find((v) => v.code === 'B719')?.disabled}
 												checked={markets.find((v) => v.code === 'B719')?.upload}
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarket('B719', e.target.checked);
-												}}
+												onChange={(e) => toggleUploadDisabledInfoMarket('B719', e.target.checked)}
 											/>
 										}
 										label={
@@ -706,7 +660,6 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell>
 									{markets.find((v) => v.code === 'B719')?.progress ?? 0 > 0 ? (
 										<CircularProgressWithLabel color='error' value={markets.find((v) => v.code === 'B719')?.progress} />
@@ -731,7 +684,6 @@ export const UploadDisabledModal = observer(() => {
 									)}
 								</StyledTableCell>
 							</TableRow>
-
 							<TableRow>
 								<StyledTableCell
 									sx={{
@@ -744,9 +696,7 @@ export const UploadDisabledModal = observer(() => {
 												size='small'
 												disabled={markets.find((v) => v.code === 'A524')?.disabled}
 												checked={markets.find((v) => v.code === 'A524')?.upload}
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarket('A524', e.target.checked);
-												}}
+												onChange={(e) => toggleUploadDisabledInfoMarket('A524', e.target.checked)}
 											/>
 										}
 										label={
@@ -763,7 +713,6 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell>
 									{markets.find((v) => v.code === 'A524')?.progress ?? 0 > 0 ? (
 										<CircularProgressWithLabel color='error' value={markets.find((v) => v.code === 'A524')?.progress} />
@@ -787,7 +736,6 @@ export const UploadDisabledModal = observer(() => {
 										</Typography>
 									)}
 								</StyledTableCell>
-
 								<StyledTableCell
 									sx={{
 										textAlign: 'left',
@@ -799,9 +747,7 @@ export const UploadDisabledModal = observer(() => {
 												size='small'
 												disabled={markets.find((v) => v.code === 'A525')?.disabled}
 												checked={markets.find((v) => v.code === 'A525')?.upload}
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarket('A525', e.target.checked);
-												}}
+												onChange={(e) => toggleUploadDisabledInfoMarket('A525', e.target.checked)}
 											/>
 										}
 										label={
@@ -818,7 +764,6 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell>
 									{markets.find((v) => v.code === 'A525')?.progress ?? 0 > 0 ? (
 										<CircularProgressWithLabel color='error' value={markets.find((v) => v.code === 'A525')?.progress} />
@@ -843,7 +788,6 @@ export const UploadDisabledModal = observer(() => {
 									)}
 								</StyledTableCell>
 							</TableRow>
-
 							<TableRow>
 								<StyledTableCell
 									sx={{
@@ -856,9 +800,7 @@ export const UploadDisabledModal = observer(() => {
 												size='small'
 												disabled={markets.find((v) => v.code === 'B956')?.disabled}
 												checked={markets.find((v) => v.code === 'B956')?.upload}
-												onChange={(e) => {
-													toggleUploadDisabledInfoMarket('B956', e.target.checked);
-												}}
+												onChange={(e) => toggleUploadDisabledInfoMarket('B956', e.target.checked)}
 											/>
 										}
 										label={
@@ -875,7 +817,6 @@ export const UploadDisabledModal = observer(() => {
 										}
 									/>
 								</StyledTableCell>
-
 								<StyledTableCell>
 									{markets.find((v) => v.code === 'B956')?.progress ?? 0 > 0 ? (
 										<CircularProgressWithLabel color='error' value={markets.find((v) => v.code === 'B956')?.progress} />
@@ -899,7 +840,6 @@ export const UploadDisabledModal = observer(() => {
 										</Typography>
 									)}
 								</StyledTableCell>
-
 								<StyledTableCell colSpan={2}></StyledTableCell>
 							</TableRow>
 						</Table>
@@ -944,14 +884,12 @@ export const UploadDisabledModal = observer(() => {
 						}}
 						onClick={async () => {
 							await setUploadable(false);
-
 							await product.disableItems(common);
 							await product.toggleUploadDisabledModal(-1, false, common);
 						}}
 					>
 						{!uploadable && !stopped ? '등록해제 중...' : '등록해제'}
 					</Button>
-
 					<Button
 						disabled={stopped}
 						disableElevation
@@ -961,19 +899,14 @@ export const UploadDisabledModal = observer(() => {
 							width: '33%',
 							mx: 0.5,
 						}}
-						onClick={async () => {
-							let accept = confirm(
+						onClick={async () =>
+							confirm(
 								'상품등록을 중단하시겠습니까?\n상품등록이 중단되더라도 이전에 등록된 상품은 삭제되지 않을 수 있습니다.',
-							);
-
-							if (accept) {
-								await setStopped(true);
-							}
-						}}
+							) && (await setStopped(true))
+						}
 					>
 						{!uploadable && stopped ? '중단 중...' : '중단'}
 					</Button>
-
 					<Button
 						disableElevation
 						variant='contained'
@@ -982,9 +915,7 @@ export const UploadDisabledModal = observer(() => {
 							width: '33%',
 							mx: 0.5,
 						}}
-						onClick={() => {
-							product.toggleUploadDisabledModal(-1, false, common);
-						}}
+						onClick={() => product.toggleUploadDisabledModal(-1, false, common)}
 					>
 						닫기
 					</Button>

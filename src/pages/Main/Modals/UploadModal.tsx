@@ -730,7 +730,8 @@ export const UploadModal = observer(() => {
 											</StyledTableCell>
 										</TableRow>
 
-										<TableRow>
+										{/* ESM통합으로 인한 1.0미사용 */}
+										{/* <TableRow>
 											<StyledTableCell
 												sx={{
 													textAlign: 'left',
@@ -862,7 +863,7 @@ export const UploadModal = observer(() => {
 													</Typography>
 												)}
 											</StyledTableCell>
-										</TableRow>
+										</TableRow> */}
 
 										<TableRow>
 											<StyledTableCell
