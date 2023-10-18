@@ -891,7 +891,6 @@ export class product {
 	// 상품 정보
 	getProduct = async (commonStore: common, p: number) => {
 		this.itemInfo.loading = true;
-
 		// Backup
 		const oldItems = this.itemInfo.items;
 
@@ -1025,6 +1024,7 @@ export class product {
 						}
 					}
 
+					if (!commonStore.user.userInfo?.sillFromCategory) return alert('일시적인 상품조회 오류, 새로고침해주세요.');
 					if (!v.categoryInfoA077)
 						v.categoryInfoA077 = {
 							code: null,

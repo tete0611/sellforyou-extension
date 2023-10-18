@@ -4,13 +4,12 @@ import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
 import { sleep, getImageSize, getCookie } from '../../Tools/Common';
-import { sendRuntimeMessage } from '../../Tools/ChromeAsync';
+// import { sendRuntimeMessage } from '../../Tools/ChromeAsync';
 import CryptoJS from 'crypto-js';
 
 // 상품정보 크롤링
 async function scrape(items: any, user: any) {
 	let result: any = form;
-
 	result.user = user;
 
 	// 페이지 타입에 따라 크롤링 다름
@@ -38,10 +37,8 @@ async function scrape(items: any, user: any) {
 
 		// 상세페이지
 		let desc_data: any = document.querySelector('#desc-lazyload-container');
-
 		let desc_resp = await fetch(desc_data.getAttribute('data-tfs-url'));
 		let desc_text = await desc_resp.text();
-
 		desc_text = desc_text.slice(18, desc_text.length - 1);
 		let desc_json = JSON.parse(desc_text);
 		let desc_html: any = new DOMParser().parseFromString(desc_json.content, 'text/html');
@@ -237,7 +234,6 @@ async function scrape(items: any, user: any) {
 
 	if (items.ipageType === 2) {
 		let subs = JSON.parse(items.offerDomain ?? items.iDetailData.offerDomain);
-
 		subs.offerDetail.featureAttributes?.map((v: any) => result['item']['attr'].push(`${v.name}:${v.values[0]}`));
 
 		// 썸네일이미지
@@ -258,7 +254,6 @@ async function scrape(items: any, user: any) {
 
 		let desc_json = JSON.parse(desc_text);
 		let desc_html: any = new DOMParser().parseFromString(desc_json.content, 'text/html');
-
 		let desc_scripts = desc_html.querySelectorAll('script');
 
 		for (let i in desc_scripts) {
@@ -339,6 +334,15 @@ async function scrape(items: any, user: any) {
 		result['item']['tmall'] = false;
 		result['item']['shop_id'] = 'alibaba';
 
+		const skuParam = items.iDetailData?.orderParamModel?.orderParam?.skuParam;
+		const skuRangePrices = skuParam?.skuRangePrices;
+		// 구매갯수당 가격이 바뀌는 상품인지 여부
+		const isRangeItem: boolean = skuParam?.skuPriceType === 'rangePrice';
+		// 그에따른 옵션가격 할당
+		const optionPrice: number = isRangeItem
+			? Math.max(...skuRangePrices.map((v) => v.price))
+			: subs.tradeModel.minPrice;
+		console.log({ optionPrice });
 		// 동영상
 		try {
 			let video = subs.offerDetail.wirelessVideo.videoUrls.android;
@@ -395,33 +399,30 @@ async function scrape(items: any, user: any) {
 		try {
 			for (let i in items.iDetailData.skuModel.skuInfoMap) {
 				let properties = i.split('&gt;');
-
 				let properties_id = '';
 				let properties_name = '';
 
-				for (let j = 0; j < properties.length; j++) {
+				for (let j = 0; j < properties.length; j++)
 					for (let k in result['item']['props_list']) {
 						if (result['item']['props_list'][k].split(':')[1] === properties[j]) {
 							if (j < properties.length) {
 								properties_id += k;
 								properties_name += k + ':' + result['item']['props_list'][k];
 							}
-
 							if (j < properties.length - 1) {
 								properties_id += ';';
 								properties_name += ';';
 							}
 						}
 					}
-				}
 
 				let quantity = items.iDetailData.skuModel.skuInfoMap[i].canBookCount;
 
 				if (quantity > 0)
 					result['item']['skus']['sku'].push({
-						price: items.iDetailData.skuModel.skuInfoMap[i].price ?? subs.tradeModel.minPrice,
+						price: items.iDetailData.skuModel.skuInfoMap[i].price ?? optionPrice,
 						total_price: 0,
-						original_price: items.iDetailData.skuModel.skuInfoMap[i].price ?? subs.tradeModel.minPrice,
+						original_price: items.iDetailData.skuModel.skuInfoMap[i].price ?? optionPrice,
 						properties: properties_id,
 						properties_name: properties_name,
 						quantity:
