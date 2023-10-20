@@ -1378,17 +1378,17 @@ export const TabAttribute = observer((props: Props) => {
 																		props.index,
 																	)
 																}
-																onBlur={(e: any) => {
+																onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
 																	if (common.user.purchaseInfo2.level < 3)
 																		return alert('[프로] 등급부터 사용 가능한 기능입니다.');
-
-																	product.updateProductMyKeyward(
-																		{
-																			productId: props.item.id,
-																			myKeyward: e.target.value,
-																		},
-																		props.index,
-																	);
+																	else if (e.target.value.replace(/\s*$/, '') !== '')
+																		product.updateProductMyKeyward(
+																			{
+																				productId: props.item.id,
+																				myKeyward: e.target.value,
+																			},
+																			props.index,
+																		);
 																}}
 															/>
 														</Box>
