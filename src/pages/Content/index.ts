@@ -1666,18 +1666,21 @@ const main = async () => {
 	const currentUrl = window.location.href;
 	/** 타오바오 단일상품 페이지 */
 	if (/item.taobao.com\/item.htm/.test(currentUrl)) {
+		console.log('타오바오 단일상품 페이지 진입');
 		const info = await initInfo(true);
 		const result = await new taobao().get(info.user);
 		floatingButton(info, null, result, false);
 
 		/** 타오바오 리스트 페이지 */
 	} else if (/\bs.taobao.com\/search/.test(currentUrl)) {
+		console.log('타오바오 리스트 페이지 진입');
 		const info = await initInfo(false);
 		await new taobao().bulkTypeOne(info.user);
 		floatingButton(info, 'taobao1', true, true);
 
 		/**  */
 	} else if (/world.taobao.com\/wow/.test(currentUrl)) {
+		console.log('월드 타오바오 페이지 진입');
 		const info = await initInfo(false);
 		await new taobao().bulkTypeThree(info.user);
 		floatingButton(info, 'taobao1', true, true);
@@ -1688,6 +1691,7 @@ const main = async () => {
 		/taobao.com\/search/.test(currentUrl) ||
 		/taobao.com\/category/.test(currentUrl)
 	) {
+		console.log('타오바오 상점 페이지 진입');
 		const info = await initInfo(false);
 		await new taobao().bulkTypeTwo(info.user);
 		floatingButton(info, 'taobao2', true, true);

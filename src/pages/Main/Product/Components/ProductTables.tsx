@@ -178,7 +178,7 @@ export const ProductTables = observer(() => {
 														searchKeyword: e.target.value,
 													})
 												}
-												onKeyPress={(e: any) => e.key !== 'Enter' && product.getSearchResult(common)}
+												onKeyPress={(e: any) => e.key === 'Enter' && product.getSearchResult(common)}
 											/>
 											<MyButton
 												disableElevation

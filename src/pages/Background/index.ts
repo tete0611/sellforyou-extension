@@ -353,8 +353,6 @@ const addToInventory = async (sender: any, origin: any) => {
 
 	result.data[0].attr = JSON.stringify(result.data[0].attr);
 
-	// console.log({ origin });
-
 	// 최종 가공 데이터를 백엔드에 보내서 DB에 추가하도록 요청
 	const response = await gql(
 		MUTATIONS.GET_TAOBAO_ITEM_USING_EXTENSION_BY_USER,
