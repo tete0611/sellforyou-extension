@@ -1,4 +1,3 @@
-import { Buffer } from 'buffer';
 import { taobao } from './modules/taobao';
 import { tmall } from './modules/tmall';
 import { express } from './modules/express';
@@ -17,7 +16,8 @@ import {
 } from '../Tools/SmartStore';
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
 import { RuntimeMessage } from '../../type/type';
-const iconv = require('iconv-lite');
+
+// const iconv = require('iconv-lite');
 
 const pageRefresh = async (shop, page) => {
 	let url: string | null = null;
@@ -75,23 +75,18 @@ const pageRefresh = async (shop, page) => {
 			break;
 	}
 
-	if (!url) {
-		return;
-	}
+	if (!url) return;
 
 	window.location.href = url.replaceAll('#', '');
 };
 
 const bulkCollect = async (useChecked: boolean, useMedal: boolean) => {
 	let inputs: any = [];
-
 	let timeout = 0;
 
 	//타임아웃 필요
 	while (true) {
-		if (timeout === 15) {
-			break;
-		}
+		if (timeout === 15) break;
 
 		let list: any = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
 
@@ -99,21 +94,12 @@ const bulkCollect = async (useChecked: boolean, useMedal: boolean) => {
 			for (let i = 0; i < list.length; i++) {
 				let toggle = false;
 
-				if (useChecked && !list[i].checked) {
-					continue;
-				}
-
+				if (useChecked && !list[i].checked) continue;
 				if (useMedal) {
-					if (list[i].getAttribute('medal') === '1') {
-						toggle = true;
-					}
-				} else {
-					toggle = true;
-				}
+					if (list[i].getAttribute('medal') === '1') toggle = true;
+				} else toggle = true;
 
-				if (!toggle) {
-					continue;
-				}
+				if (!toggle) continue;
 
 				inputs.push({
 					url: list[i].id,
@@ -137,30 +123,23 @@ const bulkPage = async (info, shop) => {
 	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
 	let collect = collectInfo.find((v: any) => v.sender.tab.id === info.tabInfo.tab.id);
 
-	if (!collect) {
-		return;
-	}
-
+	if (!collect) return;
 	if (collect.currentPage <= collect.pageEnd) {
 		const inputs = await bulkCollect(false, collect.useMedal);
 
-		if (inputs.length === 0) {
-			collect.currentPage = collect.pageEnd;
-		}
+		if (inputs.length === 0) collect.currentPage = collect.pageEnd;
 
 		collect.inputs = collect.inputs.concat(inputs);
 		collect.currentPage += 1;
 
 		switch (collect.type) {
 			case 'page': {
-				if (collect.currentPage > collect.pageEnd) {
+				if (collect.currentPage > collect.pageEnd)
 					sendRuntimeMessage({
 						action: 'collect-bulk',
 						source: { data: collect.inputs, retry: false },
 					});
-				} else {
-					pageRefresh(shop, collect.currentPage);
-				}
+				else pageRefresh(shop, collect.currentPage);
 
 				break;
 			}
@@ -173,22 +152,18 @@ const bulkPage = async (info, shop) => {
 						action: 'collect-bulk',
 						source: { data: collect.inputs, retry: false },
 					});
-				} else {
-					pageRefresh(shop, collect.currentPage);
-				}
+				} else pageRefresh(shop, collect.currentPage);
 
 				break;
 			}
 
 			case 'excel-page': {
-				if (collect.currentPage > collect.pageEnd) {
+				if (collect.currentPage > collect.pageEnd)
 					sendRuntimeMessage({
 						action: 'collect-bulk',
 						source: { data: collect.inputs, retry: false },
 					});
-				} else {
-					window.location.href = collect.pageList[collect.currentPage - 1].url;
-				}
+				else window.location.href = collect.pageList[collect.currentPage - 1].url;
 
 				break;
 			}
@@ -198,24 +173,18 @@ const bulkPage = async (info, shop) => {
 	}
 };
 
-const skip = () => {
-	sendRuntimeMessage({ action: 'collect-finish' });
-};
-
+const skip = () => sendRuntimeMessage({ action: 'collect-finish' });
 const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) => {
 	if (!result) return;
 
 	let isCollecting = false;
-
 	let container = document.createElement('table');
-
 	container.className = 'SELLFORYOU-FLOATING';
-
 	let buttonCollect = document.createElement('button');
 	let buttonCollectDefault = `<i class="fi fi-rs-inbox-in" style="display: flex; align-items: center; font-size: 32px;"></i>`;
-
 	buttonCollect.className = 'SELLFORYOU-COLLECT';
 	buttonCollect.innerHTML = buttonCollectDefault;
+
 	buttonCollect.addEventListener('click', async () => {
 		if (!info.isBulk && result.error) {
 			if (confirm(`${result.error}\n[확인]을 누르시면 수집상품목록으로 이동합니다.`))
@@ -229,7 +198,6 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 		if (bulk) {
 			let categoryResp = await fetch(chrome.runtime.getURL('resources/category.json'));
 			let categoryJson = await categoryResp.json();
-
 			let paper = document.createElement('div');
 
 			paper.id = 'sfyPaper';
@@ -356,14 +324,11 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 
 			const sfyGoldMedalEnabled: any = document.getElementById('sfyGoldMedalEnabled');
 			const sfyStandardShippingEnabled: any = document.getElementById('sfyStandardShippingEnabled');
-
 			const sfyCategoryEnabled: any = document.getElementById('sfyCategoryEnabled');
-
 			const sfyMyKeywardEnabled: any = document.getElementById('sfyMyKeywardEnabled');
 			const sfyCategoryInput: any = document.getElementById('sfyCategoryInput');
 			const sfyMyKeywardInput: any = document.getElementById('sfyMyKeywardInput');
 			const sfyCategoryList = document.getElementById('sfyCategoryList');
-
 			const sfyStart = document.getElementById('sfyStart');
 			const sfyCancel = document.getElementById('sfyCancel');
 
@@ -392,9 +357,9 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 				sfyMyKeywardInput.value = e.target.value.trim();
 				sfyMyKeywardInput.setAttribute('data-myKeyward-id', e.target.value.trim());
 			});
+
 			sfyCategoryInput.addEventListener('change', (e: any) => {
 				const input = e.target.value;
-
 				const filtered = categoryJson.filter(
 					(v: any) =>
 						v['대분류'].includes(input) ||
@@ -410,10 +375,7 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 				filtered.map((v: any) => {
 					let categoryName = ``;
 
-					if (v['대분류']) {
-						categoryName += v['대분류'];
-					}
-
+					if (v['대분류']) categoryName += v['대분류'];
 					if (v['중분류']) {
 						categoryName += ' > ';
 						categoryName += v['중분류'];
@@ -442,7 +404,6 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 					categories[i].addEventListener('click', (e: any) => {
 						sfyCategoryInput.value = e.target.textContent.trim();
 						sfyCategoryInput.setAttribute('data-category-id', e.target.getAttribute('data-category-id'));
-
 						sfyCategoryList.style.display = 'none';
 					});
 				}
@@ -464,14 +425,12 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 				});
 
 				if (!sfyCategoryEnabled.checked) sfyCategoryInput.setAttribute('data-category-id', '');
-
 				if (!sfyMyKeywardEnabled.checked) sfyMyKeywardInput.setAttribute('data-myKeyward-id', '');
 
 				collectInfo.push({
 					categoryId: sfyCategoryInput.getAttribute('data-category-id'),
 					myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
 					sender: info.tabInfo,
-
 					useMedal: sfyGoldMedalEnabled.checked,
 					useStandardShipping: sfyStandardShippingEnabled.checked,
 				});
@@ -500,7 +459,6 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 			});
 
 			if (!response) return;
-
 			if (response.status === 'success')
 				buttonCollect.innerHTML = `
                     <img src=${chrome.runtime.getURL(
@@ -558,11 +516,9 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 
 	const buttonCollectCol = document.createElement('td');
 	const buttonCollectRow = document.createElement('tr');
-
 	buttonCollectCol.className = 'SELLFORYOU-CELL';
 	buttonCollectCol.append(buttonCollect);
 	buttonCollectRow.append(buttonCollectCol);
-
 	container.append(buttonCollectRow);
 
 	if (bulk) {
@@ -625,7 +581,6 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 			buttonPageConfig.addEventListener('click', async () => {
 				let categoryResp = await fetch(chrome.runtime.getURL('resources/category.json'));
 				let categoryJson = await categoryResp.json();
-
 				let paper = document.createElement('div');
 
 				paper.id = 'sfyPaper';
@@ -813,20 +768,15 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 
 				const sfyGoldMedalEnabled: any = document.getElementById('sfyGoldMedalEnabled');
 				const sfyStandardShippingEnabled: any = document.getElementById('sfyStandardShippingEnabled');
-
 				const sfyCategoryEnabled: any = document.getElementById('sfyCategoryEnabled');
-
 				const sfyMyKeywardEnabled: any = document.getElementById('sfyMyKeywardEnabled');
 				const sfyCategoryInput: any = document.getElementById('sfyCategoryInput');
 				const sfyMyKeywardInput: any = document.getElementById('sfyMyKeywardInput');
 				const sfyCategoryList = document.getElementById('sfyCategoryList');
-
 				const sfyStart = document.getElementById('sfyStart');
 				const sfyCancel = document.getElementById('sfyCancel');
-
 				const sfyPageStart: any = document.getElementById('sfyPageStart');
 				const sfyPageEnd: any = document.getElementById('sfyPageEnd');
-
 				const sfyAmount: any = document.getElementById('sfyAmount');
 
 				if (
@@ -849,9 +799,7 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 				});
 
 				sfyMyKeywardEnabled.addEventListener('change', (e: any) => (sfyMyKeywardInput.disabled = !e.target.checked));
-
 				sfyCategoryInput.addEventListener('focus', (e: any) => (sfyCategoryList.style.display = ''));
-
 				sfyMyKeywardInput.addEventListener('change', (e: any) => {
 					sfyMyKeywardInput.value = e.target.value.trim();
 					sfyMyKeywardInput.setAttribute('data-myKeyward-id', e.target.value.trim());
@@ -859,7 +807,6 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 
 				sfyCategoryInput.addEventListener('change', (e: any) => {
 					const input = e.target.value;
-
 					const filtered = categoryJson.filter(
 						(v: any) =>
 							v['대분류'].includes(input) ||
@@ -876,17 +823,14 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 						let categoryName = ``;
 
 						if (v['대분류']) categoryName += v['대분류'];
-
 						if (v['중분류']) {
 							categoryName += ' > ';
 							categoryName += v['중분류'];
 						}
-
 						if (v['소분류']) {
 							categoryName += ' > ';
 							categoryName += v['소분류'];
 						}
-
 						if (v['세분류']) {
 							categoryName += ' > ';
 							categoryName += v['세분류'];
@@ -905,7 +849,6 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 						categories[i].addEventListener('click', (e: any) => {
 							sfyCategoryInput.value = e.target.textContent.trim();
 							sfyCategoryInput.setAttribute('data-category-id', e.target.getAttribute('data-category-id'));
-
 							sfyCategoryList.style.display = 'none';
 						});
 				});
@@ -1411,53 +1354,6 @@ const cardPay = async (info: any) => {
 	}
 };
 
-// const getsetPage = async (body: any) => {
-
-//   const url = "https://aws-set.playauto.co.kr/shop_group_set_make_amp_api_tab.html";
-
-//   const form = document.createElement("form");
-//   form.setAttribute("method", "POST");
-//   form.setAttribute("action", url);
-
-//   const input1 = document.createElement("input");
-//   input1.setAttribute("type", "hidden");
-//   //   input1.setAttribute("value", "post");
-//   input1.value = "post";
-//   input1.setAttribute("name", "dataMethod");
-//   form.appendChild(input1);
-//   const input2 = document.createElement("input");
-//   input2.setAttribute("type", "hidden");
-//   input2.setAttribute("name", "dataInfo");
-//   //   input2.setAttribute("value", encodeURIComponent(JSON.stringify(body)));
-//   input2.value = JSON.stringify(body);
-//   form.appendChild(input2);
-//   const input3 = document.createElement("input");
-//   input3.setAttribute("type", "submit");
-//   form.appendChild(input3);
-//   document.body.appendChild(form);
-//   form.submit();
-// };
-
-// const getsetPage = async (body: any) => {
-//   const url = "https://aws-set.playauto.co.kr/shop_group_set_make_amp_api_tab.html";
-
-//   const xhr = new XMLHttpRequest();
-//   xhr.open("POST", url, true);
-//   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-//   const formData = new FormData();
-//   formData.append("dataMethod", "post");
-//   formData.append("dataInfo", JSON.stringify(body));
-
-//   xhr.onreadystatechange = function () {
-//     if (xhr.readyState === 4 && xhr.status === 200) {
-//       // API 호출이 완료되었을 때의 로직을 여기에 작성하세요.
-//       console.log(xhr.responseText);
-//     }
-//   };
-
-//   xhr.send(formData);
-// };
 const getsetPage = async (body) => {
 	const url = 'https://aws-set.playauto.co.kr/shop_group_set_make_amp_api_tab.html';
 
@@ -1471,11 +1367,7 @@ const getsetPage = async (body) => {
 			body: formData,
 			mode: 'cors',
 		});
-
-		// Handle the response here
-		// console.log(response);
 	} catch (error) {
-		// Handle any errors that occur during the request
 		console.error(error);
 	}
 };
@@ -1493,17 +1385,6 @@ const main = async () => {
 		switch (request.action) {
 			case 'set_info': {
 				getsetPage(request.source).then(sendResponse);
-				// getsetPage(request.source)
-				//   .then((response) => {
-				//     if (response.status === 200) {
-				//       // 상태 코드가 200인 경우 처리
-				//     } else {
-				//       // 상태 코드가 200이 아닌 경우 처리
-				//     }
-				//   })
-				//   .catch((error) => {
-				//     console.error(error);
-				//   });
 
 				return true;
 			}

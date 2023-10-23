@@ -2,13 +2,19 @@ import React from 'react';
 import ReactQuill from 'react-quill';
 import ClearIcon from '@mui/icons-material/Clear';
 import ErrorIcon from '@mui/icons-material/Error';
-
 import { observer } from 'mobx-react';
 import { ListManager } from 'react-beautiful-dnd-grid';
 import { AppContext } from '../../../../../containers/AppContext';
 import { Box, Button, CircularProgress, Grid, IconButton, Paper, Typography } from '@mui/material';
 import { Image, Title } from '../../../Common/UI';
 import { makeStyles } from '@material-ui/core/styles';
+import { Item } from '../../../../../type/type';
+
+interface Props {
+	item: Item;
+	index: number;
+	// tableRef: any;
+}
 
 // MUI Box 사용자 지정 스타일
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // 상세페이지 탭 하위 컴포넌트
-export const TabDescriptions = observer((props: any) => {
+export const TabDescriptions = observer((props: Props) => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
 
@@ -60,7 +66,6 @@ export const TabDescriptions = observer((props: any) => {
 			>
 				<Grid container spacing={0.5}>
 					{props.item.edited.descriptions === 2 ? loading : null}
-
 					<Grid item xs={6} md={6}>
 						<Paper variant='outlined'>
 							<Title subTitle dark={common.darkTheme} error={props.item.descriptionImageError}>
@@ -76,12 +81,9 @@ export const TabDescriptions = observer((props: any) => {
 											<Paper
 												sx={{
 													color: common.darkTheme ? 'error.light' : 'error.main',
-
 													display: 'flex',
 													alignItems: 'center',
-
 													p: 0.5,
-
 													textAlign: 'left',
 												}}
 											>
@@ -97,7 +99,6 @@ export const TabDescriptions = observer((props: any) => {
 										</>
 									) : null}
 								</Box>
-
 								<Box
 									sx={{
 										display: 'flex',
@@ -115,11 +116,7 @@ export const TabDescriptions = observer((props: any) => {
 											height: 26,
 										}}
 										onClick={() => {
-											if (common.user.purchaseInfo2.level < 3) {
-												alert('[프로] 등급부터 사용 가능한 기능입니다.');
-
-												return;
-											}
+											if (common.user.purchaseInfo2.level < 3) return alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
 											product.autoImageTranslate(props.index, 3);
 										}}
@@ -132,7 +129,6 @@ export const TabDescriptions = observer((props: any) => {
 											<>전체 이미지 자동 번역</>
 										)}
 									</Button>
-
 									<Button
 										disableElevation
 										variant='contained'
@@ -143,11 +139,7 @@ export const TabDescriptions = observer((props: any) => {
 											height: 26,
 										}}
 										onClick={() => {
-											if (common.user.purchaseInfo2.level < 3) {
-												alert('[프로] 등급부터 사용 가능한 기능입니다.');
-
-												return;
-											}
+											if (common.user.purchaseInfo2.level < 3) return alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
 											window.open(chrome.runtime.getURL(`/trangers_multiple.html?id=${props.item.id}&type=3`));
 										}}
@@ -156,13 +148,11 @@ export const TabDescriptions = observer((props: any) => {
 									</Button>
 								</Box>
 							</Title>
-
 							<Box
 								sx={{
 									display: 'flex',
 									justifyContent: 'center',
 									p: 1,
-
 									height: 379,
 									overflowY: 'auto',
 								}}
@@ -175,33 +165,22 @@ export const TabDescriptions = observer((props: any) => {
 										render={(img) => (
 											<Paper
 												ref={(elem: any) => {
-													if (!elem || !elem.parentNode) {
-														return;
-													}
+													if (!elem || !elem.parentNode) return;
 
 													let fixed = elem.parentNode.getAttribute('fixed');
 
-													if (!fixed) {
-														elem.parentNode.setAttribute('fixed', 'false');
-
-														return;
-													}
+													if (!fixed) return elem.parentNode.setAttribute('fixed', 'false');
 
 													let left = parseFloat(elem.parentNode.style.left);
 													let top = parseFloat(elem.parentNode.style.top);
 
-													if (isNaN(left) || isNaN(top)) {
-														elem.parentNode.setAttribute('fixed', 'false');
-
-														return;
-													}
+													if (isNaN(left) || isNaN(top)) return elem.parentNode.setAttribute('fixed', 'false');
 
 													if (fixed === 'false') {
 														const frame = document.getElementsByClassName(
 															'ReactVirtualized__Grid ReactVirtualized__List',
 														)[0];
 														const framePos = frame.getBoundingClientRect();
-
 														const fixedWidth = (common.innerSize.width - framePos.width) / 2;
 
 														elem.parentNode.style.setProperty('left', `${left - fixedWidth}px`, 'important');
@@ -215,107 +194,96 @@ export const TabDescriptions = observer((props: any) => {
 												variant='outlined'
 											>
 												{props.item.descriptionImages.map((v: any, i: number) => {
-													if (v !== img) {
-														return null;
-													}
-
-													return (
-														<>
-															<Title
-																subTitle
-																dark={common.darkTheme}
-																error={props.item.imageCheckList && props.item.imageCheckList[img]}
-															>
-																<Box
-																	sx={{
-																		display: 'flex',
-																		alignItems: 'center',
-																	}}
+													if (v !== img) return null;
+													else
+														return (
+															<>
+																<Title
+																	subTitle
+																	dark={common.darkTheme}
+																	error={props.item.imageCheckList && props.item.imageCheckList[img]}
 																>
-																	<Typography noWrap fontSize={13}>
-																		{`상세이미지 ${(i + 1).toString().padStart(2, '0')} `}
-																	</Typography>
-
-																	{props.item.imageCheckList && props.item.imageCheckList[img] ? (
-																		<ErrorIcon
-																			color='error'
-																			sx={{
-																				fontSize: 18,
-																				mx: 0.5,
-																			}}
-																		/>
-																	) : null}
-																</Box>
-
-																<IconButton
-																	color='error'
-																	sx={{
-																		p: 0,
+																	<Box
+																		sx={{
+																			display: 'flex',
+																			alignItems: 'center',
+																		}}
+																	>
+																		<Typography noWrap fontSize={13}>
+																			{`상세이미지 ${(i + 1).toString().padStart(2, '0')} `}
+																		</Typography>
+																		{props.item.imageCheckList && props.item.imageCheckList[img] ? (
+																			<ErrorIcon
+																				color='error'
+																				sx={{
+																					fontSize: 18,
+																					mx: 0.5,
+																				}}
+																			/>
+																		) : null}
+																	</Box>
+																	<IconButton
+																		color='error'
+																		sx={{
+																			p: 0,
+																		}}
+																		size='small'
+																		onClick={() => product.filterDescription(props.index, i)}
+																	>
+																		<ClearIcon />
+																	</IconButton>
+																</Title>
+																<Image
+																	src={img}
+																	width={140}
+																	height={140}
+																	style={{
+																		objectFit: 'contain',
 																	}}
-																	size='small'
-																	onClick={() => {
-																		product.filterDescription(props.index, i);
-																	}}
+																	onClick={(e) =>
+																		product.setImagePopOver({
+																			element: e.target,
+																			data: { src: img },
+																			open: true,
+																		})
+																	}
+																/>
+																<Title
+																	subTitle
+																	dark={common.darkTheme}
+																	error={props.item.imageCheckList && props.item.imageCheckList[img]}
 																>
-																	<ClearIcon />
-																</IconButton>
-															</Title>
-
-															<Image
-																src={img}
-																width={140}
-																height={140}
-																style={{
-																	objectFit: 'contain',
-																}}
-																onClick={(e) => {
-																	product.setImagePopOver({
-																		element: e.target,
-																		data: { src: img },
-																		open: true,
-																	});
-																}}
-															/>
-
-															<Title
-																subTitle
-																dark={common.darkTheme}
-																error={props.item.imageCheckList && props.item.imageCheckList[img]}
-															>
-																<Button
-																	disableElevation
-																	variant='contained'
-																	color='info'
-																	sx={{
-																		fontSize: 13,
-																		width: '100%',
-																		height: 26,
-																	}}
-																	onClick={() => {
-																		window.open(
-																			chrome.runtime.getURL(
-																				`/trangers_single.html?id=${props.item.id}&type=3&index=${i}`,
-																			),
-																		);
-																	}}
-																>
-																	이미지 편집/번역
-																</Button>
-															</Title>
-														</>
-													);
+																	<Button
+																		disableElevation
+																		variant='contained'
+																		color='info'
+																		sx={{
+																			fontSize: 13,
+																			width: '100%',
+																			height: 26,
+																		}}
+																		onClick={() =>
+																			window.open(
+																				chrome.runtime.getURL(
+																					`/trangers_single.html?id=${props.item.id}&type=3&index=${i}`,
+																				),
+																			)
+																		}
+																	>
+																		이미지 편집/번역
+																	</Button>
+																</Title>
+															</>
+														);
 												})}
 											</Paper>
 										)}
-										onDragEnd={(src, dst) => {
-											product.switchDescription(src, dst, props.index);
-										}}
+										onDragEnd={(src, dst) => product.switchDescription(src, dst, props.index)}
 									/>
 								</Box>
 							</Box>
 						</Paper>
 					</Grid>
-
 					<Grid item xs={6} md={6}>
 						<Paper variant='outlined'>
 							<Title subTitle dark={common.darkTheme}>
@@ -335,13 +303,10 @@ export const TabDescriptions = observer((props: any) => {
 											fontSize: 13,
 											height: 26,
 										}}
-										onClick={() => {
-											product.toggleDescriptionModal(true, props.index);
-										}}
+										onClick={() => product.toggleDescriptionModal(true, props.index)}
 									>
 										상세설명 에디터열기
 									</Button>
-
 									<Button
 										disableElevation
 										variant='contained'
@@ -351,15 +316,12 @@ export const TabDescriptions = observer((props: any) => {
 											fontSize: 13,
 											height: 26,
 										}}
-										onClick={() => {
-											product.initProductDescription(props.item.id, props.index);
-										}}
+										onClick={() => product.initProductDescription(props.item.id, props.index)}
 									>
 										상세설명 복구
 									</Button>
 								</Box>
 							</Title>
-
 							<Box
 								sx={{
 									p: 1,
