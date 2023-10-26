@@ -221,21 +221,23 @@ export const Settings = observer(() => {
 															}}
 															value={`${user.keywardMemo === null ? '설정된 키워드가 없습니다. ' : user.keywardMemo}`}
 														/>
-														<IconButton
-															size='small'
-															color='error'
-															component='span'
-															onClick={async () => {
-																if (
-																	confirm(
-																		'개인 분류를 비우시겠습니까?\n상품에 등록되어있는 개인분류는 삭제되지않습니다.',
+														{user.keywardMemo && (
+															<IconButton
+																size='small'
+																color='error'
+																component='span'
+																onClick={async () => {
+																	if (
+																		confirm(
+																			'개인 분류를 비우시겠습니까?\n상품에 등록되어있는 개인분류는 삭제되지않습니다.',
+																		)
 																	)
-																)
-																	await common.resetKeywardList({ userId: common.user.id });
-															}}
-														>
-															<DeleteIcon />
-														</IconButton>
+																		await common.resetKeywardList({ userId: common.user.id });
+																}}
+															>
+																<DeleteIcon />
+															</IconButton>
+														)}
 													</Box>
 												</Grid>
 											</Grid>
