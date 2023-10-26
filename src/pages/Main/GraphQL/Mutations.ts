@@ -700,6 +700,12 @@ const MUTATIONS = {
         myKeyward : $myKeyward
     )
   }`,
+	RESET_KEYWARD_LIST: `
+  mutation($userId: Int!){
+    resetKeywardList(
+        userId: $userId
+    )
+  }`,
 	SET_LOCK_PRODUCT: `
   mutation (
     $productId : Int!

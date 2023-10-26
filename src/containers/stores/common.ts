@@ -10,7 +10,7 @@ import { coupangApiGateway } from '../../pages/Tools/Coupang';
 import { streetApiGateway } from '../../pages/Tools/Street';
 import { floatingToast, request } from '../../pages/Tools/Common';
 import { refreshToken } from '../../pages/Tools/Auth';
-import { UploadDisabledInfo, UploadInfo, User, UserInfo } from '../../type/type';
+import { Nullable, UploadDisabledInfo, UploadInfo, User, UserInfo } from '../../type/type';
 
 export class common {
 	notionPage = null;
@@ -611,7 +611,7 @@ export class common {
 	};
 
 	// 사용자 정보 설정
-	setUserInfo = (data: any) => (this.user.userInfo = data);
+	setUserInfo = (data: UserInfo) => (this.user.userInfo = data);
 
 	// 사용자 정보 업데이트(DB적용)
 	testUserInfo = async (data: any) => {
@@ -694,7 +694,7 @@ export class common {
 			}
 
 			case 'A112': {
-				let apiKey: string | null = null;
+				let apiKey: Nullable<string> = null;
 
 				switch (this.user.userInfo.streetUseKeyType) {
 					case '1': {
@@ -752,7 +752,7 @@ export class common {
 			}
 
 			case 'A113': {
-				let apiKey: string | null = null;
+				let apiKey: Nullable<string> = null;
 
 				switch (this.user.userInfo.streetNormalUseKeyType) {
 					case '1': {
@@ -999,7 +999,7 @@ export class common {
 		}
 		try {
 			if (this.uploadInfo.markets.find((v) => v.code === 'A112')!.connected) {
-				let apiKey: string | null = null;
+				let apiKey: Nullable<string> = null;
 
 				switch (this.user.userInfo.streetUseKeyType) {
 					case '1': {
@@ -1051,7 +1051,7 @@ export class common {
 
 		try {
 			if (this.uploadInfo.markets.find((v) => v.code === 'A113')!.connected) {
-				let apiKey: string | null = null;
+				let apiKey: Nullable<string> = null;
 
 				switch (this.user.userInfo.streetNormalUseKeyType) {
 					case '1': {
@@ -1222,4 +1222,22 @@ export class common {
 	setNotionPage = (data: any) => (this.notionPage = data);
 	setBanner01Image = (data: any) => (this.banner01Image = data);
 	setBanner01Url = (data: any) => (this.banner01Url = data);
+
+	/** 내 개인분류 초기화 */
+	resetKeywardList = async (data: { userId: number }) => {
+		if (!data.userId) {
+			alert('유저ID가 조회되지 않았습니다\n관리자문의 요망.');
+			return false;
+		}
+		const response = await gql(MUTATIONS.RESET_KEYWARD_LIST, data, false);
+		if (!response.data.resetKeywardList) {
+			alert('개인분류삭제 에러\n관리자문의 요망');
+			return false;
+		}
+
+		floatingToast('삭제 되었습니다.', 'success');
+
+		runInAction(() => (this.user.keywardMemo = null));
+		return true;
+	};
 }

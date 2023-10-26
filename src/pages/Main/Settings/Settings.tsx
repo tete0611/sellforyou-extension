@@ -5,7 +5,6 @@ import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import LinkIcon from '@mui/icons-material/Link';
 import DeleteIcon from '@mui/icons-material/Delete';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Header } from '../Common/Header';
@@ -126,8 +125,7 @@ export const Settings = observer(() => {
 	React.useEffect(() => {
 		if (!loaded) return;
 
-		// 출고지/반품지 정보 가져오기
-		getDeliveryInfo();
+		getDeliveryInfo(); // 출고지/반품지 정보 가져오기
 	}, [loaded]);
 
 	// 다크모드 지원 설정
@@ -218,12 +216,26 @@ export const Settings = observer(() => {
 																style: {
 																	fontSize: 14,
 																	textAlign: 'right',
+																	overflow: 'auto',
 																},
 															}}
-															defaultValue={`${
-																user.keywardMemo === null ? '설정된 키워드가 없습니다. ' : user.keywardMemo
-															}`}
+															value={`${user.keywardMemo === null ? '설정된 키워드가 없습니다. ' : user.keywardMemo}`}
 														/>
+														<IconButton
+															size='small'
+															color='error'
+															component='span'
+															onClick={async () => {
+																if (
+																	confirm(
+																		'개인 분류를 비우시겠습니까?\n상품에 등록되어있는 개인분류는 삭제되지않습니다.',
+																	)
+																)
+																	await common.resetKeywardList({ userId: common.user.id });
+															}}
+														>
+															<DeleteIcon />
+														</IconButton>
 													</Box>
 												</Grid>
 											</Grid>
@@ -1434,9 +1446,9 @@ export const Settings = observer(() => {
 															display: 'flex',
 														}}
 													>
-														<a target='_blank' href={user.userInfo?.fixImageTop}>
+														<a target='_blank' href={user.userInfo?.fixImageTop ?? ''}>
 															<img
-																src={user.userInfo?.fixImageTop}
+																src={user.userInfo?.fixImageTop ?? ''}
 																width={126}
 																height={126}
 																style={{
@@ -1463,7 +1475,7 @@ export const Settings = observer(() => {
 																}}
 																onChange={async (e) => {
 																	const fileList = e.target.files ?? [];
-																	const fileData = await readFileDataURL(fileList[0]);
+																	const fileData = (await readFileDataURL(fileList[0])) as string;
 
 																	await uploadImage({ fixImageTop: fileList[0] });
 
@@ -1555,9 +1567,9 @@ export const Settings = observer(() => {
 															display: 'flex',
 														}}
 													>
-														<a target='_blank' href={user.userInfo?.fixImageSubTop}>
+														<a target='_blank' href={user.userInfo?.fixImageSubTop ?? ''}>
 															<img
-																src={user.userInfo?.fixImageSubTop}
+																src={user.userInfo?.fixImageSubTop ?? ''}
 																width={126}
 																height={126}
 																style={{
@@ -1584,7 +1596,7 @@ export const Settings = observer(() => {
 																}}
 																onChange={async (e) => {
 																	const fileList = e.target.files ?? [];
-																	const fileData = await readFileDataURL(fileList[0]);
+																	const fileData = (await readFileDataURL(fileList[0])) as string;
 
 																	await uploadImage({ fixImageSubTop: fileList[0] });
 
@@ -1676,9 +1688,9 @@ export const Settings = observer(() => {
 															display: 'flex',
 														}}
 													>
-														<a target='_blank' href={user.userInfo?.fixImageBottom}>
+														<a target='_blank' href={user.userInfo?.fixImageBottom ?? ''}>
 															<img
-																src={user.userInfo?.fixImageBottom}
+																src={user.userInfo?.fixImageBottom ?? ''}
 																width={126}
 																height={126}
 																style={{
@@ -1705,7 +1717,7 @@ export const Settings = observer(() => {
 																}}
 																onChange={async (e) => {
 																	const fileList = e.target.files ?? [];
-																	const fileData = await readFileDataURL(fileList[0]);
+																	const fileData = (await readFileDataURL(fileList[0])) as string;
 
 																	await uploadImage({ fixImageBottom: fileList[0] });
 
@@ -1797,9 +1809,9 @@ export const Settings = observer(() => {
 															display: 'flex',
 														}}
 													>
-														<a target='_blank' href={user.userInfo?.fixImageSubBottom}>
+														<a target='_blank' href={user.userInfo?.fixImageSubBottom ?? ''}>
 															<img
-																src={user.userInfo?.fixImageSubBottom}
+																src={user.userInfo?.fixImageSubBottom ?? ''}
 																width={126}
 																height={126}
 																style={{
@@ -1826,7 +1838,7 @@ export const Settings = observer(() => {
 																}}
 																onChange={async (e) => {
 																	const fileList = e.target.files ?? [];
-																	const fileData = await readFileDataURL(fileList[0]);
+																	const fileData = (await readFileDataURL(fileList[0])) as string;
 
 																	await uploadImage({ fixImageSubBottom: fileList[0] });
 
@@ -2181,9 +2193,9 @@ export const Settings = observer(() => {
 																width: '100%',
 																fontSize: 14,
 															}}
-															value={user.userInfo?.optionIndexType ?? ''}
+															value={user.userInfo?.optionIndexType}
 															onChange={async (e) => {
-																const optionIndexType = e.target.value;
+																const optionIndexType = Number(e.target.value);
 
 																if (!optionIndexType) return alert('[옵션정보표기방식] 입력이 잘못되었습니다.');
 
