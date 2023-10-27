@@ -221,7 +221,7 @@ export const Settings = observer(() => {
 															}}
 															value={`${user.keywardMemo === null ? '설정된 키워드가 없습니다. ' : user.keywardMemo}`}
 														/>
-														{user.keywardMemo && (
+														{/* {user.keywardMemo && (
 															<IconButton
 																size='small'
 																color='error'
@@ -237,7 +237,7 @@ export const Settings = observer(() => {
 															>
 																<DeleteIcon />
 															</IconButton>
-														)}
+														)} */}
 													</Box>
 												</Grid>
 											</Grid>
