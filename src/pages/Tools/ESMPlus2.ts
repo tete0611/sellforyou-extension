@@ -8,9 +8,7 @@ import { byteSlice, getStoreTraceCodeV1, notificationByEveryTime, sendCallback, 
 
 // 지마켓/옥션 2.0 상품등록
 export async function uploadESMPlus2(productStore: product, commonStore: common, data: any) {
-	if (!data) {
-		return false;
-	}
+	if (!data) return false;
 
 	let shopName = data.DShopInfo.site_name;
 
@@ -19,12 +17,9 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 	try {
 		let esmplusAuctionId;
 		let esmplusGmarketId;
-
 		let upload_type: any = [];
-
 		let delivery_policy_code_gmk = '0';
 		let delivery_policy_code_iac = '0';
-
 		let gg_text = null;
 
 		// 로그인이 안되어 있는 경우 .json()에서 오류나는 것을 이용하여 로그인 구분
@@ -68,7 +63,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 						if (gg_json[i].SiteId === 2 && esmplusGmarketId === gg_json[i].SellerId) {
 							upload_type.push({ key: '1', value: '' });
 							upload_type.push({ key: '2', value: esmplusGmarketId });
-
 							matched = true;
 
 							break;
@@ -119,7 +113,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 						if (gg_json[i].SiteId === 1 && esmplusAuctionId === gg_json[i].SellerId) {
 							upload_type.push({ key: '1', value: esmplusAuctionId });
 							upload_type.push({ key: '2', value: '' });
-
 							matched = true;
 
 							break;
@@ -161,7 +154,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 
 		// 출고지 조회
 		let delivery_shipping_code = '0';
-
 		let delivery_shipping_resp = await fetch('https://www.esmplus.com/SELL/SYI/GetShipmentPlaces');
 		let delivery_shipping_json = await delivery_shipping_resp.json();
 
@@ -175,7 +167,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 
 		// 반품지 조회
 		let delivery_return_code = '0';
-
 		let delivery_return_resp = await fetch('https://www.esmplus.com/SELL/SYI/GetDefaultReturnMemberAddress');
 		let delivery_return_json = await delivery_return_resp.json();
 
@@ -238,7 +229,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 
 				let categoryResp2 = await fetch(chrome.runtime.getURL('resources/esmCategory.json'));
 				let categoryJson2 = await categoryResp2.json();
-
 				let esmcategoryNumber2;
 				let esmtogmarketoractioncategory2; //추가금불가능하고 , 옵션제한카테고리인지 확인해야함 undefined가 아니면 해당함
 				if (data.DShopInfo.site_code === 'A522') {
@@ -297,11 +287,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 				let errorEditionalPrice: boolean = false;
 
 				if (esmtogmarketoractioncategory2 !== undefined) {
-					for (let i in market_optn) {
-						if (market_optn[i].price !== 0) {
-							errorEditionalPrice = true; //
-						}
-					}
+					for (let i in market_optn) if (market_optn[i].price !== 0) errorEditionalPrice = true;
 				}
 
 				if (errorEditionalPrice === true) {
@@ -347,9 +333,8 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 					}
 				}
 
-				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code)?.video) {
+				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code)?.video)
 					market_item.misc1 = '';
-				}
 
 				// 상품상세페이지 (추적코드, 상단이미지, 내용, 하단이미지 순)
 				let desc = `
@@ -382,34 +367,24 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
     		`;
 
 				let group: any = {};
-
 				let words = await gql(QUERIES.SELECT_WORD_TABLES_BY_SOMEONE, {}, false);
 				let words_list = words.data.selectWordTablesBySomeone;
-
 				let words_restrict: any = {};
 
 				for (let i in words_list) {
-					if (words_list[i].findWord && !words_list[i].replaceWord) {
-						if (market_item.name3.includes(words_list[i].findWord)) {
-							words_restrict['상품명'] = words_list[i].findWord;
-						}
-					}
+					if (words_list[i].findWord && !words_list[i].replaceWord)
+						if (market_item.name3.includes(words_list[i].findWord)) words_restrict['상품명'] = words_list[i].findWord;
 				}
 
 				for (let i in market_optn) {
 					if (market_optn[i].code === market_code) {
 						for (let j in market_optn[i]) {
-							if (j.includes('misc') && market_optn[i][j] !== '') {
-								group[market_optn[i][j]] = j.replace('misc', 'opt');
-							}
-
+							if (j.includes('misc') && market_optn[i][j] !== '') group[market_optn[i][j]] = j.replace('misc', 'opt');
 							if (j.includes('opt') && j !== 'optimg' && market_optn[i][j] !== '') {
 								for (let k in words_list) {
-									if (words_list[k].findWord && !words_list[k].replaceWord) {
-										if (market_optn[i][j].includes(words_list[k].findWord)) {
+									if (words_list[k].findWord && !words_list[k].replaceWord)
+										if (market_optn[i][j].includes(words_list[k].findWord))
 											words_restrict['옵션명'] = words_list[k].findWord;
-										}
-									}
 								}
 							}
 						}
@@ -420,9 +395,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 				if (Object.keys(words_restrict).length > 0) {
 					let message = '';
 
-					for (let i in words_restrict) {
-						message += i + '에서 금지어(' + words_restrict[i] + ')가 발견되었습니다. ';
-					}
+					for (let i in words_restrict) message += i + '에서 금지어(' + words_restrict[i] + ')가 발견되었습니다. ';
 
 					productStore.addRegisteredFailed(Object.assign(market_item, { error: message }));
 					productStore.addConsoleText(`(${shopName}) [${market_code}] 금지어 발견됨`);
@@ -444,21 +417,12 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 						if (commonStore.user.userInfo.autoPrice === 'Y') {
 							let iprice = market_item.sprice;
 							let oprice = market_item.sprice + market_optn[i].price;
-
 							let percent = Math.ceil((oprice / iprice - 1) * 100);
 
-							if (percent < -50 || percent > 50) {
-								continue;
-							}
+							if (percent < -50 || percent > 50) continue;
 						}
-						// console.log("1", market_optn[i].misc1);
-						// console.log("2", market_optn[i].misc2);
-						// console.log("3", market_optn[i].misc3);
-						// option_data["OptSel"]["ObjOptInfo"]["ObjOptClaseNm1"] = market_optn[i].misc1;
-						// option_data["OptSel"]["ObjOptInfo"]["ObjOptClaseNm2"] = market_optn[i].misc2;
-						// option_data["OptSel"]["ObjOptInfo"]["ObjOptClaseNm3"] = market_optn[i].misc3;
 
-						if (option_count === 1) {
+						if (option_count === 1)
 							option_data['OptionInfoList'].push({
 								OptType: option_count,
 								OptValue1: market_optn[i].opt1,
@@ -516,7 +480,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 									},
 								],
 							});
-						} else {
+						else
 							option_data['OptionInfoList'].push({
 								OptType: option_count,
 								OptValue1: market_optn[i].opt1,
@@ -574,12 +538,10 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 									},
 								],
 							});
-						}
 					}
 				}
 
 				let date = new Date();
-
 				let YY1 = date.getFullYear().toString();
 				let MM1 = (date.getMonth() + 1).toString().padStart(2, '0');
 				let DD1 = date.getDate().toString().padStart(2, '0');
@@ -621,8 +583,8 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 				let test_tommorow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString();
 				let categoryResp = await fetch(chrome.runtime.getURL('resources/esmCategory.json'));
 				let categoryJson = await categoryResp.json();
-
 				let esmcategoryNumber;
+
 				if (data.DShopInfo.site_code === 'A522') {
 					esmcategoryNumber = categoryJson.find((item) => item.A옥션 === market_item.cate_code);
 					if (esmcategoryNumber === undefined) {
@@ -1127,7 +1089,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 							IsTplConvertible: false, // 1
 							IsGmktIACPost: false, // 1
 						},
-
 						IsAdultProduct: 'False',
 						IsVATFree: 'False',
 						ASInfo: null, //esm2.0추가
@@ -1500,7 +1461,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 					if (!productId) {
 						productStore.addRegisteredFailed(Object.assign(market_item, { error: '상품 ID를 찾을 수 없습니다.' }));
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 실패`);
-
 						await sendCallback(commonStore, data, market_code, parseInt(product), 2, '상품 ID를 찾을 수 없습니다.');
 
 						continue;
@@ -1518,7 +1478,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 					for (let property in productData) {
 						let encodedKey = encodeURIComponent(property);
 						let encodedValue = encodeURIComponent(productData[property]);
-
 						productContent.push(encodedKey + '=' + encodedValue);
 					}
 
@@ -1550,7 +1509,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 					if (!productJson.data) {
 						productStore.addRegisteredFailed(Object.assign(market_item, { error: '상품 ID를 찾을 수 없습니다.' }));
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 실패`);
-
 						await sendCallback(commonStore, data, market_code, parseInt(product), 2, '상품 ID를 찾을 수 없습니다.');
 
 						continue;
@@ -1560,9 +1518,9 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 					let product_body = {
 						model: {
 							...test_body,
-
 							GoodsNo: productJson.data[0].SingleGoodsNo,
 							SiteGoodsNo: productId,
+							SiteGoodsNoGmkt: data.DShopInfo.site_code === 'A523' ? productId : null,
 							CommandType: '2',
 						},
 						// orgModel: {
@@ -1572,6 +1530,8 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 					product_body.model.SYIStep2.Stock['SiteGoodsCountNo'] = productJson.data[0].SingleGoodsNo;
 					productStore.addRegisteredQueue(market_item);
 					productStore.addConsoleText(`(${shopName}) 상품 수정 중...`);
+
+					console.log({ product_body });
 
 					// 상품 수정 API
 					let test_resp = await fetch('https://www.esmplus.com/Sell/SingleGoods/Save', {
@@ -1589,32 +1549,19 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 						let test_json = JSON.parse(test_text);
 						let errorMessage: any = null;
 
-						if (test_json.Unknown) {
-							errorMessage = test_json.Unknown.ErrorList[0].ErrorMessage;
-						} else {
-							if (test_json.ExceptionMessage) {
-								errorMessage = test_json.ExceptionMessage;
-							} else {
-								if (test_json['1']) {
-									// if (test_json["1"].ErrorList[0].ApiErrorMessage !== "재고 정보를 변경하려면 재고번호를 입력해 주세요.") {
-									//   errorMessage = null;
-									// }
-									errorMessage = test_json['1'].ErrorList[0].ApiErrorMessage;
-								}
-
-								if (test_json['2']) {
-									errorMessage = test_json['2'].ErrorList[0].ApiErrorMessage;
-								}
+						if (test_json.Unknown) errorMessage = test_json.Unknown.ErrorList[0].ErrorMessage;
+						else {
+							if (test_json.ExceptionMessage) errorMessage = test_json.ExceptionMessage;
+							else {
+								if (test_json['1']) errorMessage = test_json['1'].ErrorList[0].ApiErrorMessage;
+								if (test_json['2']) errorMessage = test_json['2'].ErrorList[0].ApiErrorMessage;
 							}
 						}
 
-						if (!errorMessage) {
-							errorMessage = '일시적인 오류로 서비스를 이용할 수 없습니다.';
-						}
+						if (!errorMessage) errorMessage = '일시적인 오류로 서비스를 이용할 수 없습니다.';
 
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 실패`);
 						productStore.addRegisteredFailed(Object.assign(market_item, { error: errorMessage }));
-
 						await sendCallback(commonStore, data, market_code, parseInt(product), 2, errorMessage);
 					} catch (e) {
 						let product_html = new DOMParser().parseFromString(test_text, 'text/html');
@@ -1645,7 +1592,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 성공`);
 						productStore.addRegisteredSuccess(Object.assign(market_item, { error: product_code }));
-
 						await sendCallback(commonStore, data, market_code, parseInt(product), 1, product_code);
 					}
 				} else {
@@ -1658,16 +1604,11 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 						},
 					};
 
-					// console.log('최종 제이슨');
-					// console.log({ product_body });
-					// return false;
-
 					// 상품 등록 API
 					let test_resp = await fetch('https://www.esmplus.com/Sell/SingleGoods/Save', {
 						headers: {
 							'content-type': 'application/json',
 						},
-
 						body: JSON.stringify(product_body),
 						method: 'POST',
 					});
@@ -1678,33 +1619,22 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 						let test_json = JSON.parse(test_text);
 						let errorMessage: any = null;
 
-						if (test_json.Unknown) {
-							errorMessage = test_json.Unknown.ErrorList[0].ErrorMessage;
-						} else {
-							if (test_json.ExceptionMessage) {
-								errorMessage = test_json.ExceptionMessage;
-							} else {
-								if (test_json['1']) {
-									errorMessage = test_json['1'].ErrorList[0].ApiErrorMessage;
-								}
-
-								if (test_json['2']) {
-									errorMessage = test_json['2'].ErrorList[0].ApiErrorMessage;
-								}
+						if (test_json.Unknown) errorMessage = test_json.Unknown.ErrorList[0].ErrorMessage;
+						else {
+							if (test_json.ExceptionMessage) errorMessage = test_json.ExceptionMessage;
+							else {
+								if (test_json['1']) errorMessage = test_json['1'].ErrorList[0].ApiErrorMessage;
+								if (test_json['2']) errorMessage = test_json['2'].ErrorList[0].ApiErrorMessage;
 							}
 						}
 
-						if (!errorMessage) {
-							errorMessage = '일시적인 오류로 서비스를 이용할 수 없습니다.';
-						}
+						if (!errorMessage) errorMessage = '일시적인 오류로 서비스를 이용할 수 없습니다.';
 
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
 						productStore.addRegisteredFailed(Object.assign(market_item, { error: errorMessage }));
-
 						await sendCallback(commonStore, data, market_code, parseInt(product), 2, errorMessage);
 					} catch (e) {
 						let product_html = new DOMParser().parseFromString(test_text, 'text/html');
-						// console.log(product_html);
 						let product_data: any = product_html.querySelector(
 							'body > div.basic_contents > div.product_complete_group > div.group_item_result > table > tbody > tr:nth-child(1) > td > div.text_field > span',
 						);
@@ -1732,7 +1662,6 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 성공`);
 						productStore.addRegisteredSuccess(Object.assign(market_item, { error: product_code }));
-
 						await sendCallback(commonStore, data, market_code, parseInt(product), 1, product_code);
 					}
 				}
@@ -1757,10 +1686,8 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 // 지마켓/옥션 상품 등록해제
 // 상품수정 - 판매중지 - 삭제 순으로 진행해야 함
 // 따라서 상품등록 로직과 유사하게 보일 수 있음
-export async function deleteESMPlus2(productStore: product, commonStore: common, data: any) {
-	if (!data) {
-		return false;
-	}
+export const deleteESMPlus2 = async (productStore: product, commonStore: common, data: any) => {
+	if (!data) return false;
 
 	let shopName = data.DShopInfo.site_name;
 
@@ -1769,12 +1696,9 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 	try {
 		let esmplusAuctionId;
 		let esmplusGmarketId;
-
 		let upload_type: any = [];
-
 		let delivery_policy_code_gmk = '0';
 		let delivery_policy_code_iac = '0';
-
 		let gg_text = null;
 
 		try {
@@ -1816,7 +1740,6 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 						if (gg_json[i].SiteId === 2 && esmplusGmarketId === gg_json[i].SellerId) {
 							upload_type.push({ key: '1', value: '' });
 							upload_type.push({ key: '2', value: esmplusGmarketId });
-
 							matched = true;
 
 							break;
@@ -1866,7 +1789,6 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 						if (gg_json[i].SiteId === 1 && esmplusAuctionId === gg_json[i].SellerId) {
 							upload_type.push({ key: '1', value: esmplusAuctionId });
 							upload_type.push({ key: '2', value: '' });
-
 							matched = true;
 
 							break;
@@ -1902,9 +1824,7 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 		const userResp = await fetch('https://www.esmplus.com/Escrow/Order/NewOrder');
 		const userText = await userResp.text();
 		const userMatched: any = userText.match(/var masterID = "([0-9]+)"/);
-
 		let delivery_shipping_code = '0';
-
 		let delivery_shipping_resp = await fetch('https://www.esmplus.com/SELL/SYI/GetShipmentPlaces');
 		let delivery_shipping_json = await delivery_shipping_resp.json();
 
@@ -1917,7 +1837,6 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 		}
 
 		let delivery_return_code = '0';
-
 		let delivery_return_resp = await fetch('https://www.esmplus.com/SELL/SYI/GetDefaultReturnMemberAddress');
 		let delivery_return_json = await delivery_return_resp.json();
 
@@ -1929,12 +1848,9 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 				let market_item = data.DShopInfo.DataDataSet.data[product];
 				let market_optn = data.DShopInfo.DataDataSet.data_opt;
 
-				if (market_item.cert) {
-					continue;
-				}
+				if (market_item.cert) continue;
 
 				let image_list: any = [];
-
 				let name = byteSlice(market_item.name3, 50);
 
 				for (let i in market_item) {
@@ -1957,9 +1873,8 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 					}
 				}
 
-				if (!commonStore.uploadInfo.markets.find((v) => v.code === data.DShopInfo.site_code)?.video) {
+				if (!commonStore.uploadInfo.markets.find((v) => v.code === data.DShopInfo.site_code)?.video)
 					market_item.misc1 = '';
-				}
 
 				let desc = `
         ${getStoreTraceCodeV1(market_item.id, data.DShopInfo.site_code)}
@@ -1991,34 +1906,24 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 			`;
 
 				let group: any = {};
-
 				let words = await gql(QUERIES.SELECT_WORD_TABLES_BY_SOMEONE, {}, false);
 				let words_list = words.data.selectWordTablesBySomeone;
-
 				let words_restrict: any = {};
 
 				for (let i in words_list) {
-					if (words_list[i].findWord && !words_list[i].replaceWord) {
-						if (market_item.name3.includes(words_list[i].findWord)) {
-							words_restrict['상품명'] = words_list[i].findWord;
-						}
-					}
+					if (words_list[i].findWord && !words_list[i].replaceWord)
+						if (market_item.name3.includes(words_list[i].findWord)) words_restrict['상품명'] = words_list[i].findWord;
 				}
 
 				for (let i in market_optn) {
 					if (market_optn[i].code === market_code) {
 						for (let j in market_optn[i]) {
-							if (j.includes('misc') && market_optn[i][j] !== '') {
-								group[market_optn[i][j]] = j.replace('misc', 'opt');
-							}
-
+							if (j.includes('misc') && market_optn[i][j] !== '') group[market_optn[i][j]] = j.replace('misc', 'opt');
 							if (j.includes('opt') && j !== 'optimg' && market_optn[i][j] !== '') {
 								for (let k in words_list) {
-									if (words_list[k].findWord && !words_list[k].replaceWord) {
-										if (market_optn[i][j].includes(words_list[k].findWord)) {
+									if (words_list[k].findWord && !words_list[k].replaceWord)
+										if (market_optn[i][j].includes(words_list[k].findWord))
 											words_restrict['옵션명'] = words_list[k].findWord;
-										}
-									}
 								}
 							}
 						}
@@ -2028,13 +1933,10 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 				if (Object.keys(words_restrict).length > 0) {
 					let message = '';
 
-					for (let i in words_restrict) {
-						message += i + '에서 금지어(' + words_restrict[i] + ')가 발견되었습니다. ';
-					}
+					for (let i in words_restrict) message += i + '에서 금지어(' + words_restrict[i] + ')가 발견되었습니다. ';
 
 					productStore.addRegisteredFailed(Object.assign(market_item, { error: message }));
 					productStore.addConsoleText(`(${shopName}) [${market_code}] 금지어 발견됨`);
-
 					await sendCallback(commonStore, data, market_code, parseInt(product), 2, message);
 
 					continue;
@@ -2043,9 +1945,9 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 
 				let categoryResp2 = await fetch(chrome.runtime.getURL('resources/esmCategory.json'));
 				let categoryJson2 = await categoryResp2.json();
-
 				let esmcategoryNumber2;
 				let esmtogmarketoractioncategory2; //추가금불가능하고 , 옵션제한카테고리인지 확인해야함 undefined가 아니면 해당함
+
 				if (data.DShopInfo.site_code === 'A522') {
 					let auctionOptionscategoryResp = await fetch(chrome.runtime.getURL('resources/auctionOptions.json'));
 					let auctionOptionscategoryJson = await auctionOptionscategoryResp.json();
@@ -2077,6 +1979,7 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 					let gmarketOptionscategoryJson = await gmarketOptionscategoryResp.json();
 
 					esmcategoryNumber2 = categoryJson2.find((item) => item.G마켓 === market_item.cate_code);
+
 					if (esmcategoryNumber2 === undefined) {
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
 						productStore.addRegisteredFailed(
@@ -2102,7 +2005,6 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 				console.log('esmtogmarketoractioncategory', esmtogmarketoractioncategory2); //추가금불가능하고 , 옵션제한카테고리인지 확인해야함 undefined가 아니면 해당함
 
 				let option_count = Object.keys(group).length;
-
 				let option_data: any = {
 					OptionInfoList: [], //esm2.0처리
 				};
@@ -2112,19 +2014,16 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 						if (commonStore.user.userInfo.autoPrice === 'Y') {
 							let iprice = market_item.sprice;
 							let oprice = market_item.sprice + market_optn[i].price;
-
 							let percent = Math.ceil((oprice / iprice - 1) * 100);
 
-							if (percent < -50 || percent > 50) {
-								continue;
-							}
+							if (percent < -50 || percent > 50) continue;
 						}
 
 						// option_data["OptSel"]["ObjOptInfo"]["ObjOptClaseNm1"] = market_optn[i].misc1;
 						// option_data["OptSel"]["ObjOptInfo"]["ObjOptClaseNm2"] = market_optn[i].misc2;
 						// option_data["OptSel"]["ObjOptInfo"]["ObjOptClaseNm3"] = market_optn[i].misc3;
 
-						if (option_count === 1) {
+						if (option_count === 1)
 							option_data['OptionInfoList'].push({
 								OptType: option_count,
 								OptValue1: market_optn[i].opt1,
@@ -2182,7 +2081,7 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 									},
 								],
 							});
-						} else {
+						else
 							option_data['OptionInfoList'].push({
 								OptType: option_count,
 								OptValue1: market_optn[i].opt1,
@@ -2240,12 +2139,10 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 									},
 								],
 							});
-						}
 					}
 				}
 
 				let date = new Date();
-
 				let YY1 = date.getFullYear().toString();
 				let MM1 = (date.getMonth() + 1).toString().padStart(2, '0');
 				let DD1 = date.getDate().toString().padStart(2, '0');
@@ -2257,7 +2154,6 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 				let DD2 = date.getDate().toString().padStart(2, '0');
 
 				const itemInfo = productStore.itemInfo.items.find((v) => v.productCode === market_code)!;
-
 				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
 					? itemInfo[`sillCode${data.DShopInfo.site_code}`]
 					: '35';
@@ -3985,9 +3881,7 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 
 				let productId = market_item.name2;
 
-				if (!productId) {
-					continue;
-				}
+				if (!productId) continue;
 
 				let productData = {
 					paramsData: `{"Keyword": "${productId}","SiteId":"0","SellType":0,"CategoryCode":"","CustCategoryCode":0,"TransPolicyNo":0,"StatusCode":"","SearchDateType":0,"StartDate":"","EndDate":"","SellerId":"","StockQty":-1,"SellPeriod":0,"DeliveryFeeApplyType":0,"OptAddDeliveryType":0,"SellMinPrice":0,"SellMaxPrice":0,"OptSelUseIs":-1,"PremiumEnd":0,"PremiumPlusEnd":0,"FocusEnd":0,"FocusPlusEnd":0,"GoodsIds":"","SellMngCode":"","OrderByType":11,"NotiItemReg":-1,"EpinMatch":-1,"UserEvaluate":"","ShopCateReg":-1,"IsTPLUse":"","GoodsName":"","SdBrandId":0,"SdBrandName":"","IsGiftUse":""}`,
@@ -4046,11 +3940,9 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 				let deleteBody: any = {
 					model: {
 						...delete_test_body,
-
 						GoodsNo: productJson.data[0].SingleGoodsNo,
 						SiteGoodsNo: null,
 						CommandType: '2', //판매중지
-
 						IsIacSellingStatus: '0', //일단 이거 0이었고 G마켓은
 					},
 				};
@@ -4126,7 +4018,6 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 						continue;
 					}
 				} catch (e) {
-					// deleteBody.model.CommandType = "4";
 					async function deleteApiTest(lastDeleteBody: any) {
 						const deleteResp = await fetch('https://www.esmplus.com/Sell/SingleGoodsMng/SetSellStateDelete', {
 							headers: {
@@ -4186,7 +4077,7 @@ export async function deleteESMPlus2(productStore: product, commonStore: common,
 	productStore.addConsoleText(`(${shopName}) 상품 등록해제 완료`);
 
 	return true;
-}
+};
 
 // 지마켓/옥션 신규주문조회
 // export async function newOrderESMPlus2(commonStore: any, shopInfo: any) {
