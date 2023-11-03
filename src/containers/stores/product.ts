@@ -233,7 +233,7 @@ export class product {
 		whereInput: {},
 	};
 
-	categoryInfo: any = {
+	categoryInfo = {
 		markets: [
 			{
 				code: 'A077',
@@ -476,7 +476,7 @@ export class product {
 
 	// 카테고리 정보 가져오기
 	getCategoryList = async (marketCode: string) => {
-		let result = this.categoryInfo.markets.find((v: any) => v.code === marketCode);
+		let result = this.categoryInfo.markets.find((v) => v.code === marketCode)!;
 
 		if (result.data.length > 0) return;
 
@@ -565,7 +565,7 @@ export class product {
 
 	// 카테고리 입력정보
 	setCategoryInput = (marketCode: string, value: string) =>
-		(this.categoryInfo.markets.find((v: any) => v.code === marketCode).input = value);
+		(this.categoryInfo.markets.find((v) => v.code === marketCode)!.input = value);
 
 	// 카테고리 일괄설정
 	setManyCategory = (marketCode: string, value: any) => {

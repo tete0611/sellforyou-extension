@@ -417,8 +417,8 @@ export const Summary = observer((props: Props) => {
 								<Search
 									value={props.item.categoryInfoA077}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A077').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A077').data
+										product.categoryInfo.markets.find((v) => v.code === 'A077')!.input
+											? product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.data
 											: [props.item.categoryInfoA077]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
@@ -429,7 +429,7 @@ export const Summary = observer((props: Props) => {
 									}
 									onOpen={() => product.getCategoryList('A077')}
 									onClose={() => product.setCategoryInput('A077', '')}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077').loading}
+									loading={product.categoryInfo.markets.find((v) => v.code === 'A077')!.loading}
 								/>
 							</Box>
 						</Grid>
