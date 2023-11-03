@@ -7,10 +7,11 @@ import gql from '../Main/GraphQL/Requests';
 import { byteSlice, getStoreTraceCodeV1, notificationByEveryTime, sendCallback, transformContent } from './Common';
 
 // 지마켓/옥션 2.0 상품등록
-export async function uploadESMPlus2(productStore: product, commonStore: common, data: any) {
+export const uploadESMPlus2 = async (productStore: product, commonStore: common, data: any) => {
 	if (!data) return false;
 
 	let shopName = data.DShopInfo.site_name;
+	const shopCode = data.DShopInfo.site_code;
 
 	console.log(`(${shopName}) 등록정보:`, data);
 
@@ -41,7 +42,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 		let gg_json = JSON.parse(gg_text);
 
 		// 지마켓2.0/옥션2.0 구분
-		switch (data.DShopInfo.site_code) {
+		switch (shopCode) {
 			/** 지마켓 */
 			case 'A523': {
 				let user_g_resp = await fetch('https://www.esmplus.com/Home/HomeSellerActivityBalanceGmktData?sellerid=', {
@@ -187,7 +188,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 
 				const test = await gql(MUTATIONS.CHECK_ESM_PLUS, {
 					productId: market_item.id,
-					siteCode: data.DShopInfo.site_code,
+					siteCode: shopCode,
 				});
 
 				if (JSON.parse(test.data.checkESMPlus).length >= 1) {
@@ -231,7 +232,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 				let categoryJson2 = await categoryResp2.json();
 				let esmcategoryNumber2;
 				let esmtogmarketoractioncategory2; //추가금불가능하고 , 옵션제한카테고리인지 확인해야함 undefined가 아니면 해당함
-				if (data.DShopInfo.site_code === 'A522') {
+				if (shopCode === 'A522') {
 					let auctionOptionscategoryResp = await fetch(chrome.runtime.getURL('resources/auctionOptions.json'));
 					let auctionOptionscategoryJson = await auctionOptionscategoryResp.json();
 
@@ -256,7 +257,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 					esmtogmarketoractioncategory2 = auctionOptionscategoryJson.find(
 						(item) => item.카테고리코드 == esmcategoryNumber2['A옥션'],
 					);
-				} else if (data.DShopInfo.site_code === 'A523') {
+				} else if (shopCode === 'A523') {
 					let gmarketOptionscategoryResp = await fetch(chrome.runtime.getURL('resources/gmarketOptions.json'));
 					let gmarketOptionscategoryJson = await gmarketOptionscategoryResp.json();
 
@@ -333,12 +334,11 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 					}
 				}
 
-				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code)?.video)
-					market_item.misc1 = '';
+				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === shopCode)?.video) market_item.misc1 = '';
 
 				// 상품상세페이지 (추적코드, 상단이미지, 내용, 하단이미지 순)
 				let desc = `
-        ${getStoreTraceCodeV1(market_item.id, data.DShopInfo.site_code)}
+        ${getStoreTraceCodeV1(market_item.id, shopCode)}
 
         ${market_item.content2}
 
@@ -555,11 +555,9 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code)!;
 
 				// 고시정보 생성
-				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
-					? itemInfo[`sillCode${data.DShopInfo.site_code}`]
-					: '35';
-				const sillData = itemInfo[`sillData${data.DShopInfo.site_code}`]
-					? JSON.parse(itemInfo[`sillData${data.DShopInfo.site_code}`])
+				const sillCode = itemInfo[`sillCode${shopCode}`] ? itemInfo[`sillCode${shopCode}`] : '35';
+				const sillData = itemInfo[`sillData${shopCode}`]
+					? JSON.parse(itemInfo[`sillData${shopCode}`])
 					: [
 							{ code: '35-1', name: '품명 및 모델명', type: 'input' },
 							{ code: '35-2', name: '허가 관련', type: 'input' },
@@ -585,7 +583,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 				let categoryJson = await categoryResp.json();
 				let esmcategoryNumber;
 
-				if (data.DShopInfo.site_code === 'A522') {
+				if (shopCode === 'A522') {
 					esmcategoryNumber = categoryJson.find((item) => item.A옥션 === market_item.cate_code);
 					if (esmcategoryNumber === undefined) {
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
@@ -604,7 +602,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 
 						continue;
 					}
-				} else if (data.DShopInfo.site_code === 'A523') {
+				} else if (shopCode === 'A523') {
 					esmcategoryNumber = categoryJson.find((item) => item.G마켓 === market_item.cate_code);
 					if (esmcategoryNumber === undefined) {
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
@@ -624,10 +622,11 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 						continue;
 					}
 				}
+
 				let test_body = {
 					MasterId: userMatched?.[1], //esm2.0추가
 					LoginId:
-						data.DShopInfo.site_code === 'A522'
+						shopCode === 'A522'
 							? commonStore.user.userInfo.esmplusAuctionId
 							: commonStore.user.userInfo.esmplusGmarketId, //esm2.0추가
 					//esm2.0추가 아래부터
@@ -646,7 +645,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 					IsSiteDisplayIac: false,
 					IsSiteDisplayGmkt: false,
 					SellingStatusIac: null,
-					SellingStatusGmkt: null,
+					SellingStatusGmkt: shopCode === 'A522' ? 'N' : null,
 					IsDeleteGroup: false,
 					EditorUseYn: 'Y',
 					SdInfo: {
@@ -671,7 +670,7 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 					//esm2.0추가 위에 까지
 					SYIStep1: {
 						PurchaseBenefits: [], //esm2.0추가
-						RegMarketType: data.DShopInfo.site_code === 'A522' ? '1' : '2',
+						RegMarketType: shopCode === 'A522' ? '1' : '2',
 						SiteSellerId: upload_type,
 						HasCatalog: false, //esm2.0추가
 						CatalogId: '0', //esm2.0추가
@@ -1015,15 +1014,15 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 							IsCustomerNameView: false,
 						},
 						DeliveryInfo: {
-							// BundleDeliveryTempNo: '13864417',
-							// BundleDeliveryYNType: '1',
+							// BundleDeliveryTempNo: null,
+							// BundleDeliveryYNType: null,
 							CommonDeliveryUseYn: true, // 1
 							InvalidDeliveryInfo: false, // 1
 							CommonDeliveryWayOPTSEL: '0', // 1
 							GmktDeliveryWayOPTSEL: '1', // 1
 							IsCommonGmktUnifyDelivery: false, // 1
-							GmktDeliveryCOMP: '10034', // 1
-							IacDeliveryCOMP: null, // 1
+							GmktDeliveryCOMP: shopCode === 'A523' ? '10034' : null, // 1
+							IacDeliveryCOMP: shopCode === 'A522' ? '10034' : null, // 1
 							IsCommonVisitTake: false, // 1
 							IsCommonQuickService: false, // 1
 							IsCommonIACPost: false, // 1
@@ -1518,9 +1517,25 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 					let product_body = {
 						model: {
 							...test_body,
+							SYIStep2: {
+								...test_body.SYIStep2,
+								SellingPeriod: {
+									...test_body.SYIStep2.SellingPeriod,
+									History: [
+										// esm2.0 통합 추가 : 상품의 판매시작일자와 종료일자가 히스토리로 남아있는 듯 한데 일단 false로 해줌
+										{
+											// EndDate: '2023-01-25T14:59:59.000Z',
+											EndDateSpecified: false,
+											// StartDate: '2022-10-26T15:00:00.000Z',
+											StartDateSpecified: false,
+										},
+									],
+								},
+							},
 							GoodsNo: productJson.data[0].SingleGoodsNo,
-							SiteGoodsNo: productId,
-							SiteGoodsNoGmkt: data.DShopInfo.site_code === 'A523' ? productId : null,
+							SiteGoodsNo: shopCode === 'A522' ? null : productId,
+							SiteGoodsNoGmkt: shopCode === 'A523' ? productId : null,
+							SiteGoodsNoIac: shopCode === 'A522' ? productId : null,
 							CommandType: '2',
 						},
 						// orgModel: {
@@ -1681,15 +1696,16 @@ export async function uploadESMPlus2(productStore: product, commonStore: common,
 	productStore.addConsoleText(`(${shopName}) ESMPLUS 업로드 완료`);
 
 	return true;
-}
+};
 
-// 지마켓/옥션 상품 등록해제
+/** 지마켓/옥션 상품 등록해제 *********************************************************************/
 // 상품수정 - 판매중지 - 삭제 순으로 진행해야 함
 // 따라서 상품등록 로직과 유사하게 보일 수 있음
 export const deleteESMPlus2 = async (productStore: product, commonStore: common, data: any) => {
 	if (!data) return false;
 
 	let shopName = data.DShopInfo.site_name;
+	const shopCode = data.DShopInfo.site_code;
 
 	console.log(`(${shopName}) 등록정보:`, data);
 
@@ -1718,7 +1734,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 
 		let gg_json = JSON.parse(gg_text);
 
-		switch (data.DShopInfo.site_code) {
+		switch (shopCode) {
 			/** 지마켓 */
 			case 'A523': {
 				let user_g_resp = await fetch('https://www.esmplus.com/Home/HomeSellerActivityBalanceGmktData?sellerid=', {
@@ -1873,11 +1889,10 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 					}
 				}
 
-				if (!commonStore.uploadInfo.markets.find((v) => v.code === data.DShopInfo.site_code)?.video)
-					market_item.misc1 = '';
+				if (!commonStore.uploadInfo.markets.find((v) => v.code === shopCode)?.video) market_item.misc1 = '';
 
 				let desc = `
-        ${getStoreTraceCodeV1(market_item.id, data.DShopInfo.site_code)}
+        ${getStoreTraceCodeV1(market_item.id, shopCode)}
 
         ${market_item.content2}
 
@@ -1948,7 +1963,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 				let esmcategoryNumber2;
 				let esmtogmarketoractioncategory2; //추가금불가능하고 , 옵션제한카테고리인지 확인해야함 undefined가 아니면 해당함
 
-				if (data.DShopInfo.site_code === 'A522') {
+				if (shopCode === 'A522') {
 					let auctionOptionscategoryResp = await fetch(chrome.runtime.getURL('resources/auctionOptions.json'));
 					let auctionOptionscategoryJson = await auctionOptionscategoryResp.json();
 
@@ -1974,7 +1989,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 					esmtogmarketoractioncategory2 = auctionOptionscategoryJson.find(
 						(item) => item.카테고리코드 == esmcategoryNumber2['A옥션'],
 					);
-				} else if (data.DShopInfo.site_code === 'A523') {
+				} else if (shopCode === 'A523') {
 					let gmarketOptionscategoryResp = await fetch(chrome.runtime.getURL('resources/gmarketOptions.json'));
 					let gmarketOptionscategoryJson = await gmarketOptionscategoryResp.json();
 
@@ -2154,11 +2169,9 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 				let DD2 = date.getDate().toString().padStart(2, '0');
 
 				const itemInfo = productStore.itemInfo.items.find((v) => v.productCode === market_code)!;
-				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
-					? itemInfo[`sillCode${data.DShopInfo.site_code}`]
-					: '35';
-				const sillData = itemInfo[`sillData${data.DShopInfo.site_code}`]
-					? JSON.parse(itemInfo[`sillData${data.DShopInfo.site_code}`])
+				const sillCode = itemInfo[`sillCode${shopCode}`] ? itemInfo[`sillCode${shopCode}`] : '35';
+				const sillData = itemInfo[`sillData${shopCode}`]
+					? JSON.parse(itemInfo[`sillData${shopCode}`])
 					: [
 							{ code: '35-1', name: '품명 및 모델명', type: 'input' },
 							{ code: '35-2', name: '허가 관련', type: 'input' },
@@ -2182,19 +2195,19 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 				let categoryResp = await fetch(chrome.runtime.getURL('resources/esmCategory.json'));
 				let categoryJson = await categoryResp.json();
 				let esmcategoryNumber;
-				if (data.DShopInfo.site_code === 'A522') {
+				if (shopCode === 'A522') {
 					esmcategoryNumber = categoryJson.find((item) => item.A옥션 === market_item.cate_code);
-				} else if (data.DShopInfo.site_code === 'A523') {
+				} else if (shopCode === 'A523') {
 					esmcategoryNumber = categoryJson.find((item) => item.G마켓 === market_item.cate_code);
 				}
 				//등록해제 test_body
 				let delete_test_body: any = {};
-				if (data.DShopInfo.site_code === 'A522') {
+				if (shopCode === 'A522') {
 					//옥션
 					delete_test_body = {
 						MasterId: userMatched[1], //esm2.0추가
 						LoginId:
-							data.DShopInfo.site_code === 'A522'
+							shopCode === 'A522'
 								? commonStore.user.userInfo.esmplusAuctionId
 								: commonStore.user.userInfo.esmplusGmarketId, //esm2.0추가
 						//esm2.0추가 아래부터
@@ -2238,7 +2251,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 						//esm2.0추가 위에 까지
 						SYIStep1: {
 							PurchaseBenefits: [], //esm2.0추가
-							RegMarketType: data.DShopInfo.site_code === 'A522' ? '1' : '2',
+							RegMarketType: shopCode === 'A522' ? '1' : '2',
 							SiteSellerId: upload_type,
 							HasCatalog: false, //esm2.0추가
 							CatalogId: '0', //esm2.0추가
@@ -2297,7 +2310,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 								},
 								{
 									key: '2',
-									value: data.DShopInfo.site_code === 'A522' ? '' : market_item.cate_code,
+									value: shopCode === 'A522' ? '' : market_item.cate_code,
 								},
 							],
 							//esm2.0추가
@@ -2399,12 +2412,11 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 							IsGMKTEnvironmentFriendlyCertType: false, //esm2.0추가
 							IsIACEnvironmentFriendlyCertType: false, //esm2.0추가
 							//원산지항목추가
-
 							Price: {
 								InputType: '1',
 								GoodsPrice: market_item.sprice.toString(),
-								GoodsPriceIAC: data.DShopInfo.site_code === 'A522' ? market_item.sprice.toString() : '0',
-								GoodsPriceGMKT: data.DShopInfo.site_code === 'A523' ? market_item.sprice.toString() : '0',
+								GoodsPriceIAC: shopCode === 'A522' ? market_item.sprice.toString() : '0',
+								GoodsPriceGMKT: shopCode === 'A523' ? market_item.sprice.toString() : '0',
 								IsSeparate: false, //esm2.0추가
 								IsUserCustomSettlementGMKT: false, //esm2.0추가
 								GoodsPriceSettlementGMKT: '0', //esm2.0추가
@@ -2601,7 +2613,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 								CommonDeliveryWayOPTSEL: '1',
 								GmktDeliveryWayOPTSEL: '1',
 								IsCommonGmktUnifyDelivery: false,
-								GmktDeliveryCOMP: data.DShopInfo.site_code === 'A522' ? null : '100000012',
+								GmktDeliveryCOMP: shopCode === 'A522' ? null : '100000012',
 								IacDeliveryCOMP: '10034',
 								IsCommonVisitTake: false,
 								IsCommonQuickService: false,
@@ -3031,12 +3043,12 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 							IsDispExcludeSpecified: false,
 						},
 					};
-				} else if (data.DShopInfo.site_code === 'A523') {
+				} else if (shopCode === 'A523') {
 					//지마켓
 					delete_test_body = {
 						MasterId: userMatched[1], //esm2.0추가
 						LoginId:
-							data.DShopInfo.site_code === 'A522'
+							shopCode === 'A522'
 								? commonStore.user.userInfo.esmplusAuctionId
 								: commonStore.user.userInfo.esmplusGmarketId, //esm2.0추가
 						//esm2.0추가 아래부터
@@ -3080,7 +3092,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 						//esm2.0추가 위에 까지
 						SYIStep1: {
 							PurchaseBenefits: [], //esm2.0추가
-							RegMarketType: data.DShopInfo.site_code === 'A522' ? '1' : '2',
+							RegMarketType: shopCode === 'A522' ? '1' : '2',
 							SiteSellerId: upload_type,
 							HasCatalog: false, //esm2.0추가
 							CatalogId: '0', //esm2.0추가
@@ -3927,11 +3939,11 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 				if (productJson.data.length < 1) {
 					const progressValue = Math.round(((parseInt(product) + 1) * 100) / data.DShopInfo.prod_codes.length);
 
-					commonStore.setDisabledProgressValue(data.DShopInfo.site_code, progressValue);
+					commonStore.setDisabledProgressValue(shopCode, progressValue);
 
 					await gql(MUTATIONS.UNLINK_PRODUCT_STORE, {
 						productId: market_item.id,
-						siteCode: data.DShopInfo.site_code,
+						siteCode: shopCode,
 					});
 
 					continue;
@@ -3964,7 +3976,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 				};
 
 				deleteBody.model.SYIStep2.Stock['SiteGoodsCountNo'] = '0';
-				if (data.DShopInfo.site_code === 'A523') {
+				if (shopCode === 'A523') {
 					//Gmarket
 					lastDeleteBody.param[0].SingleGoodsNo = productJson.data[0].SingleGoodsNo;
 					lastDeleteBody.param[0].popupParamModel[0].GoodsNo = productJson.data[0].SingleGoodsNo;
@@ -3977,7 +3989,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 					deleteBody.model.SellingStatusGmkt = '21';
 					deleteBody.model.SellingStatusIac = 'N';
 					deleteBody.model.IsSiteDisplayGmkt = true;
-				} else if (data.DShopInfo.site_code === 'A522') {
+				} else if (shopCode === 'A522') {
 					//aution 지마켓은 판매중지까지 성공했는데 옥션은 안했네 ..
 					lastDeleteBody.param[0].SingleGoodsNo = productJson.data[0].SingleGoodsNo;
 					lastDeleteBody.param[0].popupParamModel[0].GoodsNo = productJson.data[0].SingleGoodsNo;
@@ -4046,11 +4058,11 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 						}
 						const progressValue = Math.round(((parseInt(product) + 1) * 100) / data.DShopInfo.prod_codes.length);
 
-						commonStore.setDisabledProgressValue(data.DShopInfo.site_code, progressValue);
+						commonStore.setDisabledProgressValue(shopCode, progressValue);
 
 						await gql(MUTATIONS.UNLINK_PRODUCT_STORE, {
 							productId: market_item.id,
-							siteCode: data.DShopInfo.site_code,
+							siteCode: shopCode,
 						});
 					} catch (e) {
 						// const progressValue = Math.round(((parseInt(product) + 1) * 100) / data.DShopInfo.prod_codes.length);
