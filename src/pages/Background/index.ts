@@ -303,7 +303,6 @@ const addToInventory = async (sender: any, origin: any) => {
 				productName: productName,
 			},
 		});
-		// TODO 쿠팡 API 타입 달라질 경우 대비해서 장치 마련해놓기
 
 		try {
 			if (categoryJson?.error) {

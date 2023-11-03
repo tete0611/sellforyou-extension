@@ -23,6 +23,7 @@ import { deleteTmon, uploadTmon } from '../../pages/Tools/Tmon';
 import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from '../../pages/Tools/ChromeAsync';
 import { common } from './common';
 import { ItemInfo, ManyPriceInfo, ModalInfo } from '../../type/type';
+import { UpdateProductMyKeywardInPut } from '../../type/mutation';
 
 export class product {
 	gridView: boolean = false;
@@ -4271,7 +4272,7 @@ export class product {
 	};
 
 	// 키워드 업데이트
-	updateProductMyKeyward = async (data: any, index: number) => {
+	updateProductMyKeyward = async (data: UpdateProductMyKeywardInPut, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.attribute = 0);
 		if (!this.itemInfo.items[index].edited.attribute) return;
 

@@ -1357,6 +1357,9 @@ export const TabAttribute = observer((props: Props) => {
 													<Paper variant='outlined'>
 														<Title dark={common.darkTheme} subTitle>
 															[{props.item.productCode}] 개인 분류
+															{/* <Button color='error' size='small' variant='contained' onClick={() => alert('준비중')}>
+																삭제
+															</Button> */}
 														</Title>
 														<Box
 															sx={{
@@ -1381,7 +1384,8 @@ export const TabAttribute = observer((props: Props) => {
 																onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
 																	if (common.user.purchaseInfo2.level < 3)
 																		return alert('[프로] 등급부터 사용 가능한 기능입니다.');
-																	else if (e.target.value.replace(/\s*$/, '') !== '')
+																	else if (e.target.value.replace(/\s*$/, '') !== '') {
+																		if (e.target.value.length > 50) return alert('50자 이하로 입력해주세요.');
 																		product.updateProductMyKeyward(
 																			{
 																				productId: props.item.id,
@@ -1389,6 +1393,7 @@ export const TabAttribute = observer((props: Props) => {
 																			},
 																			props.index,
 																		);
+																	}
 																}}
 															/>
 														</Box>
