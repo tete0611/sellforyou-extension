@@ -1,6 +1,6 @@
 {
   "name": "sellforyou",
-  "version": "2.18.09",
+  "version": "2.18.10",
   "description": "sellforyou",
   "scripts": {
     "build": "node utils/build.js",
