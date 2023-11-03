@@ -116,19 +116,15 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('A077', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.data
+										product.categoryInfo.markets.find((v) => v.code === 'A077')!.input
+											? product.categoryInfo.markets.find((v) => v.code === 'A077')!.data
 											: [product.manyCategoryInfo.categoryInfoA077]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-									onOpen={() => {
-										product.getCategoryList('A077');
-									}}
-									onClose={() => {
-										product.setCategoryInput('A077', '');
-									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.loading}
+									onOpen={() => product.getCategoryList('A077')}
+									onClose={() => product.setCategoryInput('A077', '')}
+									loading={product.categoryInfo.markets.find((v) => v.code === 'A077')!.loading}
 								/>
 							</Grid>
 						</Grid>

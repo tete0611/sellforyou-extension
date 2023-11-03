@@ -418,13 +418,13 @@ export const Summary = observer((props: Props) => {
 									value={props.item.categoryInfoA077}
 									options={
 										product.categoryInfo.markets.find((v) => v.code === 'A077')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.data
+											? product.categoryInfo.markets.find((v) => v.code === 'A077')!.data
 											: [props.item.categoryInfoA077]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onChange={(e: any, value: any) => product.updateCategoryAuto(value, props.index)}
-									onInputChange={(e: any, value: any, reason: any) =>
+									onInputChange={(e: any, value: any, reason: string) =>
 										reason === 'input' && product.setCategoryInput('A077', value)
 									}
 									onOpen={() => product.getCategoryList('A077')}
