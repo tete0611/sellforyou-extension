@@ -1665,7 +1665,7 @@ const main = async () => {
 		await new vvic().bulkTypeOne(info.user, 2);
 		floatingButton(info, 'vvic', true, true);
 
-		/** */
+		/** vvic 상점 페이지 */
 	} else if (/www.vvic.com\/shop/.test(currentUrl)) {
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 3);
