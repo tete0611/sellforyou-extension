@@ -180,7 +180,6 @@ const scrape = async (items: any, user: User) => {
 
 			let quantity = 999;
 
-			// console.log(items.skuMap[i].id.toString());
 			if (quantity > 0)
 				result['item']['skus']['sku'].push({
 					price: items.skuMap[i].discount_price ?? items.skuMap[i].price,
@@ -395,15 +394,9 @@ export class vvic {
 
 	async bulkTypeOne(user, bulkType: number) {
 		document.addEventListener('DOMNodeInserted', (e: any) => {
-			console.group();
-			console.log(`e.target`);
-			console.log(e.target.classList);
-			console.groupEnd();
 			try {
 				if (e.target.classList.value.includes('itemcard') ?? e.target.tagName === 'LI') {
-					console.log(e.target);
 					let products = e.target.querySelectorAll('a');
-					console.log({ products });
 					for (let i in products) {
 						try {
 							let img = products[i].querySelector('img');

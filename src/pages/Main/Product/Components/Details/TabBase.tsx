@@ -450,13 +450,13 @@ export const TabBase = observer((props: any) => {
 												product.setCategoryInput('A077', '');
 											}}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A077').input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A077').data
+												product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.input
+													? product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.data
 													: [props.item.categoryInfoA077]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
 											isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077').loading}
+											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -493,8 +493,8 @@ export const TabBase = observer((props: any) => {
 												product.setCategoryInput('B378', value);
 											}}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'B378').input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'B378').data
+												product.categoryInfo.markets.find((v: any) => v.code === 'B378')!.input
+													? product.categoryInfo.markets.find((v: any) => v.code === 'B378')!.data
 													: [props.item.categoryInfoB378]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
@@ -505,7 +505,7 @@ export const TabBase = observer((props: any) => {
 											onClose={() => {
 												product.setCategoryInput('B378', '');
 											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'B378').loading}
+											loading={product.categoryInfo.markets.find((v: any) => v.code === 'B378')!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -542,8 +542,8 @@ export const TabBase = observer((props: any) => {
 												product.setCategoryInput('A112', value);
 											}}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A112').input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A112').data
+												product.categoryInfo.markets.find((v: any) => v.code === 'A112')!.input
+													? product.categoryInfo.markets.find((v: any) => v.code === 'A112')!.data
 													: [props.item.categoryInfoA112]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
@@ -554,7 +554,7 @@ export const TabBase = observer((props: any) => {
 											onClose={() => {
 												product.setCategoryInput('A112', '');
 											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A112').loading}
+											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A112')!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -591,8 +591,8 @@ export const TabBase = observer((props: any) => {
 												product.setCategoryInput('A113', value);
 											}}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A113').input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A113').data
+												product.categoryInfo.markets.find((v: any) => v.code === 'A113')!.input
+													? product.categoryInfo.markets.find((v: any) => v.code === 'A113')!.data
 													: [props.item.categoryInfoA113]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
@@ -603,7 +603,7 @@ export const TabBase = observer((props: any) => {
 											onClose={() => {
 												product.setCategoryInput('A113', '');
 											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A113').loading}
+											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A113')!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -640,8 +640,8 @@ export const TabBase = observer((props: any) => {
 												product.setCategoryInput('A006', value);
 											}}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A006').input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A006').data
+												product.categoryInfo.markets.find((v: any) => v.code === 'A006')!.input
+													? product.categoryInfo.markets.find((v: any) => v.code === 'A006')!.data
 													: [props.item.categoryInfoA006]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
@@ -652,7 +652,7 @@ export const TabBase = observer((props: any) => {
 											onClose={() => {
 												product.setCategoryInput('A006', '');
 											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A006').loading}
+											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A006')!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -689,8 +689,8 @@ export const TabBase = observer((props: any) => {
 												product.setCategoryInput('A001', value);
 											}}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A001').input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A001').data
+												product.categoryInfo.markets.find((v: any) => v.code === 'A001')!.input
+													? product.categoryInfo.markets.find((v: any) => v.code === 'A001')!.data
 													: [props.item.categoryInfoA001]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
@@ -701,7 +701,7 @@ export const TabBase = observer((props: any) => {
 											onClose={() => {
 												product.setCategoryInput('A001', '');
 											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A001').loading}
+											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A001')!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -738,8 +738,8 @@ export const TabBase = observer((props: any) => {
 												product.setCategoryInput('A027', value);
 											}}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A027').input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A027').data
+												product.categoryInfo.markets.find((v: any) => v.code === 'A027')!.input
+													? product.categoryInfo.markets.find((v: any) => v.code === 'A027')!.data
 													: [props.item.categoryInfoA027]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
@@ -750,7 +750,7 @@ export const TabBase = observer((props: any) => {
 											onClose={() => {
 												product.setCategoryInput('A027', '');
 											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A027').loading}
+											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A027')!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -787,8 +787,8 @@ export const TabBase = observer((props: any) => {
 												product.setCategoryInput('B719', value);
 											}}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'B719').input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'B719').data
+												product.categoryInfo.markets.find((v: any) => v.code === 'B719')!.input
+													? product.categoryInfo.markets.find((v: any) => v.code === 'B719')!.data
 													: [props.item.categoryInfoB719]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
@@ -799,7 +799,7 @@ export const TabBase = observer((props: any) => {
 											onClose={() => {
 												product.setCategoryInput('B719', '');
 											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'B719').loading}
+											loading={product.categoryInfo.markets.find((v: any) => v.code === 'B719')!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -836,8 +836,8 @@ export const TabBase = observer((props: any) => {
 												product.setCategoryInput('A524', value);
 											}}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A524').input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A524').data
+												product.categoryInfo.markets.find((v: any) => v.code === 'A524')!.input
+													? product.categoryInfo.markets.find((v: any) => v.code === 'A524')!.data
 													: [props.item.categoryInfoA524]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
@@ -848,7 +848,7 @@ export const TabBase = observer((props: any) => {
 											onClose={() => {
 												product.setCategoryInput('A524', '');
 											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A524').loading}
+											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A524')!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -885,8 +885,8 @@ export const TabBase = observer((props: any) => {
 												product.setCategoryInput('A525', value);
 											}}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A525').input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A525').data
+												product.categoryInfo.markets.find((v: any) => v.code === 'A525')!.input
+													? product.categoryInfo.markets.find((v: any) => v.code === 'A525')!.data
 													: [props.item.categoryInfoA525]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
@@ -897,7 +897,7 @@ export const TabBase = observer((props: any) => {
 											onClose={() => {
 												product.setCategoryInput('A525', '');
 											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A525').loading}
+											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A525')!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -934,8 +934,8 @@ export const TabBase = observer((props: any) => {
 												product.setCategoryInput('B956', value);
 											}}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'B956').input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'B956').data
+												product.categoryInfo.markets.find((v: any) => v.code === 'B956')!.input
+													? product.categoryInfo.markets.find((v: any) => v.code === 'B956')!.data
 													: [props.item.categoryInfoB956]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
@@ -946,7 +946,7 @@ export const TabBase = observer((props: any) => {
 											onClose={() => {
 												product.setCategoryInput('B956', '');
 											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'B956').loading}
+											loading={product.categoryInfo.markets.find((v: any) => v.code === 'B956')!.loading}
 										/>
 									</Paper>
 								</Grid>

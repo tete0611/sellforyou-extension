@@ -27,22 +27,15 @@ import { UpdateProductMyKeywardInPut } from '../../type/mutation';
 
 export class product {
 	gridView: boolean = false;
-
 	count: number = 0;
-
 	etcPageSize: boolean = false;
-
 	pageTemp: number = 1;
 	page: number = 1;
 	pages: number = 0;
 	pageSize: number = 10;
-
 	state: number = 6;
-
 	myLock: number = 1;
-
 	tagDict: any = [];
-
 	uploadConsole: any = [];
 	uploadDisabledIndex: number = -1;
 	uploadFailedIndex: number = -1;
@@ -233,7 +226,7 @@ export class product {
 		whereInput: {},
 	};
 
-	categoryInfo: any = {
+	categoryInfo = {
 		markets: [
 			{
 				code: 'A077',
@@ -476,7 +469,7 @@ export class product {
 
 	// 카테고리 정보 가져오기
 	getCategoryList = async (marketCode: string) => {
-		let result = this.categoryInfo.markets.find((v: any) => v.code === marketCode);
+		let result = this.categoryInfo.markets.find((v) => v.code === marketCode)!;
 
 		if (result.data.length > 0) return;
 
@@ -565,7 +558,7 @@ export class product {
 
 	// 카테고리 입력정보
 	setCategoryInput = (marketCode: string, value: string) =>
-		(this.categoryInfo.markets.find((v: any) => v.code === marketCode).input = value);
+		(this.categoryInfo.markets.find((v) => v.code === marketCode)!.input = value);
 
 	// 카테고리 일괄설정
 	setManyCategory = (marketCode: string, value: any) => {
@@ -689,7 +682,6 @@ export class product {
 
 		if (response.errors) {
 			alert(response.errors[0].message);
-
 			exit();
 
 			return;
@@ -718,7 +710,6 @@ export class product {
 
 		if (updateResponse.errors) {
 			alert(updateResponse.errors[0].message);
-
 			exit();
 
 			return;
@@ -825,8 +816,7 @@ export class product {
 		);
 
 		floatingToast('카테고리가 저장되었습니다.', 'success');
-
-		await this.updateProdutSillsAuto('AUTO', index);
+		// await this.updateProdutSillsAuto('AUTO', index);
 
 		runInAction(() => exit());
 	};

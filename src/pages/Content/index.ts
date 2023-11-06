@@ -1587,6 +1587,7 @@ const main = async () => {
 		/chaoshi.detail.tmall.com/.test(currentUrl) ||
 		/detail.tmall.hk/.test(currentUrl)
 	) {
+		console.log('티몰 상세페이지 진입');
 		const info = await initInfo(true);
 		const result = await new tmall().get(info.user);
 		floatingButton(info, null, result, false);
