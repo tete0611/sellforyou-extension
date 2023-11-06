@@ -26,6 +26,7 @@ import {
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { Image, Input, MyButton, Search } from '../../Common/UI';
 import { byteLength, byteSlice } from '../../../Tools/Common';
+import { Item } from '../../../../type/type';
 
 // 커스텀 테이블 컬럼 스타일
 const StyledTableCell = styled(TableCell)({
@@ -35,8 +36,14 @@ const StyledTableCell = styled(TableCell)({
 	fontSize: 14,
 });
 
+interface Props {
+	item: Item;
+	index: number;
+	tableRef: any;
+}
+
 // 상품목록 테이블 행 뷰
-export const Summary = observer((props: any) => {
+export const Summary = observer((props: Props) => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
 
@@ -64,9 +71,7 @@ export const Summary = observer((props: any) => {
 					<Checkbox
 						size='small'
 						checked={props.item.checked}
-						onChange={(e) => {
-							product.toggleItemChecked(props.index, e.target.checked);
-						}}
+						onChange={(e) => product.toggleItemChecked(props.index, e.target.checked)}
 					/>
 
 					<Tooltip title={props.item.collapse ? '상세정보접기' : '상세정보열기'}>
@@ -91,16 +96,11 @@ export const Summary = observer((props: any) => {
 						label={props.item.productCode}
 						onClick={() => {
 							navigator.clipboard.writeText(props.item.productCode).then(
-								function () {
-									alert('클립보드에 복사되었습니다.');
-								},
-								function () {
-									alert('클립보드에 복사할 수 없습니다.');
-								},
+								() => alert('클립보드에 복사되었습니다.'),
+								() => alert('클립보드에 복사할 수 없습니다.'),
 							);
 						}}
 					/>
-
 					{props.item.state === 6 ? (
 						<Chip
 							size='small'
@@ -135,13 +135,13 @@ export const Summary = observer((props: any) => {
 								background: 'black',
 								objectFit: 'contain',
 							}}
-							onClick={(e) => {
+							onClick={(e) =>
 								product.setImagePopOver({
 									element: e.target,
 									data: { src: props.item.imageThumbnail[0] },
 									open: true,
-								});
-							}}
+								})
+							}
 						/>
 					</Box>
 				</StyledTableCell>
@@ -162,14 +162,8 @@ export const Summary = observer((props: any) => {
 									color={props.item.edited.summary ? 'warning' : 'info'}
 									id={`product_row_title_${props.index}`}
 									value={props.item.name}
-									onChange={(e: any) => {
-										const name = e.target.value;
-
-										product.setProductName(name, props.index);
-									}}
-									onBlur={(e: any) => {
-										product.updateProductName(props.index);
-									}}
+									onChange={(e: any) => product.setProductName(e.target.value, props.index)}
+									onBlur={(e: any) => product.updateProductName(props.index)}
 								/>
 
 								<Paper
@@ -423,29 +417,19 @@ export const Summary = observer((props: any) => {
 								<Search
 									value={props.item.categoryInfoA077}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A077').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A077').data
+										product.categoryInfo.markets.find((v) => v.code === 'A077')!.input
+											? product.categoryInfo.markets.find((v) => v.code === 'A077')!.data
 											: [props.item.categoryInfoA077]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-									onChange={(e: any, value: any) => {
-										product.updateCategoryAuto(value, props.index);
-									}}
-									onInputChange={(e: any, value: any, reason: any) => {
-										if (reason !== 'input') {
-											return;
-										}
-
-										product.setCategoryInput('A077', value);
-									}}
-									onOpen={() => {
-										product.getCategoryList('A077');
-									}}
-									onClose={() => {
-										product.setCategoryInput('A077', '');
-									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077').loading}
+									onChange={(e: any, value: any) => product.updateCategoryAuto(value, props.index)}
+									onInputChange={(e: any, value: any, reason: string) =>
+										reason === 'input' && product.setCategoryInput('A077', value)
+									}
+									onOpen={() => product.getCategoryList('A077')}
+									onClose={() => product.setCategoryInput('A077', '')}
+									loading={product.categoryInfo.markets.find((v) => v.code === 'A077')!.loading}
 								/>
 							</Box>
 						</Grid>
@@ -468,12 +452,7 @@ export const Summary = observer((props: any) => {
 									}}
 								>
 									<Tooltip title='소싱처링크'>
-										<IconButton
-											size='small'
-											onClick={() => {
-												window.open(props.item.activeTaobaoProduct.url);
-											}}
-										>
+										<IconButton size='small' onClick={() => window.open(props.item.activeTaobaoProduct.url)}>
 											{props.item.activeTaobaoProduct.shopName === 'taobao' ? (
 												<img src='/resources/icon-taobao.png' />
 											) : props.item.activeTaobaoProduct.shopName === 'tmall' ? (
@@ -493,15 +472,9 @@ export const Summary = observer((props: any) => {
 									<Tooltip title='동영상링크'>
 										<IconButton
 											size='small'
-											onClick={() => {
-												const videoUrl = props.item.activeTaobaoProduct.videoUrl;
-
-												if (!videoUrl) {
-													return;
-												}
-
-												window.open(videoUrl);
-											}}
+											onClick={() =>
+												props.item.activeTaobaoProduct.videoUrl && window.open(props.item.activeTaobaoProduct.videoUrl)
+											}
 										>
 											{props.item.activeTaobaoProduct.videoUrl ? (
 												<img src='/resources/icon-video.png' />
@@ -556,9 +529,7 @@ export const Summary = observer((props: any) => {
 												(v: any) => v.siteCode === 'A077' && v.state === 2,
 											);
 
-											if (!connected) {
-												return;
-											}
+											if (!connected) return;
 
 											window.open(connected.storeUrl);
 										}}
@@ -578,9 +549,7 @@ export const Summary = observer((props: any) => {
 											padding: 0,
 											margin: 1,
 										}}
-										onClick={() => {
-											product.updateCoupangUrl(props.index, common.user);
-										}}
+										onClick={() => product.updateCoupangUrl(props.index, common.user)}
 									>
 										<img
 											src={
@@ -602,9 +571,7 @@ export const Summary = observer((props: any) => {
 												(v: any) => v.siteCode === 'A112' && v.state === 2,
 											);
 
-											if (!connected) {
-												return;
-											}
+											if (!connected) return;
 
 											window.open(connected.storeUrl);
 										}}
@@ -629,9 +596,7 @@ export const Summary = observer((props: any) => {
 												(v: any) => v.siteCode === 'A113' && v.state === 2,
 											);
 
-											if (!connected) {
-												return;
-											}
+											if (!connected) return;
 
 											window.open(connected.storeUrl);
 										}}
@@ -656,9 +621,7 @@ export const Summary = observer((props: any) => {
 												(v: any) => v.siteCode === 'A006' && v.state === 2,
 											);
 
-											if (!connected) {
-												return;
-											}
+											if (!connected) return;
 
 											window.open(connected.storeUrl);
 										}}
@@ -683,9 +646,7 @@ export const Summary = observer((props: any) => {
 												(v: any) => v.siteCode === 'A001' && v.state === 2,
 											);
 
-											if (!connected) {
-												return;
-											}
+											if (!connected) return;
 
 											window.open(connected.storeUrl);
 										}}
@@ -710,9 +671,7 @@ export const Summary = observer((props: any) => {
 												(v: any) => v.siteCode === 'A027' && v.state === 2,
 											);
 
-											if (!connected) {
-												return;
-											}
+											if (!connected) return;
 
 											window.open(connected.storeUrl);
 										}}
@@ -737,9 +696,7 @@ export const Summary = observer((props: any) => {
 												(v: any) => v.siteCode === 'B719' && v.state === 2,
 											);
 
-											if (!connected) {
-												return;
-											}
+											if (!connected) return;
 
 											window.open(connected.storeUrl);
 										}}
@@ -764,9 +721,7 @@ export const Summary = observer((props: any) => {
 												(v: any) => v.siteCode === 'A524' && v.state === 2,
 											);
 
-											if (!connected) {
-												return;
-											}
+											if (!connected) return;
 
 											window.open(connected.storeUrl);
 										}}
@@ -791,9 +746,7 @@ export const Summary = observer((props: any) => {
 												(v: any) => v.siteCode === 'A525' && v.state === 2,
 											);
 
-											if (!connected) {
-												return;
-											}
+											if (!connected) return;
 
 											window.open(connected.storeUrl);
 										}}
@@ -818,9 +771,7 @@ export const Summary = observer((props: any) => {
 												(v: any) => v.siteCode === 'B956' && v.state === 2,
 											);
 
-											if (!connected) {
-												return;
-											}
+											if (!connected) return;
 
 											window.open(connected.storeUrl);
 										}}
@@ -864,9 +815,7 @@ export const Summary = observer((props: any) => {
 													(v: any) => v.siteCode === 'A523' && v.state === 2,
 												);
 
-												if (!connected) {
-													return;
-												}
+												if (!connected) return;
 
 												window.open(connected.storeUrl);
 											}}
@@ -891,9 +840,7 @@ export const Summary = observer((props: any) => {
 													(v: any) => v.siteCode === 'A522' && v.state === 2,
 												);
 
-												if (!connected) {
-													return;
-												}
+												if (!connected) return;
 
 												window.open(connected.storeUrl);
 											}}
@@ -919,26 +866,21 @@ export const Summary = observer((props: any) => {
 										<IconButton
 											size='small'
 											onClick={() => {
-												if (common.user.purchaseInfo2.level < 3) {
-													alert('[프로] 등급부터 사용 가능한 기능입니다.');
-
-													return;
-												}
+												if (common.user.purchaseInfo2.level < 3)
+													return alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
 												if (props.item.myLock === 2) {
 													let test: any = confirm('해당 상품을 정말로 잠금 해제하시겠습니까?');
-													if (test) {
+													if (test)
 														product.updateLockProduct(props.index, {
 															productId: props.item.id,
 															mylock: props.item.myLock === 1 ? 2 : 1,
 														});
-													}
-												} else {
+												} else
 													product.updateLockProduct(props.index, {
 														productId: props.item.id,
 														mylock: props.item.myLock === 1 ? 2 : 1,
 													});
-												}
 											}}
 										>
 											{props.item.myLock === 1 ? <LockOpenIcon /> : <LockIcon />}
@@ -958,9 +900,7 @@ export const Summary = observer((props: any) => {
 											<IconButton
 												size='small'
 												color='error'
-												onClick={() => {
-													product.toggleUploadFailedModal(props.index, true);
-												}}
+												onClick={() => product.toggleUploadFailedModal(props.index, true)}
 											>
 												<ErrorIcon />
 											</IconButton>
@@ -1012,11 +952,7 @@ export const Summary = observer((props: any) => {
 											minWidth: 60,
 										}}
 										onClick={() => {
-											if (common.user.purchaseInfo2.level < 3) {
-												alert('[프로] 등급부터 사용 가능한 기능입니다.');
-
-												return;
-											}
+											if (common.user.purchaseInfo2.level < 3) return alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
 											product.autoImageTranslate(props.index, 0);
 										}}
@@ -1088,10 +1024,8 @@ export const Summary = observer((props: any) => {
 												minWidth: 60,
 											}}
 											onClick={() => {
-												if (props.item.myLock === 2) {
-													alert('잠금 상품은 등록해제 불가능 합니다');
-													return;
-												}
+												if (props.item.myLock === 2) return alert('잠금 상품은 등록해제 불가능 합니다');
+
 												product.toggleUploadDisabledModal(props.index, true, common);
 											}}
 										>
@@ -1110,9 +1044,7 @@ export const Summary = observer((props: any) => {
 											sx={{
 												minWidth: 60,
 											}}
-											onClick={() => {
-												product.deleteProduct(common, props.item.id);
-											}}
+											onClick={() => product.deleteProduct(common, props.item.id)}
 										>
 											{props.item.delete ? (
 												<>

@@ -56,14 +56,12 @@ export const Collected = observer(() => {
 				case 'refresh': {
 					product.refreshProduct(common);
 					sendResponse(true);
-
 					break;
 				}
 
 				case 'trangers': {
 					product.updateImageTranslatedData(request.source);
 					sendResponse(true);
-
 					break;
 				}
 
@@ -88,7 +86,6 @@ export const Collected = observer(() => {
 		<ThemeProvider theme={theme}>
 			<Frame dark={common.darkTheme}>
 				<Header />
-
 				<Container maxWidth={'xl'}>
 					<Paper variant='outlined'>
 						<Title dark={common.darkTheme}>
@@ -100,7 +97,6 @@ export const Collected = observer(() => {
 							>
 								<Typography color='text.primary'>수집상품목록 ({product.count})</Typography>
 							</Box>
-
 							<Box
 								sx={{
 									alignItems: 'center',
@@ -112,9 +108,7 @@ export const Collected = observer(() => {
 									sx={{
 										minWidth: 100,
 									}}
-									onClick={() => {
-										product.toggleCollectExcelModal(true);
-									}}
+									onClick={() => product.toggleCollectExcelModal(true)}
 								>
 									엑셀대량수집
 								</MyButton>
@@ -124,9 +118,7 @@ export const Collected = observer(() => {
 										ml: 0.5,
 										minWidth: 100,
 									}}
-									onClick={() => {
-										product.itemToExcel();
-									}}
+									onClick={() => product.itemToExcel()}
 								>
 									상품정보저장
 								</MyButton>
@@ -139,38 +131,20 @@ export const Collected = observer(() => {
 										if (e.target.value === 0) {
 											const input = prompt('페이지 당 조회할 상품 수를 입력해주세요. (최대 50개까지 입력 가능)');
 
-											if (!input) {
-												alert('조회할 상품 수 입력이 잘못되었습니다.');
-
-												return;
-											}
+											if (!input) return alert('조회할 상품 수 입력이 잘못되었습니다.');
+											if (isNaN(Number(input))) return alert('조회할 상품 수는 숫자만 입력 가능합니다.');
 
 											pageSize = parseInt(input);
 
-											if (isNaN(pageSize)) {
-												alert('조회할 상품 수는 숫자만 입력 가능합니다.');
-
-												return;
-											}
-
-											if (pageSize < 1) {
-												alert('조회할 상품 수는 1개 이상으로 입력해주세요.');
-
-												return;
-											}
+											if (pageSize < 1) return alert('조회할 상품 수는 1개 이상으로 입력해주세요.');
 
 											const pageLimit = product.gridView ? 200 : 50;
 
-											if (pageSize > pageLimit) {
-												alert(`조회할 상품 수는 ${pageLimit}개 이하로 입력해주세요.`);
-
-												return;
-											}
+											if (pageSize > pageLimit) return alert(`조회할 상품 수는 ${pageLimit}개 이하로 입력해주세요.`);
 
 											product.toggleETCPageSize(true);
 										} else {
 											pageSize = e.target.value;
-
 											product.toggleETCPageSize(false);
 										}
 
@@ -181,12 +155,9 @@ export const Collected = observer(() => {
 									<MenuItem value={10}>10개 보기</MenuItem>
 									<MenuItem value={20}>20개 보기</MenuItem>
 									<MenuItem value={50}>50개 보기</MenuItem>
-
 									{product.gridView ? <MenuItem value={100}>100개 보기</MenuItem> : null}
 									{product.gridView ? <MenuItem value={200}>200개 보기</MenuItem> : null}
-
 									<MenuItem>-----------</MenuItem>
-
 									{product.etcPageSize ? (
 										<MenuItem value={0}>{product.pageSize}개 보기</MenuItem>
 									) : (
@@ -195,12 +166,7 @@ export const Collected = observer(() => {
 								</ComboBox>
 								&nbsp;
 								<Tooltip title='페이지새로고침'>
-									<IconButton
-										size='small'
-										onClick={() => {
-											product.refreshProduct(common);
-										}}
-									>
+									<IconButton size='small' onClick={() => product.refreshProduct(common)}>
 										<SyncIcon />
 									</IconButton>
 								</Tooltip>
@@ -210,28 +176,18 @@ export const Collected = observer(() => {
 									type='number'
 									width={50}
 									value={product.pageTemp}
-									onChange={(e: any) => {
-										product.setPageTemp(e.target.value);
-									}}
-									onBlur={(e: any) => {
+									onChange={(e) => product.setPageTemp(e.target.value.replace(/[^0-9]/g, ''))}
+									onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
 										const page = parseInt(e.target.value);
-
-										if (!page || isNaN(page)) {
-											return;
-										}
+										if (!page) return;
 
 										product.setPageTemp(page);
 									}}
 									onKeyPress={(e: any) => {
-										if (e.key !== 'Enter') {
-											return;
-										}
+										if (e.key !== 'Enter') return;
+										if (!e.target.value) return;
 
 										const page = parseInt(e.target.value);
-
-										if (!page || isNaN(page)) {
-											return;
-										}
 
 										product.setPageTemp(page);
 										product.getProduct(common, product.pageTemp);
@@ -239,12 +195,7 @@ export const Collected = observer(() => {
 								/>
 								&nbsp;
 								<Tooltip title='페이지이동'>
-									<IconButton
-										size='small'
-										onClick={() => {
-											product.getProduct(common, product.pageTemp);
-										}}
-									>
+									<IconButton size='small' onClick={() => product.getProduct(common, product.pageTemp)}>
 										<SearchIcon />
 									</IconButton>
 								</Tooltip>
@@ -254,14 +205,13 @@ export const Collected = observer(() => {
 									page={product.page}
 									color='primary'
 									shape='rounded'
-									onChange={(e, p) => {
+									onChange={(_, p) => {
 										product.setPageTemp(p);
 										product.getProduct(common, p);
 									}}
 								/>
 							</Box>
 						</Title>
-
 						<ProductTables />
 					</Paper>
 				</Container>

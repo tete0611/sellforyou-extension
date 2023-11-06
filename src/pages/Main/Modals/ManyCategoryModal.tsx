@@ -116,19 +116,15 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('A077', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A077').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A077').data
+										product.categoryInfo.markets.find((v) => v.code === 'A077')!.input
+											? product.categoryInfo.markets.find((v) => v.code === 'A077')!.data
 											: [product.manyCategoryInfo.categoryInfoA077]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-									onOpen={() => {
-										product.getCategoryList('A077');
-									}}
-									onClose={() => {
-										product.setCategoryInput('A077', '');
-									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077').loading}
+									onOpen={() => product.getCategoryList('A077')}
+									onClose={() => product.setCategoryInput('A077', '')}
+									loading={product.categoryInfo.markets.find((v) => v.code === 'A077')!.loading}
 								/>
 							</Grid>
 						</Grid>
@@ -175,8 +171,8 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('A077', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A077').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A077').data
+										product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.input
+											? product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.data
 											: [product.manyCategoryInfo.categoryInfoA077]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
@@ -187,7 +183,7 @@ export const ManyCategoryModal = observer(() => {
 									onClose={() => {
 										product.setCategoryInput('A077', '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077').loading}
+									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.loading}
 								/>
 							</Grid>
 
@@ -224,8 +220,8 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('B378', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'B378').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'B378').data
+										product.categoryInfo.markets.find((v: any) => v.code === 'B378')!.input
+											? product.categoryInfo.markets.find((v: any) => v.code === 'B378')!.data
 											: [product.manyCategoryInfo.categoryInfoB378]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
@@ -236,7 +232,7 @@ export const ManyCategoryModal = observer(() => {
 									onClose={() => {
 										product.setCategoryInput('B378', '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'B378').loading}
+									loading={product.categoryInfo.markets.find((v: any) => v.code === 'B378')!.loading}
 								/>
 							</Grid>
 
@@ -273,8 +269,8 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('A112', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A112').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A112').data
+										product.categoryInfo.markets.find((v: any) => v.code === 'A112')!.input
+											? product.categoryInfo.markets.find((v: any) => v.code === 'A112')!.data
 											: [product.manyCategoryInfo.categoryInfoA112]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
@@ -285,7 +281,7 @@ export const ManyCategoryModal = observer(() => {
 									onClose={() => {
 										product.setCategoryInput('A112', '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A112').loading}
+									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A112')!.loading}
 								/>
 							</Grid>
 
@@ -322,8 +318,8 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('A113', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A113').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A113').data
+										product.categoryInfo.markets.find((v: any) => v.code === 'A113')!.input
+											? product.categoryInfo.markets.find((v: any) => v.code === 'A113')!.data
 											: [product.manyCategoryInfo.categoryInfoA113]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
@@ -334,7 +330,7 @@ export const ManyCategoryModal = observer(() => {
 									onClose={() => {
 										product.setCategoryInput('A113', '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A113').loading}
+									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A113')!.loading}
 								/>
 							</Grid>
 
@@ -371,8 +367,8 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('A006', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A006').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A006').data
+										product.categoryInfo.markets.find((v: any) => v.code === 'A006')!.input
+											? product.categoryInfo.markets.find((v: any) => v.code === 'A006')!.data
 											: [product.manyCategoryInfo.categoryInfoA006]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
@@ -383,7 +379,7 @@ export const ManyCategoryModal = observer(() => {
 									onClose={() => {
 										product.setCategoryInput('A006', '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A006').loading}
+									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A006')!.loading}
 								/>
 							</Grid>
 
@@ -420,8 +416,8 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('A001', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A001').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A001').data
+										product.categoryInfo.markets.find((v: any) => v.code === 'A001')!.input
+											? product.categoryInfo.markets.find((v: any) => v.code === 'A001')!.data
 											: [product.manyCategoryInfo.categoryInfoA001]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
@@ -432,7 +428,7 @@ export const ManyCategoryModal = observer(() => {
 									onClose={() => {
 										product.setCategoryInput('A001', '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A001').loading}
+									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A001')!.loading}
 								/>
 							</Grid>
 
@@ -469,8 +465,8 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('A027', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A027').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A027').data
+										product.categoryInfo.markets.find((v: any) => v.code === 'A027')!.input
+											? product.categoryInfo.markets.find((v: any) => v.code === 'A027')!.data
 											: [product.manyCategoryInfo.categoryInfoA027]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
@@ -481,7 +477,7 @@ export const ManyCategoryModal = observer(() => {
 									onClose={() => {
 										product.setCategoryInput('A027', '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A027').loading}
+									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A027')!.loading}
 								/>
 							</Grid>
 
@@ -518,8 +514,8 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('B719', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'B719').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'B719').data
+										product.categoryInfo.markets.find((v: any) => v.code === 'B719')!.input
+											? product.categoryInfo.markets.find((v: any) => v.code === 'B719')!.data
 											: [product.manyCategoryInfo.categoryInfoB719]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
@@ -530,7 +526,7 @@ export const ManyCategoryModal = observer(() => {
 									onClose={() => {
 										product.setCategoryInput('B719', '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'B719').loading}
+									loading={product.categoryInfo.markets.find((v: any) => v.code === 'B719')!.loading}
 								/>
 							</Grid>
 
@@ -567,8 +563,8 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('A524', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A524').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A524').data
+										product.categoryInfo.markets.find((v: any) => v.code === 'A524')!.input
+											? product.categoryInfo.markets.find((v: any) => v.code === 'A524')!.data
 											: [product.manyCategoryInfo.categoryInfoA524]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
@@ -579,7 +575,7 @@ export const ManyCategoryModal = observer(() => {
 									onClose={() => {
 										product.setCategoryInput('A524', '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A524').loading}
+									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A524')!.loading}
 								/>
 							</Grid>
 
@@ -616,8 +612,8 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('A525', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A525').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A525').data
+										product.categoryInfo.markets.find((v: any) => v.code === 'A525')!.input
+											? product.categoryInfo.markets.find((v: any) => v.code === 'A525')!.data
 											: [product.manyCategoryInfo.categoryInfoA525]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
@@ -628,7 +624,7 @@ export const ManyCategoryModal = observer(() => {
 									onClose={() => {
 										product.setCategoryInput('A525', '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A525').loading}
+									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A525')!.loading}
 								/>
 							</Grid>
 
@@ -665,8 +661,8 @@ export const ManyCategoryModal = observer(() => {
 										product.setCategoryInput('B956', value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'B956').input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'B956').data
+										product.categoryInfo.markets.find((v: any) => v.code === 'B956')!.input
+											? product.categoryInfo.markets.find((v: any) => v.code === 'B956')!.data
 											: [product.manyCategoryInfo.categoryInfoB956]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
@@ -677,7 +673,7 @@ export const ManyCategoryModal = observer(() => {
 									onClose={() => {
 										product.setCategoryInput('B956', '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'B956').loading}
+									loading={product.categoryInfo.markets.find((v: any) => v.code === 'B956')!.loading}
 								/>
 							</Grid>
 						</Grid>

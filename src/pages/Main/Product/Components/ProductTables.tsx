@@ -2,13 +2,13 @@ import React from 'react';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import ReorderIcon from '@mui/icons-material/Reorder';
-import * as XLSX from 'xlsx';
-import path from 'path-browserify';
+// import * as XLSX from 'xlsx';
+// import path from 'path-browserify';
 import { byteSlice } from '../../../Tools/Common';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
-import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
+// import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
 
 import {
 	styled,
@@ -78,9 +78,7 @@ export const ProductTables = observer(() => {
 
 		let lastRow = false;
 
-		if (!product.itemInfo.items[lastIndex]) {
-			lastRow = true;
-		}
+		if (!product.itemInfo.items[lastIndex]) lastRow = true;
 
 		return (
 			<div key={props.key} style={props.style}>
@@ -93,7 +91,7 @@ export const ProductTables = observer(() => {
 						<TableRow>
 							{array.map((v, i) =>
 								product.itemInfo.items[v] ? (
-									<ImageSummary tableRef={tableRef} item={product.itemInfo.items[v]} index={v} />
+									<ImageSummary tableRef={tableRef} item={product.itemInfo.items[v]} index={v} key={i} />
 								) : null,
 							)}
 
@@ -141,17 +139,10 @@ export const ProductTables = observer(() => {
 											}}
 										>
 											<Tooltip title='검색어필터'>
-												<IconButton
-													size='small'
-													color='inherit'
-													onClick={(e) => {
-														product.toggleSearchFilterModal(true);
-													}}
-												>
+												<IconButton size='small' color='inherit' onClick={() => product.toggleSearchFilterModal(true)}>
 													<FilterAltIcon />
 												</IconButton>
 											</Tooltip>
-
 											<Select
 												sx={{
 													fontSize: 13,
@@ -160,51 +151,35 @@ export const ProductTables = observer(() => {
 													mx: 0.5,
 												}}
 												defaultValue={product.searchInfo.searchType}
-												onChange={(e: any) => {
+												onChange={(e: any) =>
 													product.setSearchInfo({
 														...product.searchInfo,
-
 														searchType: e.target.value,
-													});
-												}}
+													})
+												}
 											>
 												{/* <MenuItem value="ALL">
                         통합검색
                       </MenuItem> */}
-
 												<MenuItem value='PCODE'>상품코드</MenuItem>
-
 												<MenuItem value='ONAME'>상품명(원문)</MenuItem>
-
 												<MenuItem value='NAME'>상품명(번역)</MenuItem>
-
 												<MenuItem value='CNAME'>카테고리명</MenuItem>
-
 												<MenuItem value='OID'>구매처상품번호</MenuItem>
-
 												<MenuItem value='MID'>판매채널상품번호</MenuItem>
-
 												{common?.user?.purchaseInfo2?.level >= 3 ? <MenuItem value='KEYWARD'>개인분류</MenuItem> : null}
 											</Select>
 
 											<Input
 												id='product_tables_keyword'
-												onChange={(e: any) => {
+												onChange={(e: any) =>
 													product.setSearchInfo({
 														...product.searchInfo,
-
 														searchKeyword: e.target.value,
-													});
-												}}
-												onKeyPress={(e: any) => {
-													if (e.key !== 'Enter') {
-														return;
-													}
-
-													product.getSearchResult(common);
-												}}
+													})
+												}
+												onKeyPress={(e: any) => e.key === 'Enter' && product.getSearchResult(common)}
 											/>
-
 											<MyButton
 												disableElevation
 												variant='contained'
@@ -213,9 +188,7 @@ export const ProductTables = observer(() => {
 													minWidth: 60,
 													ml: 0.5,
 												}}
-												onClick={() => {
-													product.getSearchResult(common);
-												}}
+												onClick={() => product.getSearchResult(common)}
 											>
 												검색
 											</MyButton>
@@ -236,9 +209,8 @@ export const ProductTables = observer(() => {
 														onClick={async () => {
 															const regExp = /[^가-힣a-zA-Z0-9 ]+/g;
 															product.itemInfo.items.map((v: any, i: number) => {
-																if (!v.checked) {
-																	return null;
-																}
+																if (!v.checked) return null;
+
 																const name1 = v.name.replace(regExp, ' ');
 																const name2 = byteSlice(name1, 100);
 
@@ -285,11 +257,8 @@ export const ProductTables = observer(() => {
 													<MyButton
 														color={product.gridView ? 'secondary' : 'inherit'}
 														onClick={() => {
-															if (common.user.purchaseInfo2.level < 3) {
-																alert('[프로] 등급부터 사용 가능한 기능입니다.');
-
-																return;
-															}
+															if (common.user.purchaseInfo2.level < 3)
+																return alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
 															product.setGridView(common, true);
 														}}
@@ -302,11 +271,8 @@ export const ProductTables = observer(() => {
 													<MyButton
 														color={product.gridView ? 'inherit' : 'secondary'}
 														onClick={() => {
-															if (common.user.purchaseInfo2.level < 3) {
-																alert('[프로] 등급부터 사용 가능한 기능입니다.');
-
-																return;
-															}
+															if (common.user.purchaseInfo2.level < 3)
+																return alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
 															product.setGridView(common, false);
 														}}
@@ -320,14 +286,13 @@ export const ProductTables = observer(() => {
 													ml: 0.5,
 													minWidth: 60,
 												}}
-												onClick={(e: any) => {
+												onClick={(e: any) =>
 													product.setUpdateManyProductPopOver({
 														...product.popOverInfo.updateManyProduct,
-
 														element: e.target,
 														open: true,
-													});
-												}}
+													})
+												}
 											>
 												일괄설정
 											</MyButton>
@@ -340,11 +305,8 @@ export const ProductTables = observer(() => {
 													minWidth: 60,
 												}}
 												onClick={(e: any) => {
-													if (common.user.purchaseInfo2.level < 3) {
-														alert('[프로] 등급부터 사용 가능한 기능입니다.');
-
-														return;
-													}
+													if (common.user.purchaseInfo2.level < 3)
+														return alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
 													product.autoImageTranslate(-1, 0);
 												}}
@@ -362,7 +324,6 @@ export const ProductTables = observer(() => {
 													}}
 													onClick={() => {
 														common.setEditedUpload(true);
-
 														product.toggleUploadModal(-1, true);
 													}}
 												>
@@ -377,7 +338,6 @@ export const ProductTables = observer(() => {
 												}}
 												onClick={() => {
 													common.setEditedUpload(false);
-
 													product.toggleUploadModal(-1, true);
 												}}
 											>
@@ -390,9 +350,7 @@ export const ProductTables = observer(() => {
 														ml: 0.5,
 														minWidth: 60,
 													}}
-													onClick={() => {
-														product.toggleUploadDisabledModal(-1, true, common);
-													}}
+													onClick={() => product.toggleUploadDisabledModal(-1, true, common)}
 												>
 													일괄해제
 												</MyButton>
@@ -451,9 +409,7 @@ export const ProductTables = observer(() => {
 														ml: 0.5,
 														minWidth: 60,
 													}}
-													onClick={() => {
-														product.deleteProduct(common, -1);
-													}}
+													onClick={() => product.deleteProduct(common, -1)}
 												>
 													일괄삭제
 												</MyButton>

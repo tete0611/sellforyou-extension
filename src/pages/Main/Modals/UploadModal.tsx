@@ -17,7 +17,6 @@ import {
 	MenuItem,
 	Modal,
 	Paper,
-	Select,
 	Tab,
 	Tabs,
 	Table,
@@ -45,7 +44,7 @@ interface TabPanelProps {
 }
 
 // 탭 뷰 (등록완료 / 등록실패 / 등록중으로 구분)
-function TabPanel(props: TabPanelProps) {
+const TabPanel = (props: TabPanelProps) => {
 	const { children, value, index, ...other } = props;
 
 	return (
@@ -67,18 +66,18 @@ function TabPanel(props: TabPanelProps) {
 			)}
 		</div>
 	);
-}
+};
 
 // 탭 엘리먼트 속성 동적 처리
-function tabProps(index: number) {
+const tabProps = (index: number) => {
 	return {
 		id: `full-width-tab-${index}`,
 		'aria-controls': `full-width-tabpanel-${index}`,
 	};
-}
+};
 
 // 빙글빙글 돌아가는 로딩 아이콘 안에 퍼센테이지와 함께 표기되는 뷰
-function CircularProgressWithLabel(props: any) {
+const CircularProgressWithLabel = (props: any) => {
 	return (
 		<Box
 			sx={{
@@ -109,12 +108,22 @@ function CircularProgressWithLabel(props: any) {
 			) : null}
 		</Box>
 	);
-}
+};
 
 // 상품등록 모달 뷰
 export const UploadModal = observer(() => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
+	const {
+		modalInfo,
+		registeredInfo,
+		setImagePopOver,
+		uploadItems,
+		uploadConsole,
+		toggleUploadModal,
+		switchUploadTabs,
+	} = product;
+	const { uploadTabIndex, upload } = modalInfo;
 	const {
 		uploadInfo,
 		toggleUploadInfoMarket,
@@ -133,7 +142,7 @@ export const UploadModal = observer(() => {
 	const theme = useTheme();
 
 	return (
-		<Modal open={product.modalInfo.upload}>
+		<Modal open={upload}>
 			<Paper
 				className='uploadModal'
 				sx={{
@@ -152,12 +161,7 @@ export const UploadModal = observer(() => {
 						{editable ? '상품 수정등록' : '상품 신규등록'}
 					</Typography>
 
-					<IconButton
-						size='small'
-						onClick={() => {
-							product.toggleUploadModal(-1, false);
-						}}
-					>
+					<IconButton size='small' onClick={() => toggleUploadModal(-1, false)}>
 						<CloseIcon />
 					</IconButton>
 				</Box>
@@ -167,10 +171,8 @@ export const UploadModal = observer(() => {
 						style={{
 							borderBottom: '1px solid #0000001f',
 						}}
-						value={product.modalInfo.uploadTabIndex}
-						onChange={(e, value) => {
-							product.switchUploadTabs(value);
-						}}
+						value={uploadTabIndex}
+						onChange={(e, value) => switchUploadTabs(value)}
 					>
 						<Tab
 							label={
@@ -204,7 +206,7 @@ export const UploadModal = observer(() => {
 											ml: 1,
 										}}
 									>
-										{editable ? '수정완료' : '등록완료'} ({product.registeredInfo.success.length})
+										{editable ? '수정완료' : '등록완료'} ({registeredInfo.success.length})
 									</Typography>
 								</Box>
 							}
@@ -227,14 +229,14 @@ export const UploadModal = observer(() => {
 											ml: 1,
 										}}
 									>
-										{editable ? '수정실패' : '등록실패'} ({product.registeredInfo.failed.length})
+										{editable ? '수정실패' : '등록실패'} ({registeredInfo.failed.length})
 									</Typography>
 								</Box>
 							}
 							{...tabProps(3)}
 						/>
 
-						{product.registeredInfo.wait.length > 0 ? (
+						{registeredInfo.wait.length > 0 ? (
 							<Tab
 								label={
 									<Box
@@ -251,7 +253,7 @@ export const UploadModal = observer(() => {
 												ml: 1,
 											}}
 										>
-											{editable ? '수정중' : '등록중'} ({product.registeredInfo.wait.length})
+											{editable ? '수정중' : '등록중'} ({registeredInfo.wait.length})
 										</Typography>
 									</Box>
 								}
@@ -260,7 +262,7 @@ export const UploadModal = observer(() => {
 						) : null}
 					</Tabs>
 
-					<TabPanel value={product.modalInfo.uploadTabIndex} index={0} dir={theme.direction}>
+					<TabPanel value={uploadTabIndex} index={0} dir={theme.direction}>
 						<>
 							<Paper variant='outlined'>
 								<Box
@@ -278,12 +280,7 @@ export const UploadModal = observer(() => {
 											>
 												<FormControlLabel
 													control={
-														<Checkbox
-															size='small'
-															onChange={(e) => {
-																toggleUploadInfoMarketAll(e.target.checked);
-															}}
-														/>
+														<Checkbox size='small' onChange={(e) => toggleUploadInfoMarketAll(e.target.checked)} />
 													}
 													label={
 														<Box
@@ -307,12 +304,7 @@ export const UploadModal = observer(() => {
 											>
 												<FormControlLabel
 													control={
-														<Checkbox
-															size='small'
-															onChange={(e) => {
-																toggleUploadInfoVideoAll(e.target.checked);
-															}}
-														/>
+														<Checkbox size='small' onChange={(e) => toggleUploadInfoVideoAll(e.target.checked)} />
 													}
 													label={
 														<Box
@@ -369,9 +361,7 @@ export const UploadModal = observer(() => {
 															size='small'
 															disabled={markets.find((v) => v.code === 'A077')?.disabled}
 															checked={common?.uploadInfo?.markets?.find((v) => v.code === 'A077')?.upload}
-															onChange={(e) => {
-																toggleUploadInfoMarket('A077', e.target.checked);
-															}}
+															onChange={(e) => toggleUploadInfoMarket('A077', e.target.checked)}
 														/>
 													}
 													label={
@@ -394,9 +384,7 @@ export const UploadModal = observer(() => {
 													size='small'
 													disabled={markets?.find((v) => v.code === 'A077')?.disabled}
 													checked={markets?.find((v) => v.code === 'A077')?.video}
-													onChange={(e) => {
-														toggleUploadInfoVideo('A077', e.target.checked);
-													}}
+													onChange={(e) => toggleUploadInfoVideo('A077', e.target.checked)}
 												/>
 											</StyledTableCell>
 
@@ -435,9 +423,7 @@ export const UploadModal = observer(() => {
 															size='small'
 															disabled={markets.find((v) => v.code === 'B378')?.disabled}
 															checked={markets.find((v) => v.code === 'B378')?.upload}
-															onChange={(e) => {
-																toggleUploadInfoMarket('B378', e.target.checked);
-															}}
+															onChange={(e) => toggleUploadInfoMarket('B378', e.target.checked)}
 														/>
 													}
 													label={
@@ -494,9 +480,7 @@ export const UploadModal = observer(() => {
 															size='small'
 															disabled={markets.find((v) => v.code === 'A112')?.disabled}
 															checked={markets.find((v) => v.code === 'A112')?.upload}
-															onChange={(e) => {
-																toggleUploadInfoMarket('A112', e.target.checked);
-															}}
+															onChange={(e) => toggleUploadInfoMarket('A112', e.target.checked)}
 														/>
 													}
 													label={
@@ -560,9 +544,7 @@ export const UploadModal = observer(() => {
 															size='small'
 															disabled={markets.find((v) => v.code === 'A113')?.disabled}
 															checked={markets.find((v) => v.code === 'A113')?.upload}
-															onChange={(e) => {
-																toggleUploadInfoMarket('A113', e.target.checked);
-															}}
+															onChange={(e) => toggleUploadInfoMarket('A113', e.target.checked)}
 														/>
 													}
 													label={
@@ -585,9 +567,7 @@ export const UploadModal = observer(() => {
 													size='small'
 													disabled={markets.find((v) => v.code === 'A113')?.disabled}
 													checked={markets.find((v) => v.code === 'A113')?.video}
-													onChange={(e) => {
-														toggleUploadInfoVideo('A113', e.target.checked);
-													}}
+													onChange={(e) => toggleUploadInfoVideo('A113', e.target.checked)}
 												/>
 											</StyledTableCell>
 
@@ -655,9 +635,7 @@ export const UploadModal = observer(() => {
 													size='small'
 													disabled={markets.find((v) => v.code === 'A523')?.disabled}
 													checked={markets.find((v) => v.code === 'A523')?.video}
-													onChange={(e) => {
-														toggleUploadInfoVideo('A523', e.target.checked);
-													}}
+													onChange={(e) => toggleUploadInfoVideo('A523', e.target.checked)}
 												/>
 											</StyledTableCell>
 
@@ -723,9 +701,7 @@ export const UploadModal = observer(() => {
 													size='small'
 													disabled={markets.find((v) => v.code === 'A522')?.disabled}
 													checked={markets.find((v) => v.code === 'A522')?.video}
-													onChange={(e) => {
-														toggleUploadInfoVideo('A522', e.target.checked);
-													}}
+													onChange={(e) => toggleUploadInfoVideo('A522', e.target.checked)}
 												/>
 											</StyledTableCell>
 
@@ -754,7 +730,8 @@ export const UploadModal = observer(() => {
 											</StyledTableCell>
 										</TableRow>
 
-										<TableRow>
+										{/* ESM통합으로 인한 1.0미사용 */}
+										{/* <TableRow>
 											<StyledTableCell
 												sx={{
 													textAlign: 'left',
@@ -793,9 +770,7 @@ export const UploadModal = observer(() => {
 													size='small'
 													disabled={markets.find((v) => v.code === 'A006')?.disabled}
 													checked={markets.find((v) => v.code === 'A006')?.video}
-													onChange={(e) => {
-														toggleUploadInfoVideo('A006', e.target.checked);
-													}}
+													onChange={(e) => toggleUploadInfoVideo('A006', e.target.checked)}
 												/>
 											</StyledTableCell>
 
@@ -861,9 +836,7 @@ export const UploadModal = observer(() => {
 													size='small'
 													disabled={markets.find((v) => v.code === 'A001')?.disabled}
 													checked={markets.find((v) => v.code === 'A001')?.video}
-													onChange={(e) => {
-														toggleUploadInfoVideo('A001', e.target.checked);
-													}}
+													onChange={(e) => toggleUploadInfoVideo('A001', e.target.checked)}
 												/>
 											</StyledTableCell>
 
@@ -890,7 +863,7 @@ export const UploadModal = observer(() => {
 													</Typography>
 												)}
 											</StyledTableCell>
-										</TableRow>
+										</TableRow> */}
 
 										<TableRow>
 											<StyledTableCell
@@ -904,9 +877,7 @@ export const UploadModal = observer(() => {
 															size='small'
 															disabled={markets.find((v) => v.code === 'A027')?.disabled}
 															checked={markets.find((v) => v.code === 'A027')?.upload}
-															onChange={(e) => {
-																toggleUploadInfoMarket('A027', e.target.checked);
-															}}
+															onChange={(e) => toggleUploadInfoMarket('A027', e.target.checked)}
 														/>
 													}
 													label={
@@ -929,9 +900,7 @@ export const UploadModal = observer(() => {
 													size='small'
 													disabled={markets.find((v) => v.code === 'A027')?.disabled}
 													checked={markets.find((v) => v.code === 'A027')?.video}
-													onChange={(e) => {
-														toggleUploadInfoVideo('A027', e.target.checked);
-													}}
+													onChange={(e) => toggleUploadInfoVideo('A027', e.target.checked)}
 												/>
 											</StyledTableCell>
 
@@ -970,9 +939,7 @@ export const UploadModal = observer(() => {
 															size='small'
 															disabled={markets.find((v) => v.code === 'B719')?.disabled}
 															checked={markets.find((v) => v.code === 'B719')?.upload}
-															onChange={(e) => {
-																toggleUploadInfoMarket('B719', e.target.checked);
-															}}
+															onChange={(e) => toggleUploadInfoMarket('B719', e.target.checked)}
 														/>
 													}
 													label={
@@ -1029,9 +996,7 @@ export const UploadModal = observer(() => {
 															size='small'
 															disabled={markets.find((v) => v.code === 'A524')?.disabled}
 															checked={markets.find((v) => v.code === 'A524')?.upload}
-															onChange={(e) => {
-																toggleUploadInfoMarket('A524', e.target.checked);
-															}}
+															onChange={(e) => toggleUploadInfoMarket('A524', e.target.checked)}
 														/>
 													}
 													label={
@@ -1086,9 +1051,7 @@ export const UploadModal = observer(() => {
 															size='small'
 															disabled={markets.find((v) => v.code === 'A525')?.disabled}
 															checked={markets.find((v) => v.code === 'A525')?.upload}
-															onChange={(e) => {
-																toggleUploadInfoMarket('A525', e.target.checked);
-															}}
+															onChange={(e) => toggleUploadInfoMarket('A525', e.target.checked)}
 														/>
 													}
 													label={
@@ -1145,9 +1108,7 @@ export const UploadModal = observer(() => {
 															size='small'
 															disabled={markets.find((v) => v.code === 'B956')?.disabled}
 															checked={markets.find((v) => v.code === 'B956')?.upload}
-															onChange={(e) => {
-																toggleUploadInfoMarket('B956', e.target.checked);
-															}}
+															onChange={(e) => toggleUploadInfoMarket('B956', e.target.checked)}
 														/>
 													}
 													label={
@@ -1216,20 +1177,14 @@ export const UploadModal = observer(() => {
 											}}
 											value={markets.find((v) => v.code === 'B719')?.policyInfo}
 											onOpen={async () => {
-												if (deliveryPolicy.wemakepricePolicyList.length > 0) {
-													return;
-												}
+												if (deliveryPolicy.wemakepricePolicyList.length > 0) return;
 
 												const policyResp = await fetch(
 													'https://wpartner.wemakeprice.com/partner/sellerShip/getSellerShipList.json',
 												);
 												const policyJson = await policyResp.json();
 
-												if (!policyJson.sellerShipList) {
-													alert('위메프 로그인 후 이용해주세요.');
-
-													return;
-												}
+												if (!policyJson.sellerShipList) return alert('위메프 로그인 후 이용해주세요.');
 
 												setDeliveryPolicy({
 													...deliveryPolicy,
@@ -1237,9 +1192,7 @@ export const UploadModal = observer(() => {
 													wemakepricePolicyList: policyJson.sellerShipList,
 												});
 											}}
-											onChange={(e) => {
-												setPolicyInfo('B719', e.target.value);
-											}}
+											onChange={(e) => setPolicyInfo('B719', e.target.value)}
 										>
 											{deliveryPolicy.wemakepricePolicyList.map((v: any) => (
 												<MenuItem value={v.shipPolicyNo}>
@@ -1275,9 +1228,7 @@ export const UploadModal = observer(() => {
 											}}
 											value={markets.find((v) => v.code === 'A524')?.policyInfo}
 											onOpen={async () => {
-												if (deliveryPolicy.lotteonPolicyList.length > 0) {
-													return;
-												}
+												if (deliveryPolicy.lotteonPolicyList.length > 0) return;
 
 												const policyResp = await fetch(
 													`https://openapi.lotteon.com/v1/openapi/contract/v1/dvl/getDvCstListSr`,
@@ -1345,9 +1296,7 @@ export const UploadModal = observer(() => {
 											}}
 											value={markets.find((v) => v.code === 'A525')?.policyInfo}
 											onOpen={async () => {
-												if (deliveryPolicy.lotteonPolicyList.length > 0) {
-													return;
-												}
+												if (deliveryPolicy.lotteonPolicyList.length > 0) return;
 
 												const policyResp = await fetch(
 													`https://openapi.lotteon.com/v1/openapi/contract/v1/dvl/getDvCstListSr`,
@@ -1415,9 +1364,7 @@ export const UploadModal = observer(() => {
 											}}
 											value={markets.find((v) => v.code === 'B956')?.policyInfo}
 											onOpen={async () => {
-												if (deliveryPolicy.tmonPolicyList.length > 0) {
-													return;
-												}
+												if (deliveryPolicy.tmonPolicyList.length > 0) return;
 
 												const deliveryResp: any = await request(
 													`https://spc-om.tmon.co.kr/api/delivery/template?productType=DP03&deliverySpot=DIRECT&scCatYn=N&partnerNo=${user.userInfo.tmonId}&detail=true`,
@@ -1432,11 +1379,7 @@ export const UploadModal = observer(() => {
 													//
 												}
 
-												if (!deliveryJson) {
-													alert('티몬 로그인 후 이용해주세요.');
-
-													return;
-												}
+												if (!deliveryJson) return alert('티몬 로그인 후 이용해주세요.');
 
 												setDeliveryPolicy({
 													...deliveryPolicy,
@@ -1444,9 +1387,7 @@ export const UploadModal = observer(() => {
 													tmonPolicyList: deliveryJson.data.list,
 												});
 											}}
-											onChange={(e) => {
-												setPolicyInfo('B956', e.target.value);
-											}}
+											onChange={(e) => setPolicyInfo('B956', e.target.value)}
 										>
 											{deliveryPolicy.tmonPolicyList.map((v: any) => (
 												<MenuItem value={v.deliveryFeeSrl}>
@@ -1465,7 +1406,7 @@ export const UploadModal = observer(() => {
 						</>
 					</TabPanel>
 
-					<TabPanel value={product.modalInfo.uploadTabIndex} index={1} dir={theme.direction}>
+					<TabPanel value={uploadTabIndex} index={1} dir={theme.direction}>
 						<Box
 							sx={{
 								p: 1,
@@ -1473,7 +1414,7 @@ export const UploadModal = observer(() => {
 								overflowY: 'scroll',
 							}}
 						>
-							{product.registeredInfo.success.map((v: any) => (
+							{registeredInfo.success.map((v: any) => (
 								<Box
 									sx={{
 										display: 'flex',
@@ -1609,13 +1550,13 @@ export const UploadModal = observer(() => {
 														background: 'black',
 														objectFit: 'contain',
 													}}
-													onClick={(e) => {
-														product.setImagePopOver({
+													onClick={(e) =>
+														setImagePopOver({
 															element: e.target,
 															data: { src: v.img1 },
 															open: true,
-														});
-													}}
+														})
+													}
 												/>
 
 												<Typography
@@ -1675,7 +1616,7 @@ export const UploadModal = observer(() => {
 						</Box>
 					</TabPanel>
 
-					<TabPanel value={product.modalInfo.uploadTabIndex} index={2} dir={theme.direction}>
+					<TabPanel value={uploadTabIndex} index={2} dir={theme.direction}>
 						<Box
 							sx={{
 								p: 1,
@@ -1683,7 +1624,7 @@ export const UploadModal = observer(() => {
 								overflowY: 'scroll',
 							}}
 						>
-							{product.registeredInfo.failed.map((v: any) => (
+							{registeredInfo.failed.map((v: any) => (
 								<Box
 									sx={{
 										display: 'flex',
@@ -1751,13 +1692,13 @@ export const UploadModal = observer(() => {
 														background: 'black',
 														objectFit: 'contain',
 													}}
-													onClick={(e) => {
-														product.setImagePopOver({
+													onClick={(e) =>
+														setImagePopOver({
 															element: e.target,
 															data: { src: v.img1 },
 															open: true,
-														});
-													}}
+														})
+													}
 												/>
 
 												<Typography
@@ -1816,7 +1757,7 @@ export const UploadModal = observer(() => {
 						</Box>
 					</TabPanel>
 
-					<TabPanel value={product.modalInfo.uploadTabIndex} index={3} dir={theme.direction}>
+					<TabPanel value={uploadTabIndex} index={3} dir={theme.direction}>
 						<Box
 							sx={{
 								p: 1,
@@ -1824,7 +1765,7 @@ export const UploadModal = observer(() => {
 								overflowY: 'scroll',
 							}}
 						>
-							{product.registeredInfo.wait.map((v: any) => (
+							{registeredInfo.wait.map((v: any) => (
 								<Box
 									sx={{
 										display: 'flex',
@@ -1892,13 +1833,13 @@ export const UploadModal = observer(() => {
 														background: 'black',
 														objectFit: 'contain',
 													}}
-													onClick={(e) => {
-														product.setImagePopOver({
+													onClick={(e) =>
+														setImagePopOver({
 															element: e.target,
 															data: { src: v.img1 },
 															open: true,
-														});
-													}}
+														})
+													}
 												/>
 
 												<Typography
@@ -1968,7 +1909,7 @@ export const UploadModal = observer(() => {
 						p: 1,
 					}}
 				>
-					{product.uploadConsole.map((v: any) => (
+					{uploadConsole.map((v: any) => (
 						<Typography
 							sx={{
 								fontSize: 12,
@@ -2000,7 +1941,7 @@ export const UploadModal = observer(() => {
 							onClick={async () => {
 								await setUploadable(false);
 
-								await product.uploadItems(common, true);
+								await uploadItems(common, true);
 							}}
 						>
 							{!uploadable && !stopped ? '수정 중...' : '수정'}
@@ -2018,7 +1959,7 @@ export const UploadModal = observer(() => {
 							onClick={async () => {
 								await setUploadable(false);
 
-								await product.uploadItems(common, false);
+								await uploadItems(common, false);
 							}}
 						>
 							{!uploadable && !stopped ? '등록 중...' : '등록'}
@@ -2034,15 +1975,10 @@ export const UploadModal = observer(() => {
 							width: '33%',
 							mx: 0.5,
 						}}
-						onClick={async () => {
-							let accept = confirm(
-								'상품등록/수정을 중단하시겠습니까? 중단 이전에 등록/수정된 상품은 삭제되지 않을 수 있습니다.',
-							);
-
-							if (accept) {
-								await setStopped(true);
-							}
-						}}
+						onClick={async () =>
+							confirm('상품등록/수정을 중단하시겠습니까? 중단 이전에 등록/수정된 상품은 삭제되지 않을 수 있습니다.') &&
+							(await setStopped(true))
+						}
 					>
 						{!uploadable && stopped ? '중단 중...' : '중단'}
 					</Button>
@@ -2055,9 +1991,7 @@ export const UploadModal = observer(() => {
 							width: '33%',
 							mx: 0.5,
 						}}
-						onClick={() => {
-							product.toggleUploadModal(-1, false);
-						}}
+						onClick={() => toggleUploadModal(-1, false)}
 					>
 						닫기
 					</Button>

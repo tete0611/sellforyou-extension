@@ -25,6 +25,14 @@ const useStyles = makeStyles((theme) => ({
 export const TabThumbnails = observer((props: any) => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
+	const {
+		itemInfo,
+		autoImageTranslate,
+		addProductThumbnailImage,
+		initProductThumbnailImage,
+		updateProductThumbnailImage,
+		setImagePopOver,
+	} = product;
 
 	// 썸네일이미지 수정 및 변경 사항 발생 시
 	const loading = (
@@ -88,7 +96,8 @@ export const TabThumbnails = observer((props: any) => {
 						}}
 					>
 						<Button
-							disabled={product.itemInfo.items.find((v) => v.translate)}
+							//@ts-ignore
+							disabled={itemInfo.items.find((v) => v.translate)}
 							disableElevation
 							variant='contained'
 							color='secondary'
@@ -103,7 +112,7 @@ export const TabThumbnails = observer((props: any) => {
 									return;
 								}
 
-								product.autoImageTranslate(props.index, 1);
+								autoImageTranslate(props.index, 1);
 							}}
 						>
 							{props.item.translate ? (
@@ -158,7 +167,7 @@ export const TabThumbnails = observer((props: any) => {
 									const fileList = e.target.files ?? [];
 									const fileData = await readFileDataURL(fileList[0]);
 
-									product.addProductThumbnailImage(fileList[0], fileData, props.index);
+									addProductThumbnailImage(fileList[0], fileData, props.index);
 								}}
 							/>
 						</Button>
@@ -172,9 +181,7 @@ export const TabThumbnails = observer((props: any) => {
 								fontSize: 13,
 								height: 26,
 							}}
-							onClick={() => {
-								product.initProductThumbnailImage(props.item.id, props.index);
-							}}
+							onClick={() => initProductThumbnailImage(props.item.id, props.index)}
 						>
 							이미지 복구
 						</Button>
@@ -201,6 +208,7 @@ export const TabThumbnails = observer((props: any) => {
 							maxItems={5}
 							render={(img) => (
 								<Paper
+									key={img}
 									ref={(elem: any) => {
 										if (!elem || !elem.parentNode) {
 											return;
@@ -239,14 +247,13 @@ export const TabThumbnails = observer((props: any) => {
 									}}
 									variant='outlined'
 								>
-									{props.item.imageThumbnail.map((v: any, i: number) => {
-										if (v !== img) {
-											return null;
-										}
+									{props.item.imageThumbnail.map((v: string, imageIndex: number) => {
+										if (v !== img) return null;
 
 										return (
 											<>
 												<Title
+													key={imageIndex}
 													subTitle
 													dark={common.darkTheme}
 													error={props.item.imageCheckList && props.item.imageCheckList[img]}
@@ -258,7 +265,7 @@ export const TabThumbnails = observer((props: any) => {
 														}}
 													>
 														<Typography noWrap fontSize={13}>
-															{i === 0 ? '대표이미지' : `추가이미지 ${i.toString().padStart(2, '0')}`}
+															{imageIndex === 0 ? '대표이미지' : `추가이미지 ${imageIndex.toString().padStart(2, '0')}`}
 														</Typography>
 													</Box>
 
@@ -268,8 +275,8 @@ export const TabThumbnails = observer((props: any) => {
 															display: 'flex',
 														}}
 													>
-														{props.item.imageThumbnailExtensions && props.item.imageThumbnailExtensions[i] ? (
-															<Chip size='small' label={props.item.imageThumbnailExtensions[i]} />
+														{props.item.imageThumbnailExtensions && props.item.imageThumbnailExtensions[imageIndex] ? (
+															<Chip size='small' label={props.item.imageThumbnailExtensions[imageIndex]} />
 														) : null}
 														&nbsp;
 														<IconButton
@@ -279,7 +286,7 @@ export const TabThumbnails = observer((props: any) => {
 															}}
 															size='small'
 															onClick={() => {
-																product.updateProductThumbnailImage(i, -1, props.index);
+																updateProductThumbnailImage(imageIndex, -1, props.index);
 															}}
 														>
 															<ClearIcon />
@@ -295,7 +302,7 @@ export const TabThumbnails = observer((props: any) => {
 														objectFit: 'contain',
 													}}
 													onClick={(e) => {
-														product.setImagePopOver({
+														setImagePopOver({
 															element: e.target,
 															data: { src: img },
 															open: true,
@@ -317,14 +324,29 @@ export const TabThumbnails = observer((props: any) => {
 															width: '100%',
 															height: 26,
 														}}
-														onClick={() => {
+														onClick={() =>
 															window.open(
-																chrome.runtime.getURL(`/trangers_single.html?id=${props.item.id}&type=1&index=${i}`),
-															);
-														}}
+																chrome.runtime.getURL(
+																	`/trangers_single.html?id=${props.item.id}&type=1&index=${imageIndex}`,
+																),
+															)
+														}
 													>
 														이미지 편집/번역
 													</Button>
+													{/* <Button
+														disableElevation
+														variant='contained'
+														color='error'
+														sx={{
+															fontSize: 13,
+															width: '35%',
+															height: 26,
+														}}
+														onClick={() => initProductThumbnailImage(props.item.id, props.index, imageIndex)}
+													>
+														복구
+													</Button> */}
 												</Title>
 											</>
 										);
@@ -332,7 +354,7 @@ export const TabThumbnails = observer((props: any) => {
 								</Paper>
 							)}
 							onDragEnd={(src, dst) => {
-								product.updateProductThumbnailImage(src, dst, props.index);
+								updateProductThumbnailImage(src, dst, props.index);
 							}}
 						/>
 					</Box>

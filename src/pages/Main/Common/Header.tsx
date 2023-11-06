@@ -83,14 +83,14 @@ export const Header = observer(() => {
 
 				if (i === 1) {
 					for (let key in response) {
-						if (response[key].value.properties.title[0][0].includes('http')) {
+						if (response[key]?.value?.properties?.title[0][0]?.includes('http')) {
 							common.setBanner01Url(response[key].value.properties.title[0][0]);
 						}
 					}
 				}
 				if (i === 2) {
 					for (let key in response) {
-						if (response[key].value.properties.title[0][0].includes('http')) {
+						if (response[key]?.value?.properties?.title[0][0]?.includes('http')) {
 							common.setBanner01Image(response[key].value.properties.title[0][0]);
 						}
 					}

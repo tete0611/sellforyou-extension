@@ -1,5 +1,5 @@
 const MUTATIONS = {
-	// 로그인
+	/** 로그인 */
 	SIGN_IN_USER_BY_EVERYONE: `
         mutation ($id: String!, $pw: String!) {
             signInUserByEveryone(userType: EMAIL, email: $id, password: $pw) {
@@ -8,35 +8,35 @@ const MUTATIONS = {
             }
         }
     `,
-	// 로그아웃
+	/** 로그아웃 */
 	SIGN_OUT_USER_BY_EVERYONE: `
         mutation {
             signOutUserByEveryone
         }
     `,
 
-	// 회원가입
+	/** 회원가입 */
 	SIGN_UP_USER_BY_EVERYONE: `
         mutation ($email: String!, $password: String!, $phone: String!, $refCode: String) {
             signUpUserByEveryone2(email: $email, password: $password, phone: $phone, verificationId: 0, refCode: $refCode)
         }
     `,
 
-	// 인증번호요청
+	/** 휴대폰 인증번호요청 */
 	REQUEST_PHONE_VERIFICATION_BY_EVERYONE: `
         mutation ($phoneNumber: String!) {
             requestPhoneVerificationByEveryone(phoneNumber: $phoneNumber)
         }
     `,
 
-	// 인증하기
+	/** 휴대폰 인증하기 */
 	VERIFY_PHONE_BY_EVERYONE: `
         mutation ($phoneNumber: String!, $verificationNumber: String!) {
             verifyPhoneByEveryone(phoneNumber: $phoneNumber, verificationNumber: $verificationNumber)
         }
     `,
 
-	// 내정보 수정
+	/** 내정보 수정 */
 	UPDATE_MY_DATA_BY_USER: `
         mutation (
             $marginRate: Float
@@ -272,12 +272,14 @@ const MUTATIONS = {
         }
     `,
 
+	/** 상품옵션명 설정 */
 	SET_PRODUCT_OPTION_NAME_BY_SOMEONE: `
         mutation ($productOptionNameId: Int!, $isActive: Boolean!, $name: String!) {
             setProductOptionNameBySomeOne(productOptionNameId: $productOptionNameId, isActive: $isActive, name: $name)
         }
     `,
 
+	/** 상품옵션값 설정 */
 	SET_PRODUCT_OPTION_VALUE_BY_SOMEONE: `
         mutation (
             $productOptionNameId: Int, 
@@ -298,48 +300,56 @@ const MUTATIONS = {
         }
     `,
 
+	/** 상품옵션 수정 */
 	UPDATE_PRODUCT_OPTION: `
         mutation ($id: Int!, $productOption: [setProductOption!]!) {
             updateProductOption(id: $id, productOption: $productOption)
         }
     `,
 
+	/** 상품삭제 */
 	DELETE_PRODUCT_BY_USER: `
         mutation ($productId: [Int!]!) {
             deleteProductByUser(productId: $productId)
         }
     `,
 
+	/** 상품수집 (생성) */
 	GET_TAOBAO_ITEM_USING_EXTENSION_BY_USER: `
         mutation ($data: String!) {
             getTaobaoItemUsingExtensionByUser(data: $data)
         }
     `,
 
+	/** 등록상품 URL 업데이트 */
 	UPDATE_PRODUCT_STORE_URL_INFO_BY_SOMEONE: `
         mutation ($productStoreId: Int!, $storeProductId: String!) {
             updateProductStoreUrlInfoBySomeone(productStoreId: $productStoreId, storeProductId: $storeProductId)
         }
     `,
 
+	/** 상품명 수정 */
 	UPDATE_PRODUCT_NAME_BY_USER: `
         mutation ($productId: Int!, $name: String!) {
             updateProductNameByUser(productId: $productId, name: $name)
         }
     `,
 
+	/**  */
 	UPDATE_MULTIPLE_PRODUCT_NAME_BY_USER: `
         mutation($data: [ProductOptionNameInput!]!) {
             updateMultipleProductNameByUser(data: $data)
         }
     `,
 
+	/** 상품태그 수정 */
 	UPDATE_PRODUCT_TAG_BY_USER: `
         mutation ($productId: Int!, $searchTags: String, $immSearchTags: String) {
             updateProductTagByUser(productId: $productId, searchTags: $searchTags, immSearchTags: $immSearchTags)
         }
     `,
 
+	/** 상품카테고리 수정 */
 	UPDATE_PRODUCT_CATEGORY: `
         mutation (
             $productId: Int!,
@@ -372,6 +382,7 @@ const MUTATIONS = {
         }
     `,
 
+	/** 상품가격 수정 */
 	UPDATE_PRODUCT_FEE: `
         mutation (
             $productId: Int!,
@@ -404,6 +415,7 @@ const MUTATIONS = {
         }
     `,
 
+	/** 상품 환율, 마진율, 마진단위, 배대지배송비등 업데이트  */
 	UPDATE_MANY_PRODUCT_PRICE_BY_USER: `
         mutation (
             $productIds: [Int!]!,
@@ -426,6 +438,7 @@ const MUTATIONS = {
         }
     `,
 
+	/** 상품 오픈마켓 fee 업데이트 */
 	UPDATE_MANY_PRODUCT_FEE: `
         mutation (
             $productId: [Int!]!,
@@ -685,6 +698,12 @@ const MUTATIONS = {
     updateKeywardList(
         productId : $productId
         myKeyward : $myKeyward
+    )
+  }`,
+	RESET_KEYWARD_LIST: `
+  mutation($userId: Int!){
+    resetKeywardList(
+        userId: $userId
     )
   }`,
 	SET_LOCK_PRODUCT: `

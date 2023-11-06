@@ -4,11 +4,14 @@ import { fabric } from 'fabric';
 import gql from '../Main/GraphQL/Requests';
 import { getLocalStorage } from '../Tools/ChromeAsync';
 import { floatingToast, getClock, readFileDataURL, sleep } from '../Tools/Common';
-import { Layer, Product } from '../../type/type';
+import { Nullable, Product } from '../../type/type';
+import { Image as FabricImage } from 'fabric/fabric-impl';
 
 const ENDPOINT_IMAGE = 'https://img.sellforyou.co.kr';
 const FLASK_URL = 'http://www.sellforyou.co.kr:5003/trangers/';
 let papagoApiKey = '';
+
+type Customfabricobject = fabric.Object & { id: number; text: any; isEditing: boolean };
 
 /** 크롬스토리지 파파고 키 가져오기 */
 getLocalStorage('ppgKey').then((apiKey) => {
@@ -55,8 +58,8 @@ let mainCrop: any = document.getElementById('mainCrop');
 let mainTextEditor: any = document.getElementById('mainTextEditor');
 let mainWaterMark: any = document.getElementById('mainWaterMark');
 let mainDownload: any = document.getElementById('mainDownload');
-let originWidthPCLayout: any = document.getElementById('originWidthPCLayout');
-let originWidthURLLayout: any = document.getElementById('originWidthURLLayout');
+// let originWidthPCLayout: any = document.getElementById('originWidthPCLayout');
+// let originWidthURLLayout: any = document.getElementById('originWidthURLLayout');
 let multipleTranslation: any = document.getElementById('multipleTranslation');
 let singleTranslation: any = document.getElementById('singleTranslation');
 let areaTranslation: any = document.getElementById('areaTranslation');
@@ -151,7 +154,7 @@ let cropRatioType: any = '3';
 let currentImageIndex: any = null;
 let currentType: any = null;
 
-let dragImage: any = null;
+let dragImage: null | FabricImage = null;
 
 let editorMode = 'idle';
 
@@ -159,10 +162,10 @@ let isShapeFill = true;
 let isDrag = false;
 let isOriginal = false;
 
-let layers: Layer[] = [];
+let layers: any = [];
 
-let maskCanvas: any = new fabric.Canvas('mask');
-let myCanvas: any = new fabric.Canvas('main');
+let maskCanvas = new fabric.Canvas('mask');
+let myCanvas = new fabric.Canvas('main');
 
 let orgCanvas: any = new fabric.Canvas('original');
 
@@ -189,34 +192,24 @@ const loadLocalSettings = () => {
 	originWidthDescription.value = appData.settings.originWidthDescriptionSize ?? '';
 	applySensitive.value = appData.settings.originSensitive ?? '0.03';
 
-	if (applyOriginWidthPC.value === 'N') {
-		originWidthPC.disabled = false;
-	}
+	if (applyOriginWidthPC.value === 'N') originWidthPC.disabled = false;
 
-	if (applyOriginWidthThumbnail.value === 'N') {
-		originWidthThumbnail.disabled = false;
-	}
+	if (applyOriginWidthThumbnail.value === 'N') originWidthThumbnail.disabled = false;
 
-	if (applyOriginWidthOption.value === 'N') {
-		originWidthOption.disabled = false;
-	}
+	if (applyOriginWidthOption.value === 'N') originWidthOption.disabled = false;
 
-	if (applyOriginWidthDescription.value === 'N') {
-		originWidthDescription.disabled = false;
-	}
+	if (applyOriginWidthDescription.value === 'N') originWidthDescription.disabled = false;
 
 	let radioExtensionType: any = document.getElementsByName('extensionType');
 
 	for (let i = 0; i < radioExtensionType.length; i++) {
-		if (radioExtensionType[i].value === appData.settings.extensionType) {
+		if (radioExtensionType[i].value === appData.settings.extensionType)
 			radioExtensionType[i].parentNode.className = 'radio activated';
-		}
 
 		radioExtensionType[i].addEventListener('change', (e: any) => {
 			for (let j = 0; j < radioExtensionType.length; j++) {
 				if (e.target.value === radioExtensionType[j].value) {
 					radioExtensionType[j].parentNode.className = 'radio activated';
-
 					saveLocalSettings('extensionType', e.target.value);
 				} else {
 					radioExtensionType[j].parentNode.className = 'radio default';
@@ -228,9 +221,8 @@ const loadLocalSettings = () => {
 	let waterMarkType: any = document.getElementsByName('waterMarkType');
 
 	for (let i = 0; i < waterMarkType.length; i++) {
-		if (waterMarkType[i].value === appData.settings.waterMarkType) {
+		if (waterMarkType[i].value === appData.settings.waterMarkType)
 			waterMarkType[i].parentNode.className = 'radio activated';
-		}
 
 		waterMarkType[i].addEventListener('change', (e: any) => {
 			for (let j = 0; j < waterMarkType.length; j++) {
@@ -294,23 +286,19 @@ const saveLocalSettings = (key: string, value: string) => {
 
 const getCurrentLayer = () => {
 	let layer = layers.filter((v: any) => {
-		if (v.index !== currentImageIndex || v.type !== currentType) {
-			return false;
-		}
+		if (v.index !== currentImageIndex || v.type !== currentType) return false;
 		return true;
 	});
 
 	return layer[0];
 };
 
-const mergeImage = (dataUrl: any) => {
+const mergeImage = (dataUrl: string) => {
 	return new Promise((resolve, reject) => {
 		let cropped = new Image();
 
 		cropped.src = dataUrl;
-		cropped.onload = () => {
-			resolve(cropped);
-		};
+		cropped.onload = () => resolve(cropped);
 
 		cropped.onerror = reject;
 	});
@@ -318,12 +306,11 @@ const mergeImage = (dataUrl: any) => {
 
 const saveCanvas = () => {
 	layers.map((v: any) => {
-		if (v.index !== currentImageIndex || v.type !== currentType) {
+		if (v.index !== currentImageIndex || v.type !== currentType)
 			v.state.undo = {
 				canvas: [],
 				object: [],
 			};
-		}
 
 		v.state.redo = {
 			canvas: [],
@@ -333,25 +320,19 @@ const saveCanvas = () => {
 
 	let layer = getCurrentLayer();
 
-	if (!layer || !layer.object) {
-		return;
-	}
+	if (!layer || !layer.object) return;
 
 	let canvas = JSON.stringify(myCanvas.toObject(['id', 'selectable']));
 	let object = JSON.stringify(layer.object);
 
 	if (layer.state.current.canvas) {
-		if (layer.state.undo.canvas.length > 9) {
-			layer.state.undo.canvas.shift();
-		}
+		if (layer.state.undo.canvas.length > 9) layer.state.undo.canvas.shift();
 
 		layer.state.undo.canvas.push(layer.state.current.canvas);
 	}
 
 	if (layer.state.current.object) {
-		if (layer.state.undo.object.length > 9) {
-			layer.state.undo.object.shift();
-		}
+		if (layer.state.undo.object.length > 9) layer.state.undo.object.shift();
 
 		layer.state.undo.object.push(layer.state.current.object);
 	}
@@ -389,9 +370,7 @@ const replayCanvas = (type: string) => {
 	let stateCanvas = playStack.canvas.pop();
 	let stateObject = playStack.object.pop();
 
-	if (!stateCanvas || !stateObject) {
-		return;
-	}
+	if (!stateCanvas || !stateObject) return;
 
 	saveStack.canvas.push(layer.state.current.canvas);
 	saveStack.object.push(layer.state.current.object);
@@ -399,8 +378,8 @@ const replayCanvas = (type: string) => {
 	myCanvas.clear();
 	myCanvas.loadFromJSON(stateCanvas, async () => {
 		myCanvas.renderAll();
-
-		layer.image.current = myCanvas.backgroundImage?.src ?? myCanvas.overlayImage.src;
+		// @ts-ignore
+		layer.image.current = myCanvas.backgroundImage?.src ?? myCanvas.overlayImage?.src;
 		layer.object = [];
 
 		let object = JSON.parse(stateObject);
@@ -475,13 +454,10 @@ const displayImage = async (index: number, customWidth: number) => {
 
 	let imageList = document.getElementsByClassName('image-thumbnail');
 	for (let i = 0; i < imageList.length; i++) {
-		if (imageList[i].getAttribute('key') === currentImageIndex.toString()) {
+		if (imageList[i].getAttribute('key') === currentImageIndex.toString())
 			imageList[i].className = 'image-thumbnail activated';
-		} else {
-			imageList[i].className = 'image-thumbnail deactivated';
-		}
+		else imageList[i].className = 'image-thumbnail deactivated';
 	}
-
 	orgCanvas.clear();
 	myCanvas.clear();
 
@@ -492,9 +468,7 @@ const displayImage = async (index: number, customWidth: number) => {
 
 	let layer = getCurrentLayer();
 
-	if (!layer) {
-		return;
-	}
+	if (!layer) return;
 
 	let originalMerged: any = await mergeImage(layer.image.origin);
 
@@ -643,9 +617,7 @@ const displayImage = async (index: number, customWidth: number) => {
 						let fontSize = text.fontSize;
 
 						while (true) {
-							if (text.width >= posText.width) {
-								break;
-							}
+							if (text.width >= posText.width) break;
 
 							fontSize += 1;
 
@@ -691,9 +663,7 @@ const displayImage = async (index: number, customWidth: number) => {
 		});
 
 		while (true) {
-			if (text.width >= currentImage.width / 2) {
-				break;
-			}
+			if (text.width >= currentImage.width / 2) break;
 
 			text.set({
 				fontSize: text.fontSize + 1,
@@ -710,7 +680,7 @@ const displayImage = async (index: number, customWidth: number) => {
 		myCanvas.add(text);
 	}
 
-	myCanvas.setBackgroundImage(currentImage);
+	myCanvas.setBackgroundImage(currentImage, () => {});
 
 	switch (editorMode) {
 		case 'crop': {
@@ -784,7 +754,7 @@ const displayImage = async (index: number, customWidth: number) => {
 		}
 
 		default: {
-			myCanvas.setBackgroundImage(currentImage);
+			myCanvas.setBackgroundImage(currentImage, () => {});
 
 			break;
 		}
@@ -863,9 +833,8 @@ const processVisionData = async (info: any) => {
 			const products = await getProductList(params.id);
 
 			for (let i in products.data.selectProductsBySomeone) {
-				if (products.data.selectProductsBySomeone[i].id === parseInt(params.id)) {
+				if (products.data.selectProductsBySomeone[i].id === parseInt(params.id))
 					product = products.data.selectProductsBySomeone[i];
-				}
 			}
 			testLayer = 2; // 2. 레이어 새로 등록하게 끔 처리 해줘야함
 			await addToLayers(); //3. 레이어 새로 적용 product에 있는 것
@@ -876,20 +845,17 @@ const processVisionData = async (info: any) => {
 		}
 
 		let visionArray: any = await visionAnalyzer(visionJson.responses[0]); // 여기안에 PPG모듈 번역
-		if (visionArray.length === 0) {
-			return;
-		}
+		if (visionArray.length === 0) return;
 
 		let pos = info?.pos;
 
-		if (pos) {
+		if (pos)
 			visionArray.map((v: any) => {
 				v.pos.map((w: any) => {
 					w.x += info.pos.x;
 					w.y += info.pos.y;
 				});
 			});
-		}
 
 		let colorResp = await fetch(FLASK_URL + 'getcolor', {
 			headers: {
@@ -938,9 +904,7 @@ const processVisionData = async (info: any) => {
 			objectList.push(rect);
 
 			let translated = visionArray[i].translated;
-			if (visionArray[i].direction == 'vertical') {
-				translated = visionArray[i].translated.match(/.{1}/g).join('\n');
-			}
+			if (visionArray[i].direction == 'vertical') translated = visionArray[i].translated.match(/.{1}/g).join('\n');
 
 			layer.object.push({
 				foreground: colorJson.data[i].foreground,
@@ -972,9 +936,7 @@ const dataURItoBlob = (dataURI: string) => {
 	const binary: any = atob(dataURI.split(',')[1]);
 	const array: any = [];
 
-	for (let i = 0; i < binary.length; i += 1) {
-		array.push(binary.charCodeAt(i));
-	}
+	for (let i = 0; i < binary.length; i += 1) array.push(binary.charCodeAt(i));
 
 	return new Blob([new Uint8Array(array)], { type: mime });
 };
@@ -989,20 +951,18 @@ const getMaskImage = async (itemList: any) => {
 
 	maskCanvas.clear();
 	maskCanvas.setDimensions({
-		width: myCanvas.width * (100 / percentage),
-		height: myCanvas.height * (100 / percentage),
+		width: myCanvas.width! * (100 / percentage),
+		height: myCanvas.height! * (100 / percentage),
 	});
 
-	maskCanvas.setBackgroundImage(currentImage);
+	maskCanvas.setBackgroundImage(currentImage, () => {});
 
 	let image = maskCanvas.toDataURL();
 
 	maskCanvas.clear();
 	maskCanvas.backgroundColor = 'black';
 
-	itemList.map((v: any) => {
-		maskCanvas.add(v);
-	});
+	itemList.map((v: any) => maskCanvas.add(v));
 
 	let maskImage = maskCanvas.toDataURL();
 	let formData = new FormData();
@@ -1021,7 +981,7 @@ const getMaskImage = async (itemList: any) => {
 	});
 
 	let dataBlob = await dataResp.blob();
-	let dataBase64 = await readFileDataURL(dataBlob);
+	let dataBase64 = (await readFileDataURL(dataBlob)) as string;
 	let dataMerged: any = await mergeImage(dataBase64);
 	let result: any = new fabric.Image(dataMerged);
 
@@ -1036,9 +996,8 @@ const getMaskImage = async (itemList: any) => {
 };
 
 const visionAnalyzer = async (data: any) => {
-	if (!data.fullTextAnnotation) {
-		return [];
-	}
+	if (!data.fullTextAnnotation) return [];
+
 	let vision_count = 0;
 	let test = 0;
 	let vision_input = data.fullTextAnnotation.text.replaceAll('&', '');
@@ -1059,9 +1018,8 @@ const visionAnalyzer = async (data: any) => {
 
 	let direction = 'horizontal';
 	let vision_blocks = data.fullTextAnnotation.pages[0].blocks;
-	if (test === 1) {
-		vision_blocks[0].paragraphs.shift();
-	}
+	if (test === 1) vision_blocks[0].paragraphs.shift();
+
 	for (let a in vision_blocks) {
 		let vision_paragraphs = vision_blocks[a].paragraphs;
 
@@ -1074,9 +1032,8 @@ const visionAnalyzer = async (data: any) => {
 				for (let d in vision_symbols) {
 					vision_text += vision_symbols[d].text;
 
-					if (vision_pos.length === 0) {
-						vision_pos = vision_symbols[d].boundingBox.vertices;
-					} else {
+					if (vision_pos.length === 0) vision_pos = vision_symbols[d].boundingBox.vertices;
+					else {
 						vision_pos[1] = vision_symbols[d].boundingBox.vertices[1];
 						vision_pos[2] = vision_symbols[d].boundingBox.vertices[2];
 
@@ -1086,11 +1043,8 @@ const visionAnalyzer = async (data: any) => {
 						width = vision_symbols[d].boundingBox.vertices[1].x - vision_paragraphs[b].boundingBox.vertices[0].x;
 						height = vision_symbols[d].boundingBox.vertices[3].y - vision_paragraphs[b].boundingBox.vertices[0].y;
 
-						if (height > width) {
-							direction = 'vertical';
-						} else {
-							direction = 'horizontal';
-						}
+						if (height > width) direction = 'vertical';
+						else direction = 'horizontal';
 					}
 
 					if (vision_symbols[d].property && vision_symbols[d].property.detectedBreak) {
@@ -1098,13 +1052,9 @@ const visionAnalyzer = async (data: any) => {
 
 						if (breakType === 'LINE_BREAK' || breakType === 'EOL_SURE_SPACE') {
 							vision_pos.map((v: any) => {
-								if (!v.x) {
-									v.x = 0;
-								}
+								if (!v.x) v.x = 0;
 
-								if (!v.y) {
-									v.y = 0;
-								}
+								if (!v.y) v.y = 0;
 							});
 
 							let offset = {
@@ -1135,9 +1085,7 @@ const visionAnalyzer = async (data: any) => {
 							vision_pos = [];
 							vision_text = '';
 							vision_count += 1;
-						} else if (breakType === 'SPACE') {
-							vision_text += ' ';
-						}
+						} else if (breakType === 'SPACE') vision_text += ' ';
 					}
 				}
 			}
@@ -1149,13 +1097,9 @@ const visionAnalyzer = async (data: any) => {
 
 const sortBy = (array: any, key: string, asc: boolean) => {
 	let sorted = array.sort((a: any, b: any) => {
-		if (a[key] < b[key]) {
-			return asc ? -1 : 1;
-		}
+		if (a[key] < b[key]) return asc ? -1 : 1;
 
-		if (a[key] > b[key]) {
-			return asc ? 1 : -1;
-		}
+		if (a[key] > b[key]) return asc ? 1 : -1;
 
 		return 0;
 	});
@@ -1183,29 +1127,22 @@ const addToLayers = async () => {
 
 						layers.push({
 							type: params.type,
-
 							index: i,
-
 							image: {
 								origin: imageUrl,
 								current: imageData as string,
 							},
-
 							object: [],
-
 							state: {
 								undo: {
 									canvas: [],
 									object: [],
 								},
-
 								redo: {
 									canvas: [],
 									object: [],
 								},
-
 								current: {},
-
 								check: 'checked',
 							},
 						});
@@ -1246,29 +1183,22 @@ const addToLayers = async () => {
 
 						layers.push({
 							type: params.type,
-
 							index: i,
-
 							image: {
 								origin: v,
 								current: imageData as string,
 							},
-
 							object: [],
-
 							state: {
 								undo: {
 									canvas: [],
 									object: [],
 								},
-
 								redo: {
 									canvas: [],
 									object: [],
 								},
-
 								current: {},
-
 								check: 'checked',
 							},
 						});
@@ -1286,13 +1216,11 @@ const addToLayers = async () => {
 
 			let matched = /product\/[0-9]+\/description.html/.test(product.description);
 
-			if (matched) {
-				let desc_resp = await fetch(`${ENDPOINT_IMAGE}/sellforyou/${product.description}?${new Date().getTime()}`);
-
-				description = await desc_resp.text();
-			} else {
-				description = product.description;
-			}
+			if (matched)
+				await fetch(`${ENDPOINT_IMAGE}/sellforyou/${product.description}?${new Date().getTime()}`).then(
+					async (desc_resp) => (description = await desc_resp.text()),
+				);
+			else description = product.description;
 
 			let elem = new DOMParser();
 			let elemImage = elem.parseFromString(description, 'text/html');
@@ -1321,29 +1249,22 @@ const addToLayers = async () => {
 
 						layers.push({
 							type: params.type,
-
 							index: i,
-
 							image: {
 								origin: v,
 								current: imageData as string,
 							},
-
 							object: [],
-
 							state: {
 								undo: {
 									canvas: [],
 									object: [],
 								},
-
 								redo: {
 									canvas: [],
 									object: [],
 								},
-
 								current: {},
-
 								check: 'checked',
 							},
 						});
@@ -1368,9 +1289,7 @@ const loadImageList = async () => {
 
 	let filterdImages: any = [];
 
-	if (params.type) {
-		currentType = params.type;
-	}
+	if (params.type) currentType = params.type;
 
 	let newLayer = layers.filter((v: any) => v.type === currentType);
 	switch (currentType) {
@@ -1412,13 +1331,11 @@ const loadImageList = async () => {
 
 			let matched = /product\/[0-9]+\/description.html/.test(product.description);
 
-			if (matched) {
-				let desc_resp = await fetch(`${ENDPOINT_IMAGE}/sellforyou/${product.description}?${new Date().getTime()}`);
-
-				description = await desc_resp.text();
-			} else {
-				description = product.description;
-			}
+			if (matched)
+				await fetch(`${ENDPOINT_IMAGE}/sellforyou/${product.description}?${new Date().getTime()}`).then(
+					async (desc_resp) => (description = await desc_resp.text()),
+				);
+			else description = product.description;
 
 			let elem = new DOMParser();
 			let elemImage = elem.parseFromString(description, 'text/html');
@@ -1448,12 +1365,8 @@ const loadImageList = async () => {
                 </div>
                 `;
 		}
-		if (filterdImages.length > 21) {
-			headerSider.style.overflowX = 'auto';
-		}
-	} else {
-		imageList.innerHTML += `<div class="imageListDiv"> </div>`;
-	}
+		if (filterdImages.length > 21) headerSider.style.overflowX = 'auto';
+	} else imageList.innerHTML += `<div class="imageListDiv"> </div>`;
 
 	let checked: any = document.getElementsByClassName(`checkBox`);
 	for (let i = 0; i < checked.length; i++) {
@@ -1492,9 +1405,7 @@ const loadImageList = async () => {
 
 	let imageElement = document.getElementsByClassName(`image-thumbnail`);
 
-	if (imageElement.length < 0) {
-		return;
-	}
+	if (imageElement.length < 0) return;
 
 	for (let i = 0; i < imageElement.length; i++) {
 		imageElement[i].addEventListener('click', async () => {
@@ -1504,10 +1415,8 @@ const loadImageList = async () => {
 		});
 	}
 	/** trangers_multiple일 경우 */
-	if (!params.index) {
-		await displayImage(0, 0);
-		/** trangers_single일 경우 */
-	} else {
+	if (!params.index) await displayImage(0, 0);
+	/** trangers_single일 경우 */ else {
 		/** "옵션이미지 -> 이미지 편집/번역"일 경우 */
 		if (params.type === '2') {
 			let emptyImageCount = 0;
@@ -1546,16 +1455,12 @@ const ColorToHex = (color: any) => {
 	return hexadecimal.length == 1 ? '0' + hexadecimal : hexadecimal;
 };
 
-const ConvertRGBtoHex = (red: any, green: any, blue: any) => {
-	return '#' + ColorToHex(red) + ColorToHex(green) + ColorToHex(blue);
-};
-
+const ConvertRGBtoHex = (red: any, green: any, blue: any) =>
+	'#' + ColorToHex(red) + ColorToHex(green) + ColorToHex(blue);
 const hexToRgb = (hex: any) => {
 	let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
 
-	hex = hex.replace(shorthandRegex, (m: any, r: any, g: any, b: any) => {
-		return r + r + g + g + b + b;
-	});
+	hex = hex.replace(shorthandRegex, (m: any, r: any, g: any, b: any) => r + r + g + g + b + b);
 
 	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 
@@ -1577,8 +1482,9 @@ const canvasSetting = () => {
 		transparentCorners: false,
 	});
 
+	// @ts-ignore
 	myCanvas.on({
-		'text:changed': (e: any) => {
+		'text:changed': (e) => {
 			let object = e.target;
 			let layer = getCurrentLayer();
 			let objectDirection = layer.object[object.id].textOption.direction;
@@ -1658,9 +1564,7 @@ const canvasSetting = () => {
 			let object = e.selected[0];
 			let objectType = object.get('type');
 
-			if (object.id === -1) {
-				return;
-			}
+			if (object.id === -1) return;
 
 			let layer = getCurrentLayer();
 			let v = layer.object[object.id];
@@ -1709,53 +1613,29 @@ const canvasSetting = () => {
 					fixedTextLineThrough.checked = v.textOption.lineThrough === 'lineThrough' ? true : false;
 					fixedTextUnderLine.checked = v.textOption.underLine === 'underLine' ? true : false;
 
-					if (toolTextBold.checked) {
-						toolTextBold.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						toolTextBold.parentNode.style.color = 'white';
-					}
+					if (toolTextBold.checked) toolTextBold.parentNode.style.color = 'rgb(41, 136, 255)';
+					else toolTextBold.parentNode.style.color = 'white';
 
-					if (toolTextItalic.checked) {
-						toolTextItalic.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						toolTextItalic.parentNode.style.color = 'white';
-					}
+					if (toolTextItalic.checked) toolTextItalic.parentNode.style.color = 'rgb(41, 136, 255)';
+					else toolTextItalic.parentNode.style.color = 'white';
 
-					if (toolTextLineThrough.checked) {
-						toolTextLineThrough.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						toolTextLineThrough.parentNode.style.color = 'white';
-					}
+					if (toolTextLineThrough.checked) toolTextLineThrough.parentNode.style.color = 'rgb(41, 136, 255)';
+					else toolTextLineThrough.parentNode.style.color = 'white';
 
-					if (toolTextUnderLine.checked) {
-						toolTextUnderLine.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						toolTextUnderLine.parentNode.style.color = 'white';
-					}
+					if (toolTextUnderLine.checked) toolTextUnderLine.parentNode.style.color = 'rgb(41, 136, 255)';
+					else toolTextUnderLine.parentNode.style.color = 'white';
 
-					if (fixedTextBold.checked) {
-						fixedTextBold.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						fixedTextBold.parentNode.style.color = 'white';
-					}
+					if (fixedTextBold.checked) fixedTextBold.parentNode.style.color = 'rgb(41, 136, 255)';
+					else fixedTextBold.parentNode.style.color = 'white';
 
-					if (fixedTextItalic.checked) {
-						fixedTextItalic.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						fixedTextItalic.parentNode.style.color = 'white';
-					}
+					if (fixedTextItalic.checked) fixedTextItalic.parentNode.style.color = 'rgb(41, 136, 255)';
+					else fixedTextItalic.parentNode.style.color = 'white';
 
-					if (fixedTextLineThrough.checked) {
-						fixedTextLineThrough.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						fixedTextLineThrough.parentNode.style.color = 'white';
-					}
+					if (fixedTextLineThrough.checked) fixedTextLineThrough.parentNode.style.color = 'rgb(41, 136, 255)';
+					else fixedTextLineThrough.parentNode.style.color = 'white';
 
-					if (fixedTextUnderLine.checked) {
-						fixedTextUnderLine.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						fixedTextUnderLine.parentNode.style.color = 'white';
-					}
+					if (fixedTextUnderLine.checked) fixedTextUnderLine.parentNode.style.color = 'rgb(41, 136, 255)';
+					else fixedTextUnderLine.parentNode.style.color = 'white';
 
 					break;
 				}
@@ -1858,9 +1738,7 @@ const canvasSetting = () => {
 			let object = e.selected[0];
 			let objectType = object.get('type');
 
-			if (object.id === -1) {
-				return;
-			}
+			if (object.id === -1) return;
 
 			let layer = getCurrentLayer();
 			let v = layer.object[object.id];
@@ -1906,53 +1784,29 @@ const canvasSetting = () => {
 					fixedTextLineThrough.checked = v.textOption.lineThrough === 'lineThrough' ? true : false;
 					fixedTextUnderLine.checked = v.textOption.underLine === 'underLine' ? true : false;
 
-					if (toolTextBold.checked) {
-						toolTextBold.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						toolTextBold.parentNode.style.color = 'white';
-					}
+					if (toolTextBold.checked) toolTextBold.parentNode.style.color = 'rgb(41, 136, 255)';
+					else toolTextBold.parentNode.style.color = 'white';
 
-					if (toolTextItalic.checked) {
-						toolTextItalic.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						toolTextItalic.parentNode.style.color = 'white';
-					}
+					if (toolTextItalic.checked) toolTextItalic.parentNode.style.color = 'rgb(41, 136, 255)';
+					else toolTextItalic.parentNode.style.color = 'white';
 
-					if (toolTextLineThrough.checked) {
-						toolTextLineThrough.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						toolTextLineThrough.parentNode.style.color = 'white';
-					}
+					if (toolTextLineThrough.checked) toolTextLineThrough.parentNode.style.color = 'rgb(41, 136, 255)';
+					else toolTextLineThrough.parentNode.style.color = 'white';
 
-					if (toolTextUnderLine.checked) {
-						toolTextUnderLine.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						toolTextUnderLine.parentNode.style.color = 'white';
-					}
+					if (toolTextUnderLine.checked) toolTextUnderLine.parentNode.style.color = 'rgb(41, 136, 255)';
+					else toolTextUnderLine.parentNode.style.color = 'white';
 
-					if (fixedTextBold.checked) {
-						fixedTextBold.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						fixedTextBold.parentNode.style.color = 'white';
-					}
+					if (fixedTextBold.checked) fixedTextBold.parentNode.style.color = 'rgb(41, 136, 255)';
+					else fixedTextBold.parentNode.style.color = 'white';
 
-					if (fixedTextItalic.checked) {
-						fixedTextItalic.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						fixedTextItalic.parentNode.style.color = 'white';
-					}
+					if (fixedTextItalic.checked) fixedTextItalic.parentNode.style.color = 'rgb(41, 136, 255)';
+					else fixedTextItalic.parentNode.style.color = 'white';
 
-					if (fixedTextLineThrough.checked) {
-						fixedTextLineThrough.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						fixedTextLineThrough.parentNode.style.color = 'white';
-					}
+					if (fixedTextLineThrough.checked) fixedTextLineThrough.parentNode.style.color = 'rgb(41, 136, 255)';
+					else fixedTextLineThrough.parentNode.style.color = 'white';
 
-					if (fixedTextUnderLine.checked) {
-						fixedTextUnderLine.parentNode.style.color = 'rgb(41, 136, 255)';
-					} else {
-						fixedTextUnderLine.parentNode.style.color = 'white';
-					}
+					if (fixedTextUnderLine.checked) fixedTextUnderLine.parentNode.style.color = 'rgb(41, 136, 255)';
+					else fixedTextUnderLine.parentNode.style.color = 'white';
 
 					break;
 				}
@@ -2041,7 +1895,7 @@ const canvasSetting = () => {
 		'object:moving': (e: any) => {
 			let object = e.target;
 			let layer = getCurrentLayer();
-			let objects = myCanvas.getActiveObject();
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 			let percentage = Math.round(parseInt(previewSize.value) / 10) * 10 + 10;
 
 			let left = Math.floor(object.left / (100 / percentage));
@@ -2049,29 +1903,25 @@ const canvasSetting = () => {
 			let width = Math.floor((object.width * object.scaleX) / (100 / percentage));
 			let height = Math.floor((object.height * object.scaleY) / (100 / percentage));
 
-			if (left < 0) {
+			if (left < 0)
 				object.set({
 					left: 0,
 				});
-			}
 
-			if (left + width > myCanvas.width) {
+			if (left + width > myCanvas.width!)
 				object.set({
-					left: (myCanvas.width - width) * (100 / percentage),
+					left: (myCanvas.width! - width) * (100 / percentage),
 				});
-			}
 
-			if (top < 0) {
+			if (top < 0)
 				object.set({
 					top: 0,
 				});
-			}
 
-			if (top + height > myCanvas.height) {
+			if (top + height > myCanvas.height!)
 				object.set({
-					top: (myCanvas.height - height) * (100 / percentage),
+					top: (myCanvas.height! - height) * (100 / percentage),
 				});
-			}
 
 			if (objects.id !== -1) {
 				if (objects['_objects']) {
@@ -2079,13 +1929,14 @@ const canvasSetting = () => {
 						let object = objects['_objects'][i];
 
 						objects.set({
-							left: parseInt(objects.left),
-							top: parseInt(objects.top),
+							left: parseInt(String(objects.left)),
+							top: parseInt(String(objects.top)),
 						});
 					}
 				} else {
-					layer.object[objects.id].pos[0].x = parseInt(object.left);
-					layer.object[objects.id].pos[0].y = parseInt(object.top);
+					const objectId = objects.id;
+					layer.object[objectId].pos[0].x = parseInt(object.left);
+					layer.object[objectId].pos[0].y = parseInt(object.top);
 				}
 			}
 
@@ -2097,7 +1948,7 @@ const canvasSetting = () => {
 		'object:scaling': (e: any) => {
 			let object = e.target;
 			let layer = getCurrentLayer();
-			let objects = myCanvas.getActiveObject();
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 			let objectType = e.target.get('type');
 
 			let height = object.getScaledHeight();
@@ -2113,9 +1964,8 @@ const canvasSetting = () => {
 					});
 
 					toolTextSize.value = size;
-					if (objects.text !== undefined) {
-						layer.object[objects.id].textOption.size = size;
-					}
+					if (objects.text !== undefined) layer.object[objects.id].textOption.size = size;
+
 					saveCanvas();
 					break;
 				}
@@ -2132,23 +1982,20 @@ const canvasSetting = () => {
 				let width = Math.floor((object.width * object.scaleX) / (100 / percentage));
 				let height = Math.floor((object.height * object.scaleY) / (100 / percentage));
 
-				if (left < 0 || left + width > myCanvas.width) {
+				if (left < 0 || left + width > myCanvas.width!)
 					object.set({
 						left: 0,
-						width: myCanvas.width * (100 / percentage),
+						width: myCanvas.width! * (100 / percentage),
 						scaleX: 1.0,
 					});
-				}
 
-				if (top < 0 || top + height > myCanvas.height) {
+				if (top < 0 || top + height > myCanvas.height!)
 					object.set({
 						top: 0,
-						height: myCanvas.height * (100 / percentage),
+						height: myCanvas.height! * (100 / percentage),
 						scaleY: 1.0,
 					});
-				}
 			}
-
 			if (objects.id !== -1) {
 				if (objects['_objects']) {
 					//
@@ -2158,7 +2005,6 @@ const canvasSetting = () => {
 					layer.object[objects.id].pos[3].y = parseInt(height);
 				}
 			}
-
 			myCanvas.renderAll();
 
 			return;
@@ -2167,10 +2013,10 @@ const canvasSetting = () => {
 		'object:rotating': (e) => {
 			let object = e.target;
 			let layer = getCurrentLayer();
-			let objects = myCanvas.getActiveObject();
-
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 			if (objects.id !== -1) {
 				if (objects['_objects']) {
+					//
 				} else {
 					object.set({
 						angle: object.angle,
@@ -2194,9 +2040,8 @@ const canvasSetting = () => {
 					editorMode === 'area-recovery-drag' ||
 					editorMode === 'area-recovery-brush' ||
 					editorMode === 'crop'
-				) {
+				)
 					return;
-				}
 
 				e.target.set('backgroundColor', 'rgba(41, 136, 255, 0.5)');
 
@@ -2215,23 +2060,17 @@ const canvasSetting = () => {
 					editorMode === 'area-recovery-drag' ||
 					editorMode === 'area-recovery-brush' ||
 					editorMode === 'crop'
-				) {
+				)
 					return;
-				}
 
 				let layer = getCurrentLayer();
 				let color = layer.object[e.target.id].background;
 
 				if (layer.object[e.target.id].object === 'i-text') {
-					if (color) {
-						e.target.set('backgroundColor', `rgb(${color.R}, ${color.G}, ${color.B})`);
-					} else {
-						e.target.set('backgroundColor', `transparent`);
-					}
+					if (color) e.target.set('backgroundColor', `rgb(${color.R}, ${color.G}, ${color.B})`);
+					else e.target.set('backgroundColor', `transparent`);
 				} else {
-					if (color) {
-						e.target.set('backgroundColor', `transparent`);
-					}
+					if (color) e.target.set('backgroundColor', `transparent`);
 				}
 
 				myCanvas.renderAll();
@@ -2281,9 +2120,7 @@ const canvasSetting = () => {
 		},
 
 		'mouse:move': (e: any) => {
-			if (!isDrag) {
-				return;
-			}
+			if (!isDrag) return;
 
 			switch (editorMode) {
 				case 'area-recovery-drag': {
@@ -2303,13 +2140,13 @@ const canvasSetting = () => {
 					let yMin = Math.min(...test['y']);
 
 					let rect = new fabric.Rect({
-						left: xMin - dragImage.width / 2,
-						top: yMin - dragImage.height / 2,
+						left: xMin - dragImage?.width! / 2,
+						top: yMin - dragImage?.height! / 2,
 						width: xMax - xMin,
 						height: yMax - yMin,
 					});
 
-					dragImage.set({
+					dragImage?.set({
 						clipPath: rect,
 						selectable: false,
 						visible: true,
@@ -2355,7 +2192,6 @@ const canvasSetting = () => {
 
 					await processVisionData({
 						image: data,
-
 						pos: {
 							x: xMin,
 							y: yMin,
@@ -2408,9 +2244,7 @@ const canvasSetting = () => {
 					let objects = myCanvas.getObjects().filter((v: any) => {
 						let type = v.get('type');
 
-						if (type !== 'path') {
-							return false;
-						}
+						if (type !== 'path') return false;
 
 						return true;
 					});
@@ -2467,8 +2301,8 @@ const canvasSetting = () => {
 
 					myCanvas.zoomToPoint(new fabric.Point(0, 0), 1.0);
 					myCanvas.setDimensions({
-						width: myCanvas.width * (100 / percentage),
-						height: myCanvas.height * (100 / percentage),
+						width: myCanvas.width! * (100 / percentage),
+						height: myCanvas.height! * (100 / percentage),
 					});
 
 					let dataUrl = myCanvas.toDataURL();
@@ -2508,9 +2342,7 @@ const canvasSetting = () => {
 					let objects = myCanvas.getObjects().filter((v: any) => {
 						let type = v.get('type');
 
-						if (type !== 'path') {
-							return false;
-						}
+						if (type !== 'path') return false;
 
 						myCanvas.remove(v);
 
@@ -2534,8 +2366,8 @@ const canvasSetting = () => {
 
 					myCanvas.zoomToPoint(new fabric.Point(0, 0), 1.0);
 					myCanvas.setDimensions({
-						width: myCanvas.width * (100 / percentage),
-						height: myCanvas.height * (100 / percentage),
+						width: myCanvas.width! * (100 / percentage),
+						height: myCanvas.height! * (100 / percentage),
 					});
 
 					let dataUrl = myCanvas.toDataURL();
@@ -2561,7 +2393,7 @@ const canvasSetting = () => {
 };
 
 const setTextFont = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	let layer = getCurrentLayer();
 
@@ -2587,7 +2419,7 @@ const setTextFont = async (e: any) => {
 };
 
 const setTextSize = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	let layer = getCurrentLayer();
 
@@ -2616,11 +2448,9 @@ const setTextSize = async (e: any) => {
 
 const setTextColor = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
-	if (!objects) {
-		return;
-	}
+	if (!objects) return;
 
 	let layer = getCurrentLayer();
 
@@ -2657,11 +2487,9 @@ const setTextColor = async (e: any) => {
 
 const setTextBackground = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
-	if (!objects) {
-		return;
-	}
+	if (!objects) return;
 
 	let layer = getCurrentLayer();
 
@@ -2698,11 +2526,9 @@ const setTextBackground = async (e: any) => {
 
 const setShapeColor = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
-	if (!objects) {
-		return;
-	}
+	if (!objects) return;
 
 	let layer = getCurrentLayer();
 
@@ -2738,11 +2564,9 @@ const setShapeColor = async (e: any) => {
 };
 
 const setShapeStrokeWidth = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
-	if (!objects) {
-		return;
-	}
+	if (!objects) return;
 
 	let layer = getCurrentLayer();
 
@@ -2770,12 +2594,10 @@ const setShapeStrokeWidth = async (e: any) => {
 };
 
 const setShapeStrokeShape = async (e) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 	let layer = getCurrentLayer();
 
-	if (!objects) {
-		return;
-	}
+	if (!objects) return;
 
 	if (objects['_objects']) {
 		for (let i in objects['_objects']) {
@@ -2796,6 +2618,7 @@ const setShapeStrokeShape = async (e) => {
 		layer.object[objects.id].shapeOption.ry = parseInt(e.target.value);
 
 		objects.set({
+			// @ts-ignore
 			rx: parseInt(e.target.value),
 			ry: parseInt(e.target.value),
 		});
@@ -2805,11 +2628,9 @@ const setShapeStrokeShape = async (e) => {
 
 const setShapeBackground = async (e: any) => {
 	let color: any = hexToRgb(e.target.value);
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
-	if (!objects) {
-		return;
-	}
+	if (!objects) return;
 
 	let layer = getCurrentLayer();
 
@@ -2845,7 +2666,7 @@ const setShapeBackground = async (e: any) => {
 };
 
 const setTextBold = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	let layer = getCurrentLayer();
 
@@ -2867,11 +2688,8 @@ const setTextBold = async (e: any) => {
 		});
 	}
 
-	if (e.target.checked) {
-		e.target.parentNode.style.color = 'rgb(41, 136, 255)';
-	} else {
-		e.target.parentNode.style.color = 'white';
-	}
+	if (e.target.checked) e.target.parentNode.style.color = 'rgb(41, 136, 255)';
+	else e.target.parentNode.style.color = 'white';
 
 	myCanvas.renderAll();
 
@@ -2879,7 +2697,7 @@ const setTextBold = async (e: any) => {
 };
 
 const setTextItalic = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	let layer = getCurrentLayer();
 
@@ -2901,11 +2719,8 @@ const setTextItalic = async (e: any) => {
 		});
 	}
 
-	if (e.target.checked) {
-		e.target.parentNode.style.color = 'rgb(41, 136, 255)';
-	} else {
-		e.target.parentNode.style.color = 'white';
-	}
+	if (e.target.checked) e.target.parentNode.style.color = 'rgb(41, 136, 255)';
+	else e.target.parentNode.style.color = 'white';
 
 	myCanvas.renderAll();
 
@@ -2913,7 +2728,7 @@ const setTextItalic = async (e: any) => {
 };
 
 const setTextLineThrough = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	let layer = getCurrentLayer();
 
@@ -2935,11 +2750,8 @@ const setTextLineThrough = async (e: any) => {
 		});
 	}
 
-	if (e.target.checked) {
-		e.target.parentNode.style.color = 'rgb(41, 136, 255)';
-	} else {
-		e.target.parentNode.style.color = 'white';
-	}
+	if (e.target.checked) e.target.parentNode.style.color = 'rgb(41, 136, 255)';
+	else e.target.parentNode.style.color = 'white';
 
 	myCanvas.renderAll();
 
@@ -2947,7 +2759,7 @@ const setTextLineThrough = async (e: any) => {
 };
 
 const setTextUnderLine = async (e: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	let layer = getCurrentLayer();
 
@@ -2969,11 +2781,8 @@ const setTextUnderLine = async (e: any) => {
 		});
 	}
 
-	if (e.target.checked) {
-		e.target.parentNode.style.color = 'rgb(41, 136, 255)';
-	} else {
-		e.target.parentNode.style.color = 'white';
-	}
+	if (e.target.checked) e.target.parentNode.style.color = 'rgb(41, 136, 255)';
+	else e.target.parentNode.style.color = 'white';
 
 	myCanvas.renderAll();
 
@@ -2993,6 +2802,7 @@ const setTextAlign = async (direction: any) => {
 		}
 	} else {
 		objects.set({
+			// @ts-ignore
 			textAlign: direction,
 		});
 	}
@@ -3003,7 +2813,7 @@ const setTextAlign = async (direction: any) => {
 };
 
 const setGroupAlign = async (direction: any) => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 	if (objects['_objects']) {
 		for (let i in objects['_objects']) {
@@ -3012,7 +2822,7 @@ const setGroupAlign = async (direction: any) => {
 			switch (direction) {
 				case 'left': {
 					object.set({
-						left: 0 - objects.width / 2,
+						left: 0 - objects.width! / 2,
 					});
 
 					break;
@@ -3028,7 +2838,7 @@ const setGroupAlign = async (direction: any) => {
 
 				case 'right': {
 					object.set({
-						left: objects.width / 2 - object.width,
+						left: objects.width! / 2 - object.width,
 					});
 
 					break;
@@ -3036,7 +2846,7 @@ const setGroupAlign = async (direction: any) => {
 
 				case 'top': {
 					object.set({
-						top: 0 - objects.height / 2,
+						top: 0 - objects.height! / 2,
 					});
 
 					break;
@@ -3052,7 +2862,7 @@ const setGroupAlign = async (direction: any) => {
 
 				case 'bottom': {
 					object.set({
-						top: objects.height / 2 - object.height,
+						top: objects.height! / 2 - object.height,
 					});
 
 					break;
@@ -3086,7 +2896,6 @@ const toggleInit = (mode: string) => {
 
 		case 'area-remove-brush': {
 			areaRemoveSelect.style.display = 'none';
-
 			myCanvas.isDrawingMode = false;
 
 			break;
@@ -3100,7 +2909,6 @@ const toggleInit = (mode: string) => {
 
 		case 'area-recovery-brush': {
 			areaRecoverySelect.style.display = 'none';
-
 			myCanvas.isDrawingMode = false;
 
 			break;
@@ -3122,7 +2930,6 @@ const toggleInit = (mode: string) => {
 
 		case 'download': {
 			mainDownload.style.display = 'none';
-
 			// originWidthPCLayout.style.display = "none";
 			// originWidthURLLayout.style.display = "none";
 
@@ -3152,9 +2959,7 @@ const toggleToolbar = async (element: any, mode: string) => {
 
 				toggleInit(mode);
 			} else {
-				if (editorMode !== 'idle') {
-					toggleInit(editorMode);
-				}
+				if (editorMode !== 'idle') toggleInit(editorMode);
 
 				// editorMode = mode;
 				// buttons[i].className = "toolbar button primary";
@@ -3231,12 +3036,8 @@ const toggleToolbar = async (element: any, mode: string) => {
 					}
 
 					case 'download': {
-						let accept = confirm('모든 이미지가 셀포유에 적용됩니다.\n편집이 모두 완료되었는지 확인 후 저장해주세요.');
+						if (!confirm('모든 이미지가 셀포유에 적용됩니다.\n편집이 모두 완료되었는지 확인 후 저장해주세요.')) return;
 						buttons[i].className = 'toolbar button default btnTooltip';
-
-						if (!accept) {
-							return;
-						}
 
 						mainDownload.style.display = '';
 						// thisDownload.style.display = "none";
@@ -3277,10 +3078,13 @@ const toggleToolbar = async (element: any, mode: string) => {
 };
 
 const addShape = async () => {
+	const { width = 0, height = 0 } = myCanvas;
+	const shapeSize = 150;
+
 	let color = {
-		r: 0,
-		g: 0,
-		b: 0,
+		r: 255,
+		g: 255,
+		b: 255,
 	};
 
 	let info = {
@@ -3288,20 +3092,20 @@ const addShape = async () => {
 
 		pos: [
 			{
-				x: 0,
+				x: width / 2 + shapeSize / 2,
+				y: height / 2 + shapeSize / 2,
+			},
+			{
+				x: shapeSize,
 				y: 0,
 			},
 			{
-				x: 150,
-				y: 0,
-			},
-			{
-				x: 150,
-				y: 150,
+				x: shapeSize,
+				y: shapeSize,
 			},
 			{
 				x: 0,
-				y: 150,
+				y: shapeSize,
 			},
 		],
 
@@ -3381,7 +3185,7 @@ const addText = async () => {
 };
 
 const setTextTab = () => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 	let layer = getCurrentLayer();
 	let length = Object.keys(objects['_objects']).length;
 
@@ -3455,7 +3259,7 @@ const addTextVertical = async () => {
 };
 
 const setShapeTab = () => {
-	let objects = myCanvas.getActiveObject();
+	let objects = myCanvas.getActiveObject() as Customfabricobject;
 	let layer = getCurrentLayer();
 	let length = Object.keys(objects['_objects']).length;
 
@@ -3549,23 +3353,9 @@ const single = async () => {
 	floatingToast(`번역이 완료되었습니다.`, 'information');
 };
 
-const recovery = () => {
-	let accept = confirm('모든 이미지를 적용 전으로 되돌리시겠습니까?');
+const recovery = () => confirm('모든 이미지를 적용 전으로 되돌리시겠습니까?') && window.location.reload();
 
-	if (accept) {
-		window.location.reload();
-	}
-};
-
-const exit = () => {
-	let accept = confirm('편집을 종료하시겠습니까?');
-
-	if (!accept) {
-		return;
-	}
-
-	window.close();
-};
+const exit = () => confirm('편집을 종료하시겠습니까?') && window.close();
 
 const thisRecovery = async () => {
 	let accept = confirm('현재 이미지를 적용 전으로 되돌리시겠습니까?');
@@ -3599,11 +3389,8 @@ const thisRecovery = async () => {
 const zoomOut = async () => {
 	let percentage = parseInt(previewSize.value);
 
-	if (percentage - 10 < 0) {
-		percentage = 0;
-	} else {
-		percentage = percentage - 10;
-	}
+	if (percentage - 10 < 0) percentage = 0;
+	else percentage = percentage - 10;
 
 	previewSize.value = percentage;
 
@@ -3612,11 +3399,8 @@ const zoomOut = async () => {
 
 const zoomIn = async () => {
 	let percentage = parseInt(previewSize.value);
-	if (percentage + 10 > 200) {
-		percentage = 200;
-	} else {
-		percentage = percentage + 10;
-	}
+	if (percentage + 10 > 200) percentage = 200;
+	else percentage = percentage + 10;
 
 	previewSize.value = percentage;
 
@@ -3649,14 +3433,12 @@ const saveBadImage = async () => {
 
 	let layer = getCurrentLayer();
 
-	let dataUrl = null;
+	let dataUrl: Nullable<string> = null;
 	switch (currentType) {
 		case '1': {
-			if (applyOriginWidthThumbnail.value === 'N') {
+			if (applyOriginWidthThumbnail.value === 'N')
 				dataUrl = await displayImage(currentImageIndex, originWidthThumbnail.value);
-			} else {
-				dataUrl = await displayImage(currentImageIndex, 0);
-			}
+			else dataUrl = await displayImage(currentImageIndex, 0);
 
 			uploadData.thumbnails.push({
 				index: currentImageIndex,
@@ -3667,13 +3449,11 @@ const saveBadImage = async () => {
 		}
 
 		case '2': {
-			if (applyOriginWidthOption.value === 'N') {
+			if (applyOriginWidthOption.value === 'N')
 				dataUrl = await displayImage(currentImageIndex, originWidthOption.value);
-			} else {
-				dataUrl = await displayImage(currentImageIndex, 0);
-			}
+			else dataUrl = await displayImage(currentImageIndex, 0);
 
-			for (let j in product.productOptionName) {
+			for (let j in product.productOptionName)
 				for (let k in product.productOptionName[j].productOptionValue) {
 					let option = product.productOptionName[j].productOptionValue[k];
 					let optionImage = /product\/[0-9]+\/option/.test(option.image ?? '')
@@ -3688,17 +3468,14 @@ const saveBadImage = async () => {
 						});
 					}
 				}
-			}
 
 			break;
 		}
 
 		case '3': {
-			if (applyOriginWidthDescription.value === 'N') {
+			if (applyOriginWidthDescription.value === 'N')
 				dataUrl = await displayImage(currentImageIndex, originWidthDescription.value);
-			} else {
-				dataUrl = await displayImage(currentImageIndex, 0);
-			}
+			else dataUrl = await displayImage(currentImageIndex, 0);
 
 			if (description.includes('&amp;')) description = description.replaceAll('&amp;', '&');
 
@@ -3711,11 +3488,7 @@ const saveBadImage = async () => {
 			break;
 	}
 
-	if (currentType === '3') {
-		if (description) {
-			uploadData.description = description;
-		}
-	}
+	if (currentType === '3') if (description) uploadData.description = description;
 
 	let uploadQuery = `mutation TEST($productId: Int!, $thumbnails: [ProductNewThumbnailImageUpdateInput!], $optionValues: [ProductOptionValueImageUpdateInput!]!, $description:String) {
         updateNewProductImageBySomeone(
@@ -3730,13 +3503,9 @@ const saveBadImage = async () => {
 
 	loading.style.display = 'none';
 
-	if (upload_json.errors) {
-		alert(upload_json.errors[0].message);
+	if (upload_json.errors) return alert(upload_json.errors[0].message);
 
-		return;
-	}
-
-	if (upload_json.data) {
+	if (upload_json.data)
 		chrome.runtime.sendMessage(
 			{
 				action: 'trangers',
@@ -3744,51 +3513,41 @@ const saveBadImage = async () => {
 			},
 			async () => {},
 		);
-	} else {
-		alert(upload_json.errors[0].message);
-	}
+	else alert(upload_json.errors[0].message);
 };
 const saveSingle = async () => {
 	if (!product) return;
-	let accept = confirm('적용 시 이미지를 되돌릴 수 없습니다.');
-
-	if (!accept) {
-		return;
-	}
+	if (!confirm('적용 시 이미지를 되돌릴 수 없습니다.')) return;
 
 	loading.style.display = '';
 
 	let uploadData: any = {
-		productId: product.id,
+		productId: product?.id,
 		thumbnails: [],
 		optionValues: [],
 	};
 
-	let description: any = null;
+	let description: string | null = null;
 
 	if (currentType === '3') {
-		let matched = /product\/[0-9]+\/description.html/.test(product.description);
+		const matched = /product\/[0-9]+\/description.html/.test(product.description);
 
-		if (matched) {
-			let desc_resp = await fetch(`${ENDPOINT_IMAGE}/sellforyou/${product.description}?${new Date().getTime()}`);
-
-			description = await desc_resp.text();
-		} else {
-			description = product.description;
-		}
+		if (matched)
+			await fetch(`${ENDPOINT_IMAGE}/sellforyou/${product.description}?${new Date().getTime()}`).then(
+				async (desc_resp) => (description = await desc_resp.text()),
+			);
+		else description = product.description;
 	}
 
 	let layer = getCurrentLayer();
 
-	let dataUrl = null;
+	let dataUrl: Nullable<string> = null;
 
 	switch (currentType) {
 		case '1': {
-			if (applyOriginWidthThumbnail.value === 'N') {
+			if (applyOriginWidthThumbnail.value === 'N')
 				dataUrl = await displayImage(currentImageIndex, originWidthThumbnail.value);
-			} else {
-				dataUrl = await displayImage(currentImageIndex, 0);
-			}
+			else dataUrl = await displayImage(currentImageIndex, 0);
 
 			uploadData.thumbnails.push({
 				index: currentImageIndex,
@@ -3799,42 +3558,35 @@ const saveSingle = async () => {
 		}
 
 		case '2': {
-			if (applyOriginWidthOption.value === 'N') {
+			console.log(applyOriginWidthOption.value);
+			if (applyOriginWidthOption.value === 'N')
 				dataUrl = await displayImage(currentImageIndex, originWidthOption.value);
-			} else {
-				dataUrl = await displayImage(currentImageIndex, 0);
-			}
-
-			for (let j in product.productOptionName) {
+			else dataUrl = await displayImage(currentImageIndex, 0);
+			for (let j in product.productOptionName)
 				for (let k in product.productOptionName[j].productOptionValue) {
-					let option = product.productOptionName[j].productOptionValue[k];
-					let optionImage = /product\/[0-9]+\/option/.test(option.image ?? '')
+					const option = product.productOptionName[j].productOptionValue[k];
+					const optionImage = /product\/[0-9]+\/[option]*/.test(option.image ?? '')
 						? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
 						: option.image;
-
-					if (layer.image.origin === optionImage) {
+					if (layer.image.origin === optionImage)
 						uploadData.optionValues.push({
 							id: option.id,
 							image: optionImage,
 							newImageBase64: dataUrl,
 						});
-					}
 				}
-			}
 
 			break;
 		}
 
 		case '3': {
-			if (applyOriginWidthDescription.value === 'N') {
+			if (applyOriginWidthDescription.value === 'N')
 				dataUrl = await displayImage(currentImageIndex, originWidthDescription.value);
-			} else {
-				dataUrl = await displayImage(currentImageIndex, 0);
-			}
+			else dataUrl = await displayImage(currentImageIndex, 0);
 
-			if (description.includes('&amp;')) description = description.replaceAll('&amp;', '&');
+			if (description?.includes('&amp;')) description = description.replaceAll('&amp;', '&');
 
-			description = description.replaceAll(layer.image.origin, dataUrl);
+			description = description?.replaceAll(layer.image.origin, dataUrl ?? '')!;
 
 			break;
 		}
@@ -3843,11 +3595,7 @@ const saveSingle = async () => {
 			break;
 	}
 
-	if (currentType === '3') {
-		if (description) {
-			uploadData.description = description;
-		}
-	}
+	if (currentType === '3') if (description) uploadData.description = description;
 
 	let uploadQuery = `mutation TEST($productId: Int!, $thumbnails: [ProductNewThumbnailImageUpdateInput!], $optionValues: [ProductOptionValueImageUpdateInput!]!, $description:String) {
         updateNewProductImageBySomeone(
@@ -3862,11 +3610,7 @@ const saveSingle = async () => {
 
 	loading.style.display = 'none';
 
-	if (upload_json.errors) {
-		alert(upload_json.errors[0].message);
-
-		return;
-	}
+	if (upload_json.errors) return alert(upload_json.errors[0].message);
 
 	if (upload_json.data) {
 		chrome.runtime.sendMessage(
@@ -3875,16 +3619,12 @@ const saveSingle = async () => {
 				source: JSON.parse(upload_json.data.updateNewProductImageBySomeone),
 			},
 			() => {
-				if (thisImageSave.getAttribute('key') == '5') {
-					window.close();
-				}
+				if (thisImageSave.getAttribute('key') == '5') window.close();
 			},
 		);
 
 		floatingToast(`현재 이미지가 셀포유에 적용되었습니다.`, 'success');
-	} else {
-		alert(upload_json.errors[0].message);
-	}
+	} else alert(upload_json.errors[0].message);
 };
 
 const saveMultiple = async () => {
@@ -3903,27 +3643,23 @@ const saveMultiple = async () => {
 	if (currentType === '3') {
 		let matched = /product\/[0-9]+\/description.html/.test(product.description);
 
-		if (matched) {
-			let desc_resp = await fetch(`${ENDPOINT_IMAGE}/sellforyou/${product.description}?${new Date().getTime()}`);
-
-			description = await desc_resp.text();
-		} else {
-			description = product.description;
-		}
+		if (matched)
+			await fetch(`${ENDPOINT_IMAGE}/sellforyou/${product.description}?${new Date().getTime()}`).then(
+				async (desc_resp) => (description = await desc_resp.text()),
+			);
+		else description = product.description;
 	}
 
 	let filtered = layers.filter((v: any) => v.type === currentType && v.image.origin !== '');
 
 	for (let i = 0; i < filtered.length; i++) {
-		let dataUrl = null;
+		let dataUrl: Nullable<string> = null;
 
 		switch (currentType) {
 			case '1': {
-				if (applyOriginWidthThumbnail.value === 'N') {
+				if (applyOriginWidthThumbnail.value === 'N')
 					dataUrl = await displayImage(filtered[i].index, originWidthThumbnail.value);
-				} else {
-					dataUrl = await displayImage(filtered[i].index, 0);
-				}
+				else dataUrl = await displayImage(filtered[i].index, 0);
 
 				uploadData.thumbnails.push({
 					index: filtered[i].index,
@@ -3934,38 +3670,32 @@ const saveMultiple = async () => {
 			}
 
 			case '2': {
-				if (applyOriginWidthOption.value === 'N') {
+				if (applyOriginWidthOption.value === 'N')
 					dataUrl = await displayImage(filtered[i].index, originWidthOption.value);
-				} else {
-					dataUrl = await displayImage(filtered[i].index, 0);
-				}
+				else dataUrl = await displayImage(filtered[i].index, 0);
 
-				for (let j in product?.productOptionName) {
+				for (let j in product?.productOptionName)
 					for (let k in product.productOptionName[j].productOptionValue) {
 						let option = product.productOptionName[j].productOptionValue[k];
-						let optionImage = /product\/[0-9]+\/option/.test(option.image ?? '')
+						let optionImage = /product\/[0-9]+\/[option]*/.test(option.image ?? '')
 							? `${ENDPOINT_IMAGE}/sellforyou/${option.image}`
 							: option.image;
 
-						if (filtered[i].image.origin === optionImage) {
+						if (filtered[i].image.origin === optionImage)
 							uploadData.optionValues.push({
 								id: option.id,
 								image: optionImage,
 								newImageBase64: dataUrl,
 							});
-						}
 					}
-				}
 
 				break;
 			}
 
 			case '3': {
-				if (applyOriginWidthDescription.value === 'N') {
+				if (applyOriginWidthDescription.value === 'N')
 					dataUrl = await displayImage(filtered[i].index, originWidthDescription.value);
-				} else {
-					dataUrl = await displayImage(filtered[i].index, 0);
-				}
+				else dataUrl = await displayImage(filtered[i].index, 0);
 
 				if (description.includes('&amp;')) description = description.replaceAll('&amp;', '&');
 
@@ -3979,11 +3709,7 @@ const saveMultiple = async () => {
 		}
 	}
 
-	if (currentType === '3') {
-		if (description) {
-			uploadData.description = description;
-		}
-	}
+	if (currentType === '3') if (description) uploadData.description = description;
 
 	let uploadQuery = `mutation TEST($productId: Int!, $thumbnails: [ProductNewThumbnailImageUpdateInput!], $optionValues: [ProductOptionValueImageUpdateInput!]!, $description:String) {
         updateNewProductImageBySomeone(
@@ -4004,7 +3730,7 @@ const saveMultiple = async () => {
 		return;
 	}
 
-	if (upload_json.data) {
+	if (upload_json.data)
 		chrome.runtime.sendMessage(
 			{
 				action: 'trangers',
@@ -4012,20 +3738,17 @@ const saveMultiple = async () => {
 			},
 			() => window.close(),
 		);
-	} else {
-		alert(upload_json.errors[0].message);
-	}
+	else alert(upload_json.errors[0].message);
 };
 
 const imageToolHelper = () => {
 	if (!product) return;
-	if (product.activeTaobaoProduct.shopName === 'express' || product.activeTaobaoProduct.shopName?.includes('amazon')) {
+	if (product.activeTaobaoProduct.shopName === 'express' || product.activeTaobaoProduct.shopName?.includes('amazon'))
 		startRegion.value = 'en';
-	}
 
 	let radioList: any = document.getElementsByName('cropRatioType');
 
-	for (let i = 0; i < radioList.length; i++) {
+	for (let i = 0; i < radioList.length; i++)
 		radioList[i].addEventListener('change', (e: any) => {
 			for (let j = 0; j < radioList.length; j++) {
 				if (e.target.value === radioList[j].value) {
@@ -4039,10 +3762,9 @@ const imageToolHelper = () => {
 				}
 			}
 		});
-	}
 
 	textTranslated.addEventListener('keyup', (e: any) => {
-		let objects = myCanvas.getActiveObject();
+		let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 		let layer = getCurrentLayer();
 
@@ -4121,11 +3843,8 @@ const imageToolHelper = () => {
 	areaRemoveBrush.addEventListener('click', () => toggleToolbar(areaRemove, 'area-remove-brush'));
 	areaRemove.addEventListener('click', () => toggleToolbar(areaRemove, removeType));
 	areaRemoveType.addEventListener('click', () => {
-		if (areaRemoveSelect.style.display === '') {
-			areaRemoveSelect.style.display = 'none';
-		} else {
-			areaRemoveSelect.style.display = '';
-		}
+		if (areaRemoveSelect.style.display === '') areaRemoveSelect.style.display = 'none';
+		else areaRemoveSelect.style.display = '';
 
 		areaRecoverySelect.style.display = 'none';
 		shapeSelect.style.display = 'none';
@@ -4136,11 +3855,8 @@ const imageToolHelper = () => {
 	areaRecoveryBrush.addEventListener('click', () => toggleToolbar(areaRecovery, 'area-recovery-brush'));
 	areaRecovery.addEventListener('click', () => toggleToolbar(areaRecovery, recoveryType));
 	areaRecoveryType.addEventListener('click', () => {
-		if (areaRecoverySelect.style.display === '') {
-			areaRecoverySelect.style.display = 'none';
-		} else {
-			areaRecoverySelect.style.display = '';
-		}
+		if (areaRecoverySelect.style.display === '') areaRecoverySelect.style.display = 'none';
+		else areaRecoverySelect.style.display = '';
 
 		areaRemoveSelect.style.display = 'none';
 		shapeSelect.style.display = 'none';
@@ -4160,6 +3876,7 @@ const imageToolHelper = () => {
 			top: cropRectangle.top + 1,
 			width: croppedWidth - 1,
 			height: croppedHeight - 1,
+			//@ts-ignore
 			globalCompositeOperation: 'source-over',
 		});
 
@@ -4202,11 +3919,8 @@ const imageToolHelper = () => {
 
 	shapeStart.addEventListener('click', () => addShape());
 	shapeType.addEventListener('click', () => {
-		if (shapeSelect.style.display === '') {
-			shapeSelect.style.display = 'none';
-		} else {
-			shapeSelect.style.display = '';
-		}
+		if (shapeSelect.style.display === '') shapeSelect.style.display = 'none';
+		else shapeSelect.style.display = '';
 
 		areaRemoveSelect.style.display = 'none';
 		areaRecoverySelect.style.display = 'none';
@@ -4219,11 +3933,8 @@ const imageToolHelper = () => {
 	});
 
 	textType.addEventListener('click', () => {
-		if (textSelect.style.display === '') {
-			textSelect.style.display = 'none';
-		} else {
-			textSelect.style.display = '';
-		}
+		if (textSelect.style.display === '') textSelect.style.display = 'none';
+		else textSelect.style.display = '';
 
 		areaRemoveSelect.style.display = 'none';
 		areaRecoverySelect.style.display = 'none';
@@ -4266,11 +3977,8 @@ const imageToolHelper = () => {
 	previewZoomOut.addEventListener('click', () => {
 		let percentage = parseInt(previewSize.value);
 
-		if (percentage - 10 < 0) {
-			percentage = 0;
-		} else {
-			percentage = percentage - 10;
-		}
+		if (percentage - 10 < 0) percentage = 0;
+		else percentage = percentage - 10;
 
 		previewSize.value = percentage;
 
@@ -4280,34 +3988,25 @@ const imageToolHelper = () => {
 	previewZoomIn.addEventListener('click', (e: any) => {
 		let percentage = parseInt(previewSize.value);
 
-		if (percentage + 10 > 200) {
-			percentage = 200;
-		} else {
-			percentage = percentage + 10;
-		}
+		if (percentage + 10 > 200) percentage = 200;
+		else percentage = percentage + 10;
 
 		previewSize.value = percentage;
 
 		displayImage(currentImageIndex, 0);
 	});
 
-	playUndo.addEventListener('click', () => {
-		replayCanvas('undo');
-	});
+	playUndo.addEventListener('click', () => replayCanvas('undo'));
 
-	playRedo.addEventListener('click', () => {
-		replayCanvas('redo');
-	});
+	playRedo.addEventListener('click', () => replayCanvas('redo'));
 
 	displayDouble.addEventListener('click', () => {
 		if (doubleFrame.style.display === 'none') {
 			displayDouble.innerHTML = `<img src="resources/27double.svg" alt="" width="30px" />`;
-
 			doubleFrame.style.display = '';
 			doubleBorder.style.display = '';
 		} else {
 			displayDouble.innerHTML = `<img src="resources/26single.svg" alt="" width="30px" />`;
-
 			doubleFrame.style.display = 'none';
 			doubleBorder.style.display = 'none';
 		}
@@ -4338,98 +4037,64 @@ const imageToolHelper = () => {
 	applyOriginWidthPC.addEventListener('change', (e: any) => {
 		saveLocalSettings('originWidthPC', e.target.value);
 
-		if (e.target.value === 'Y') {
-			originWidthPC.disabled = true;
-		} else {
-			originWidthPC.disabled = false;
-		}
+		if (e.target.value === 'Y') originWidthPC.disabled = true;
+		else originWidthPC.disabled = false;
 	});
 
-	originWidthPC.addEventListener('change', (e: any) => {
-		saveLocalSettings('originWidthPCSize', e.target.value);
-	});
+	originWidthPC.addEventListener('change', (e: any) => saveLocalSettings('originWidthPCSize', e.target.value));
 
 	applyOriginWidthThumbnail.addEventListener('change', (e: any) => {
 		saveLocalSettings('originWidthThumbnail', e.target.value);
 
-		if (e.target.value === 'Y') {
-			originWidthThumbnail.disabled = true;
-		} else {
-			originWidthThumbnail.disabled = false;
-		}
+		if (e.target.value === 'Y') originWidthThumbnail.disabled = true;
+		else originWidthThumbnail.disabled = false;
 	});
 
-	originWidthThumbnail.addEventListener('change', (e: any) => {
-		saveLocalSettings('originWidthThumbnailSize', e.target.value);
-	});
+	originWidthThumbnail.addEventListener('change', (e: any) =>
+		saveLocalSettings('originWidthThumbnailSize', e.target.value),
+	);
 
 	applyOriginWidthOption.addEventListener('change', (e: any) => {
 		saveLocalSettings('originWidthOption', e.target.value);
 
-		if (e.target.value === 'Y') {
-			originWidthOption.disabled = true;
-		} else {
-			originWidthOption.disabled = false;
-		}
+		if (e.target.value === 'Y') originWidthOption.disabled = true;
+		else originWidthOption.disabled = false;
 	});
 
-	originWidthOption.addEventListener('change', (e: any) => {
-		saveLocalSettings('originWidthOptionSize', e.target.value);
-	});
+	originWidthOption.addEventListener('change', (e: any) => saveLocalSettings('originWidthOptionSize', e.target.value));
 
 	applyOriginWidthDescription.addEventListener('change', (e: any) => {
 		saveLocalSettings('originWidthDescription', e.target.value);
 
-		if (e.target.value === 'Y') {
-			originWidthDescription.disabled = true;
-		} else {
-			originWidthDescription.disabled = false;
-		}
+		if (e.target.value === 'Y') originWidthDescription.disabled = true;
+		else originWidthDescription.disabled = false;
 	});
 
-	originWidthDescription.addEventListener('change', (e: any) => {
-		saveLocalSettings('originWidthDescriptionSize', e.target.value);
-	});
+	originWidthDescription.addEventListener('change', (e: any) =>
+		saveLocalSettings('originWidthDescriptionSize', e.target.value),
+	);
 
-	btnSetting.addEventListener('click', () => {
-		setting.style.display = '';
-	});
+	btnSetting.addEventListener('click', () => (setting.style.display = ''));
 
-	applySensitive.addEventListener('change', (e: any) => {
-		saveLocalSettings('originSensitive', e.target.value);
-	});
+	applySensitive.addEventListener('change', (e: any) => saveLocalSettings('originSensitive', e.target.value));
 
-	settingAccept.addEventListener('click', () => {
-		setting.style.display = 'none';
-	});
+	settingAccept.addEventListener('click', () => (setting.style.display = 'none'));
 
 	toolShapeOutlineColor.addEventListener('input', setShapeColor);
-	toolShapeOutlineColor.addEventListener('change', () => {
-		saveCanvas();
-	});
+	toolShapeOutlineColor.addEventListener('change', () => saveCanvas());
 	toolShapeStrokeWidth.addEventListener('input', setShapeStrokeWidth);
-	toolShapeStrokeWidth.addEventListener('change', () => {
-		saveCanvas();
-	});
+	toolShapeStrokeWidth.addEventListener('change', () => saveCanvas());
 	toolShapeStrokeShape.addEventListener('input', setShapeStrokeShape);
-	toolShapeStrokeShape.addEventListener('change', () => {
-		saveCanvas();
-	});
+	toolShapeStrokeShape.addEventListener('change', () => saveCanvas());
 	toolShapeBackground.addEventListener('input', setShapeBackground);
-	toolShapeBackground.addEventListener('change', () => {
-		saveCanvas();
-	});
+	toolShapeBackground.addEventListener('change', () => saveCanvas());
 
 	toolTextFont.addEventListener('change', setTextFont);
 	toolTextSize.addEventListener('change', setTextSize);
 	toolTextColor.addEventListener('input', setTextColor);
-	toolTextColor.addEventListener('change', () => {
-		saveCanvas();
-	});
+	toolTextColor.addEventListener('change', () => saveCanvas());
 	toolTextBackground.addEventListener('input', setTextBackground);
-	toolTextBackground.addEventListener('change', () => {
-		saveCanvas();
-	});
+	toolTextBackground.addEventListener('change', () => saveCanvas());
 	toolTextBold.addEventListener('change', setTextBold);
 	toolTextItalic.addEventListener('change', setTextItalic);
 	toolTextLineThrough.addEventListener('change', setTextLineThrough);
@@ -4439,32 +4104,20 @@ const imageToolHelper = () => {
 	toolTextAlignRight.addEventListener('click', () => setTextAlign('right'));
 
 	fixedShapeOutlineColor.addEventListener('input', setShapeColor);
-	fixedShapeOutlineColor.addEventListener('change', () => {
-		saveCanvas();
-	});
+	fixedShapeOutlineColor.addEventListener('change', () => saveCanvas());
 	fixedShapeStrokeWidth.addEventListener('input', setShapeStrokeWidth);
-	fixedShapeStrokeWidth.addEventListener('change', () => {
-		saveCanvas();
-	});
+	fixedShapeStrokeWidth.addEventListener('change', () => saveCanvas());
 	fixedShapeStrokeShape.addEventListener('input', setShapeStrokeShape);
-	fixedShapeStrokeShape.addEventListener('change', () => {
-		saveCanvas();
-	});
+	fixedShapeStrokeShape.addEventListener('change', () => saveCanvas());
 	fixedShapeBackground.addEventListener('input', setShapeBackground);
-	fixedShapeBackground.addEventListener('change', () => {
-		saveCanvas();
-	});
+	fixedShapeBackground.addEventListener('change', () => saveCanvas());
 
 	fixedTextFont.addEventListener('change', setTextFont);
 	fixedTextSize.addEventListener('change', setTextSize);
 	fixedTextColor.addEventListener('input', setTextColor);
-	fixedTextColor.addEventListener('change', () => {
-		saveCanvas();
-	});
+	fixedTextColor.addEventListener('change', () => saveCanvas());
 	fixedTextBackground.addEventListener('input', setTextBackground);
-	fixedTextBackground.addEventListener('change', () => {
-		saveCanvas();
-	});
+	fixedTextBackground.addEventListener('change', () => saveCanvas());
 	fixedTextBold.addEventListener('change', setTextBold);
 	fixedTextItalic.addEventListener('change', setTextItalic);
 	fixedTextLineThrough.addEventListener('change', setTextLineThrough);
@@ -4474,18 +4127,14 @@ const imageToolHelper = () => {
 	fixedTextAlignRight.addEventListener('change', () => setTextAlign('right'));
 
 	floatingTextToolDragger.addEventListener('drag', (e: any) => {
-		if (e.x === 0 && e.y === 0) {
-			return;
-		}
+		if (e.x === 0 && e.y === 0) return;
 
 		floatingTextTool.style.left = `${e.x + 224}px`;
 		floatingTextTool.style.top = `${e.y + 52}px`;
 	});
 
 	floatingShapeToolDragger.addEventListener('drag', (e: any) => {
-		if (e.x === 0 && e.y === 0) {
-			return;
-		}
+		if (e.x === 0 && e.y === 0) return;
 
 		floatingShapeTool.style.left = `${e.x + 103}px`;
 		floatingShapeTool.style.top = `${e.y + 52}px`;
@@ -4506,45 +4155,36 @@ const imageToolHelper = () => {
 		mainDownload.style.display = 'none';
 
 		for (let i = 0; i < filtered.length; i++) {
-			let dataUrl: any = null;
+			let dataUrl: Nullable<string> = null;
 
 			switch (currentType) {
 				case '0': {
-					if (applyOriginWidthPC.value === 'N') {
-						dataUrl = await displayImage(filtered[i].index, originWidthPC.value);
-					} else {
-						dataUrl = await displayImage(filtered[i].index, 0);
-					}
+					if (applyOriginWidthPC.value === 'N') dataUrl = await displayImage(filtered[i].index, originWidthPC.value);
+					else dataUrl = await displayImage(filtered[i].index, 0);
 
 					break;
 				}
 
 				case '1': {
-					if (applyOriginWidthThumbnail.value === 'N') {
+					if (applyOriginWidthThumbnail.value === 'N')
 						dataUrl = await displayImage(filtered[i].index, originWidthThumbnail.value);
-					} else {
-						dataUrl = await displayImage(filtered[i].index, 0);
-					}
+					else dataUrl = await displayImage(filtered[i].index, 0);
 
 					break;
 				}
 
 				case '2': {
-					if (applyOriginWidthOption.value === 'N') {
+					if (applyOriginWidthOption.value === 'N')
 						dataUrl = await displayImage(filtered[i].index, originWidthOption.value);
-					} else {
-						dataUrl = await displayImage(filtered[i].index, 0);
-					}
+					else dataUrl = await displayImage(filtered[i].index, 0);
 
 					break;
 				}
 
 				case '3': {
-					if (applyOriginWidthDescription.value === 'N') {
+					if (applyOriginWidthDescription.value === 'N')
 						dataUrl = await displayImage(filtered[i].index, originWidthDescription.value);
-					} else {
-						dataUrl = await displayImage(filtered[i].index, 0);
-					}
+					else dataUrl = await displayImage(filtered[i].index, 0);
 
 					break;
 				}
@@ -4581,7 +4221,7 @@ const imageToolHelper = () => {
 			}
 
 			chrome.downloads.download({
-				url: dataUrl,
+				url: dataUrl!,
 				filename: dataPath,
 				saveAs: false,
 			});
@@ -4592,31 +4232,24 @@ const imageToolHelper = () => {
 		floatingToast(`모든 이미지가 PC에 저장되었습니다.`, 'success');
 	});
 
-	uploadAccept.addEventListener('click', () => {
-		saveMultiple();
-	});
+	uploadAccept.addEventListener('click', () => saveMultiple());
 
 	imageExit.addEventListener('click', exit);
 
 	thisImageRecovery.addEventListener('click', thisRecovery);
-	thisImageSave.addEventListener('click', () => {
-		saveSingle();
-	});
+	thisImageSave.addEventListener('click', () => saveSingle());
 };
 
 const setKeyEvents = () => {
 	window.addEventListener('wheel', (e) => {
 		if (e.shiftKey) {
-			if (e.deltaY > 0) {
-				zoomOut();
-			} else {
-				zoomIn();
-			}
+			if (e.deltaY > 0) zoomOut();
+			else zoomIn();
 		}
 	});
 
 	window.addEventListener('keydown', (e) => {
-		let objects = myCanvas.getActiveObject();
+		let objects = myCanvas.getActiveObject() as Customfabricobject;
 		let layer = getCurrentLayer();
 
 		if (objects == null) {
@@ -4696,6 +4329,12 @@ const setKeyEvents = () => {
 				break;
 			}
 
+			case e.shiftKey && 'q':
+			case e.shiftKey && 'Q': {
+				addShape();
+				break;
+			}
+
 			case e.shiftKey && 't':
 			case e.shiftKey && 'T': {
 				addText();
@@ -4742,7 +4381,7 @@ const setKeyEvents = () => {
 			// }
 
 			case 'Delete': {
-				let objects = myCanvas.getActiveObject();
+				let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 				if (objects) {
 					if (objects['_objects']) {
@@ -4810,7 +4449,7 @@ const setKeyEvents = () => {
 		if (e.key === 'ArrowUp') {
 			e.preventDefault();
 
-			let objects = myCanvas.getActiveObject();
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 			if (objects) {
 				if (objects['_objects']) {
@@ -4845,7 +4484,7 @@ const setKeyEvents = () => {
 					switch (objectType) {
 						case 'rect': {
 							objects.set({
-								top: objects.top - 5,
+								top: objects.top! - 5,
 							});
 
 							break;
@@ -4854,7 +4493,7 @@ const setKeyEvents = () => {
 						case 'i-text': {
 							if (!objects.isEditing) {
 								objects.set({
-									top: objects.top - 5,
+									top: objects.top! - 5,
 								});
 							}
 
@@ -4875,7 +4514,7 @@ const setKeyEvents = () => {
 		if (e.key === 'ArrowDown') {
 			e.preventDefault();
 
-			let objects = myCanvas.getActiveObject();
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 			if (objects) {
 				if (objects['_objects']) {
@@ -4910,7 +4549,7 @@ const setKeyEvents = () => {
 					switch (objectType) {
 						case 'rect': {
 							objects.set({
-								top: objects.top + 5,
+								top: objects.top! + 5,
 							});
 
 							break;
@@ -4919,7 +4558,7 @@ const setKeyEvents = () => {
 						case 'i-text': {
 							if (!objects.isEditing) {
 								objects.set({
-									top: objects.top + 5,
+									top: objects.top! + 5,
 								});
 							}
 
@@ -4940,7 +4579,7 @@ const setKeyEvents = () => {
 		if (e.key === 'ArrowLeft') {
 			e.preventDefault();
 
-			let objects = myCanvas.getActiveObject();
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 			if (objects) {
 				if (objects['_objects']) {
@@ -4975,7 +4614,7 @@ const setKeyEvents = () => {
 					switch (objectType) {
 						case 'rect': {
 							objects.set({
-								left: objects.left - 5,
+								left: objects.left! - 5,
 							});
 
 							break;
@@ -4984,7 +4623,7 @@ const setKeyEvents = () => {
 						case 'i-text': {
 							if (!objects.isEditing) {
 								objects.set({
-									left: objects.left - 5,
+									left: objects.left! - 5,
 								});
 							}
 
@@ -5005,7 +4644,7 @@ const setKeyEvents = () => {
 		if (e.key === 'ArrowRight') {
 			e.preventDefault();
 
-			let objects = myCanvas.getActiveObject();
+			let objects = myCanvas.getActiveObject() as Customfabricobject;
 
 			if (objects) {
 				if (objects['_objects']) {
@@ -5040,7 +4679,7 @@ const setKeyEvents = () => {
 					switch (objectType) {
 						case 'rect': {
 							objects.set({
-								left: objects.left + 5,
+								left: objects.left! + 5,
 							});
 
 							break;
@@ -5049,7 +4688,7 @@ const setKeyEvents = () => {
 						case 'i-text': {
 							if (!objects.isEditing) {
 								objects.set({
-									left: objects.left + 5,
+									left: objects.left! + 5,
 								});
 							}
 
@@ -5108,9 +4747,7 @@ const reloadTranslate = async () => {
 };
 const autoTranslation = async () => {
 	while (true) {
-		if (loading.style.display === 'none') {
-			break;
-		}
+		if (loading.style.display === 'none') break;
 
 		await sleep(1000 * 1);
 	}
@@ -5148,11 +4785,7 @@ const main = async () => {
 
 	let user_json = await gql(userQuery, {}, false);
 
-	if (user_json.errors) {
-		alert(user_json.errors[0].message);
-
-		return;
-	}
+	if (user_json.errors) return alert(user_json.errors[0].message);
 
 	let appInfo = localStorage.getItem('appInfo');
 

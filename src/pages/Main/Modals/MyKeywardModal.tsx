@@ -23,6 +23,7 @@ export const MyKeywardModal = observer(() => {
 			marginUnitType: common.user.userInfo.marginUnitType,
 			localShippingFee: common.user.userInfo.defaultShippingFee,
 			shippingFee: common.user.userInfo.extraShippingFee,
+			refundShippingFee: common.user.userInfo.refundShippingFee,
 		});
 	}, [common.loaded]);
 

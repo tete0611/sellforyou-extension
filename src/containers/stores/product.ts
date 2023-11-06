@@ -2,7 +2,7 @@ import gql from '../../pages/Main/GraphQL/Requests';
 import QUERIES from '../../pages/Main/GraphQL/Queries';
 import MUTATIONS from '../../pages/Main/GraphQL/Mutations';
 
-import { runInAction, makeAutoObservable, values } from 'mobx';
+import { runInAction, makeAutoObservable } from 'mobx';
 import {
 	cartesian,
 	downloadExcel,
@@ -22,26 +22,20 @@ import { deleteLotteon, uploadLotteon } from '../../pages/Tools/Lotteon';
 import { deleteTmon, uploadTmon } from '../../pages/Tools/Tmon';
 import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from '../../pages/Tools/ChromeAsync';
 import { common } from './common';
-import { ItemInfo, ModalInfo } from '../../type/type';
+import { ItemInfo, ManyPriceInfo, ModalInfo } from '../../type/type';
+import { UpdateProductMyKeywardInPut } from '../../type/mutation';
 
 export class product {
 	gridView: boolean = false;
-
 	count: number = 0;
-
 	etcPageSize: boolean = false;
-
 	pageTemp: number = 1;
 	page: number = 1;
 	pages: number = 0;
 	pageSize: number = 10;
-
 	state: number = 6;
-
 	myLock: number = 1;
-
 	tagDict: any = [];
-
 	uploadConsole: any = [];
 	uploadDisabledIndex: number = -1;
 	uploadFailedIndex: number = -1;
@@ -56,9 +50,7 @@ export class product {
 	itemInfo: ItemInfo = {
 		checkedAll: false,
 		current: 0,
-
 		items: [],
-
 		loading: false,
 	};
 
@@ -234,7 +226,7 @@ export class product {
 		whereInput: {},
 	};
 
-	categoryInfo: any = {
+	categoryInfo = {
 		markets: [
 			{
 				code: 'A077',
@@ -313,12 +305,13 @@ export class product {
 	ManymyKeyward: any = {
 		myKeyward: '',
 	};
-	manyPriceInfo: any = {
+	manyPriceInfo: ManyPriceInfo = {
 		cnyRate: 185,
 		marginRate: 25,
 		marginUnitType: 'PERCENT',
 		localShippingFee: 6000,
 		shippingFee: 0,
+		refundShippingFee: 0,
 	};
 
 	manyFeeInfo: any = {
@@ -442,64 +435,43 @@ export class product {
 				this.pageSize !== 50 &&
 				this.pageSize !== 100 &&
 				this.pageSize !== 200
-			) {
+			)
 				this.etcPageSize = true;
-			}
 		});
 	};
 
 	// 이미지 팝업
-	setImagePopOver = (data: any) => {
-		this.popOverInfo.image = data;
-	};
+	setImagePopOver = (data: any) => (this.popOverInfo.image = data);
 
 	// 옵션명 키워드추가 팝업
-	setAddOptionNamePopOver = (data: any) => {
-		this.popOverInfo.addOptionName = data;
-	};
+	setAddOptionNamePopOver = (data: any) => (this.popOverInfo.addOptionName = data);
 
 	// 옵션명 키워드변경 팝업
-	setReplaceOptionNamePopOver = (data: any) => {
-		this.popOverInfo.replaceOptionName = data;
-	};
+	setReplaceOptionNamePopOver = (data: any) => (this.popOverInfo.replaceOptionName = data);
 
 	// 옵션가 일괄인상 팝업
-	setAddOptionPricePopOver = (data: any) => {
-		this.popOverInfo.addOptionPrice = data;
-	};
+	setAddOptionPricePopOver = (data: any) => (this.popOverInfo.addOptionPrice = data);
 
 	// 옵션가 일괄인하 팝업
-	setSubtractOptionPricePopOver = (data: any) => {
-		this.popOverInfo.subtractOptionPrice = data;
-	};
+	setSubtractOptionPricePopOver = (data: any) => (this.popOverInfo.subtractOptionPrice = data);
 
 	// 옵션가 일괄설정 팝업
-	setOptionPricePopOver = (data: any) => {
-		this.popOverInfo.setOptionPrice = data;
-	};
+	setOptionPricePopOver = (data: any) => (this.popOverInfo.setOptionPrice = data);
 
 	// 재고수량 일괄설정 팝업
-	setOptionStockPopOver = (data: any) => {
-		this.popOverInfo.setOptionStock = data;
-	};
+	setOptionStockPopOver = (data: any) => (this.popOverInfo.setOptionStock = data);
 
 	// 고시정보 설정
-	setProductSillDataPopOver = (data: any) => {
-		this.popOverInfo.setProductSillData = data;
-	};
+	setProductSillDataPopOver = (data: any) => (this.popOverInfo.setProductSillData = data);
 
 	// 상품 일괄설정 모달
-	setUpdateManyProductPopOver = (data: any) => {
-		this.popOverInfo.updateManyProduct = data;
-	};
+	setUpdateManyProductPopOver = (data: any) => (this.popOverInfo.updateManyProduct = data);
 
 	// 카테고리 정보 가져오기
 	getCategoryList = async (marketCode: string) => {
-		let result = this.categoryInfo.markets.find((v: any) => v.code === marketCode);
+		let result = this.categoryInfo.markets.find((v) => v.code === marketCode)!;
 
-		if (result.data.length > 0) {
-			return;
-		}
+		if (result.data.length > 0) return;
 
 		result.loading = true;
 
@@ -541,9 +513,7 @@ export class product {
 				break;
 		}
 
-		if (categories.errors) {
-			return;
-		}
+		if (categories.errors) return;
 
 		runInAction(() => {
 			switch (marketCode) {
@@ -587,9 +557,8 @@ export class product {
 	};
 
 	// 카테고리 입력정보
-	setCategoryInput = (marketCode: string, value: string) => {
-		this.categoryInfo.markets.find((v: any) => v.code === marketCode).input = value;
-	};
+	setCategoryInput = (marketCode: string, value: string) =>
+		(this.categoryInfo.markets.find((v) => v.code === marketCode)!.input = value);
 
 	// 카테고리 일괄설정
 	setManyCategory = (marketCode: string, value: any) => {
@@ -631,8 +600,8 @@ export class product {
 	};
 
 	// 카테고리 설정
-	setCategory = (index: number) => {
-		this.itemInfo.items[index] = {
+	setCategory = (index: number) =>
+		(this.itemInfo.items[index] = {
 			...this.itemInfo.items[index],
 
 			categoryInfoA077: this.manyCategoryInfo.categoryInfoA077,
@@ -646,14 +615,11 @@ export class product {
 			categoryInfoA524: this.manyCategoryInfo.categoryInfoA524,
 			categoryInfoA525: this.manyCategoryInfo.categoryInfoA525,
 			categoryInfoB956: this.manyCategoryInfo.categoryInfoB956,
-		};
-	};
+		});
 
 	// 카테고리 업데이트
 	updateCategory = async (marketCode: string, value: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.baseInfo = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.baseInfo = 0);
 
 		this.itemInfo.items[index].edited.baseInfo = 2;
 
@@ -665,9 +631,7 @@ export class product {
 
 		if (categories.errors) {
 			alert(categories.errors[0].message);
-
 			exit();
-
 			return;
 		}
 
@@ -675,16 +639,12 @@ export class product {
 
 		let sillInfo: any = null;
 
-		if (marketCode === 'A077') {
-			sillInfo = parsedSillInfo[0][`sillInfo${marketCode}`];
-		} else {
-			sillInfo = parsedSillInfo;
-		}
+		if (marketCode === 'A077') sillInfo = parsedSillInfo[0][`sillInfo${marketCode}`];
+		else sillInfo = parsedSillInfo;
 
 		runInAction(() => {
-			if (marketCode === 'A077') {
+			if (marketCode === 'A077')
 				this.itemInfo.items[index].tagInfo = this.tagDict.find((w: any) => w.code === value.code).tagJson;
-			}
 
 			this.itemInfo.items[index][`categoryInfo${marketCode}`] = {
 				[`sillInfo${marketCode}`]: sillInfo[0],
@@ -702,7 +662,6 @@ export class product {
 			marketCode,
 			{
 				productIds: data.productId,
-
 				value: sillInfo[0].code,
 			},
 			index,
@@ -710,31 +669,26 @@ export class product {
 
 		floatingToast('카테고리가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 카테고리 자동매칭 업데이트
 	updateCategoryAuto = async (value: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.summary = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.summary = 0);
 
 		this.itemInfo.items[index].edited.summary = 2;
-		// console.log(value.code);
+
 		const response = await gql(QUERIES.SEARCH_CATEGORY_INFO_A077_BY_CODE, { code: value.code }, false);
-		// console.log({ response });
+
 		if (response.errors) {
 			alert(response.errors[0].message);
-
 			exit();
 
 			return;
 		}
 
 		const categories = response.data.searchCategoryInfoA077BySomeone[0];
-		// console.log({ categories });
+
 		const updateResponse = await gql(
 			MUTATIONS.UPDATE_PRODUCT_CATEGORY,
 			{
@@ -756,7 +710,6 @@ export class product {
 
 		if (updateResponse.errors) {
 			alert(updateResponse.errors[0].message);
-
 			exit();
 
 			return;
@@ -765,155 +718,147 @@ export class product {
 		const tagInfo = this.tagDict.find((w: any) => w.code === value.code).tagJson;
 		const parsedSillInfo = JSON.parse(updateResponse.data.updateProductCategory2);
 
-		runInAction(() => {
-			this.itemInfo.items[index] = {
-				...this.itemInfo.items[index],
+		runInAction(
+			() =>
+				(this.itemInfo.items[index] = {
+					...this.itemInfo.items[index],
 
-				tagInfo,
+					tagInfo,
 
-				categoryInfoA077: {
-					code: categories.code,
-					name: categories.name,
+					categoryInfoA077: {
+						code: categories.code,
+						name: categories.name,
 
-					sillInfoA077: parsedSillInfo[0][`sillInfoA077`][0],
-					activeSillDataA077: parsedSillInfo[0][`sillInfoA077`],
-				},
+						sillInfoA077: parsedSillInfo[0][`sillInfoA077`][0],
+						activeSillDataA077: parsedSillInfo[0][`sillInfoA077`],
+					},
 
-				categoryInfoB378: {
-					code: categories.categoryInfoB378.code,
-					name: categories.categoryInfoB378.name,
+					categoryInfoB378: {
+						code: categories.categoryInfoB378.code,
+						name: categories.categoryInfoB378.name,
 
-					sillInfoB378: parsedSillInfo[0][`sillInfoB378`][0],
-					activeSillDataB378: parsedSillInfo[0][`sillInfoB378`],
-				},
+						sillInfoB378: parsedSillInfo[0][`sillInfoB378`][0],
+						activeSillDataB378: parsedSillInfo[0][`sillInfoB378`],
+					},
 
-				categoryInfoA112: {
-					code: categories.categoryInfoA112.code,
-					name: categories.categoryInfoA112.name,
+					categoryInfoA112: {
+						code: categories.categoryInfoA112.code,
+						name: categories.categoryInfoA112.name,
 
-					sillInfoA112: parsedSillInfo[0][`sillInfoA112`][0],
-					activeSillDataA112: parsedSillInfo[0][`sillInfoA112`],
-				},
+						sillInfoA112: parsedSillInfo[0][`sillInfoA112`][0],
+						activeSillDataA112: parsedSillInfo[0][`sillInfoA112`],
+					},
 
-				categoryInfoA113: {
-					code: categories.categoryInfoA113.code,
-					name: categories.categoryInfoA113.name,
+					categoryInfoA113: {
+						code: categories.categoryInfoA113.code,
+						name: categories.categoryInfoA113.name,
 
-					sillInfoA113: parsedSillInfo[0][`sillInfoA113`][0],
-					activeSillDataA113: parsedSillInfo[0][`sillInfoA113`],
-				},
+						sillInfoA113: parsedSillInfo[0][`sillInfoA113`][0],
+						activeSillDataA113: parsedSillInfo[0][`sillInfoA113`],
+					},
 
-				categoryInfoA006: {
-					code: categories.categoryInfoA006.code,
-					name: categories.categoryInfoA006.name,
+					categoryInfoA006: {
+						code: categories.categoryInfoA006.code,
+						name: categories.categoryInfoA006.name,
 
-					sillInfoA006: parsedSillInfo[0][`sillInfoA006`][0],
-					activeSillDataA006: parsedSillInfo[0][`sillInfoA006`],
-				},
+						sillInfoA006: parsedSillInfo[0][`sillInfoA006`][0],
+						activeSillDataA006: parsedSillInfo[0][`sillInfoA006`],
+					},
 
-				categoryInfoA001: {
-					code: categories.categoryInfoA001.code,
-					name: categories.categoryInfoA001.name,
+					categoryInfoA001: {
+						code: categories.categoryInfoA001.code,
+						name: categories.categoryInfoA001.name,
 
-					sillInfoA001: parsedSillInfo[0][`sillInfoA001`][0],
-					activeSillDataA001: parsedSillInfo[0][`sillInfoA001`],
-				},
+						sillInfoA001: parsedSillInfo[0][`sillInfoA001`][0],
+						activeSillDataA001: parsedSillInfo[0][`sillInfoA001`],
+					},
 
-				categoryInfoA027: {
-					code: categories.categoryInfoA027.code,
-					name: categories.categoryInfoA027.name,
+					categoryInfoA027: {
+						code: categories.categoryInfoA027.code,
+						name: categories.categoryInfoA027.name,
 
-					sillInfoA027: parsedSillInfo[0][`sillInfoA027`][0],
-					activeSillDataA027: parsedSillInfo[0][`sillInfoA027`],
-				},
+						sillInfoA027: parsedSillInfo[0][`sillInfoA027`][0],
+						activeSillDataA027: parsedSillInfo[0][`sillInfoA027`],
+					},
 
-				categoryInfoB719: {
-					code: categories.categoryInfoB719.code,
-					name: categories.categoryInfoB719.name,
+					categoryInfoB719: {
+						code: categories.categoryInfoB719.code,
+						name: categories.categoryInfoB719.name,
 
-					sillInfoB719: parsedSillInfo[0][`sillInfoB719`][0],
-					activeSillDataB719: parsedSillInfo[0][`sillInfoB719`],
-				},
+						sillInfoB719: parsedSillInfo[0][`sillInfoB719`][0],
+						activeSillDataB719: parsedSillInfo[0][`sillInfoB719`],
+					},
 
-				categoryInfoA524: {
-					code: categories.categoryInfoA524.code,
-					name: categories.categoryInfoA524.name,
+					categoryInfoA524: {
+						code: categories.categoryInfoA524.code,
+						name: categories.categoryInfoA524.name,
 
-					sillInfoA524: parsedSillInfo[0][`sillInfoA524`][0],
-					activeSillDataA524: parsedSillInfo[0][`sillInfoA524`],
-				},
+						sillInfoA524: parsedSillInfo[0][`sillInfoA524`][0],
+						activeSillDataA524: parsedSillInfo[0][`sillInfoA524`],
+					},
 
-				categoryInfoA525: {
-					code: categories.categoryInfoA525.code,
-					name: categories.categoryInfoA525.name,
+					categoryInfoA525: {
+						code: categories.categoryInfoA525.code,
+						name: categories.categoryInfoA525.name,
 
-					sillInfoA525: parsedSillInfo[0][`sillInfoA525`][0],
-					activeSillDataA525: parsedSillInfo[0][`sillInfoA525`],
-				},
+						sillInfoA525: parsedSillInfo[0][`sillInfoA525`][0],
+						activeSillDataA525: parsedSillInfo[0][`sillInfoA525`],
+					},
 
-				categoryInfoB956: {
-					code: categories.categoryInfoB956.code,
-					name: categories.categoryInfoB956.name,
+					categoryInfoB956: {
+						code: categories.categoryInfoB956.code,
+						name: categories.categoryInfoB956.name,
 
-					sillInfoB956: parsedSillInfo[0][`sillInfoB956`][0],
-					activeSillDataB956: parsedSillInfo[0][`sillInfoB956`],
-				},
-			};
-		});
+						sillInfoB956: parsedSillInfo[0][`sillInfoB956`][0],
+						activeSillDataB956: parsedSillInfo[0][`sillInfoB956`],
+					},
+				}),
+		);
 
 		floatingToast('카테고리가 저장되었습니다.', 'success');
+		// await this.updateProdutSillsAuto('AUTO', index);
 
-		await this.updateProdutSillsAuto('AUTO', index);
-
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 카테고리 자동매칭 일괄설정
 	updateManyCategoryAuto = async (value: any) => {
 		const response = await gql(QUERIES.SEARCH_CATEGORY_INFO_A077_BY_CODE, { code: value.code }, false);
 
-		if (response.errors) {
-			return;
-		}
+		if (response.errors) return;
 
 		const categories = response.data.searchCategoryInfoA077BySomeone[0];
 
-		runInAction(() => {
-			this.manyCategoryInfo = {
-				categoryInfoA077: {
-					code: categories.code,
-					name: categories.name,
-				},
+		runInAction(
+			() =>
+				(this.manyCategoryInfo = {
+					categoryInfoA077: {
+						code: categories.code,
+						name: categories.name,
+					},
 
-				categoryInfoB378: categories.categoryInfoB378,
-				categoryInfoA112: categories.categoryInfoA112,
-				categoryInfoA113: categories.categoryInfoA113,
-				categoryInfoA006: categories.categoryInfoA006,
-				categoryInfoA001: categories.categoryInfoA001,
-				categoryInfoA027: categories.categoryInfoA027,
-				categoryInfoB719: categories.categoryInfoB719,
-				categoryInfoA524: categories.categoryInfoA524,
-				categoryInfoA525: categories.categoryInfoA525,
-				categoryInfoB956: categories.categoryInfoB956,
-			};
-		});
+					categoryInfoB378: categories.categoryInfoB378,
+					categoryInfoA112: categories.categoryInfoA112,
+					categoryInfoA113: categories.categoryInfoA113,
+					categoryInfoA006: categories.categoryInfoA006,
+					categoryInfoA001: categories.categoryInfoA001,
+					categoryInfoA027: categories.categoryInfoA027,
+					categoryInfoB719: categories.categoryInfoB719,
+					categoryInfoA524: categories.categoryInfoA524,
+					categoryInfoA525: categories.categoryInfoA525,
+					categoryInfoB956: categories.categoryInfoB956,
+				}),
+		);
 	};
 
 	// 상품 상태 (수집, 등록)
-	setState = (value: number) => {
-		this.state = value;
-	};
+	setState = (value: number) => (this.state = value);
 
 	// 잠금 상태 (잠금 ,해제)
-	setLock = (value: number) => {
-		this.myLock = value;
-	};
+	setLock = (value: number) => (this.myLock = value);
+
 	// 임시 상태
-	setPageTemp = (value: number) => {
-		this.pageTemp = value;
-	};
+	setPageTemp = (value: number) => (this.pageTemp = value);
 
 	// 한 페이지에 표시하는 상품 수
 	setPageSize = async (value: number) => {
@@ -923,9 +868,7 @@ export class product {
 
 		await setLocalStorage({ appInfo: auth });
 
-		runInAction(() => {
-			this.pageSize = value;
-		});
+		runInAction(() => (this.pageSize = value));
 	};
 
 	// 태그사전 정보
@@ -933,44 +876,30 @@ export class product {
 		const tagResp = await fetch('/resources/dictionary.json');
 		const tagJson = await tagResp.json();
 
-		runInAction(() => {
-			this.tagDict = tagJson;
-		});
+		runInAction(() => (this.tagDict = tagJson));
 	};
 
 	// 상품 정보
-	getProduct = async (commonStore: any, p: number) => {
+	getProduct = async (commonStore: common, p: number) => {
 		this.itemInfo.loading = true;
-
 		// Backup
 		const oldItems = this.itemInfo.items;
 
 		const response1 = await gql(QUERIES.SELECT_MY_PRODUCT_COUNT_BY_USER, { where: this.searchInfo.whereInput }, false);
 
-		if (response1.errors) {
-			alert(response1.errors[0].message);
-
-			return;
-		}
+		if (response1.errors) return alert(response1.errors[0].message);
 
 		runInAction(() => {
 			this.itemInfo.items = [];
-
 			this.page = p;
-			// this.pageSize = s;
-
 			this.count = response1.data.selectMyProductsCountByUser;
-
 			const pagesOffset = Math.ceil(this.count / this.pageSize);
-
 			this.pages = pagesOffset;
 		});
 
 		let s = this.pageSize;
 
-		if (s > this.count) {
-			s = this.count;
-		}
+		if (s > this.count) s = this.count;
 
 		const skipOffset = (p - 1) * s;
 
@@ -988,17 +917,13 @@ export class product {
 				false,
 			);
 
-			if (response2.errors) {
-				alert(response2.errors[0].message);
-
-				return;
-			}
+			if (response2.errors) return alert(response2.errors[0].message);
 
 			result = await Promise.all(
 				response2.data.selectMyProductByUser.map(async (v: any) => {
-					v.imageThumbnail = v.imageThumbnail.map((w: any) => {
-						return /^https?/.test(w) ? w : `${process.env.SELLFORYOU_MINIO_HTTPS}/${w}`;
-					});
+					v.imageThumbnail = v.imageThumbnail.map((w: any) =>
+						/^https?/.test(w) ? w : `${process.env.SELLFORYOU_MINIO_HTTPS}/${w}`,
+					);
 
 					const thumbResp = await fetch(v.imageThumbnail[0]);
 					const thumbBlob = await thumbResp.blob();
@@ -1008,11 +933,8 @@ export class product {
 
 					return {
 						...v,
-
 						thumbData,
-
 						checked,
-
 						edited: {
 							summary: 0,
 							baseInfo: 0,
@@ -1038,33 +960,27 @@ export class product {
 				false,
 			);
 
-			if (response2.errors) {
-				alert(response2.errors[0].message);
-
-				return;
-			}
+			if (response2.errors) return alert(response2.errors[0].message);
 
 			result = await Promise.all(
 				response2.data.selectMyProductByUser.map(async (v: any) => {
 					v.attribute = v.attribute ? JSON.parse(v.attribute) : [];
 
-					v.imageThumbnail = v.imageThumbnail.map((w: any) => {
-						return /^https?/.test(w) ? w : `${process.env.SELLFORYOU_MINIO_HTTPS}/${w}`;
-					});
+					v.imageThumbnail = v.imageThumbnail.map((w: any) =>
+						/^https?/.test(w) ? w : `${process.env.SELLFORYOU_MINIO_HTTPS}/${w}`,
+					);
 
-					if (v.activeTaobaoProduct.videoUrl) {
+					if (v.activeTaobaoProduct.videoUrl)
 						v.activeTaobaoProduct.videoUrl = /^https?/.test(v.activeTaobaoProduct.videoUrl)
 							? v.activeTaobaoProduct.videoUrl
 							: 'https:' + v.activeTaobaoProduct.videoUrl;
-					}
 
-					v.productOptionName.map((w: any) => {
+					v.productOptionName.map((w: any) =>
 						w.productOptionValue.map((x: any) => {
-							if (x.image) {
+							if (x.image)
 								x.image = /^https?/.test(x.image) ? x.image : `${process.env.SELLFORYOU_MINIO_HTTPS}/${x.image}`;
-							}
-						});
-					});
+						}),
+					);
 
 					const thumbResp = await fetch(v.imageThumbnail[0]);
 					const thumbBlob = await thumbResp.blob();
@@ -1081,9 +997,7 @@ export class product {
 						descHtml = new DOMParser().parseFromString(descText, 'text/html');
 
 						v.description = descText ?? v.description;
-					} else {
-						descHtml = new DOMParser().parseFromString(v.description, 'text/html');
-					}
+					} else descHtml = new DOMParser().parseFromString(v.description, 'text/html');
 
 					if (descHtml) {
 						v.descriptionImages = [];
@@ -1092,9 +1006,8 @@ export class product {
 
 						for (let i in imageList) {
 							if (imageList[i].src) {
-								if (imageList[i].src.includes('.gif')) {
-									imageList[i].parentNode.removeChild(imageList[i]);
-								} else {
+								if (imageList[i].src.includes('.gif')) imageList[i].parentNode.removeChild(imageList[i]);
+								else {
 									imageList[i].src = imageList[i].src;
 									v.descriptionImages.push(imageList[i].src);
 								}
@@ -1102,235 +1015,205 @@ export class product {
 						}
 					}
 
-					if (!v.categoryInfoA077) {
+					if (!commonStore.user.userInfo?.sillFromCategory)
+						return confirm('일시적인 상품조회 오류, 새로고침해주세요.') ? window.location.reload() : null;
+					if (!v.categoryInfoA077)
 						v.categoryInfoA077 = {
 							code: null,
 							name: '카테고리를 선택해주세요.',
 						};
-					} else {
-						if (!v.sillCodeA077) {
+					else {
+						if (!v.sillCodeA077)
 							v.sillCodeA077 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA077.sillInfoA077.code
 									: v.categoryInfoA077.activeSillDataA077.find((w) => w.code === 'ETC').code;
-						}
 
-						if (!v.sillDataA077) {
+						if (!v.sillDataA077)
 							v.sillDataA077 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA077.sillInfoA077.data
 									: v.categoryInfoA077.activeSillDataA077.find((w) => w.code === 'ETC').data;
-						}
 					}
 
-					if (!v.categoryInfoB378) {
+					if (!v.categoryInfoB378)
 						v.categoryInfoB378 = {
 							code: null,
 							name: '카테고리를 선택해주세요.',
 						};
-					} else {
-						if (!v.sillCodeB378) {
+					else {
+						if (!v.sillCodeB378)
 							v.sillCodeB378 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoB378.sillInfoB378.code
 									: v.categoryInfoB378.activeSillDataB378.find((w) => w.code === '기타 재화').code;
-						}
-
-						if (!v.sillDataB378) {
+						if (!v.sillDataB378)
 							v.sillDataB378 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoB378.sillInfoB378.data
 									: v.categoryInfoB378.activeSillDataB378.find((w) => w.code === '기타 재화').data;
-						}
 					}
 
-					if (!v.categoryInfoA112) {
+					if (!v.categoryInfoA112)
 						v.categoryInfoA112 = {
 							code: null,
 							name: '카테고리를 선택해주세요.',
 						};
-					} else {
-						if (!v.sillCodeA112) {
+					else {
+						if (!v.sillCodeA112)
 							v.sillCodeA112 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA112.sillInfoA112.code
 									: v.categoryInfoA112.activeSillDataA112.find((w) => w.code === '891045').code;
-						}
-
-						if (!v.sillDataA112) {
+						if (!v.sillDataA112)
 							v.sillDataA112 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA112.sillInfoA112.data
 									: v.categoryInfoA112.activeSillDataA112.find((w) => w.code === '891045').data;
-						}
 					}
 
-					if (!v.categoryInfoA113) {
+					if (!v.categoryInfoA113)
 						v.categoryInfoA113 = {
 							code: null,
 							name: '카테고리를 선택해주세요.',
 						};
-					} else {
-						if (!v.sillCodeA113) {
+					else {
+						if (!v.sillCodeA113)
 							v.sillCodeA113 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA113.sillInfoA113.code
 									: v.categoryInfoA113.activeSillDataA113.find((w) => w.code === '891045').code;
-						}
-
-						if (!v.sillDataA113) {
+						if (!v.sillDataA113)
 							v.sillDataA113 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA113.sillInfoA113.data
 									: v.categoryInfoA113.activeSillDataA113.find((w) => w.code === '891045').data;
-						}
 					}
 
-					if (!v.categoryInfoA006) {
+					if (!v.categoryInfoA006)
 						v.categoryInfoA006 = {
 							code: null,
 							name: '카테고리를 선택해주세요.',
 						};
-					} else {
-						if (!v.sillCodeA006) {
+					else {
+						if (!v.sillCodeA006)
 							v.sillCodeA006 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA006.sillInfoA006.code
 									: v.categoryInfoA006.activeSillDataA006.find((w) => w.code === '35').code;
-						}
-
-						if (!v.sillDataA006) {
+						if (!v.sillDataA006)
 							v.sillDataA006 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA006.sillInfoA006.data
 									: v.categoryInfoA006.activeSillDataA006.find((w) => w.code === '35').data;
-						}
 					}
 
-					if (!v.categoryInfoA001) {
+					if (!v.categoryInfoA001)
 						v.categoryInfoA001 = {
 							code: null,
 							name: '카테고리를 선택해주세요.',
 						};
-					} else {
-						if (!v.sillCodeA001) {
+					else {
+						if (!v.sillCodeA001)
 							v.sillCodeA001 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA001.sillInfoA001.code
 									: v.categoryInfoA001.activeSillDataA001.find((w) => w.code === '35').code;
-						}
-
-						if (!v.sillDataA001) {
+						if (!v.sillDataA001)
 							v.sillDataA001 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA001.sillInfoA001.data
 									: v.categoryInfoA001.activeSillDataA001.find((w) => w.code === '35').data;
-						}
 					}
 
-					if (!v.categoryInfoA027) {
+					if (!v.categoryInfoA027)
 						v.categoryInfoA027 = {
 							code: null,
 							name: '카테고리를 선택해주세요.',
 						};
-					} else {
-						if (!v.sillCodeA027) {
+					else {
+						if (!v.sillCodeA027)
 							v.sillCodeA027 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA027.sillInfoA027.code
 									: v.categoryInfoA027.activeSillDataA027.find((w) => w.code === '38').code;
-						}
-
-						if (!v.sillDataA027) {
+						if (!v.sillDataA027)
 							v.sillDataA027 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA027.sillInfoA027.data
 									: v.categoryInfoA027.activeSillDataA027.find((w) => w.code === '38').data;
-						}
 					}
 
-					if (!v.categoryInfoB719) {
+					if (!v.categoryInfoB719)
 						v.categoryInfoB719 = {
 							code: null,
 							name: '카테고리를 선택해주세요.',
 						};
-					} else {
-						if (!v.sillCodeB719) {
+					else {
+						if (!v.sillCodeB719)
 							v.sillCodeB719 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoB719.sillInfoB719.code
 									: v.categoryInfoB719.activeSillDataB719.find((w) => w.code === '38').code;
-						}
-
-						if (!v.sillDataB719) {
+						if (!v.sillDataB719)
 							v.sillDataB719 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoB719.sillInfoB719.data
 									: v.categoryInfoB719.activeSillDataB719.find((w) => w.code === '38').data;
-						}
 					}
 
-					if (!v.categoryInfoA524) {
+					if (!v.categoryInfoA524)
 						v.categoryInfoA524 = {
 							code: null,
 							name: '카테고리를 선택해주세요.',
 						};
-					} else {
-						if (!v.sillCodeA524) {
+					else {
+						if (!v.sillCodeA524)
 							v.sillCodeA524 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA524.sillInfoA524.code
 									: v.categoryInfoA524.activeSillDataA524.find((w) => w.code === '38').code;
-						}
-
-						if (!v.sillDataA524) {
+						if (!v.sillDataA524)
 							v.sillDataA524 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA524.sillInfoA524.data
 									: v.categoryInfoA524.activeSillDataA524.find((w) => w.code === '38').data;
-						}
 					}
 
-					if (!v.categoryInfoA525) {
+					if (!v.categoryInfoA525)
 						v.categoryInfoA525 = {
 							code: null,
 							name: '카테고리를 선택해주세요.',
 						};
-					} else {
-						if (!v.sillCodeA525) {
+					else {
+						if (!v.sillCodeA525)
 							v.sillCodeA525 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA525.sillInfoA525.code
 									: v.categoryInfoA525.activeSillDataA525.find((w) => w.code === '38').code;
-						}
-
-						if (!v.sillDataA525) {
+						if (!v.sillDataA525)
 							v.sillDataA525 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoA525.sillInfoA525.data
 									: v.categoryInfoA525.activeSillDataA525.find((w) => w.code === '38').data;
-						}
 					}
 
-					if (!v.categoryInfoB956) {
+					if (!v.categoryInfoB956)
 						v.categoryInfoB956 = {
 							code: null,
 							name: '카테고리를 선택해주세요.',
 						};
-					} else {
-						if (!v.sillCodeB956) {
+					else {
+						if (!v.sillCodeB956)
 							v.sillCodeB956 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoB956.sillInfoB956.code
 									: v.categoryInfoB956.activeSillDataB956.find((w) => w.code === '기타 재화').code;
-						}
-
-						if (!v.sillDataB956) {
+						if (!v.sillDataB956)
 							v.sillDataB956 =
 								commonStore.user.userInfo.sillFromCategory === 'Y'
 									? v.categoryInfoB956.sillInfoB956.data
 									: v.categoryInfoB956.activeSillDataB956.find((w) => w.code === '기타 재화').data;
-						}
 					}
 
 					const tagInfo = this.tagDict.find((w: any) => w.code === v.categoryInfoA077?.code)?.tagJson;
@@ -1338,10 +1221,8 @@ export class product {
 
 					return {
 						...v,
-
 						tagInfo,
 						thumbData,
-
 						checked,
 						collapse: false,
 						delete: false,
@@ -1349,12 +1230,10 @@ export class product {
 						translate: false,
 						optionCollapse: false,
 						tabs: 0,
-
 						thumbnailImageError: false,
 						optionPriceError: false,
 						optionImageError: false,
 						descriptionImageError: false,
-
 						edited: {
 							summary: 0,
 							baseInfo: 0,
@@ -1365,7 +1244,6 @@ export class product {
 							optionImages: 0,
 							descriptions: 0,
 						},
-
 						immSearchTagsTemp: v.immSearchTags,
 					};
 				}),
@@ -1382,45 +1260,23 @@ export class product {
 	};
 
 	// 상품 삭제
-	deleteProduct = async (commonStore: any, productId: number) => {
+	deleteProduct = async (commonStore: common, productId: number) => {
 		let productIds: any = [];
 
 		if (productId === -1) {
-			this.itemInfo.items
-				.filter((v: any) => v.checked)
-				.map((v: any) => {
-					productIds.push(v.id);
-				});
+			this.itemInfo.items.filter((v: any) => v.checked).map((v: any) => productIds.push(v.id));
 
-			if (productIds.length < 1) {
-				alert('상품이 선택되지 않았습니다.');
-
+			if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
+			if (!confirm(`선택한 상품 ${productIds.length}개를 삭제하시겠습니까?\n삭제된 상품은 다시 복구하실 수 없습니다.`))
 				return;
-			}
 
-			const accept = confirm(
-				`선택한 상품 ${productIds.length}개를 삭제하시겠습니까?\n삭제된 상품은 다시 복구하실 수 없습니다.`,
-			);
-
-			if (!accept) {
-				return;
-			}
-
-			this.itemInfo.items
-				.filter((v: any) => v.checked)
-				.map((v: any) => {
-					v.delete = true;
-				});
+			this.itemInfo.items.filter((v: any) => v.checked).map((v: any) => (v.delete = true));
 		} else {
 			productIds.push(productId);
 
-			const accept = confirm(`상품을 삭제하시겠습니까?\n삭제된 상품은 다시 복구하실 수 없습니다.`);
+			if (!confirm(`상품을 삭제하시겠습니까?\n삭제된 상품은 다시 복구하실 수 없습니다.`)) return;
 
-			if (!accept) {
-				return;
-			}
-
-			this.itemInfo.items.find((v: any) => v.id === productId).delete = true;
+			this.itemInfo.items.find((v) => v.id === productId)!.delete = true;
 		}
 
 		await gql(MUTATIONS.DELETE_PRODUCT_BY_USER, { productId: productIds }, false);
@@ -1436,13 +1292,9 @@ export class product {
 
 	// 상품명 업데이트
 	updateProductName = async (index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.summary = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.summary = 0);
 
-		if (!this.itemInfo.items[index].edited.summary) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.summary) return;
 
 		this.itemInfo.items[index].edited.summary = 2;
 
@@ -1465,9 +1317,7 @@ export class product {
 
 		floatingToast('상품명이 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 검색어 태그 설정(쿠팡)
@@ -1478,13 +1328,9 @@ export class product {
 
 	// 검색어 태그 업데이트(쿠팡)
 	updateProductSearchTag = async (data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.baseInfo = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.baseInfo = 0);
 
-		if (!this.itemInfo.items[index].edited.baseInfo) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.baseInfo) return;
 
 		this.itemInfo.items[index].edited.baseInfo = 2;
 
@@ -1503,16 +1349,12 @@ export class product {
 
 		floatingToast('검색어태그(쿠팡)가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 검색어 태그 추가(스마트스토어)
 	addProductImmSearchTag = async (data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.baseInfo = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.baseInfo = 0);
 
 		this.itemInfo.items[index].edited.baseInfo = 2;
 
@@ -1520,11 +1362,7 @@ export class product {
 
 		tagList = tagList.filter((v: any) => v);
 
-		if (tagList.find((v: any) => v === data)) {
-			exit();
-
-			return;
-		}
+		if (tagList.find((v: any) => v === data)) return exit();
 
 		if (tagList.length > 9) {
 			floatingToast('검색어는 최대 10개까지만 입력하실 수 있습니다.', 'information');
@@ -1538,9 +1376,7 @@ export class product {
 
 		let output = '';
 
-		tagList.map((v: any) => {
-			output += `${v},`;
-		});
+		tagList.map((v: any) => (output += `${v},`));
 
 		output = output.slice(0, output.length - 1);
 
@@ -1561,9 +1397,7 @@ export class product {
 
 		floatingToast('검색어태그(스마트스토어)가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 검색어 태그 설정(스마트스토어)
@@ -1574,13 +1408,9 @@ export class product {
 
 	// 검색어 태그 사용불가 단어 조회(스마트스토어)
 	verifyProductImmSearchTag = async (data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.baseInfo = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.baseInfo = 0);
 
-		if (!this.itemInfo.items[index].edited.baseInfo) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.baseInfo) return;
 
 		this.itemInfo.items[index].edited.baseInfo = 2;
 
@@ -1627,22 +1457,11 @@ export class product {
 			tagDataSet.map((v: any) => {
 				// console.log('test', v.restricted);
 
-				if (tagList.length > 9) {
-					floatingToast('검색어는 최대 10개까지만 입력하실 수 있습니다.', 'information');
-
-					return;
-				}
-
-				if (tagList.find((w: any) => w === v.tag)) {
+				if (tagList.length > 9) return floatingToast('검색어는 최대 10개까지만 입력하실 수 있습니다.', 'information');
+				if (tagList.find((w: any) => w === v.tag))
 					//자꾸 여기서 걸리네 이유를 모르겠음.. 추가적으로 조건들에 걸리는데도 밑에 저기 너 왜 여기까지옴? 콘솔안찍히는데 이상하게 tagList.push(v.tag)는 동작하는거처럼 들어가있음
 					return;
-				}
-
-				if (v.restricted) {
-					floatingToast(`사용할 수 없는 검색어입니다. [${v.tag}]`, 'failed');
-
-					return;
-				}
+				if (v.restricted) return floatingToast(`사용할 수 없는 검색어입니다. [${v.tag}]`, 'failed');
 
 				tagList.push(v.tag);
 			}),
@@ -1670,16 +1489,12 @@ export class product {
 
 		floatingToast('검색어태그(스마트스토어)가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 검색어 태그 삭제(스마트스토어)
 	removeProductImmSearchTag = async (data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.baseInfo = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.baseInfo = 0);
 
 		this.itemInfo.items[index].edited.baseInfo = 2;
 
@@ -1688,9 +1503,7 @@ export class product {
 		let output = '';
 
 		tagList = tagList.filter((v: any) => v && v !== data);
-		tagList.map((v: any) => {
-			output += `${v},`;
-		});
+		tagList.map((v: any) => (output += `${v},`));
 
 		output = output.slice(0, output.length - 1);
 
@@ -1711,16 +1524,12 @@ export class product {
 
 		floatingToast('검색어태그(스마트스토어)가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 썸네일이미지 추가
 	addProductThumbnailImage = async (blob: any, base64: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.thumbnailImages = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.thumbnailImages = 0);
 
 		this.itemInfo.items[index].edited.thumbnailImages = 2;
 
@@ -1747,7 +1556,6 @@ export class product {
 
 		let operations = {
 			variables: temp,
-
 			query: MUTATIONS.UPDATE_IMAGE_THUMBNAIL_DATA,
 		};
 
@@ -1782,13 +1590,9 @@ export class product {
 
 	// 썸네일이미지 스왑/업데이트
 	updateProductThumbnailImage = async (src: number, dst: number, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.thumbnailImages = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.thumbnailImages = 0);
 
-		if (src === dst) {
-			return;
-		}
+		if (src === dst) return;
 
 		this.itemInfo.items[index].edited.thumbnailImages = 2;
 
@@ -1796,18 +1600,14 @@ export class product {
 
 		temp.splice(src, 1);
 
-		if (dst >= 0) {
-			temp.splice(dst, 0, this.itemInfo.items[index].imageThumbnail[src]);
-		}
+		if (dst >= 0) temp.splice(dst, 0, this.itemInfo.items[index].imageThumbnail[src]);
 
 		const response = await gql(MUTATIONS.UPDATE_IMAGE_THUMBNAIL_DATA, {
 			productId: this.itemInfo.items[index].id,
-			thumbnails: temp.map((v: any) => {
-				return {
-					defaultImage: v,
-					uploadImage: null,
-				};
-			}),
+			thumbnails: temp.map((v: any) => ({
+				defaultImage: v,
+				uploadImage: null,
+			})),
 		});
 
 		if (response.errors) {
@@ -1835,13 +1635,9 @@ export class product {
 
 	// 상품 판매가 업데이트
 	updateProductPrice = async (index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.price = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.price = 0);
 
-		if (!this.itemInfo.items[index].edited.price) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.price) return;
 
 		this.itemInfo.items[index].edited.price = 2;
 
@@ -1864,13 +1660,11 @@ export class product {
 
 		floatingToast('가격정보가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 옵션가격 설정
-	setProductOption = (commonStore: any, data: any, index: number, optionIndex: number, handlePrice: boolean) => {
+	setProductOption = (commonStore: common, data: any, index: number, optionIndex: number, handlePrice: boolean) => {
 		let price: any = null;
 
 		if (!handlePrice) {
@@ -1880,18 +1674,14 @@ export class product {
 				marginUnitType: this.itemInfo.items[index].marginUnitType,
 			};
 
-			if (priceInfo.marginUnitType === 'PERCENT') {
+			if (priceInfo.marginUnitType === 'PERCENT')
 				price = (data.priceCny * priceInfo.cnyRate + data.defaultShippingFee) * (1 + priceInfo.marginRate / 100);
-			} else {
-				price = data.priceCny * priceInfo.cnyRate + data.defaultShippingFee + priceInfo.marginRate;
-			}
+			else price = data.priceCny * priceInfo.cnyRate + data.defaultShippingFee + priceInfo.marginRate;
 
 			const wonType = commonStore.user.userInfo.calculateWonType;
 
 			price = Math.round(price / wonType) * wonType;
-		} else {
-			price = data.price;
-		}
+		} else price = data.price;
 
 		this.itemInfo.items[index].productOption[optionIndex] = { ...data, price };
 		this.itemInfo.items[index].edited.option = 1;
@@ -1899,13 +1689,9 @@ export class product {
 
 	// 옵션가격 일괄설정
 	updateManyProductOption = async (index: number, optionIds: any) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.option = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.option = 0);
 
-		if (!this.itemInfo.items[index].edited.option) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.option) return;
 
 		this.itemInfo.items[index].edited.option = 2;
 
@@ -1915,7 +1701,7 @@ export class product {
 			.filter((v: any) => {
 				let found = optionIds.find((w: any) => w === v.id);
 
-				if (found) {
+				if (found)
 					options.push({
 						productOptionId: v.id,
 						defaultShippingFee: v.defaultShippingFee,
@@ -1923,7 +1709,6 @@ export class product {
 						stock: v.stock,
 						isActive: v.isActive,
 					});
-				}
 
 				return v.isActive;
 			})
@@ -1966,29 +1751,23 @@ export class product {
 
 		floatingToast('옵션세부정보가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 옵션명 변경
-	replaceProductOption = async (commonStore: any, index: number) => {
+	replaceProductOption = async (commonStore: common, index: number) => {
 		const taobaoData = JSON.parse(this.itemInfo.items[index].activeTaobaoProduct.originalData);
 
 		let options: any = [];
 		let optionNames: any = [];
 
 		this.itemInfo.items[index].productOptionName.map((w: any) => {
-			if (!w.isActive) {
-				return [];
-			}
+			if (!w.isActive) return [];
 
 			let optionValues: any = [];
 
 			w.productOptionValue.map((x: any) => {
-				if (!x.isActive) {
-					return;
-				}
+				if (!x.isActive) return;
 
 				optionValues.push({
 					name: w,
@@ -1996,9 +1775,7 @@ export class product {
 				});
 			});
 
-			if (optionValues.length > 0) {
-				optionNames.push(optionValues);
-			}
+			if (optionValues.length > 0) optionNames.push(optionValues);
 		});
 
 		if (optionNames.length > 0) {
@@ -2039,15 +1816,12 @@ export class product {
 						// const isThirdKeyProduct = skus[0]?.split(':').length === 3;
 						const matched = skus.find((z: any) => z === `${x.name.taobaoPid}:${x.value.taobaoVid}`);
 
-						if (!matched) {
-							return false;
-						}
+						if (!matched) return false;
 
 						return true;
 					});
 
 					option['name'] += `${x.name.name}:${x.value.name}, `;
-
 					option[`optionValue${valueIndex + 1}Id`] = x.value.id;
 					option['optionString'] += `${x.value.number.toString().padStart(2, '0')}_`;
 				});
@@ -2062,12 +1836,10 @@ export class product {
 						localShippingFee: this.itemInfo.items[index].localShippingFee,
 					};
 
-					if (priceInfo.marginUnitType === 'PERCENT') {
+					if (priceInfo.marginUnitType === 'PERCENT')
 						price =
 							(priceInfo.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee) * (1 + priceInfo.marginRate / 100);
-					} else {
-						price = priceInfo.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee + priceInfo.marginRate;
-					}
+					else price = priceInfo.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee + priceInfo.marginRate;
 
 					price = Math.round(price / wonType) * wonType;
 
@@ -2091,20 +1863,13 @@ export class product {
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		runInAction(() => {
-			this.itemInfo.items[index].productOption = options.map((v: any, index: number) => {
-				return {
-					...v,
-
-					id: response.data.updateProductOption[index],
-				};
-			});
+			this.itemInfo.items[index].productOption = options.map((v: any, index: number) => ({
+				...v,
+				id: response.data.updateProductOption[index],
+			}));
 
 			const priceList = this.itemInfo.items[index].productOption.map((v: any) => v.price);
 
@@ -2140,24 +1905,20 @@ export class product {
 			options = this.itemInfo.items[index].productOption.map((v: any) => {
 				let matched = true;
 
-				if (valueIndex) {
+				if (valueIndex)
 					if (
 						valueIndex !== v.optionValue1Id &&
 						valueIndex !== v.optionValue2Id &&
 						valueIndex !== v.optionValue3Id &&
 						valueIndex !== v.optionValue4Id &&
 						valueIndex !== v.optionValue5Id
-					) {
+					)
 						matched = false;
-					}
-				}
 
 				if (matched) {
 					switch (type) {
 						case 'addPrice': {
-							if (activeOnly && !v.isActive) {
-								break;
-							}
+							if (activeOnly && !v.isActive) break;
 
 							v.price += offset;
 
@@ -2165,9 +1926,7 @@ export class product {
 						}
 
 						case 'subPrice': {
-							if (activeOnly && !v.isActive) {
-								break;
-							}
+							if (activeOnly && !v.isActive) break;
 
 							v.price -= offset;
 
@@ -2175,9 +1934,7 @@ export class product {
 						}
 
 						case 'setPrice': {
-							if (activeOnly && !v.isActive) {
-								break;
-							}
+							if (activeOnly && !v.isActive) break;
 
 							v.price = offset;
 
@@ -2185,9 +1942,7 @@ export class product {
 						}
 
 						case 'setStock': {
-							if (activeOnly && !v.isActive) {
-								break;
-							}
+							if (activeOnly && !v.isActive) break;
 
 							v.stock = offset;
 
@@ -2197,11 +1952,8 @@ export class product {
 						case 'setActive': {
 							let active = Math.floor((v.price / this.itemInfo.items[index].price - 1) * 100);
 
-							if (active > offset) {
-								v.isActive = false;
-							} else {
-								v.isActive = true;
-							}
+							if (active > offset) v.isActive = false;
+							else v.isActive = true;
 
 							break;
 						}
@@ -2229,9 +1981,7 @@ export class product {
 				};
 			});
 
-			if (!options) {
-				return;
-			}
+			if (!options) return;
 
 			const priceList = this.itemInfo.items[index].productOption
 				.filter((v: any) => v.isActive)
@@ -2253,49 +2003,41 @@ export class product {
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
+		if (response.errors) return alert(response.errors[0].message);
 
-			return;
-		}
-
-		runInAction(() => {
-			this.itemInfo.items[index].productOption = options.map((v: any, index: number) => {
-				return {
+		runInAction(
+			() =>
+				(this.itemInfo.items[index].productOption = options.map((v: any, index: number) => ({
 					...v,
 
 					id: response.data.updateProductOption[index],
-				};
-			});
-		});
+				}))),
+		);
 
 		floatingToast('옵션세부정보가 저장되었습니다.', 'success');
 	};
 
 	// 옵션가 설정
-	setProductOptionPrice = (data: any, index: number) => {
+	setProductOptionPrice = (data: Partial<ManyPriceInfo>, index: number) => {
 		Object.assign(this.itemInfo.items[index], data);
 
 		this.itemInfo.items[index].edited.price = 1;
 	};
 
 	// 옵션가 업데이트
-	updateProductOptionPrice = async (commonStore: any, data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.price = 0;
-		};
+	updateProductOptionPrice = async (commonStore: common, data: Partial<ManyPriceInfo>, index: number) => {
+		const exit = () => (this.itemInfo.items[index].edited.price = 0);
 
-		if (!this.itemInfo.items[index].edited.price) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.price) return;
 
 		this.itemInfo.items[index].edited.price = 2;
 
-		let priceInfo: any = {
+		let priceInfo: ManyPriceInfo = {
 			cnyRate: this.itemInfo.items[index].cnyRate,
 			marginRate: this.itemInfo.items[index].marginRate,
 			marginUnitType: this.itemInfo.items[index].marginUnitType,
 			shippingFee: this.itemInfo.items[index].shippingFee,
+			refundShippingFee: this.itemInfo.items[index].refundShippingFee,
 			localShippingFee: this.itemInfo.items[index].localShippingFee,
 			localShippingCode: this.itemInfo.items[index].localShippingCode,
 		};
@@ -2306,7 +2048,6 @@ export class product {
 			MUTATIONS.UPDATE_MANY_PRODUCT_PRICE_BY_USER,
 			{
 				...priceInfo,
-
 				productIds: [this.itemInfo.items[index].id],
 			},
 			false,
@@ -2322,12 +2063,10 @@ export class product {
 
 		const originalPrice = this.itemInfo.items[index].activeTaobaoProduct.price;
 
-		if (priceInfo.marginUnitType === 'PERCENT') {
+		if (priceInfo.marginUnitType === 'PERCENT')
 			priceInfo.price =
 				(originalPrice * priceInfo.cnyRate + priceInfo.localShippingFee) * (1 + priceInfo.marginRate / 100);
-		} else {
-			priceInfo.price = originalPrice * priceInfo.cnyRate + priceInfo.localShippingFee + priceInfo.marginRate;
-		}
+		else priceInfo.price = originalPrice * priceInfo.cnyRate + priceInfo.localShippingFee + priceInfo.marginRate;
 
 		const wonType = commonStore.user.userInfo.calculateWonType;
 
@@ -2339,12 +2078,10 @@ export class product {
 			options = this.itemInfo.items[index].productOption.map((v: any) => {
 				let optionPrice: any = null;
 
-				if (priceInfo.marginUnitType === 'PERCENT') {
+				if (priceInfo.marginUnitType === 'PERCENT')
 					optionPrice =
 						(v.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee) * (1 + priceInfo.marginRate / 100);
-				} else {
-					optionPrice = v.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee + priceInfo.marginRate;
-				}
+				else optionPrice = v.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee + priceInfo.marginRate;
 
 				optionPrice = Math.round(optionPrice / wonType) * wonType;
 
@@ -2371,16 +2108,10 @@ export class product {
 
 			const activeOptions = options.filter((v: any) => v.isActive);
 
-			if (activeOptions.length > 0) {
-				priceInfo.price = Math.min(...activeOptions.map((v: any) => v.price));
-			}
+			if (activeOptions.length > 0) priceInfo.price = Math.min(...activeOptions.map((v: any) => v.price));
 		});
 
-		if (!options) {
-			exit();
-
-			return;
-		}
+		if (!options) return exit();
 
 		const response2 = await gql(
 			MUTATIONS.UPDATE_PRODUCT_OPTION,
@@ -2402,27 +2133,20 @@ export class product {
 		runInAction(() => {
 			Object.assign(this.itemInfo.items[index], priceInfo);
 
-			this.itemInfo.items[index].productOption = options.map((v: any, index: number) => {
-				return {
-					...v,
-
-					id: response2.data.updateProductOption[index],
-				};
-			});
+			this.itemInfo.items[index].productOption = options.map((v: any, index: number) => ({
+				...v,
+				id: response2.data.updateProductOption[index],
+			}));
 		});
 
 		floatingToast('가격정보가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 옵션이미지 업데이트
 	updateProductOptionImage = async (data: any, index: number, nameIndex: number, valueIndex: number, base64: any) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.optionImages = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.optionImages = 0);
 
 		this.itemInfo.items[index].edited.optionImages = 2;
 
@@ -2459,11 +2183,7 @@ export class product {
 			this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].image =
 				response.data.setProductOptionValueBySomeOne;
 		} else {
-			if (!this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].image) {
-				exit();
-
-				return;
-			}
+			if (!this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].image) return exit();
 
 			const response = await gql(
 				MUTATIONS.SET_PRODUCT_OPTION_VALUE_BY_SOMEONE,
@@ -2488,54 +2208,39 @@ export class product {
 
 		floatingToast('옵션이미지 정보가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 옵션값 설정
 	setProductOptionValue = (data: any, index: number, nameIndex: number, valueIndex: any) => {
-		if (valueIndex === null) {
-			this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue = data;
-		} else {
-			this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex] = data;
-		}
+		if (valueIndex === null) this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue = data;
+		else this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex] = data;
 
 		this.itemInfo.items[index].edited.option = 1;
 	};
 
 	// 옵션값 업데이트
-	updateProductOptionValue = async (commonStore: any, index: number, nameIndex: number, valueIds: any) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.option = 0;
-		};
+	updateProductOptionValue = async (commonStore: common, index: number, nameIndex: number, valueIds: any) => {
+		const exit = () => (this.itemInfo.items[index].edited.option = 0);
 
-		if (!this.itemInfo.items[index].edited.option) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.option) return;
 
 		this.itemInfo.items[index].edited.option = 2;
 
 		let values: any = [];
 
-		this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue.map((v: any) => {
-			valueIds.map((w: any) => {
-				if (v.id === w) {
-					values.push(v);
-				}
-			});
+		this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue.map((v) => {
+			valueIds.map((w: any) => v.id === w && values.push(v));
 		});
 
 		if (values.length > 1) {
 			const response = await gql(
 				MUTATIONS.UPDATE_MANY_PRODUCT_OPTION_VALUE,
 				{
-					data: values.map((v: any) => {
-						return {
-							productOptionValueId: v.id,
-							name: v.name,
-						};
-					}),
+					data: values.map((v: any) => ({
+						productOptionValueId: v.id,
+						name: v.name,
+					})),
 				},
 				false,
 			);
@@ -2571,29 +2276,23 @@ export class product {
 
 		floatingToast('옵션정보가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 옵션값 일괄설정
 	setProductOptionValueAll = (data: any, index: number, nameIndex: number) => {
-		this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue.map((v: any) => {
-			v.isActive = data.isActive;
-		});
+		this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue.map(
+			(v: any) => (v.isActive = data.isActive),
+		);
 
 		this.itemInfo.items[index].edited.option = 1;
 	};
 
 	// 옵션값 일괄 업데이트
-	updateProductOptionValueAll = async (commonStore: any, data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.option = 0;
-		};
+	updateProductOptionValueAll = async (commonStore: common, data: any, index: number) => {
+		const exit = () => (this.itemInfo.items[index].edited.option = 0);
 
-		if (!this.itemInfo.items[index].edited.option) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.option) return;
 
 		this.itemInfo.items[index].edited.option = 2;
 
@@ -2618,9 +2317,7 @@ export class product {
 
 		floatingToast('옵션정보가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 옵션명 설정
@@ -2630,14 +2327,10 @@ export class product {
 	};
 
 	// 옵션명 업데이트
-	updateProductOptionName = async (commonStore: any, data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.option = 0;
-		};
+	updateProductOptionName = async (commonStore: common, data: any, index: number) => {
+		const exit = () => (this.itemInfo.items[index].edited.option = 0);
 
-		if (!this.itemInfo.items[index].edited.option) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.option) return;
 
 		this.itemInfo.items[index].edited.option = 2;
 
@@ -2663,29 +2356,20 @@ export class product {
 
 		floatingToast('옵션정보가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 상세페이지 이미지 필터링
 	filterDescription = (itemIndex: number, imageIndex: number) => {
 		const imageList = this.itemInfo.items[itemIndex].descriptionImages.filter((v: any, i: number) => {
-			if (i !== imageIndex) {
-				return true;
-			}
+			if (i !== imageIndex) return true;
 
 			const descHtml = new DOMParser().parseFromString(this.itemInfo.items[itemIndex].description, 'text/html');
 			const descImages = descHtml.querySelectorAll('img');
 
 			for (let j in descImages) {
-				if (!descImages[j].src) {
-					continue;
-				}
-
-				if (descImages[j].src === v) {
-					descImages[j].remove();
-				}
+				if (!descImages[j].src) continue;
+				if (descImages[j].src === v) descImages[j].remove();
 			}
 
 			this.itemInfo.items[itemIndex].description = descHtml.body.outerHTML;
@@ -2695,55 +2379,41 @@ export class product {
 
 		this.itemInfo.items[itemIndex].descriptionImages = imageList;
 		this.itemInfo.items[itemIndex].edited.descriptions = 1;
-
 		this.updateDescription(itemIndex);
 	};
 
 	// 상세페이지 설정
 	setDescription = (html: any, index: number) => {
 		this.itemInfo.items[index].description = html;
-
 		this.itemInfo.items[index].edited.descriptions = 1;
 	};
 
 	// 상세페이지 이미지 스왑/업데이트
 	switchDescription = (src: number, dst: number, index: number) => {
-		if (src === dst) {
-			return;
-		}
+		if (src === dst) return;
 
 		const temp = [...this.itemInfo.items[index].descriptionImages];
 
 		temp.splice(src, 1);
 
-		if (dst >= 0) {
-			temp.splice(dst, 0, this.itemInfo.items[index].descriptionImages[src]);
-		}
+		if (dst >= 0) temp.splice(dst, 0, this.itemInfo.items[index].descriptionImages[src]);
 
 		const descHtml = new DOMParser().parseFromString(this.itemInfo.items[index].description, 'text/html');
 		const descImages = descHtml.querySelectorAll('img');
 
-		temp.map((v: any, i: number) => {
-			descImages[i].src = v;
-		});
+		temp.map((v: any, i: number) => (descImages[i].src = v));
 
 		this.itemInfo.items[index].description = descHtml.body.outerHTML;
 		this.itemInfo.items[index].descriptionImages = temp;
-
 		this.itemInfo.items[index].edited.descriptions = 1;
-
 		this.updateDescription(index);
 	};
 
 	// 상세페이지 업데이트
 	updateDescription = async (index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.descriptions = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.descriptions = 0);
 
-		if (!this.itemInfo.items[index].edited.descriptions) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.descriptions) return;
 
 		this.itemInfo.items[index].edited.descriptions = 2;
 
@@ -2771,13 +2441,9 @@ export class product {
 
 	// 상세페이지 이미지 업데이트
 	updateDescriptionImages = async (index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.descriptions = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.descriptions = 0);
 
-		if (!this.itemInfo.items[index].edited.descriptions) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.descriptions) return;
 
 		this.itemInfo.items[index].edited.descriptions = 2;
 
@@ -2804,22 +2470,18 @@ export class product {
 			);
 			let descText = await descResp.text();
 
-			runInAction(() => {
-				this.itemInfo.items[index].description = descText ? descText : this.itemInfo.items[index].description;
-			});
+			runInAction(
+				() => (this.itemInfo.items[index].description = descText ? descText : this.itemInfo.items[index].description),
+			);
 		}
 
 		const imageList: any = [];
-
 		const descHtml = new DOMParser().parseFromString(this.itemInfo.items[index].description, 'text/html');
 		const descImages = descHtml.querySelectorAll('img');
 
 		for (let j in descImages) {
-			if (!descImages[j].outerHTML) {
-				continue;
-			} else {
-				imageList.push(descImages[j].src);
-			}
+			if (!descImages[j].outerHTML) continue;
+			else imageList.push(descImages[j].src);
 		}
 
 		floatingToast('상세이미지 목록이 수정되었습니다.', 'success');
@@ -2836,67 +2498,46 @@ export class product {
 		switch (marketCode) {
 			case 'A077': {
 				this.itemInfo.items[index].naverFee = data;
-
 				break;
 			}
-
 			case 'B378': {
 				this.itemInfo.items[index].coupangFee = data;
-
 				break;
 			}
-
 			case 'A112': {
 				this.itemInfo.items[index].streetFee = data;
-
 				break;
 			}
-
 			case 'A113': {
 				this.itemInfo.items[index].streetNormalFee = data;
-
 				break;
 			}
-
 			case 'A001': {
 				this.itemInfo.items[index].auctionFee = data;
-
 				break;
 			}
-
 			case 'A006': {
 				this.itemInfo.items[index].gmarketFee = data;
-
 				break;
 			}
-
 			case 'A027': {
 				this.itemInfo.items[index].interparkFee = data;
-
 				break;
 			}
-
 			case 'B719': {
 				this.itemInfo.items[index].wemakepriceFee = data;
-
 				break;
 			}
-
 			case 'A524': {
 				this.itemInfo.items[index].lotteonFee = data;
-
 				break;
 			}
-
 			case 'A525': {
 				this.itemInfo.items[index].lotteonNormalFee = data;
-
 				break;
 			}
-
 			case 'B956': {
 				this.itemInfo.items[index].tmonFee = data;
-
 				break;
 			}
 		}
@@ -2906,13 +2547,9 @@ export class product {
 
 	// 오픈마켓수수료 업데이트
 	updateProductFee = async (data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.baseInfo = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.baseInfo = 0);
 
-		if (!this.itemInfo.items[index].edited.baseInfo) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.baseInfo) return;
 
 		this.itemInfo.items[index].edited.baseInfo = 2;
 
@@ -2928,86 +2565,39 @@ export class product {
 
 		floatingToast('오픈마켓수수료적용가가 저장되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 판매가 일괄설정
-	setManyPriceInfo = (data: any) => {
-		this.manyPriceInfo = data;
-	};
+	setManyPriceInfo = (data: ManyPriceInfo) => (this.manyPriceInfo = data);
 
 	// 오픈마켓수수료 일괄설정
-	setManyFeeInfo = (data: any) => {
-		this.manyFeeInfo = data;
-	};
+	setManyFeeInfo = (data: any) => (this.manyFeeInfo = data);
 
 	// 카테고리 일괄설정
-	setManyCategoryInfo = (data: any) => {
-		this.manyCategoryInfo = data;
-	};
+	setManyCategoryInfo = (data: any) => (this.manyCategoryInfo = data);
 
 	// 상품명 일괄설정
-	setManyNameInfo = (data: any) => {
-		this.manyNameInfo = data;
-	};
+	setManyNameInfo = (data: any) => (this.manyNameInfo = data);
 
 	// 검색어태그 일괄설정
-	setManyTagInfo = (data: any) => {
-		this.manyTagInfo = data;
-	};
+	setManyTagInfo = (data: any) => (this.manyTagInfo = data);
 
 	// 상세페이지 일괄설정
-	setManyDescriptionInfo = (data: any) => {
-		this.manyDescriptionInfo = data;
-	};
+	setManyDescriptionInfo = (data: any) => (this.manyDescriptionInfo = data);
 
 	// 판매가 일괄 업데이트
-	updateManyPrice = async (commonStore: any) => {
+	updateManyPrice = async (commonStore: common) => {
 		let productIds: any = [];
 
-		this.itemInfo.items.map((v: any) => {
-			if (v.checked) {
-				productIds.push(v.id);
-			}
-		});
+		this.itemInfo.items.map((v) => v.checked && productIds.push(v.id));
 
-		if (productIds.length < 1) {
-			alert('상품이 선택되지 않았습니다.');
-
-			return null;
-		}
-
-		if (this.manyPriceInfo.cnyRate <= 0) {
-			alert('환율은 0 보다 큰 값으로 입력해주세요.');
-
-			return;
-		}
-
-		if (this.manyPriceInfo.marginRate < 0) {
-			alert('마진율은 0% 이상으로 입력해주세요.');
-
-			return;
-		}
-
-		if (!this.manyPriceInfo.marginUnitType) {
-			alert('마진단위를 선택해주세요.');
-
-			return;
-		}
-
-		if (this.manyPriceInfo.localShippingFee < 0) {
-			alert('해외배송비는 0원 이상으로 입력해주세요.');
-
-			return;
-		}
-
-		if (this.manyPriceInfo.shippingFee < 0) {
-			alert('유료배송비는 0원 이상으로 입력해주세요.');
-
-			return;
-		}
+		if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
+		if (this.manyPriceInfo.cnyRate <= 0) return alert('환율은 0 보다 큰 값으로 입력해주세요.');
+		if (this.manyPriceInfo.marginRate < 0) return alert('마진율은 0% 이상으로 입력해주세요.');
+		if (!this.manyPriceInfo.marginUnitType) return alert('마진단위를 선택해주세요.');
+		if (this.manyPriceInfo.localShippingFee < 0) return alert('해외배송비는 0원 이상으로 입력해주세요.');
+		if (this.manyPriceInfo.shippingFee < 0) return alert('유료배송비는 0원 이상으로 입력해주세요.');
 
 		const response = await gql(
 			MUTATIONS.UPDATE_MANY_PRODUCT_PRICE_BY_USER,
@@ -3015,11 +2605,7 @@ export class product {
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		floatingToast(`상품 ${productIds.length}개의 가격을 일괄설정하였습니다.`, 'success');
 
@@ -3028,23 +2614,14 @@ export class product {
 	};
 
 	// 오픈마켓수수료 일괄 업데이트
-	updateManyFee = async (commonStore: any, ids: any) => {
+	updateManyFee = async (commonStore: common, ids: any) => {
 		let productIds: any = [];
 
-		if (ids) {
-			productIds = ids;
-		} else {
-			this.itemInfo.items.map((v: any) => {
-				if (v.checked) {
-					productIds.push(v.id);
-				}
-			});
+		if (ids) productIds = ids;
+		else {
+			this.itemInfo.items.map((v) => v.checked && productIds.push(v.id));
 
-			if (productIds.length < 1) {
-				alert('상품이 선택되지 않았습니다.');
-
-				return null;
-			}
+			if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
 		}
 
 		const response = await gql(
@@ -3066,11 +2643,7 @@ export class product {
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		floatingToast(`상품 ${productIds.length}개의 수수료를 일괄설정하였습니다.`, 'success');
 
@@ -3079,23 +2652,14 @@ export class product {
 	};
 
 	// 카테고리 일괄 업데이트
-	updateManyCategory = async (commonStore: any, ids: any) => {
+	updateManyCategory = async (commonStore: common, ids: any) => {
 		let productIds: any = [];
 
-		if (ids) {
-			productIds = ids;
-		} else {
-			this.itemInfo.items.map((v: any) => {
-				if (v.checked) {
-					productIds.push(v.id);
-				}
-			});
+		if (ids) productIds = ids;
+		else {
+			this.itemInfo.items.map((v: any) => v.checked && productIds.push(v.id));
 
-			if (productIds.length < 1) {
-				alert('상품이 선택되지 않았습니다.');
-
-				return null;
-			}
+			if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
 		}
 
 		const response = await gql(
@@ -3117,17 +2681,12 @@ export class product {
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		const response1 = await gql(
 			MUTATIONS.UPDATE_PRODUCT_SILL_CODES_BY_USER,
 			{
 				productIds,
-
 				code_a077: this.manyCategoryInfo.categoryInfoA077.code ? '' : undefined,
 				code_b378: this.manyCategoryInfo.categoryInfoB378.code ? '' : undefined,
 				code_a112: this.manyCategoryInfo.categoryInfoA112.code ? '' : undefined,
@@ -3143,17 +2702,12 @@ export class product {
 			false,
 		);
 
-		if (response1.errors) {
-			alert(response1.errors[0].message);
-
-			return;
-		}
+		if (response1.errors) return alert(response1.errors[0].message);
 
 		const response2 = await gql(
 			MUTATIONS.UPDATE_PRODUCT_SILL_DATAS_BY_USER,
 			{
 				productIds,
-
 				data_a077: this.manyCategoryInfo.categoryInfoA077.code ? '' : undefined,
 				data_b378: this.manyCategoryInfo.categoryInfoB378.code ? '' : undefined,
 				data_a112: this.manyCategoryInfo.categoryInfoA112.code ? '' : undefined,
@@ -3169,11 +2723,7 @@ export class product {
 			false,
 		);
 
-		if (response2.errors) {
-			alert(response1.errors[0].message);
-
-			return;
-		}
+		if (response2.errors) return alert(response1.errors[0].message);
 
 		floatingToast(`상품 ${productIds.length}개의 카테고리를 일괄설정하였습니다.`, 'success');
 
@@ -3182,28 +2732,16 @@ export class product {
 	};
 
 	// 상품명 일괄 업데이트
-	updateManyName = async (commonStore: any, data: any) => {
+	updateManyName = async (commonStore: common, data: any) => {
 		let productIds: any = [];
 
-		this.itemInfo.items.map((v: any) => {
-			if (v.checked) {
-				productIds.push(v.id);
-			}
-		});
+		this.itemInfo.items.map((v) => v.checked && productIds.push(v.id));
 
-		if (productIds.length < 1) {
-			alert('상품이 선택되지 않았습니다.');
-
-			return null;
-		}
+		if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
 
 		const response = await gql(MUTATIONS.UPDATE_MANY_PRODUCT_NAME_BY_USER, { ...data, productIds }, false);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		floatingToast(`상품 ${productIds.length}개의 상품명을 일괄설정하였습니다.`, 'success');
 
@@ -3212,35 +2750,20 @@ export class product {
 	};
 
 	// 검색어태그 일괄 업데이트
-	updateManyTag = async (commonStore: any) => {
+	updateManyTag = async (commonStore: common) => {
 		let productIds: any = [];
 
-		this.itemInfo.items.map((v: any) => {
-			if (v.checked) {
-				productIds.push(v.id);
-			}
-		});
+		this.itemInfo.items.map((v) => v.checked && productIds.push(v.id));
 
-		if (productIds.length < 1) {
-			alert('상품이 선택되지 않았습니다.');
-
-			return null;
-		}
-
+		if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
 		if (!this.manyTagInfo.immSearchTagsDisabled) {
 			let output = '';
-
 			let tagList: any = [];
 			let addList = this.manyTagInfo.immSearchTags.replaceAll(' ', '').split(',') ?? [];
-
 			let userResp = await fetch('https://sell.smartstore.naver.com/api/products?_action=create');
 			let userJson = await userResp.json();
 
-			if (userJson.error) {
-				floatingToast('스마트스토어 로그인 후 이용해주세요.', 'warning');
-
-				return;
-			}
+			if (userJson.error) return floatingToast('스마트스토어 로그인 후 이용해주세요.', 'warning');
 
 			let tagDataSet = await Promise.all(
 				addList
@@ -3261,28 +2784,14 @@ export class product {
 			);
 
 			tagDataSet.map((v: any) => {
-				if (tagList.length > 9) {
-					floatingToast('검색어는 최대 10개까지만 입력하실 수 있습니다.', 'information');
-
-					return;
-				}
-
-				if (tagList.find((w: any) => w === v.tag)) {
-					return;
-				}
-
-				if (v.restricted) {
-					floatingToast(`사용할 수 없는 검색어입니다. [${v.tag}]`, 'failed');
-
-					return;
-				}
+				if (tagList.length > 9) return floatingToast('검색어는 최대 10개까지만 입력하실 수 있습니다.', 'information');
+				if (tagList.find((w: any) => w === v.tag)) return;
+				if (v.restricted) return floatingToast(`사용할 수 없는 검색어입니다. [${v.tag}]`, 'failed');
 
 				tagList.push(v.tag);
 			});
 
-			tagList.map((v: any) => {
-				output += `${v},`;
-			});
+			tagList.map((v: any) => (output += `${v},`));
 
 			output = output.slice(0, output.length - 1);
 
@@ -3294,17 +2803,12 @@ export class product {
 			{
 				searchTags: this.manyTagInfo.searchTagsDisabled ? null : this.manyTagInfo.searchTags,
 				immSearchTags: this.manyTagInfo.immSearchTagsDisabled ? null : this.manyTagInfo.immSearchTags,
-
 				productIds,
 			},
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		floatingToast(`상품 ${productIds.length}개의 검색어태그를 일괄설정하였습니다.`, 'success');
 
@@ -3313,21 +2817,15 @@ export class product {
 	};
 
 	// 상세페이지 일괄 업데이트
-	updateManyDescription = async (commonStore: any) => {
+	updateManyDescription = async (commonStore: common) => {
 		const inputs = this.itemInfo.items
 			.filter((v) => v.checked)
-			.map((v: any) => {
-				return {
-					productId: v.id,
-					description: (this.manyDescriptionInfo.html ?? '') + v.description,
-				};
-			});
+			.map((v: any) => ({
+				productId: v.id,
+				description: (this.manyDescriptionInfo.html ?? '') + v.description,
+			}));
 
-		if (inputs.length < 1) {
-			alert('상품이 선택되지 않았습니다.');
-
-			return null;
-		}
+		if (inputs.length < 1) return alert('상품이 선택되지 않았습니다.');
 
 		const response = await gql(
 			MUTATIONS.UPDATE_MANY_DESCRIPTION,
@@ -3337,11 +2835,7 @@ export class product {
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		floatingToast(`상품 ${inputs.length}개의 상세설명 내용이 일괄추가되었습니다.`, 'success');
 
@@ -3350,11 +2844,9 @@ export class product {
 	};
 
 	// 상품명 일괄 업데이트
-	updateMultipleProductName = async (commonStore: any, data: any) => {
+	updateMultipleProductName = async (commonStore: common, data: any) => {
 		data = data.filter((v: any, i: number) => {
-			if (!v) {
-				return false;
-			}
+			if (!v) return false;
 
 			this.itemInfo.items[i].name = v.name;
 
@@ -3363,11 +2855,7 @@ export class product {
 
 		const response = await gql(MUTATIONS.UPDATE_MULTIPLE_PRODUCT_NAME_BY_USER, { data }, false);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		floatingToast(`상품 ${data.length}개의 상품명이 일괄변경되었습니다.`, 'success');
 
@@ -3376,27 +2864,20 @@ export class product {
 	};
 
 	// 상품 단일선택
-	toggleItemChecked = (index: number, value: boolean) => {
-		this.itemInfo.items[index].checked = value;
-	};
+	toggleItemChecked = (index: number, value: boolean) => (this.itemInfo.items[index].checked = value);
 
 	// 상품 일괄선택
 	toggleItemCheckedAll = (value: boolean) => {
 		this.itemInfo.checkedAll = value;
-		this.itemInfo.items.map((v: any) => {
-			v.checked = value;
-		});
+		this.itemInfo.items.map((v) => (v.checked = value));
 	};
 
 	// 상품 펼쳐보기 (상세보기)
-	toggleItemCollapse = (index: number) => {
-		this.itemInfo.items[index].collapse = !this.itemInfo.items[index].collapse;
-	};
+	toggleItemCollapse = (index: number) => (this.itemInfo.items[index].collapse = !this.itemInfo.items[index].collapse);
 
 	// 상품 옵션명 원문보기
-	toggleItemOptionCollapse = (index: number) => {
-		this.itemInfo.items[index].optionCollapse = !this.itemInfo.items[index].optionCollapse;
-	};
+	toggleItemOptionCollapse = (index: number) =>
+		(this.itemInfo.items[index].optionCollapse = !this.itemInfo.items[index].optionCollapse);
 
 	// 2.0 상품등록 모달
 	// toggleEsm2UploadModal = (index: number, value: boolean) => {
@@ -3413,19 +2894,18 @@ export class product {
 	// 상품 등록해제 모달
 	toggleUploadDisabledModal = (index: number, value: boolean, commonStore: common) => {
 		if (value) {
-			if (index > -1) {
+			if (index > -1)
 				commonStore.uploadDisabledInfo.markets.map((v) => {
 					const matched = this.itemInfo.items[index].activeProductStore.find((w) => w.siteCode === v.code);
 
 					v.disabled = !matched;
 					v.upload = matched;
 				});
-			} else {
+			else
 				commonStore.uploadDisabledInfo.markets.map((v) => {
 					v.disabled = false;
 					v.upload = true;
 				});
-			}
 		}
 
 		this.uploadDisabledIndex = index;
@@ -3433,7 +2913,7 @@ export class product {
 	};
 
 	// 상품 등록해제 모달
-	// toggleEsm2UploadDisabledModal = (index: number, value: boolean, commonStore: any) => {
+	// toggleEsm2UploadDisabledModal = (index: number, value: boolean, commonStore: common) => {
 	// 	if (value) {
 	// 		if (index > -1) {
 	// 			commonStore.uploadDisabledInfo.markets.map((v: any) => {
@@ -3464,9 +2944,7 @@ export class product {
 	// };
 	// 상품 등록실패 모달
 	toggleUploadFailedModal = (index: number, value: boolean) => {
-		if (index > -1) {
-			this.uploadFailedIndex = index;
-		}
+		if (index > -1) this.uploadFailedIndex = index;
 
 		this.modalInfo.uploadFailed = value;
 	};
@@ -3478,59 +2956,37 @@ export class product {
 	};
 
 	// 판매가 일괄설정 모달
-	toggleManyPriceModal = (value: boolean) => {
-		this.modalInfo.price = value;
-	};
+	toggleManyPriceModal = (value: boolean) => (this.modalInfo.price = value);
 
 	// 오픈마켓 수수료 일괄설정 모달
-	toggleManyFeeModal = (value: boolean) => {
-		this.modalInfo.fee = value;
-	};
+	toggleManyFeeModal = (value: boolean) => (this.modalInfo.fee = value);
 
 	// 카테고리 일괄설정 모달
-	toggleManyCategoryModal = (value: boolean) => {
-		this.modalInfo.category = value;
-	};
+	toggleManyCategoryModal = (value: boolean) => (this.modalInfo.category = value);
 
 	// 상품명 일괄설정 모달
-	toggleManyNameModal = (value: boolean) => {
-		this.modalInfo.name = value;
-	};
+	toggleManyNameModal = (value: boolean) => (this.modalInfo.name = value);
 
 	// 잠금 일괄설정 모달
-	toggleManyLockModal = (value: boolean) => {
-		this.modalInfo.locked = value;
-	};
+	toggleManyLockModal = (value: boolean) => (this.modalInfo.locked = value);
 
 	// 검색어 태그 일괄설정 모달
-	toggleManyTagModal = (value: boolean) => {
-		this.modalInfo.tag = value;
-	};
+	toggleManyTagModal = (value: boolean) => (this.modalInfo.tag = value);
 
 	// 검색어 필터 모달
-	toggleSearchFilterModal = (value: boolean) => {
-		this.modalInfo.userFilter = value;
-	};
+	toggleSearchFilterModal = (value: boolean) => (this.modalInfo.userFilter = value);
 
 	// 엑셀파일 상품수집 모달
-	toggleCollectExcelModal = (value: boolean) => {
-		this.modalInfo.collectExcel = value;
-	};
+	toggleCollectExcelModal = (value: boolean) => (this.modalInfo.collectExcel = value);
 
 	// 검색어 필터 모달
-	toggleSearchFilter = () => {
-		this.searchInfo.userFilter = !this.searchInfo.userFilter;
-	};
+	toggleSearchFilter = () => (this.searchInfo.userFilter = !this.searchInfo.userFilter);
 
 	// 검색정보 설정
-	setSearchInfo = (data: any) => {
-		this.searchInfo = data;
-	};
+	setSearchInfo = (data: any) => (this.searchInfo = data);
 
 	// 검색조건 설정 (AND)
-	setSearchWhereAndInput = (where: any) => {
-		this.searchInfo.whereInput.AND = where;
-	};
+	setSearchWhereAndInput = (where: any) => (this.searchInfo.whereInput.AND = where);
 
 	// 검색조건 설정 (OR)
 	setSearchWhereOrInput = (where: any) => (this.searchInfo.whereInput.OR = where);
@@ -3541,7 +2997,7 @@ export class product {
 	// };
 
 	// 검색결과 조회
-	getSearchResult = (commonStore: any) => {
+	getSearchResult = (commonStore: common) => {
 		this.setSearchWhereAndInput([
 			{ state: { equals: this.state } },
 			{ myLock: this.state === 7 && this.myLock === 1 ? {} : { equals: this.myLock } },
@@ -3550,63 +3006,54 @@ export class product {
 					? { code: { equals: this.searchInfo.categoryInfo.code } }
 					: {},
 			},
-
 			{
 				createdAt: this.searchInfo.collectedStart ? { gte: this.searchInfo.collectedStart } : {},
 			},
 			{
 				createdAt: this.searchInfo.collectedEnd ? { lte: this.searchInfo.collectedEnd } : {},
 			},
-
 			{
 				stockUpdatedAt: this.searchInfo.registeredStart ? { gte: this.searchInfo.registeredStart } : {},
 			},
 			{
 				stockUpdatedAt: this.searchInfo.registeredEnd ? { lte: this.searchInfo.registeredEnd } : {},
 			},
-
 			{
 				taobaoProduct: this.searchInfo.cnyPriceStart ? { price: { gte: this.searchInfo.cnyPriceStart } } : {},
 			},
 			{
 				taobaoProduct: this.searchInfo.cnyPriceEnd ? { price: { lte: this.searchInfo.cnyPriceEnd } } : {},
 			},
-
 			{
 				cnyRate: this.searchInfo.cnyRateStart ? { gte: this.searchInfo.cnyRateStart } : {},
 			},
 			{
 				cnyRate: this.searchInfo.cnyRateEnd ? { lte: this.searchInfo.cnyRateEnd } : {},
 			},
-
 			{
 				localShippingFee: this.searchInfo.localFeeStart ? { gte: this.searchInfo.localFeeStart } : {},
 			},
 			{
 				localShippingFee: this.searchInfo.localFeeEnd ? { lte: this.searchInfo.localFeeEnd } : {},
 			},
-
 			{
 				marginRate: this.searchInfo.marginRateStart ? { gte: this.searchInfo.marginRateStart } : {},
 			},
 			{
 				marginRate: this.searchInfo.marginRateEnd ? { lte: this.searchInfo.marginRateEnd } : {},
 			},
-
 			{
 				price: this.searchInfo.priceStart ? { gte: this.searchInfo.priceStart } : {},
 			},
 			{
 				price: this.searchInfo.priceEnd ? { lte: this.searchInfo.priceEnd } : {},
 			},
-
 			{
 				shippingFee: this.searchInfo.feeStart ? { gte: this.searchInfo.feeStart } : {},
 			},
 			{
 				shippingFee: this.searchInfo.feeEnd ? { lte: this.searchInfo.feeEnd } : {},
 			},
-
 			{
 				taobaoProduct: this.searchInfo.shopName === 'ALL' ? {} : { shopName: { equals: this.searchInfo.shopName } },
 			},
@@ -3725,20 +3172,15 @@ export class product {
 			}
 
 			case 'PCODE': {
-				if (!this.searchInfo.searchKeyword.includes('SFY_')) {
-					alert('상품코드는 SFY_000 형식으로 입력해주세요.');
+				if (!this.searchInfo.searchKeyword.includes('SFY_')) return alert('상품코드는 SFY_000 형식으로 입력해주세요.');
 
-					return;
-				}
 				let list: any = [];
 				let parseList: any = [];
 
 				list = this.searchInfo.searchKeyword.split(',');
 				list.map((v: any) => {
-					if (!v.includes('SFY_')) {
-						alert('모든 상품코드는 SFY_000 형식으로 입력해주세요.');
-						return;
-					}
+					if (!v.includes('SFY_')) return alert('모든 상품코드는 SFY_000 형식으로 입력해주세요.');
+
 					parseList.push(parseInt(v.split('_')[1], 36));
 				});
 
@@ -3755,13 +3197,10 @@ export class product {
 						},
 					},
 				]);
-
 				break;
 			}
-
 			case 'NAME': {
 				this.setSearchWhereOrInput([{ name: { contains: this.searchInfo.searchKeyword } }]);
-
 				break;
 			}
 
@@ -3823,7 +3262,6 @@ export class product {
 						},
 					},
 				]);
-
 				break;
 			}
 
@@ -3835,7 +3273,6 @@ export class product {
 						},
 					},
 				]);
-
 				break;
 			}
 
@@ -3856,13 +3293,11 @@ export class product {
 						},
 					},
 				]);
-
 				break;
 			}
 
 			case 'KEYWARD': {
 				this.setSearchWhereOrInput([{ myKeyward: { equals: this.searchInfo.searchKeyword } }]);
-
 				break;
 			}
 		}
@@ -3873,14 +3308,10 @@ export class product {
 	};
 
 	// 상품 세부정보에서 탭 이동
-	switchTabs = (index: number, value: number) => {
-		this.itemInfo.items[index].tabs = value;
-	};
+	switchTabs = (index: number, value: number) => (this.itemInfo.items[index].tabs = value);
 
 	// 상품 등록 시 탭 이동
-	switchUploadTabs = (value: number) => {
-		this.modalInfo.uploadTabIndex = value;
-	};
+	switchUploadTabs = (value: number) => (this.modalInfo.uploadTabIndex = value);
 
 	// Esm2.0 상품 등록 시 탭 이동
 	// switchEsm2UploadTabs = (value: number) => {
@@ -3888,17 +3319,12 @@ export class product {
 	// };
 
 	// 상품 등록 - 등록중
-	addRegisteredQueue = (data: any) => {
-		this.registeredInfo.wait.push(data);
-	};
+	addRegisteredQueue = (data: any) => this.registeredInfo.wait.push(data);
 
 	// 상품 등록 - 등록완료
 	addRegisteredSuccess = (data: any) => {
 		this.registeredInfo.wait = this.registeredInfo.wait.filter((v: any) => {
-			if (v.site_name === data.site_name && v.code === data.code) {
-				return false;
-			}
-
+			if (v.site_name === data.site_name && v.code === data.code) return false;
 			return true;
 		});
 
@@ -3908,10 +3334,7 @@ export class product {
 	// 상품 등록 - 등록실패
 	addRegisteredFailed = (data: any) => {
 		this.registeredInfo.wait = this.registeredInfo.wait.filter((v: any) => {
-			if (v.site_name === data.site_name && v.code === data.code) {
-				return false;
-			}
-
+			if (v.site_name === data.site_name && v.code === data.code) return false;
 			return true;
 		});
 
@@ -3928,20 +3351,15 @@ export class product {
 			productIds.push(this.itemInfo.items[this.uploadDisabledIndex].id);
 		} else {
 			this.itemInfo.items.map((v) => {
-				if (v.myLock === 2 && v.checked) {
-					lockProducts.push(v.productCode);
-				}
+				if (v.myLock === 2 && v.checked) lockProducts.push(v.productCode);
 				if (v.myLock === 1 && v.checked) {
 					v.delete = true;
-
 					productIds.push(v.id);
 				}
 			});
 		}
-		if (lockProducts.length !== 0) {
+		if (lockProducts.length !== 0)
 			alert(`[잠금상품목록] \n${lockProducts.join(',')} \n\n잠금 상품을 제외하고 등록해제 합니다`);
-		}
-
 		if (productIds.length < 1) {
 			if (lockProducts.length !== 0) alert('잠금 상품을 제외한 상품이 선택되지 않았습니다.');
 			else alert('상품이 선택되지 않았습니다.');
@@ -4043,7 +3461,7 @@ export class product {
 	};
 
 	// Esm 2.0 상품 등록해제
-	// Esm2DisableItems = async (commonStore: any) => {
+	// Esm2DisableItems = async (commonStore: common) => {
 	// 	let productIds: any = [];
 	// 	let lockProducts: any = [];
 	// 	if (this.Esm2uploadDisabledIndex > -1) {
@@ -4125,50 +3543,29 @@ export class product {
 	uploadItems = async (commonStore: common, edit: boolean) => {
 		let productIds: number[] = [];
 
-		if (this.uploadIndex > -1) {
-			productIds.push(this.itemInfo.items[this.uploadIndex].id);
-		} else {
-			this.itemInfo.items.map((v: any) => {
-				if (v.checked) {
-					productIds.push(v.id);
-				}
-			});
-		}
+		if (this.uploadIndex > -1) productIds.push(this.itemInfo.items[this.uploadIndex].id);
+		else this.itemInfo.items.map((v) => v.checked && productIds.push(v.id));
 
-		if (productIds.length < 1) {
-			alert('상품이 선택되지 않았습니다.');
-
-			return;
-		}
+		if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
 
 		const markets = commonStore.uploadInfo.markets.filter((v) => v.upload).map((v) => v.code);
 
-		if (markets.length < 1) {
-			alert('오픈마켓이 선택되지 않았습니다.');
-
-			return;
-		}
+		if (markets.length < 1) return alert('오픈마켓이 선택되지 않았습니다.');
 
 		const response = await gql(QUERIES.GET_REGISTER_PRODUCTS_DATA_BY_USER, {
 			productIds,
 			siteCode: markets,
 		});
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		const data = JSON.parse(response.data.getRegisterProductsDataByUser);
 		console.log({ data });
 		if (edit) {
 			commonStore.setEditedUpload(true);
-
 			this.addConsoleText('상품 수정을 시작합니다.');
 		} else {
 			commonStore.setEditedUpload(false);
-
 			this.addConsoleText('상품 등록을 시작합니다.');
 		}
 
@@ -4246,9 +3643,7 @@ export class product {
 			),
 		]);
 
-		if (commonStore.uploadInfo.stopped) {
-			alert('업로드가 중단되었습니다.');
-		}
+		if (commonStore.uploadInfo.stopped) alert('업로드가 중단되었습니다.');
 
 		this.refreshProduct(commonStore);
 
@@ -4258,7 +3653,7 @@ export class product {
 	};
 
 	// 상품 등록 esm2.0
-	// Esm2uploadItems = async (commonStore: any, edit: boolean) => {
+	// Esm2uploadItems = async (commonStore: common, edit: boolean) => {
 	// 	let productIds: any = [];
 
 	// 	if (this.Esm2uploadIndex > -1) {
@@ -4377,11 +3772,7 @@ export class product {
 	updateCoupangUrl = (index: number, user: any) => {
 		this.itemInfo.items[index].productStore.map(async (v: any) => {
 			if (v.siteCode === 'B378' && v.state === 2) {
-				if (v.storeProductId !== '0') {
-					window.open(v.storeUrl);
-
-					return;
-				}
+				if (v.storeProductId !== '0') return window.open(v.storeUrl);
 
 				const body = {
 					accesskey: user.userInfo.coupangAccessKey,
@@ -4396,11 +3787,7 @@ export class product {
 
 				const response = await coupangApiGateway(body);
 
-				if (!response.data) {
-					alert(response.message);
-
-					return;
-				}
+				if (!response.data) return alert(response.message);
 
 				if (response.data.statusName !== '승인완료') {
 					if (response.data.statusName === '승인반려') {
@@ -4415,18 +3802,11 @@ export class product {
 								false,
 							);
 
-							if (response.errors) {
-								alert(response.errors[0].message);
+							if (response.errors) return alert(response.errors[0].message);
 
-								return;
-							}
 							v.state = 3;
 						}
-					} else {
-						alert(`상품이 현재 [${response.data.statusName}] 상태입니다.`);
-
-						return;
-					}
+					} else return alert(`상품이 현재 [${response.data.statusName}] 상태입니다.`);
 				}
 
 				await gql(MUTATIONS.UPDATE_PRODUCT_STORE_URL_INFO_BY_SOMEONE, {
@@ -4492,21 +3872,13 @@ export class product {
 	};
 
 	// 상품목록 새로고침
-	refreshProduct = (commonStore: any) => {
-		this.getProduct(commonStore, this.page);
-	};
+	refreshProduct = (commonStore: common) => this.getProduct(commonStore, this.page);
 
-	// 썸네일이미지 복구
-	initProductThumbnailImage = async (id: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.thumbnailImages = 0;
-		};
+	// 썸네일이미지 복구 - imageIndex가 있을경우 단일 복구로 동작
+	initProductThumbnailImage = async (id: number, index: number, imageIndex?: number) => {
+		const exit = () => (this.itemInfo.items[index].edited.thumbnailImages = 0);
 
-		let accept = confirm('원본 이미지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.');
-
-		if (!accept) {
-			return;
-		}
+		if (!confirm('원본 이미지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.')) return;
 
 		this.itemInfo.items[index].edited.thumbnailImages = 2;
 
@@ -4514,34 +3886,25 @@ export class product {
 
 		if (response.errors) {
 			alert(response.errors[0].message);
-
 			exit();
-
 			return;
 		}
 
 		const thumbnailList = JSON.parse(response.data.initProductThumbnailImageByUser);
 
-		this.itemInfo.items[index].imageThumbnail = thumbnailList;
+		if (imageIndex === undefined) this.itemInfo.items[index].imageThumbnail = thumbnailList;
+		else this.itemInfo.items[index].imageThumbnail[imageIndex] = thumbnailList[imageIndex];
 
 		floatingToast('원본 이미지로 복구되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 옵션이미지 복구
 	initProductOptionImage = async (id: number, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.optionImages = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.optionImages = 0);
 
-		let accept = confirm('원본 이미지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.');
-
-		if (!accept) {
-			return;
-		}
+		if (!confirm('원본 이미지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.')) return;
 
 		this.itemInfo.items[index].edited.optionImages = 2;
 
@@ -4549,9 +3912,7 @@ export class product {
 
 		if (response.errors) {
 			alert(response.errors[0].message);
-
 			exit();
-
 			return;
 		}
 
@@ -4560,16 +3921,12 @@ export class product {
 		this.itemInfo.items[index].productOptionName.map((v: any) => {
 			const resultOptionName = optionList.find((w: any) => w.id === v.id);
 
-			if (!resultOptionName) {
-				return;
-			}
+			if (!resultOptionName) return;
 
 			v.productOptionValue.map((x: any) => {
 				const resultOptionValue = resultOptionName.optionValues.find((y: any) => y.id === x.id);
 
-				if (!resultOptionValue) {
-					return;
-				}
+				if (!resultOptionValue) return;
 
 				x.image = resultOptionValue.img;
 			});
@@ -4577,22 +3934,14 @@ export class product {
 
 		floatingToast('원본 이미지로 복구되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 상세페이지 이미지 복구
-	initProductDescription = async (id: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.descriptions = 0;
-		};
+	initProductDescription = async (id: number, index: number) => {
+		const exit = () => (this.itemInfo.items[index].edited.descriptions = 0);
 
-		let accept = confirm('원본 상세페이지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.');
-
-		if (!accept) {
-			return;
-		}
+		if (!confirm('원본 상세페이지로 복구하시겠습니까?\n이미지 번역 등 수정한 정보는 사라집니다.')) return;
 
 		this.itemInfo.items[index].edited.descriptions = 2;
 
@@ -4600,9 +3949,7 @@ export class product {
 
 		if (response.errors) {
 			alert(response.errors[0].message);
-
 			exit();
-
 			return;
 		}
 
@@ -4618,9 +3965,7 @@ export class product {
 
 			descHtml = new DOMParser().parseFromString(descText, 'text/html');
 
-			runInAction(() => {
-				this.itemInfo.items[index].description = descText ?? this.itemInfo.items[index].description;
-			});
+			runInAction(() => (this.itemInfo.items[index].description = descText ?? this.itemInfo.items[index].description));
 		} else {
 			descHtml = new DOMParser().parseFromString(this.itemInfo.items[index].description, 'text/html');
 		}
@@ -4632,9 +3977,7 @@ export class product {
 				const imageList: any = descHtml.querySelectorAll('img');
 
 				for (let i in imageList) {
-					if (!imageList[i].src) {
-						continue;
-					}
+					if (!imageList[i].src) continue;
 
 					this.itemInfo.items[index].descriptionImages.push(imageList[i].src);
 				}
@@ -4648,16 +3991,13 @@ export class product {
 
 	// 이미지번역결과 적용
 	updateImageTranslatedData = async (data: any) => {
-		const product = this.itemInfo.items.find((v: any) => v.id === data.productId);
+		const product = this.itemInfo.items.find((v: any) => v.id === data.productId)!;
 
 		if (data.thumbnails.length > 0) {
 			product.imageThumbnail = product.imageThumbnail.map((v: any, i: number) => {
 				const matched = data.thumbnails.find((w: any) => i === w.index);
 
-				if (!matched) {
-					return v;
-				}
-
+				if (!matched) return v;
 				return matched.newImage;
 			});
 
@@ -4670,10 +4010,7 @@ export class product {
 				.map((v: any) => {
 					const matched = data.optionValues.find((w: any) => w.id === v.id);
 
-					if (!matched || !matched.newImage) {
-						return;
-					}
-
+					if (!matched || !matched.newImage) return;
 					v.image = matched.newImage;
 				});
 
@@ -4694,9 +4031,7 @@ export class product {
 					const imageList: any = descHtml.querySelectorAll('img');
 
 					for (let i in imageList) {
-						if (!imageList[i].src) {
-							continue;
-						}
+						if (!imageList[i].src) continue;
 
 						product.descriptionImages.push(imageList[i].src);
 					}
@@ -4706,40 +4041,40 @@ export class product {
 			floatingToast('상세이미지 번역이 적용되었습니다.', 'success');
 		}
 
-		runInAction(() => {
-			product.isImageTranslated = true;
-		});
+		runInAction(() => (product.isImageTranslated = true));
 	};
 
 	// 옵션명 키워드추가 모달
-	toggleAddOptionNameModal = (value: boolean) => {
-		this.modalInfo.addOptionName = value;
-	};
+	toggleAddOptionNameModal = (value: boolean) => (this.modalInfo.addOptionName = value);
 
 	// 옵션명 키워드변경 모달
-	toggleReplaceOptionNameModal = (value: boolean) => {
-		this.modalInfo.replaceOptionName = value;
-	};
+	toggleReplaceOptionNameModal = (value: boolean) => (this.modalInfo.replaceOptionName = value);
 
 	// 사용자 정의 페이지 당 상품 수 설정
-	toggleETCPageSize = (value: boolean) => {
-		this.etcPageSize = value;
-	};
+	toggleETCPageSize = (value: boolean) => (this.etcPageSize = value);
 
 	// 에러체크
 	checkErrorExist = async (index: number) => {
 		let errorFound = false;
-
 		this.itemInfo.items[index].error = true;
-
 		this.itemInfo.items[index].optionPriceError = false;
+		this.itemInfo.items[index].optionNameError = false;
 		this.itemInfo.items[index].thumbnailImageError = false;
 		this.itemInfo.items[index].optionImageError = false;
 		this.itemInfo.items[index].descriptionImageError = false;
-
 		this.itemInfo.items[index].imageCheckList = {};
 
 		const activeProductOption = this.itemInfo.items[index].productOption.filter((v: any) => v.isActive);
+		const activeProductOptionName = this.itemInfo.items[index].productOptionName.map((v) =>
+			v.productOptionValue.map((v2) => v2.name),
+		);
+		/** 옵션명 중복체크 추가 */
+		activeProductOptionName.forEach((v) => {
+			if (new Set(v).size !== v.length) {
+				this.itemInfo.items[index].optionNameError = true;
+				errorFound = true;
+			}
+		});
 
 		if (activeProductOption.length > 0) {
 			const priceList = activeProductOption.map((v: any) => v.price);
@@ -4747,34 +4082,28 @@ export class product {
 
 			if (price !== this.itemInfo.items[index].price) {
 				this.itemInfo.items[index].optionPriceError = true;
-
 				errorFound = true;
 			}
 		}
 
 		await Promise.all(
 			this.itemInfo.items[index].imageThumbnail.map(async (v: any) => {
-				runInAction(() => {
-					this.itemInfo.items[index].imageCheckList[v] = false;
-				});
+				runInAction(() => (this.itemInfo.items[index].imageCheckList[v] = false));
 
 				const imageResp = await fetch(v);
 				const imageBlob = await imageResp.blob();
-
 				const image: any = await getImageMeta(v);
 
 				runInAction(() => {
 					if (image.width < 600) {
 						this.itemInfo.items[index].imageCheckList[v] = true;
 						this.itemInfo.items[index].thumbnailImageError = true;
-
 						errorFound = true;
 					}
 
 					if (image.height < 600) {
 						this.itemInfo.items[index].imageCheckList[v] = true;
 						this.itemInfo.items[index].thumbnailImageError = true;
-
 						errorFound = true;
 					}
 
@@ -4782,35 +4111,27 @@ export class product {
 						case 'image/webp': {
 							break;
 						}
-
 						case 'image/jpeg': {
 							if (!v.includes('jpg')) {
 								this.itemInfo.items[index].imageCheckList[v] = true;
 								this.itemInfo.items[index].thumbnailImageError = true;
-
 								errorFound = true;
 							}
-
 							break;
 						}
-
 						case 'image/png': {
 							if (!v.includes('png')) {
 								this.itemInfo.items[index].imageCheckList[v] = true;
 								this.itemInfo.items[index].thumbnailImageError = true;
-
 								errorFound = true;
 							}
-
 							break;
 						}
 
 						default: {
 							this.itemInfo.items[index].imageCheckList[v] = true;
 							this.itemInfo.items[index].thumbnailImageError = true;
-
 							errorFound = true;
-
 							break;
 						}
 					}
@@ -4822,13 +4143,9 @@ export class product {
 			this.itemInfo.items[index].productOptionName
 				.flatMap((v: any) => v.productOptionValue)
 				.map(async (v: any) => {
-					if (!v.image) {
-						return;
-					}
+					if (!v.image) return;
 
-					runInAction(() => {
-						this.itemInfo.items[index].imageCheckList[v.image] = false;
-					});
+					runInAction(() => (this.itemInfo.items[index].imageCheckList[v.image] = false));
 
 					const imageResp = await fetch(v.image);
 					const imageBlob = await imageResp.blob();
@@ -4838,35 +4155,27 @@ export class product {
 							case 'image/webp': {
 								break;
 							}
-
 							case 'image/jpeg': {
 								if (!v.image.includes('jpg')) {
 									this.itemInfo.items[index].imageCheckList[v.image] = true;
 									this.itemInfo.items[index].optionImageError = true;
-
 									errorFound = true;
 								}
-
 								break;
 							}
-
 							case 'image/png': {
 								if (!v.image.includes('png')) {
 									this.itemInfo.items[index].imageCheckList[v.image] = true;
 									this.itemInfo.items[index].optionImageError = true;
-
 									errorFound = true;
 								}
-
 								break;
 							}
 
 							default: {
 								this.itemInfo.items[index].imageCheckList[v.image] = true;
 								this.itemInfo.items[index].optionImageError = true;
-
 								errorFound = true;
-
 								break;
 							}
 						}
@@ -4876,9 +4185,7 @@ export class product {
 
 		await Promise.all(
 			this.itemInfo.items[index].descriptionImages.map(async (v: any) => {
-				runInAction(() => {
-					this.itemInfo.items[index].imageCheckList[v] = false;
-				});
+				runInAction(() => (this.itemInfo.items[index].imageCheckList[v] = false));
 
 				const imageResp = await fetch(v);
 				const imageBlob = await imageResp.blob();
@@ -4888,35 +4195,27 @@ export class product {
 						case 'image/webp': {
 							break;
 						}
-
 						case 'image/jpeg': {
 							if (!v.includes('jpg')) {
 								this.itemInfo.items[index].imageCheckList[v] = true;
 								this.itemInfo.items[index].descriptionImageError = true;
-
 								errorFound = true;
 							}
-
 							break;
 						}
-
 						case 'image/png': {
 							if (!v.includes('png')) {
 								this.itemInfo.items[index].imageCheckList[v] = true;
 								this.itemInfo.items[index].descriptionImageError = true;
-
 								errorFound = true;
 							}
-
 							break;
 						}
 
 						default: {
 							this.itemInfo.items[index].imageCheckList[v] = true;
 							this.itemInfo.items[index].descriptionImageError = true;
-
 							errorFound = true;
-
 							break;
 						}
 					}
@@ -4931,31 +4230,21 @@ export class product {
 				floatingToast('에러가 발견되었습니다.', 'failed');
 
 				this.itemInfo.items[index].collapse = true;
-			} else {
-				floatingToast('에러가 발견되지 않았습니다.', 'success');
-			}
+			} else floatingToast('에러가 발견되지 않았습니다.', 'success');
 		});
 	};
 
 	// 상품키워드 설정
 	setProductKeyward = (data: any, index: number) => {
 		this.itemInfo.items[index].myKeyward = data.myKeyward;
-
 		this.itemInfo.items[index].edited.attribute = 1;
 	};
+
 	// 상품속성 설정
 	setProductAttribute = (data: any, index: number) => {
-		if (data.manufacturer) {
-			this.itemInfo.items[index].manuFacturer = data.manufacturer;
-		}
-
-		if (data.brandName) {
-			this.itemInfo.items[index].brandName = data.brandName;
-		}
-
-		if (data.modelName) {
-			this.itemInfo.items[index].modelName = data.modelName;
-		}
+		if (data.manufacturer) this.itemInfo.items[index].manuFacturer = data.manufacturer;
+		if (data.brandName) this.itemInfo.items[index].brandName = data.brandName;
+		if (data.modelName) this.itemInfo.items[index].modelName = data.modelName;
 
 		this.itemInfo.items[index].edited.attribute = 1;
 	};
@@ -4966,27 +4255,16 @@ export class product {
 
 		const response = await gql(MUTATIONS.SET_LOCK_PRODUCT, data, false);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
+		if (response.errors) return alert(response.errors[0].message);
 
-			return;
-		}
-		if (data.mylock === 1) {
-			floatingToast('상품 잠금 해제되었습니다.', 'success');
-		} else {
-			floatingToast('상품 잠금 되었습니다.', 'success');
-		}
+		if (data.mylock === 1) floatingToast('상품 잠금 해제되었습니다.', 'success');
+		else floatingToast('상품 잠금 되었습니다.', 'success');
 	};
+
 	// 키워드 업데이트
-
-	updateProductMyKeyward = async (data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.attribute = 0;
-		};
-
-		if (!this.itemInfo.items[index].edited.attribute) {
-			return;
-		}
+	updateProductMyKeyward = async (data: UpdateProductMyKeywardInPut, index: number) => {
+		const exit = () => (this.itemInfo.items[index].edited.attribute = 0);
+		if (!this.itemInfo.items[index].edited.attribute) return;
 
 		this.itemInfo.items[index].edited.attribute = 2;
 
@@ -4994,28 +4272,20 @@ export class product {
 
 		if (response.errors) {
 			alert(response.errors[0].message);
-
 			exit();
-
 			return;
 		}
 
 		floatingToast('상품속성정보가 변경되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 상품속성 업데이트
 	updateProductAttribute = async (data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.attribute = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.attribute = 0);
 
-		if (!this.itemInfo.items[index].edited.attribute) {
-			return;
-		}
+		if (!this.itemInfo.items[index].edited.attribute) return;
 
 		this.itemInfo.items[index].edited.attribute = 2;
 
@@ -5023,50 +4293,32 @@ export class product {
 
 		if (response.errors) {
 			alert(response.errors[0].message);
-
 			exit();
-
 			return;
 		}
 
 		floatingToast('상품속성정보가 변경되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 상품속성 일괄설정 모달
-	toggleManyAttributeModal = (value: boolean) => {
-		this.modalInfo.attribute = value;
-	};
+	toggleManyAttributeModal = (value: boolean) => (this.modalInfo.attribute = value);
 
-	toggleManyMyKeywardModal = (value: boolean) => {
-		this.modalInfo.myKeywarded = value;
-	};
+	toggleManyMyKeywardModal = (value: boolean) => (this.modalInfo.myKeywarded = value);
 
 	// 상품속성 일괄설정
-	setManyAttributeInfo = (data: any) => {
-		this.manyAttributeInfo = data;
-	};
-	setManyKeyward = (data: any) => {
-		this.ManymyKeyward = data;
-	};
+	setManyAttributeInfo = (data: any) => (this.manyAttributeInfo = data);
+
+	setManyKeyward = (data: any) => (this.ManymyKeyward = data);
+
 	// 개인분류 일괄 업데이트
-	updateManyMyKeyward = async (commonStore: any) => {
+	updateManyMyKeyward = async (commonStore: common) => {
 		let productIds: any = [];
 
-		this.itemInfo.items.map((v: any) => {
-			if (v.checked) {
-				productIds.push(v.id);
-			}
-		});
+		this.itemInfo.items.map((v) => v.checked && productIds.push(v.id));
 
-		if (productIds.length < 1) {
-			alert('상품이 선택되지 않았습니다.');
-
-			return null;
-		}
+		if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
 
 		const response = await gql(
 			MUTATIONS.UPDATE_MANY_KEYWARD_LIST,
@@ -5074,11 +4326,7 @@ export class product {
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		floatingToast(`상품 ${productIds.length}개의 속성을 일괄설정하였습니다.`, 'success');
 
@@ -5086,20 +4334,12 @@ export class product {
 		this.refreshProduct(commonStore);
 	};
 	// 상품속성 일괄 업데이트
-	updateManyAttribute = async (commonStore: any) => {
+	updateManyAttribute = async (commonStore: common) => {
 		let productIds: any = [];
 
-		this.itemInfo.items.map((v: any) => {
-			if (v.checked) {
-				productIds.push(v.id);
-			}
-		});
+		this.itemInfo.items.map((v) => v.checked && productIds.push(v.id));
 
-		if (productIds.length < 1) {
-			alert('상품이 선택되지 않았습니다.');
-
-			return null;
-		}
+		if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
 
 		const response = await gql(
 			MUTATIONS.UPDATE_MANY_PRODUCT_ATTRIBUTE_BY_USER,
@@ -5107,11 +4347,7 @@ export class product {
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		floatingToast(`상품 ${productIds.length}개의 개인분류를 일괄설정하였습니다.`, 'success');
 
@@ -5121,9 +4357,7 @@ export class product {
 
 	// 고시정보 업데이트
 	updateProdutSillCodes = async (marketCode: string, data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.attribute = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.attribute = 0);
 
 		this.itemInfo.items[index].edited.attribute = 2;
 
@@ -5133,7 +4367,6 @@ export class product {
 			MUTATIONS.UPDATE_PRODUCT_SILL_CODES_BY_USER,
 			{
 				productIds: data.productIds,
-
 				[`code_${lowerCode}`]: data.value,
 			},
 			false,
@@ -5141,9 +4374,7 @@ export class product {
 
 		if (response1.errors) {
 			alert(response1.errors[0].message);
-
 			exit();
-
 			return;
 		}
 
@@ -5155,7 +4386,6 @@ export class product {
 			MUTATIONS.UPDATE_PRODUCT_SILL_DATAS_BY_USER,
 			{
 				productIds: data.productIds,
-
 				[`data_${lowerCode}`]: sillData,
 			},
 			false,
@@ -5163,9 +4393,7 @@ export class product {
 
 		if (response2.errors) {
 			alert(response1.errors[0].message);
-
 			exit();
-
 			return;
 		}
 
@@ -5176,16 +4404,12 @@ export class product {
 
 		floatingToast('상품정보제공고시가 변경되었습니다.', 'success');
 
-		runInAction(() => {
-			exit();
-		});
+		runInAction(() => exit());
 	};
 
 	// 고시정보 세부내용 업데이트
 	updateProdutSillDatas = async (marketCode: string, data: any, index: number) => {
-		const exit = () => {
-			this.itemInfo.items[index].edited.attribute = 0;
-		};
+		const exit = () => (this.itemInfo.items[index].edited.attribute = 0);
 
 		this.itemInfo.items[index].edited.attribute = 2;
 
@@ -5195,7 +4419,6 @@ export class product {
 			MUTATIONS.UPDATE_PRODUCT_SILL_DATAS_BY_USER,
 			{
 				productIds: data.productIds,
-
 				[`data_${lowerCode}`]: data.value,
 			},
 			false,
@@ -5203,17 +4426,13 @@ export class product {
 
 		if (response1.errors) {
 			alert(response1.errors[0].message);
-
 			exit();
-
 			return;
 		}
 
 		runInAction(() => {
 			this.itemInfo.items[index][`sillData${marketCode}`] = data.value;
-
 			floatingToast('상품정보제공고시 상세정보가 변경되었습니다.', 'success');
-
 			exit();
 		});
 	};
@@ -5227,7 +4446,6 @@ export class product {
 			case 'AUTO': {
 				sillCode = {
 					productIds: [this.itemInfo.items[index].id],
-
 					code_a077: this.itemInfo.items[index].categoryInfoA077.sillInfoA077.code,
 					code_b378: this.itemInfo.items[index].categoryInfoB378.sillInfoB378.code,
 					code_a112: this.itemInfo.items[index].categoryInfoA112.sillInfoA112.code,
@@ -5240,14 +4458,12 @@ export class product {
 					code_a525: this.itemInfo.items[index].categoryInfoA525.sillInfoA525.code,
 					code_b956: this.itemInfo.items[index].categoryInfoB956.sillInfoB956.code,
 				};
-
 				break;
 			}
 
 			case 'ETC': {
 				sillCode = {
 					productIds: [this.itemInfo.items[index].id],
-
 					code_a077:
 						this.itemInfo.items[index].categoryInfoA077.activeSillDataA077.find(
 							(v) => v.code !== this.itemInfo.items[index].categoryInfoA077.sillInfoA077.code,
@@ -5293,22 +4509,16 @@ export class product {
 							(v) => v.code !== this.itemInfo.items[index].categoryInfoB956.sillInfoB956.code,
 						)?.code ?? this.itemInfo.items[index].categoryInfoB956.sillInfoB956.code,
 				};
-
 				break;
 			}
 		}
 
 		const response1 = await gql(MUTATIONS.UPDATE_PRODUCT_SILL_CODES_BY_USER, sillCode, false);
 
-		if (response1.errors) {
-			alert(response1.errors[0].message);
-
-			return;
-		}
+		if (response1.errors) return alert(response1.errors[0].message);
 
 		sillData = {
 			productIds: [this.itemInfo.items[index].id],
-
 			data_a077: this.itemInfo.items[index].categoryInfoA077.activeSillDataA077.find(
 				(v) => v.code === sillCode.code_a077,
 			).data,
@@ -5346,11 +4556,7 @@ export class product {
 
 		const response2 = await gql(MUTATIONS.UPDATE_PRODUCT_SILL_DATAS_BY_USER, sillData, false);
 
-		if (response2.errors) {
-			alert(response2.errors[0].message);
-
-			return;
-		}
+		if (response2.errors) return alert(response2.errors[0].message);
 
 		runInAction(() => {
 			this.itemInfo.items[index].sillCodeA077 = sillCode.code_a077;
@@ -5377,7 +4583,6 @@ export class product {
 			this.itemInfo.items[index].sillDataA525 = sillData.data_a525;
 			this.itemInfo.items[index].sillDataB956 = sillData.data_b956;
 		});
-
 		floatingToast('상품고시정보를 일괄설정하었습니다.', 'success');
 	};
 
@@ -5385,30 +4590,16 @@ export class product {
 	autoImageTranslate = async (index: number, seq: number) => {
 		let productIds: any = [];
 
-		if (index === -1) {
-			productIds = this.itemInfo.items.filter((v: any) => v.checked).map((v: any) => v.id);
-		} else {
-			productIds = [this.itemInfo.items[index].id];
-		}
+		if (index === -1) productIds = this.itemInfo.items.filter((v: any) => v.checked).map((v: any) => v.id);
+		else productIds = [this.itemInfo.items[index].id];
 
-		if (productIds.length < 1) {
-			alert('상품이 선택되지 않았습니다.');
-
-			return;
-		}
-
-		if (productIds.length > 10) {
-			alert('일괄번역은 한번에 10개씩 가능합니다.');
-
-			return;
-		}
+		if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
+		if (productIds.length > 10) return alert('일괄번역은 한번에 10개씩 가능합니다.');
 
 		for (let i = 0; i <= productIds.length; i++) {
 			const item = this.itemInfo.items.find((v) => v.id === productIds[i]);
 
-			if (!item) {
-				continue;
-			}
+			if (!item) continue;
 
 			item.translate = true;
 
@@ -5420,17 +4611,13 @@ export class product {
 					},
 					10,
 				);
-
 				const resThumbnails = await sendTabMessage(tabThumbnails.id, {
 					action: 'auto-translate',
 				});
 
 				if (!resThumbnails) {
 					floatingToast('썸네일이미지 번역이 중단되었습니다.', 'failed');
-
-					runInAction(() => {
-						item.translate = false;
-					});
+					runInAction(() => (item.translate = false));
 
 					return;
 				}
@@ -5452,10 +4639,7 @@ export class product {
 				if (!resOptions) {
 					floatingToast('옵션이미지 번역이 중단되었습니다.', 'failed');
 
-					runInAction(() => {
-						item.translate = false;
-					});
-
+					runInAction(() => (item.translate = false));
 					return;
 				}
 			}
@@ -5476,25 +4660,18 @@ export class product {
 				if (!resDescriptions) {
 					floatingToast('상세이미지 번역이 중단되었습니다.', 'failed');
 
-					runInAction(() => {
-						item.translate = false;
-					});
-
+					runInAction(() => (item.translate = false));
 					return;
 				}
 			}
 
-			runInAction(() => {
-				item.translate = false;
-			});
+			runInAction(() => (item.translate = false));
 		}
 	};
 
 	// 그리드뷰
-	setGridView = async (commonStore: any, value: boolean) => {
-		if (this.gridView === value) {
-			return;
-		}
+	setGridView = async (commonStore: common, value: boolean) => {
+		if (this.gridView === value) return;
 
 		let auth: any = await getLocalStorage('appInfo');
 
@@ -5513,11 +4690,8 @@ export class product {
 		runInAction(() => {
 			if (value) {
 				this.itemInfo.items.sort((a, b) => {
-					if (b.thumbData > a.thumbData) {
-						return 1;
-					} else if (a.thumbData > b.thumbData) {
-						return -1;
-					}
+					if (b.thumbData > a.thumbData) return 1;
+					else if (a.thumbData > b.thumbData) return -1;
 
 					return 0;
 				});
@@ -5532,10 +4706,11 @@ export class product {
 			siteCode: [market],
 		});
 
-		runInAction(() => {
-			this.manyDescriptionInfo.previewHtml = JSON.parse(
-				response.data.getRegisterProductsDataByUser,
-			)[0]?.DShopInfo?.DataDataSet?.data[0]?.content;
-		});
+		runInAction(
+			() =>
+				(this.manyDescriptionInfo.previewHtml = JSON.parse(
+					response.data.getRegisterProductsDataByUser,
+				)[0]?.DShopInfo?.DataDataSet?.data[0]?.content),
+		);
 	};
 }

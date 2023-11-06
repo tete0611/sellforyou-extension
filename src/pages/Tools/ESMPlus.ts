@@ -277,7 +277,7 @@ export async function uploadESMPlus(productStore: product, commonStore: common, 
 							<video controls>
 								<source src="${market_item.misc1}" type="video/mp4">
 							</video>
-							
+
 							<br />
 							<br />
 						`
@@ -286,10 +286,10 @@ export async function uploadESMPlus(productStore: product, commonStore: common, 
 
 					${commonStore.user.userInfo.descriptionShowTitle === 'Y' ? market_item.name3 : ``}
 				</div>
-								
+
 				<br />
 				<br />
-				
+
 				${transformContent(market_item.content1)}
                 ${market_item.content3}
 			`;
@@ -498,7 +498,7 @@ export async function uploadESMPlus(productStore: product, commonStore: common, 
 				let MM2 = (date.getMonth() + 1).toString().padStart(2, '0');
 				let DD2 = date.getDate().toString().padStart(2, '0');
 
-				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
+				const itemInfo = productStore.itemInfo.items.find((v) => v.productCode === market_code)!;
 
 				// 고시정보 생성
 				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
@@ -1228,7 +1228,7 @@ export async function deleteESMPlus(productStore: any, commonStore: any, data: a
 
 				let desc = `
         ${getStoreTraceCodeV1(market_item.id, data.DShopInfo.site_code)}
-        
+
         ${market_item.content2}
 
 				<div style="text-align: center;">
@@ -1238,7 +1238,7 @@ export async function deleteESMPlus(productStore: any, commonStore: any, data: a
 							<video controls>
 								<source src="${market_item.misc1}" type="video/mp4">
 							</video>
-							
+
 							<br />
 							<br />
 						`
@@ -1247,10 +1247,10 @@ export async function deleteESMPlus(productStore: any, commonStore: any, data: a
 
 					${commonStore.user.userInfo.descriptionShowTitle === 'Y' ? market_item.name3 : ``}
 				</div>
-								
+
 				<br />
 				<br />
-				
+
 				${transformContent(market_item.content1)}
                 ${market_item.content3}
 			`;

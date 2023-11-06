@@ -2,7 +2,7 @@ import React from 'react';
 
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
-import { Box, Button, Grid, MenuItem, Popover, Select, TextField, Typography } from '@mui/material';
+import { Box, Grid, MenuItem, Popover, TextField, Typography } from '@mui/material';
 import { ComboBox, MyButton } from '../Common/UI';
 
 // 옵션 재고수량 일괄설정 팝업
@@ -11,22 +11,18 @@ export const SetOptionStockPopOver = observer(() => {
 	const { product } = React.useContext(AppContext);
 
 	// 팝업이 닫혔을 경우 데이터를 초기화
-	const onClose = () => {
+	const onClose = () =>
 		product.setOptionStockPopOver({
 			...product.popOverInfo.setOptionStock,
-
 			index: -1,
 			element: null,
 			open: false,
-
 			data: {
 				nameIndex: -1,
 				valueIndex: -1,
 				stock: '',
 			},
 		});
-	};
-
 	return (
 		<Popover
 			open={product.popOverInfo.setOptionStock.open}
@@ -55,7 +51,6 @@ export const SetOptionStockPopOver = observer(() => {
 						>
 							<Typography fontSize={14}>적용할 옵션명</Typography>
 						</Grid>
-
 						<Grid
 							item
 							xs={6}
@@ -69,22 +64,18 @@ export const SetOptionStockPopOver = observer(() => {
 									width: '100%',
 								}}
 								value={product.popOverInfo.setOptionStock.data.nameIndex}
-								onChange={(e) => {
+								onChange={(e) =>
 									product.setOptionStockPopOver({
 										...product.popOverInfo.setOptionStock,
-
 										data: {
 											...product.popOverInfo.setOptionStock.data,
-
 											nameIndex: e.target.value,
 										},
-									});
-								}}
+									})
+								}
 							>
 								<MenuItem value={-2}>{'<체크된 옵션>'}</MenuItem>
-
 								<MenuItem value={-1}>{'<모든 옵션명>'}</MenuItem>
-
 								{product.popOverInfo.setOptionStock.index > -1
 									? product.itemInfo.items[product.popOverInfo.setOptionStock.index].productOptionName.map(
 											(v: any, i: number) => <MenuItem value={i}>{v.name}</MenuItem>,
@@ -92,7 +83,6 @@ export const SetOptionStockPopOver = observer(() => {
 									: null}
 							</ComboBox>
 						</Grid>
-
 						{product.popOverInfo.setOptionStock.data.nameIndex < 0 ? null : (
 							<>
 								<Grid
@@ -105,7 +95,6 @@ export const SetOptionStockPopOver = observer(() => {
 								>
 									<Typography fontSize={14}>적용할 옵션값</Typography>
 								</Grid>
-
 								<Grid
 									item
 									xs={6}
@@ -119,30 +108,26 @@ export const SetOptionStockPopOver = observer(() => {
 											width: '100%',
 										}}
 										value={product.popOverInfo.setOptionStock.data.valueIndex}
-										onChange={(e) => {
+										onChange={(e) =>
 											product.setOptionStockPopOver({
 												...product.popOverInfo.setOptionStock,
-
 												data: {
 													...product.popOverInfo.setOptionStock.data,
-
 													valueIndex: e.target.value,
 												},
-											});
-										}}
+											})
+										}
 									>
 										<MenuItem value={-1}>{'<옵션값 선택>'}</MenuItem>
-
 										{product.popOverInfo.setOptionStock.index > -1
 											? product.itemInfo.items[product.popOverInfo.setOptionStock.index].productOptionName[
 													product.popOverInfo.setOptionStock.data.nameIndex
-											  ].productOptionValue.map((v: any, i: number) => <MenuItem value={i}>{v.name}</MenuItem>)
+											  ].productOptionValue.map((v, i) => <MenuItem value={i}>{v.name}</MenuItem>)
 											: null}
 									</ComboBox>
 								</Grid>
 							</>
 						)}
-
 						<Grid
 							item
 							xs={6}
@@ -153,7 +138,6 @@ export const SetOptionStockPopOver = observer(() => {
 						>
 							<Typography fontSize={14}>설정할 재고수량</Typography>
 						</Grid>
-
 						<Grid
 							item
 							xs={6}
@@ -174,22 +158,19 @@ export const SetOptionStockPopOver = observer(() => {
 										padding: 5,
 									},
 								}}
-								onBlur={(e) => {
+								onBlur={(e) =>
 									product.setOptionStockPopOver({
 										...product.popOverInfo.setOptionStock,
-
 										data: {
 											...product.popOverInfo.setOptionStock.data,
-
 											stock: e.target.value,
 										},
-									});
-								}}
+									})
+								}
 							/>
 						</Grid>
 					</Grid>
 				</Box>
-
 				<Box
 					sx={{
 						display: 'flex',
@@ -205,30 +186,16 @@ export const SetOptionStockPopOver = observer(() => {
 						}}
 						onClick={() => {
 							const index = product.popOverInfo.setOptionStock.index;
-
-							const stock = parseInt(product.popOverInfo.setOptionStock.data.stock);
-
+							const stock = Number(product.popOverInfo.setOptionStock.data.stock);
 							const nameIndex = parseInt(product.popOverInfo.setOptionStock.data.nameIndex);
 							const valueIndex = parseInt(product.popOverInfo.setOptionStock.data.valueIndex);
 
-							if (!stock || isNaN(stock)) {
-								alert('설정할 재고수량은 숫자 형식으로만 입력 가능합니다.');
-
-								return;
-							}
-
+							if (!stock || isNaN(stock)) return alert('설정할 재고수량은 숫자 형식으로만 입력 가능합니다.');
 							if (nameIndex < 0) {
-								if (nameIndex === -1) {
-									product.calcProductOptionPrice(stock, 'setStock', index, null, false);
-								} else if (nameIndex === -2) {
-									product.calcProductOptionPrice(stock, 'setStock', index, null, true);
-								}
+								if (nameIndex === -1) product.calcProductOptionPrice(stock, 'setStock', index, null, false);
+								else if (nameIndex === -2) product.calcProductOptionPrice(stock, 'setStock', index, null, true);
 							} else {
-								if (valueIndex === -1) {
-									alert('적용할 옵션값을 선택해주세요.');
-
-									return;
-								}
+								if (valueIndex === -1) return alert('적용할 옵션값을 선택해주세요.');
 
 								const valueId =
 									product.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex].id;
