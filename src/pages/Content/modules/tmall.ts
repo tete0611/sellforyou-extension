@@ -4,12 +4,12 @@ import { form } from './common/data';
 import { injectScript } from './common/utils';
 import { getCookie, sleep, getImageSize } from '../../Tools/Common';
 import { sendRuntimeMessage } from '../../Tools/ChromeAsync';
+import { User } from '../../../type/type';
 
 // 티몰 상품정보 크롤링
-async function scrape(items: any, user: any) {
+const scrape = async (items: any, user: User) => {
 	let result: any = form;
 	result.user = user;
-
 	// 페이지별 크롤링 방식 다름
 	if (items.pageType === 1) {
 		// 상품속성
@@ -65,15 +65,13 @@ async function scrape(items: any, user: any) {
 					if (desc[i].src.includes('.gif')) desc[i].parentNode.removeChild(desc[i]);
 					else {
 						const image: any = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
-						if (image <= 1000) {
+						if (image <= 1000)
 							// console.log('흰색 이미지', desc[i]);
 							desc[i].parentNode.removeChild(desc[i]);
-						} else {
+						else {
 							desc[i].src = desc[i].src;
 							desc_imgs.push(desc[i].src);
 						}
-						// desc[i].src = desc[i].src;
-						// desc_imgs.push(desc[i].src);
 					}
 				}
 			} catch (e) {
@@ -261,13 +259,10 @@ async function scrape(items: any, user: any) {
 
 		return result;
 	} else {
-		// pageType 2
-		// console.log("test", items.desc);
-		// console.log("cnt", items.cnt);
 		const params = new Proxy(new URLSearchParams(window.location.search), {
 			get: (searchParams: any, prop) => searchParams.get(prop),
 		});
-
+		const isHkUrl = window.location.href.includes('detail.tmall.hk');
 		const appKey = '12574478';
 		const tokenFull = getCookie('_m_h5_tk');
 		const token = tokenFull.split('_')[0];
@@ -277,7 +272,9 @@ async function scrape(items: any, user: any) {
 		const sign1 = CryptoJS.MD5(text1).toString();
 
 		// 티몰 상품정보 조회 API
-		const dataUrl = `https://h5api.m.tmall.com/h5/mtop.taobao.pcdetail.data.get/1.0/?jsv=2.6.1&appKey=${appKey}&t=${time1}&sign=${sign1}&api=mtop.taobao.pcdetail.data.get&v=1.0&ttid=2022%40taobao_litepc_9.20.0&isSec=0&ecode=0&AntiFlood=true&AntiCreep=true&H5Request=true&type=json&dataType=json&data=${encodeURI(
+		const dataUrl = `https://h5api.m.tmall.${
+			isHkUrl ? 'hk' : 'com'
+		}/h5/mtop.taobao.pcdetail.data.get/1.0/?jsv=2.6.1&appKey=${appKey}&t=${time1}&sign=${sign1}&api=mtop.taobao.pcdetail.data.get&v=1.0&ttid=2022%40taobao_litepc_9.20.0&isSec=0&ecode=0&AntiFlood=true&AntiCreep=true&H5Request=true&type=json&dataType=json&data=${encodeURI(
 			data1,
 		)}`;
 
@@ -531,7 +528,7 @@ async function scrape(items: any, user: any) {
 
 		return result;
 	}
-}
+};
 
 export class tmall {
 	constructor() {
