@@ -6,6 +6,7 @@ import { injectScript } from './common/utils';
 import { sleep, getImageSize, getCookie } from '../../Tools/Common';
 // import { sendRuntimeMessage } from '../../Tools/ChromeAsync';
 import CryptoJS from 'crypto-js';
+import { User } from '../../../type/type';
 
 // 상품정보 크롤링
 async function scrape(items: any, user: any) {
@@ -473,7 +474,7 @@ export class alibaba {
 	}
 
 	// 수집하기 눌렀을 때
-	async get(user: any) {
+	async get(user: User) {
 		sessionStorage.removeItem('sfy-alibaba-item');
 
 		injectScript('alibaba');

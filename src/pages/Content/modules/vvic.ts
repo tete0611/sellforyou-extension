@@ -365,7 +365,7 @@ export class vvic {
 		});
 	}
 
-	async get(user: any) {
+	async get(user: User) {
 		sessionStorage.removeItem('sfy-vvic-item');
 
 		injectScript('vvic');

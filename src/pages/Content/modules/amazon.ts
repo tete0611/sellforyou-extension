@@ -2,6 +2,7 @@ import { injectScript } from './common/utils';
 import { request, sleep } from '../../Tools/Common';
 import { form } from './common/data';
 import { checkLogin } from './common/auth';
+import { User } from '../../../type/type';
 
 // 아마존 상품정보 크롤링
 async function scrape(items: any, user: any, region: string) {
@@ -566,7 +567,7 @@ async function scrape(items: any, user: any, region: string) {
 }
 
 export class amazon {
-	async get(user: any, region: string) {
+	async get(user: User, region: string) {
 		checkLogin(`amazon-${region}`).then((auth) => {
 			if (!auth) {
 				return null;

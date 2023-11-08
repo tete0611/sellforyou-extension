@@ -15,11 +15,11 @@ import {
 	uploadA077Resources,
 } from '../Tools/SmartStore';
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
-import { RuntimeMessage } from '../../type/type';
+import { RuntimeMessage, Shop, User } from '../../type/type';
 
 // const iconv = require('iconv-lite');
 
-const pageRefresh = async (shop, page) => {
+const pageRefresh = async (shop: Shop | null, page) => {
 	let url: string | null = null;
 	//페이지 검색 필터(검색필터) 문제
 	switch (shop) {
@@ -119,7 +119,7 @@ const bulkCollect = async (useChecked: boolean, useMedal: boolean) => {
 	return inputs;
 };
 
-const bulkPage = async (info, shop) => {
+const bulkPage = async (info, shop: Shop | null) => {
 	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
 	let collect = collectInfo.find((v: any) => v.sender.tab.id === info.tabInfo.tab.id);
 
@@ -174,7 +174,7 @@ const bulkPage = async (info, shop) => {
 };
 
 const skip = () => sendRuntimeMessage({ action: 'collect-finish' });
-const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) => {
+const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: boolean) => {
 	if (!result) return;
 
 	let isCollecting = false;
@@ -1229,9 +1229,15 @@ const addExcelInfo = async (request) => {
 	return true;
 };
 
-const initInfo = async (display: boolean) => {
-	const user = await sendRuntimeMessage({ action: 'user' });
-	const isBulk = await sendRuntimeMessage({ action: 'is-bulk' });
+const initInfo = async (
+	display: boolean,
+): Promise<{
+	user: User;
+	isBulk: boolean;
+	tabInfo: any;
+}> => {
+	const user = (await sendRuntimeMessage({ action: 'user' })) as User;
+	const isBulk = (await sendRuntimeMessage({ action: 'is-bulk' })) as boolean;
 	const tabInfo = await sendRuntimeMessage({ action: 'tab-info' });
 
 	if (display && isBulk) {

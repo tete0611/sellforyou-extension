@@ -539,7 +539,7 @@ export class tmall {
 		});
 	}
 
-	async get(user: any) {
+	async get(user: User) {
 		sessionStorage.removeItem('sfy-tmall-item');
 
 		injectScript('tmall');

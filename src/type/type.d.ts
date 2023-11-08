@@ -116,6 +116,7 @@ export type ManyPriceInfo = {
 	refundShippingFee: number;
 };
 
+/** common -> User타입 */
 export type User = {
 	userInfo: UserInfo;
 	createdToken?: any;
@@ -226,7 +227,6 @@ type Item = {
 	sillCodeA524: string;
 	sillCodeA525: string;
 	sillCodeB956: string;
-
 	sillDataA077: any;
 	sillDataB378: any;
 	sillDataA112: any;
@@ -240,6 +240,7 @@ type Item = {
 	sillDataB956: any;
 };
 
+/** common -> User -> UserInfo 타입 */
 type UserInfo = {
 	phone: string;
 	streetApiKey: string | undefined;
@@ -347,3 +348,16 @@ type UserInfo = {
 	streetNormalApiMemo3: string;
 	streetNormalApiMemo4: string;
 };
+
+/** 오픈마켓종류 정의 */
+export type Shop =
+	| 'alibaba'
+	| 'amazon'
+	| 'amazon1'
+	| 'amazon2'
+	| 'express'
+	| 'taobao1'
+	| 'taobao2'
+	| 'tmall1'
+	| 'tmall2'
+	| 'vvic';
