@@ -259,6 +259,7 @@ type UserInfo = {
 	coupangAccessKey: string;
 	coupangSecretKey: string;
 	coupangUseType: 'Y' | 'N';
+	coupangImageOpt: 'Y' | 'N';
 	streetUseKeyType: string;
 	streetUseType: 'Y' | 'N';
 	streetNormalUseKeyType: string;
