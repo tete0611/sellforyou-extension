@@ -348,6 +348,7 @@ type UserInfo = {
 	streetNormalApiMemo2: string;
 	streetNormalApiMemo3: string;
 	streetNormalApiMemo4: string;
+	asInfo: any;
 };
 
 /** 오픈마켓종류 정의 */
