@@ -22,7 +22,7 @@ import { deleteLotteon, uploadLotteon } from '../../pages/Tools/Lotteon';
 import { deleteTmon, uploadTmon } from '../../pages/Tools/Tmon';
 import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from '../../pages/Tools/ChromeAsync';
 import { common } from './common';
-import { ItemInfo, ManyPriceInfo, ModalInfo } from '../../type/type';
+import { ItemInfo, ManyPriceInfo, ModalInfo, User } from '../../type/type';
 import { UpdateProductMyKeywardInPut } from '../../type/mutation';
 
 export class product {
@@ -1017,6 +1017,7 @@ export class product {
 
 					if (!commonStore.user.userInfo?.sillFromCategory)
 						return confirm('일시적인 상품조회 오류, 새로고침해주세요.') ? window.location.reload() : null;
+
 					if (!v.categoryInfoA077)
 						v.categoryInfoA077 = {
 							code: null,
@@ -3769,7 +3770,7 @@ export class product {
 	};
 
 	// 쿠팡에서는 상품 승인완료 전에 상품 URL을 알 수 없기 때문에 승인완료 시점에서 상품 URL을 넣어주는 작업 필요
-	updateCoupangUrl = (index: number, user: any) => {
+	updateCoupangUrl = (index: number, user: User) => {
 		this.itemInfo.items[index].productStore.map(async (v: any) => {
 			if (v.siteCode === 'B378' && v.state === 2) {
 				if (v.storeProductId !== '0') return window.open(v.storeUrl);
@@ -3991,7 +3992,7 @@ export class product {
 
 	// 이미지번역결과 적용
 	updateImageTranslatedData = async (data: any) => {
-		const product = this.itemInfo.items.find((v: any) => v.id === data.productId)!;
+		const product = this.itemInfo.items.find((v) => v.id === data.productId)!;
 
 		if (data.thumbnails.length > 0) {
 			product.imageThumbnail = product.imageThumbnail.map((v: any, i: number) => {

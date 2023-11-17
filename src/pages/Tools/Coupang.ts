@@ -18,8 +18,18 @@ import { getLocalStorage } from './ChromeAsync';
 import { product } from '../../containers/stores/product';
 import { common } from '../../containers/stores/common';
 
+interface CoupangProps {
+	method: string;
+	path: string;
+	query?: string;
+	accesskey: string;
+	secretkey: string;
+	data: any;
+}
+
 /** 쿠팡 API Endpoint 인터페이스 */
-export const coupangApiGateway = async (body: any) => {
+export const coupangApiGateway = async (body: CoupangProps) => {
+	// console.log({ body });
 	const datetime = new Date().toISOString().substr(2, 17).replace(/:/gi, '').replace(/-/gi, '') + 'Z';
 	const method = body.method;
 	const path = body.path;
@@ -44,8 +54,12 @@ export const coupangApiGateway = async (body: any) => {
 
 		body: method === 'GET' || method === 'HEAD' ? null : JSON.stringify(body.data),
 	});
-
-	return await coupang_resp.json();
+	// console.log({ coupang_resp });
+	if (coupang_resp.status === 403 && body.method === 'DELETE')
+		throw new Error('쿠팡 API 403에러발생.\n관리자에게 문의해주세요.');
+	const json = await coupang_resp.json();
+	// console.log({ json });
+	return json;
 };
 
 // 쿠팡 상품등록 API
@@ -144,7 +158,7 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 					data: {},
 				};
 
-				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code)!;
+				const itemInfo = productStore.itemInfo.items.find((v) => v.productCode === market_code)!;
 
 				// 고시정보 설정
 				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
@@ -666,6 +680,9 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 					productStore.addRegisteredQueue(market_item);
 					productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 중...`);
 
+					// console.log({ product_body });
+					// productStore.addConsoleText(`(${shopName}) [${market_code}] 테스트`);
+					// return false;
 					let product_json = await coupangApiGateway(product_body);
 
 					if (product_json.code === 'ERROR') {
