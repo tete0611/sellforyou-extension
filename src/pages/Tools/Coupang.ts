@@ -886,7 +886,7 @@ export const newOrderCoupang = async (commonStore: common, shopInfo: any) => {
 /** 쿠팡 발주확인 처리 */
 export const productPreparedCoupang = async (commonStore: common, shopInfo: any) => {
 	const shopName = shopInfo.name;
-	const orderList: any = await getLocalStorage('order');
+	const orderList = await getLocalStorage<any>('order');
 	const coupangOrderList = orderList.filter((v: any) => v.marketCode === 'B378');
 
 	let orderNo: any = [];

@@ -9,7 +9,7 @@ let STATUS = 'CONTINUED';
 const gql: any = async (query: any, variables: any, customHeaders: boolean) => {
 	try {
 		// 토큰 정보를 가져옴
-		let auth: any = await getLocalStorage('appInfo');
+		let auth = await getLocalStorage<any>('appInfo');
 
 		// 쿼리/뮤테이션 수행
 		const resp = await fetch(`${process.env.SELLFORYOU_API_SERVER}/graphql`, {

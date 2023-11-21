@@ -363,3 +363,33 @@ export type Shop =
 	| 'tmall1'
 	| 'tmall2'
 	| 'vvic';
+
+/** 대량수집시 크롬스토리지에 저장하는 수집정보타입 */
+export type CollectInfo = {
+	categoryId: string;
+	currentPage: number;
+	inputs: {
+		productName: string;
+		productTags: string;
+		url: string;
+	}[];
+	maxLimits: number;
+	myKeyward: string;
+	pageEnd: number;
+	pageStart: number;
+	sender: any;
+	type: string;
+	useMedal: boolean;
+	useStandardShipping: boolean;
+	pageList: any;
+};
+
+export type Sender = {
+	documentId: string;
+	documentLifecycle: string;
+	frameId: number;
+	id: string;
+	origin: string;
+	tab: chrome.tabs.Tab;
+	url: string;
+};

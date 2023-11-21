@@ -967,7 +967,7 @@ export async function productPreparedLotteon(commonStore: any, shopInfo: any) {
 		return [];
 	}
 
-	const orderList: any = await getLocalStorage('order');
+	const orderList = await getLocalStorage<any>('order');
 	const LotteonOrderList = orderList.filter((v: any) => v.marketCode === 'A524' || v.marketCode === 'A525');
 	console.log('LotteonOrderList', LotteonOrderList);
 	try {

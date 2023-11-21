@@ -15,7 +15,7 @@ import {
 	uploadA077Resources,
 } from '../Tools/SmartStore';
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
-import { RuntimeMessage, Shop, User } from '../../type/type';
+import { CollectInfo, RuntimeMessage, Shop, User } from '../../type/type';
 
 // const iconv = require('iconv-lite');
 
@@ -120,9 +120,15 @@ const bulkCollect = async (useChecked: boolean, useMedal: boolean) => {
 };
 
 const bulkPage = async (info, shop: Shop | null) => {
-	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
-	let collect = collectInfo.find((v: any) => v.sender.tab.id === info.tabInfo.tab.id);
-
+	// console.log('구간4');
+	// await sleep(10000);
+	let collectInfo = (await getLocalStorage<CollectInfo[]>('collectInfo')) ?? [];
+	// console.log(`콜렉트인포`);
+	// console.log({ collectInfo });
+	let collect = collectInfo.find((v) => v.sender.tab.id === info.tabInfo.tab.id);
+	// console.log(`1번 콜렉트`);
+	// console.log({ collect });
+	console.log({ collect });
 	if (!collect) return;
 	if (collect.currentPage <= collect.pageEnd) {
 		const inputs = await bulkCollect(false, collect.useMedal);
@@ -131,15 +137,24 @@ const bulkPage = async (info, shop: Shop | null) => {
 
 		collect.inputs = collect.inputs.concat(inputs);
 		collect.currentPage += 1;
-
+		// console.log(`2번 콜렉트`);
+		// console.log({ collect });
+		// await sleep(20000);
 		switch (collect.type) {
 			case 'page': {
-				if (collect.currentPage > collect.pageEnd)
+				// console.log('구간8');
+				if (collect.currentPage > collect.pageEnd) {
+					// console.log('구간8-1');
+					// await sleep(10000);
 					sendRuntimeMessage({
 						action: 'collect-bulk',
 						source: { data: collect.inputs, retry: false },
 					});
-				else pageRefresh(shop, collect.currentPage);
+				} else {
+					// console.log('구간8-2');
+					// await sleep(10000);
+					pageRefresh(shop, collect.currentPage);
+				}
 
 				break;
 			}
@@ -412,9 +427,9 @@ const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: b
 			const startBulk = async () => {
 				const tabs: any = await sendRuntimeMessage({ action: 'tab-info-all' });
 
-				let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
+				let collectInfo = (await getLocalStorage<Partial<CollectInfo>[]>('collectInfo')) ?? [];
 
-				collectInfo = collectInfo.filter((v: any) => {
+				collectInfo = collectInfo.filter((v) => {
 					if (v.sender.tab.id === info.tabInfo.tab.id) return false;
 
 					const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
@@ -854,13 +869,15 @@ const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: b
 				});
 
 				const startBulk = async (type: 'page' | 'amount') => {
+					// console.log('구간2');
+					// await sleep(10000);
 					const tabs: any = await sendRuntimeMessage({
 						action: 'tab-info-all',
 					});
 
-					let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
+					let collectInfo = ((await getLocalStorage('collectInfo')) as Partial<CollectInfo>[]) ?? [];
 
-					collectInfo = collectInfo.filter((v: any) => {
+					collectInfo = collectInfo.filter((v) => {
 						if (v.sender.tab.id === info.tabInfo.tab.id) return false;
 
 						const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
@@ -921,13 +938,15 @@ const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: b
 							break;
 						}
 					}
-
+					console.log({ collectInfo });
 					await setLocalStorage({ collectInfo });
 
 					pageRefresh(shop, parseInt(sfyPageStart.value));
 				};
 
-				sfyStart.addEventListener('click', () => {
+				sfyStart.addEventListener('click', async () => {
+					// console.log('구간1');
+					// await sleep(10000);
 					const radios: any = document.getElementsByName('sfyBulkType');
 
 					for (let i = 0; i < radios.length; i++) {
@@ -986,7 +1005,8 @@ const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: b
 
 			container.append(logoRow);
 		}
-
+		// console.log('구간3');
+		// await sleep(10000);
 		bulkPage(info, shop);
 	}
 
@@ -1178,8 +1198,8 @@ const resultDetails = async (data: any) => {
 
 	const tabInfo: any = await sendRuntimeMessage({ action: 'tab-info' });
 
-	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
-	let collect = collectInfo.find((v: any) => v.sender.tab.id === tabInfo.tab.id);
+	let collectInfo = (await getLocalStorage<CollectInfo[]>('collectInfo')) ?? [];
+	let collect = collectInfo.find((v) => v.sender.tab.id === tabInfo.tab.id);
 
 	if (!collect) return;
 
@@ -1194,9 +1214,9 @@ const addExcelInfo = async (request) => {
 	const tabInfo: any = await sendRuntimeMessage({ action: 'tab-info' });
 	const tabs: any = await sendRuntimeMessage({ action: 'tab-info-all' });
 
-	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
+	let collectInfo = (await getLocalStorage<Partial<CollectInfo>[]>('collectInfo')) ?? [];
 
-	collectInfo = collectInfo.filter((v: any) => {
+	collectInfo = collectInfo.filter((v) => {
 		if (v.sender.tab.id === tabInfo.tab.id) return false;
 
 		const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
@@ -1636,7 +1656,6 @@ const main = async () => {
 		const currentPage = parseInt(new URLSearchParams(window.location.search).get('page') ?? '1');
 		// a태그 , 1~5 및 ... 버튼에 이벤트부여
 		pageNationEl?.querySelectorAll('a').forEach((a, index) => {
-			console.log({ a });
 			a.addEventListener('click', async () => {
 				if (a.innerText !== '') await pageRefresh('express', parseInt(a.innerText));
 				else index < 2 ? await pageRefresh('express', currentPage - 5) : await pageRefresh('express', currentPage + 5);

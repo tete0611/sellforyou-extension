@@ -302,7 +302,7 @@ export class common {
 	toggleTheme = async () => {
 		this.darkTheme = !this.darkTheme;
 
-		let appInfo: any = await getLocalStorage('appInfo');
+		let appInfo = await getLocalStorage<any>('appInfo');
 
 		appInfo = {
 			...appInfo,
@@ -592,7 +592,7 @@ export class common {
 
 	// 로그아웃
 	signOut = async () => {
-		let appInfo: any = await getLocalStorage('appInfo');
+		let appInfo = await getLocalStorage<any>('appInfo');
 
 		appInfo = {
 			...appInfo,
@@ -1104,7 +1104,7 @@ export class common {
 
 	// 다크모드 ON/OFF 상태
 	loadTheme = async () => {
-		let appInfo: any = (await getLocalStorage('appInfo')) ?? null;
+		let appInfo = (await getLocalStorage<any>('appInfo')) ?? null;
 
 		if (!appInfo) return;
 
@@ -1113,7 +1113,7 @@ export class common {
 
 	// 상단 열려있는 탭 상태
 	loadStack = async () => {
-		const stack: any = (await getLocalStorage('stack')) ?? [];
+		const stack = (await getLocalStorage<any>('stack')) ?? [];
 
 		runInAction(() => (this.chips = stack));
 	};

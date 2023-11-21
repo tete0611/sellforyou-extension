@@ -111,7 +111,7 @@ export async function getTaobaoOrder() {
 	const taobaoId = await sendTabMessage(newTab.id, {
 		action: 'order-taobao-id',
 	});
-	const taobaoInfo: any = (await getLocalStorage(`taobaoInfo-${taobaoId}`)) ?? [];
+	const taobaoInfo = (await getLocalStorage<any>(`taobaoInfo-${taobaoId}`)) ?? [];
 
 	const orderData: any = await sendTabMessage(newTab.id, {
 		action: 'order-taobao',

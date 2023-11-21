@@ -115,7 +115,7 @@ export const Header = observer(() => {
 			return;
 		}
 
-		let appInfo: any = await getLocalStorage('appInfo');
+		let appInfo = await getLocalStorage<any>('appInfo');
 
 		appInfo = {
 			...appInfo,

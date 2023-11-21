@@ -44,7 +44,7 @@ export const SignIn = () => {
 	// 컴포넌트 초기화
 	React.useEffect(() => {
 		// PC에 저장된 회원정보를 가져오고, 자동로그인 또는 자동입력 등의 기능 수행
-		getLocalStorage('appInfo').then((info: any) => {
+		getLocalStorage<any>('appInfo').then((info) => {
 			if (!info) {
 				return;
 			}

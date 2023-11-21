@@ -897,7 +897,7 @@ export async function productPreparedStreet(commonStore: any, shopInfo: any) {
 	if (!shopInfo.connected || shopInfo.disabled) {
 		return [];
 	}
-	const orderList: any = await getLocalStorage('order');
+	const orderList = await getLocalStorage<any>('order');
 	let orderInfo: any = [];
 
 	switch (shopInfo.code) {
