@@ -408,7 +408,7 @@ export type CollectInfo = {
 	myKeyward: string;
 	pageEnd: number;
 	pageStart: number;
-	sender: any;
+	sender: Sender;
 	type: string;
 	useMedal: boolean;
 	useStandardShipping: boolean;

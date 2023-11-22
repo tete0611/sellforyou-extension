@@ -18,7 +18,7 @@ export class common {
 	banner01Image = null;
 	banner01Url = null;
 
-	innerSize: any = {
+	innerSize = {
 		width: window.innerWidth,
 		height: window.innerHeight,
 	};

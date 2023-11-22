@@ -81,19 +81,19 @@ const pageRefresh = async (shop: Shop | null, page: number) => {
 };
 
 const bulkCollect = async (useChecked: boolean, useMedal: boolean) => {
-	let inputs: any = [];
+	let inputs: CollectInfo['inputs'] = [];
 	let timeout = 0;
 
 	//타임아웃 필요
 	while (true) {
 		if (timeout === 15) break;
 
-		let list: any = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
+		let list = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
 
 		if (list.length > 0) {
 			for (let i = 0; i < list.length; i++) {
 				let toggle = false;
-
+				//@ts-ignore
 				if (useChecked && !list[i].checked) continue;
 				if (useMedal) {
 					if (list[i].getAttribute('medal') === '1') toggle = true;
@@ -119,7 +119,14 @@ const bulkCollect = async (useChecked: boolean, useMedal: boolean) => {
 	return inputs;
 };
 
-const bulkPage = async (info, shop: Shop | null) => {
+const bulkPage = async (
+	info: {
+		user: User;
+		isBulk: boolean;
+		tabInfo: Sender;
+	},
+	shop: Shop | null,
+) => {
 	// console.log('구간4');
 	// await sleep(10000);
 	let collectInfo = (await getLocalStorage<CollectInfo[]>('collectInfo')) ?? [];
@@ -128,7 +135,6 @@ const bulkPage = async (info, shop: Shop | null) => {
 	let collect = collectInfo.find((v) => v.sender.tab.id === info.tabInfo.tab.id);
 	// console.log(`1번 콜렉트`);
 	// console.log({ collect });
-	console.log({ collect });
 	if (!collect) return;
 	if (collect.currentPage <= collect.pageEnd) {
 		const inputs = await bulkCollect(false, collect.useMedal);
@@ -189,7 +195,16 @@ const bulkPage = async (info, shop: Shop | null) => {
 };
 
 const skip = () => sendRuntimeMessage({ action: 'collect-finish' });
-const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: boolean) => {
+const floatingButton = async (
+	info: {
+		user: User;
+		isBulk: boolean;
+		tabInfo: Sender;
+	},
+	shop: Shop | null,
+	result: any,
+	bulk: boolean,
+) => {
 	if (!result) return;
 
 	let isCollecting = false;
@@ -430,9 +445,9 @@ const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: b
 				let collectInfo = (await getLocalStorage<Partial<CollectInfo>[]>('collectInfo')) ?? [];
 
 				collectInfo = collectInfo.filter((v) => {
-					if (v.sender.tab.id === info.tabInfo.tab.id) return false;
+					if (v.sender?.tab.id === info.tabInfo.tab.id) return false;
 
-					const matched = tabs?.find((w: any) => w.id === v.sender.tab.id);
+					const matched = tabs?.find((w) => w.id === v.sender?.tab.id);
 
 					if (!matched) return false;
 
@@ -878,9 +893,9 @@ const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: b
 					let collectInfo = ((await getLocalStorage('collectInfo')) as Partial<CollectInfo>[]) ?? [];
 
 					collectInfo = collectInfo.filter((v) => {
-						if (v.sender.tab.id === info.tabInfo.tab.id) return false;
+						if (v.sender?.tab.id === info.tabInfo.tab.id) return false;
 
-						const matched = tabs?.find((w: any) => w.id === v.sender.tab.id);
+						const matched = tabs?.find((w) => w.id === v.sender?.tab.id);
 
 						if (!matched) return false;
 
@@ -895,18 +910,12 @@ const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: b
 								categoryId: sfyCategoryInput.getAttribute('data-category-id'),
 								myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
 								currentPage: parseInt(sfyPageStart.value),
-
 								inputs: [],
-
 								maxLimits: 0,
-
 								pageStart: parseInt(sfyPageStart.value),
 								pageEnd: parseInt(sfyPageEnd.value),
-
 								sender: info.tabInfo,
-
 								type: 'page',
-
 								useMedal: sfyGoldMedalEnabled.checked,
 								useStandardShipping: sfyStandardShippingEnabled.checked,
 							});
@@ -938,7 +947,7 @@ const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: b
 							break;
 						}
 					}
-					console.log({ collectInfo });
+					// console.log({ collectInfo });
 					await setLocalStorage({ collectInfo });
 
 					pageRefresh(shop, parseInt(sfyPageStart.value));
@@ -1211,15 +1220,15 @@ const resultDetails = async (data: any) => {
 };
 
 const addExcelInfo = async (request) => {
-	const tabInfo = await sendRuntimeMessage<Sender>({ action: 'tab-info' });
+	const tabInfo = (await sendRuntimeMessage<Sender>({ action: 'tab-info' }))!;
 	const tabs = await sendRuntimeMessage<chrome.tabs.Tab[]>({ action: 'tab-info-all' });
 
 	let collectInfo = (await getLocalStorage<Partial<CollectInfo>[]>('collectInfo')) ?? [];
 
 	collectInfo = collectInfo.filter((v) => {
-		if (v.sender.tab.id === tabInfo?.tab.id) return false;
+		if (v.sender?.tab.id === tabInfo?.tab.id) return false;
 
-		const matched = tabs?.find((w) => w.id === v.sender.tab.id);
+		const matched = tabs?.find((w) => w.id === v.sender?.tab.id);
 
 		if (!matched) return false;
 
@@ -1230,15 +1239,11 @@ const addExcelInfo = async (request) => {
 		categoryId: '',
 		myKeyward: '',
 		currentPage: 1,
-
 		inputs: [],
-
 		pageStart: 1,
 		pageEnd: request.source.data.length,
 		pageList: request.source.data,
-
 		sender: tabInfo,
-
 		type: 'excel-page',
 	});
 
@@ -1249,16 +1254,10 @@ const addExcelInfo = async (request) => {
 	return true;
 };
 
-const initInfo = async (
-	display: boolean,
-): Promise<{
-	user: User;
-	isBulk: boolean;
-	tabInfo: any;
-}> => {
-	const user = (await sendRuntimeMessage({ action: 'user' })) as User;
-	const isBulk = (await sendRuntimeMessage({ action: 'is-bulk' })) as boolean;
-	const tabInfo = await sendRuntimeMessage({ action: 'tab-info' });
+const initInfo = async (display: boolean) => {
+	const user = (await sendRuntimeMessage<User>({ action: 'user' }))!;
+	const isBulk = (await sendRuntimeMessage<boolean>({ action: 'is-bulk' }))!;
+	const tabInfo = (await sendRuntimeMessage<Sender>({ action: 'tab-info' }))!;
 
 	if (display && isBulk) {
 		let paper = document.createElement('div');
