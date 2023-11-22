@@ -297,12 +297,12 @@ const scrape = async (items: any, user: User) => {
 
 		let thumnails = dataJson.data.item?.images;
 		// let descText: any = await fetch(descUrl, { credentials: "include" });
-		let descText: any = await sendRuntimeMessage({
+		let descText = await sendRuntimeMessage<string>({
 			action: 'fetch',
 			form: { url: descUrl },
 		});
 		// let descJson = JSON.parse(descText.split("mtopjsonp1(")[1].slice(0, -1)); 이거 너무오래걸려서 위에 api로 쏴보니 data2변경해서 잘됨
-		let descJson = JSON.parse(descText);
+		let descJson = JSON.parse(descText ?? '');
 		// api로 상세이미지 불러올때 트래픽 tmall에서 감지되면 드래그 해줘야하기 때문에 , 사용자가 드래그할수있도록 해당 url도 띄여주어야함 그래야 수집됨
 		if (descJson.data.url !== undefined) window.open(descJson.data.url);
 
@@ -558,7 +558,7 @@ export class tmall {
 				let originalData = JSON.parse(data);
 
 				if (originalData.pageType === 1 && originalData.descUrl) {
-					let desc: any = await sendRuntimeMessage({
+					let desc = await sendRuntimeMessage<string>({
 						action: 'fetch',
 						form: { url: originalData.descUrl },
 					});

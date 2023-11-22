@@ -15,7 +15,7 @@ import {
 	uploadA077Resources,
 } from '../Tools/SmartStore';
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
-import { CollectInfo, RuntimeMessage, Shop, User } from '../../type/type';
+import { CollectInfo, RuntimeMessage, Sender, Shop, User } from '../../type/type';
 
 // const iconv = require('iconv-lite');
 
@@ -425,14 +425,14 @@ const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: b
 			});
 
 			const startBulk = async () => {
-				const tabs: any = await sendRuntimeMessage({ action: 'tab-info-all' });
+				const tabs = await sendRuntimeMessage<chrome.tabs.Tab[]>({ action: 'tab-info-all' });
 
 				let collectInfo = (await getLocalStorage<Partial<CollectInfo>[]>('collectInfo')) ?? [];
 
 				collectInfo = collectInfo.filter((v) => {
 					if (v.sender.tab.id === info.tabInfo.tab.id) return false;
 
-					const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
+					const matched = tabs?.find((w: any) => w.id === v.sender.tab.id);
 
 					if (!matched) return false;
 
@@ -468,7 +468,7 @@ const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: b
 
 			buttonCollect.innerHTML = `<div class="SELLFORYOU-LOADING" />`;
 
-			const response: any = await sendRuntimeMessage({
+			const response = await sendRuntimeMessage<{ status: string; statusMessage: string }>({
 				action: 'collect',
 				source: result,
 			});
@@ -871,7 +871,7 @@ const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: b
 				const startBulk = async (type: 'page' | 'amount') => {
 					// console.log('구간2');
 					// await sleep(10000);
-					const tabs: any = await sendRuntimeMessage({
+					const tabs = await sendRuntimeMessage<chrome.tabs.Tab[]>({
 						action: 'tab-info-all',
 					});
 
@@ -880,7 +880,7 @@ const floatingButton = async (info: any, shop: Shop | null, result: any, bulk: b
 					collectInfo = collectInfo.filter((v) => {
 						if (v.sender.tab.id === info.tabInfo.tab.id) return false;
 
-						const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
+						const matched = tabs?.find((w: any) => w.id === v.sender.tab.id);
 
 						if (!matched) return false;
 
@@ -1196,10 +1196,10 @@ const resultDetails = async (data: any) => {
 		);
 	});
 
-	const tabInfo: any = await sendRuntimeMessage({ action: 'tab-info' });
+	const tabInfo = await sendRuntimeMessage<Sender>({ action: 'tab-info' });
 
 	let collectInfo = (await getLocalStorage<CollectInfo[]>('collectInfo')) ?? [];
-	let collect = collectInfo.find((v) => v.sender.tab.id === tabInfo.tab.id);
+	let collect = collectInfo.find((v) => v.sender.tab.id === tabInfo?.tab.id);
 
 	if (!collect) return;
 
@@ -1211,15 +1211,15 @@ const resultDetails = async (data: any) => {
 };
 
 const addExcelInfo = async (request) => {
-	const tabInfo: any = await sendRuntimeMessage({ action: 'tab-info' });
-	const tabs: any = await sendRuntimeMessage({ action: 'tab-info-all' });
+	const tabInfo = await sendRuntimeMessage<Sender>({ action: 'tab-info' });
+	const tabs = await sendRuntimeMessage<chrome.tabs.Tab[]>({ action: 'tab-info-all' });
 
 	let collectInfo = (await getLocalStorage<Partial<CollectInfo>[]>('collectInfo')) ?? [];
 
 	collectInfo = collectInfo.filter((v) => {
-		if (v.sender.tab.id === tabInfo.tab.id) return false;
+		if (v.sender.tab.id === tabInfo?.tab.id) return false;
 
-		const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
+		const matched = tabs?.find((w) => w.id === v.sender.tab.id);
 
 		if (!matched) return false;
 

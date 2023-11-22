@@ -47,7 +47,7 @@ export const deleteLocalStorage = (keys: any) => {
 };
 
 /** 메시지 전송 (콘텐츠스크립트 -> 확장프로그램) */
-export const sendRuntimeMessage = (obj: RuntimeMessage) => {
+export const sendRuntimeMessage = <T>(obj: RuntimeMessage): Promise<T | null> => {
 	console.log('runtime', obj);
 
 	return new Promise((resolve, reject) => {
@@ -70,7 +70,7 @@ export const sendRuntimeMessage = (obj: RuntimeMessage) => {
 };
 
 /** 메시지 전송 (확장프로그램 -> 콘텐츠스크립트) */
-export const sendTabMessage = (tabid: number | undefined, obj: any) => {
+export const sendTabMessage = <T>(tabid: number | undefined, obj: any): Promise<T | null> | undefined => {
 	console.log(tabid, obj);
 	if (tabid === undefined) return;
 	return new Promise((resolve, reject) => {

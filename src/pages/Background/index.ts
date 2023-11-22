@@ -15,9 +15,9 @@ import { BulkInfo, CollectInfo, RuntimeMessage, Sender } from '../../type/type';
 // 티몰 상세페이지 요청 시 CORS 이슈 발생
 // 이를 해결하기 위해 서비스워커에서 처리하지 않고 메시지 채널로 콘텐츠 스크립트에서 처리하도록 구현
 // 티몰에 상품 수집하려고 페이지 들어가면 탭이 생겼다가 사라지는게 이 기능
-const tmallCORS = async (args: RuntimeMessage['form']) => {
+const tmallCORS = async (args: RuntimeMessage['form']): Promise<string | undefined | null> => {
 	const tab = await createTabCompletely({ active: false, url: args?.url }, 5);
-	const res = await sendTabMessage(tab.id, { action: 'fetch', form: args });
+	const res = await sendTabMessage<string>(tab.id, { action: 'fetch', form: args });
 	if (tab.id) chrome.tabs.remove(tab.id);
 
 	return res;
