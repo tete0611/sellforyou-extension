@@ -1700,6 +1700,7 @@ const main = async () => {
 		console.log('1688 리스트페이지 진입');
 		const info = await initInfo(false);
 		await new alibaba().bulkTypeOne(info.user);
+		console.log('ttt');
 		floatingButton(info, 'alibaba', true, true);
 
 		/** vvic 단일상품 페이지 */
