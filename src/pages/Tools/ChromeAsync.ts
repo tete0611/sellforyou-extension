@@ -70,9 +70,9 @@ export const sendRuntimeMessage = (obj: RuntimeMessage) => {
 };
 
 /** 메시지 전송 (확장프로그램 -> 콘텐츠스크립트) */
-export const sendTabMessage = (tabid: number, obj: any) => {
+export const sendTabMessage = (tabid: number | undefined, obj: any) => {
 	console.log(tabid, obj);
-
+	if (tabid === undefined) return;
 	return new Promise((resolve, reject) => {
 		chrome.tabs.sendMessage(tabid, obj, (response) => {
 			let lastError = chrome.runtime.lastError;

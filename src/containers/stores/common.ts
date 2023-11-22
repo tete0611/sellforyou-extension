@@ -10,7 +10,7 @@ import { coupangApiGateway } from '../../pages/Tools/Coupang';
 import { streetApiGateway } from '../../pages/Tools/Street';
 import { floatingToast, request } from '../../pages/Tools/Common';
 import { refreshToken } from '../../pages/Tools/Auth';
-import { Nullable, UploadDisabledInfo, UploadInfo, User, UserInfo } from '../../type/type';
+import { AppInfo, Nullable, UploadDisabledInfo, UploadInfo, User, UserInfo } from '../../type/type';
 
 export class common {
 	notionPage = null;
@@ -302,7 +302,7 @@ export class common {
 	toggleTheme = async () => {
 		this.darkTheme = !this.darkTheme;
 
-		let appInfo = await getLocalStorage<any>('appInfo');
+		let appInfo = await getLocalStorage<AppInfo>('appInfo');
 
 		appInfo = {
 			...appInfo,
@@ -592,7 +592,7 @@ export class common {
 
 	// 로그아웃
 	signOut = async () => {
-		let appInfo = await getLocalStorage<any>('appInfo');
+		let appInfo = await getLocalStorage<AppInfo>('appInfo');
 
 		appInfo = {
 			...appInfo,
@@ -1104,7 +1104,7 @@ export class common {
 
 	// 다크모드 ON/OFF 상태
 	loadTheme = async () => {
-		let appInfo = (await getLocalStorage<any>('appInfo')) ?? null;
+		let appInfo = (await getLocalStorage<AppInfo>('appInfo')) ?? null;
 
 		if (!appInfo) return;
 

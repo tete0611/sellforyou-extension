@@ -1407,7 +1407,7 @@ const main = async () => {
 
 	document.documentElement.insertBefore(link, null);
 
-	chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender, sendResponse) => {
+	chrome.runtime.onMessage.addListener((request: RuntimeMessage, _, sendResponse) => {
 		switch (request.action) {
 			case 'set_info': {
 				getsetPage(request.source).then(sendResponse);

@@ -469,7 +469,7 @@ export async function uploadSmartStore(productStore: product, commonStore: commo
 		return false;
 	}
 
-	let newTab: any = {};
+	let newTab = {} as chrome.tabs.Tab;
 	let shopName = data.DShopInfo.site_name;
 
 	console.log(`(${shopName}) 등록정보:`, data);
@@ -1434,12 +1434,12 @@ export async function uploadSmartStore(productStore: product, commonStore: commo
 }
 
 // 스마트스토어 상품 등록해제
-export async function deleteSmartStore(productStore: any, commonStore: any, data: any) {
+export async function deleteSmartStore(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}
 
-	let newTab: any = {};
+	let newTab = {} as chrome.tabs.Tab;
 	let shopName = data.DShopInfo.site_name;
 
 	console.log(`(${shopName}) 등록정보:`, data);
@@ -1577,14 +1577,14 @@ export async function deleteSmartStore(productStore: any, commonStore: any, data
 		productStore.addConsoleText(`(${shopName}) 상품 등록해제 중단`);
 		notificationByEveryTime(`(${shopName}) 상품 등록해제 도중 오류가 발생하였습니다. (${e.toString()})`);
 
-		chrome.tabs.remove(newTab.id);
+		chrome.tabs.remove(newTab.id!);
 
 		return false;
 	}
 
 	productStore.addConsoleText(`(${shopName}) 상품 등록해제 완료`);
 
-	chrome.tabs.remove(newTab.id);
+	chrome.tabs.remove(newTab.id!);
 
 	return true;
 }

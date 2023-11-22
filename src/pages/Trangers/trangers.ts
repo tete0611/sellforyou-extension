@@ -4763,7 +4763,7 @@ let testLayerList: any = [];
 const main = async () => {
 	loading.style.display = '';
 
-	chrome.runtime.onMessage.addListener((request, sender: any, sendResponse) => {
+	chrome.runtime.onMessage.addListener((request, _: any, sendResponse) => {
 		switch (request.action) {
 			case 'auto-translate': {
 				autoTranslation().then(sendResponse);

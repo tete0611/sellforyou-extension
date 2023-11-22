@@ -51,6 +51,37 @@ export type Product = {
 // 	type: string;
 // };
 
+export type AppInfo = {
+	id: string;
+	password: string;
+	accessToken: string;
+	refreshToken: string;
+	loading: boolean;
+	autoFill: boolean;
+	autoLogin: boolean;
+	pageSize: number;
+	gridView: boolean;
+	darkTheme: boolean;
+	ppgKey: string;
+};
+
+export type BulkInfo = {
+	current: number;
+	currentPage: number;
+	inputs: {
+		productName: string;
+		productTags: string;
+		url: string;
+		keywardMemo: string;
+	}[];
+	isBulk: boolean;
+	isCancel: boolean;
+	isComplete: boolean;
+	isExcel: boolean;
+	results: any[];
+	sender: Sender;
+};
+
 export type UploadInfo = {
 	stopped: boolean;
 	editable: boolean;

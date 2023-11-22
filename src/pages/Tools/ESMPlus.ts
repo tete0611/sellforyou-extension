@@ -1033,7 +1033,7 @@ export async function uploadESMPlus(productStore: product, commonStore: common, 
 // 지마켓/옥션 상품 등록해제
 // 상품수정 - 판매중지 - 삭제 순으로 진행해야 함
 // 따라서 상품등록 로직과 유사하게 보일 수 있음
-export async function deleteESMPlus(productStore: any, commonStore: any, data: any) {
+export async function deleteESMPlus(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -1222,7 +1222,7 @@ export async function deleteESMPlus(productStore: any, commonStore: any, data: a
 					}
 				}
 
-				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code).video) {
+				if (!commonStore.uploadInfo.markets.find((v) => v.code === data.DShopInfo.site_code)!.video) {
 					market_item.misc1 = '';
 				}
 
@@ -1457,7 +1457,7 @@ export async function deleteESMPlus(productStore: any, commonStore: any, data: a
 				let MM2 = (date.getMonth() + 1).toString().padStart(2, '0');
 				let DD2 = date.getDate().toString().padStart(2, '0');
 
-				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
+				const itemInfo = productStore.itemInfo.items.find((v) => v.productCode === market_code)!;
 
 				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
 					? itemInfo[`sillCode${data.DShopInfo.site_code}`]

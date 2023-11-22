@@ -221,7 +221,6 @@ export const Payments = observer(() => {
 				payments.togglePayCardModal(true);
 
 				// 셀포유 홈페이지를 열고, 해당 페이지에 메시지 전송 후 콘텐츠 스크립트에서 처리
-				if (!tab.id) return alert('탭ID가 없습니다\n관리자에게 문의바람');
 				const response = await sendTabMessage(tab.id, {
 					action: 'pay-card',
 					source: {
@@ -243,7 +242,7 @@ export const Payments = observer(() => {
 				});
 
 				// 작업이 끝나면 셀포유 홈페이지를 자동으로 닫음
-				chrome.tabs.remove(tab.id);
+				if (tab.id) chrome.tabs.remove(tab.id);
 
 				// 결제중인 상태를 나타내는 모달 뷰를 끔
 				payments.togglePayCardModal(false);

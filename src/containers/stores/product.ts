@@ -22,7 +22,7 @@ import { deleteLotteon, uploadLotteon } from '../../pages/Tools/Lotteon';
 import { deleteTmon, uploadTmon } from '../../pages/Tools/Tmon';
 import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from '../../pages/Tools/ChromeAsync';
 import { common } from './common';
-import { ItemInfo, ManyPriceInfo, ModalInfo, User } from '../../type/type';
+import { AppInfo, ItemInfo, ManyPriceInfo, ModalInfo, User } from '../../type/type';
 import { UpdateProductMyKeywardInPut } from '../../type/mutation';
 
 export class product {
@@ -423,7 +423,7 @@ export class product {
 
 	// PC 기본값 설정
 	loadAppInfo = async () => {
-		let auth = await getLocalStorage<any>('appInfo');
+		let auth = await getLocalStorage<AppInfo>('appInfo');
 
 		runInAction(() => {
 			this.pageSize = auth.pageSize ?? 10;
@@ -862,7 +862,7 @@ export class product {
 
 	// 한 페이지에 표시하는 상품 수
 	setPageSize = async (value: number) => {
-		let auth = await getLocalStorage<any>('appInfo');
+		let auth = await getLocalStorage<AppInfo>('appInfo');
 
 		auth.pageSize = value;
 
@@ -4612,7 +4612,6 @@ export class product {
 					},
 					10,
 				);
-				if (!tabThumbnails.id) return alert('tabThumbnailsID가 없습니다\n관리자에게 문의바람');
 				const resThumbnails = await sendTabMessage(tabThumbnails.id, {
 					action: 'auto-translate',
 				});
@@ -4633,7 +4632,6 @@ export class product {
 					},
 					10,
 				);
-				if (!tabOptions.id) return alert('tabOptionsID가 없습니다\n관리자에게 문의바람');
 				const resOptions = await sendTabMessage(tabOptions.id, {
 					action: 'auto-translate',
 				});
@@ -4654,7 +4652,6 @@ export class product {
 					},
 					10,
 				);
-				if (!tabDescriptions.id) return alert('탭ID가 없습니다\n관리자에게 문의바람');
 				const resDescriptions = await sendTabMessage(tabDescriptions.id, {
 					action: 'auto-translate',
 				});
@@ -4675,7 +4672,7 @@ export class product {
 	setGridView = async (commonStore: common, value: boolean) => {
 		if (this.gridView === value) return;
 
-		let auth = await getLocalStorage<any>('appInfo');
+		let auth = await getLocalStorage<AppInfo>('appInfo');
 
 		auth.gridView = value;
 

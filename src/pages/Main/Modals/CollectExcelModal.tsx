@@ -111,7 +111,7 @@ export const CollectExcelModal = observer(() => {
 											})[0];
 
 											const tab = await createTabCompletely({ active: false, url: 'https://www.google.com/' }, 10);
-											if (!tab.id) return alert('탭ID가 없습니다\n관리자에게 문의바람');
+
 											await sendTabMessage(tab.id, {
 												action: 'collect-product-excel',
 												source: { data: excelData, retry: false },
@@ -204,7 +204,7 @@ export const CollectExcelModal = observer(() => {
 											)[0];
 
 											const tab = await createTabCompletely({ active: false, url: 'https://www.google.com/' }, 10);
-											if (!tab.id) return alert('탭ID가 없습니다\n관리자에게 문의바람');
+
 											await sendTabMessage(tab.id, {
 												action: 'collect-page-excel',
 												source: { data: excelData, retry: false },

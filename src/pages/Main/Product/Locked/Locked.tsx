@@ -54,7 +54,7 @@ export const Locked = observer(() => {
 		product.refreshProduct(common);
 
 		// 메시지 이벤트 설정하기 (이미지번역, 새로고침 등)
-		chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+		chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
 			switch (request.action) {
 				case 'refresh': {
 					product.refreshProduct(common);

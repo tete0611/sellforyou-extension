@@ -13,6 +13,9 @@ import {
 } from './Common';
 import { Buffer } from 'buffer';
 import { getLocalStorage } from './ChromeAsync';
+import { product } from '../../containers/stores/product';
+import { common } from '../../containers/stores/common';
+import { Nullable } from '../../type/type';
 
 const iconv = require('iconv-lite');
 const xml2js = require('xml2js');
@@ -49,7 +52,7 @@ export async function streetApiGateway(body: any) {
 }
 
 // 11번가 상품등록
-export async function uploadStreet(productStore: any, commonStore: any, data: any) {
+export async function uploadStreet(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -59,7 +62,7 @@ export async function uploadStreet(productStore: any, commonStore: any, data: an
 	console.log(`(${shopName}) 등록정보:`, data);
 
 	try {
-		let apiKey = null;
+		let apiKey: Nullable<string> = null;
 		let streetOutbound: any = null;
 		let streetInbound: any = null;
 
@@ -288,7 +291,7 @@ export async function uploadStreet(productStore: any, commonStore: any, data: an
 					continue;
 				}
 
-				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code).video) {
+				if (!commonStore.uploadInfo.markets.find((v) => v.code === data.DShopInfo.site_code)!.video) {
 					market_item.misc1 = '';
 				}
 
@@ -325,7 +328,7 @@ export async function uploadStreet(productStore: any, commonStore: any, data: an
         ${market_item.content3}
 			`;
 
-				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
+				const itemInfo = productStore.itemInfo.items.find((v) => v.productCode === market_code)!;
 
 				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
 					? itemInfo[`sillCode${data.DShopInfo.site_code}`]
@@ -646,7 +649,7 @@ export async function uploadStreet(productStore: any, commonStore: any, data: an
 }
 
 // 11번가 상품등록 해제
-export async function deleteStreet(productStore: any, commonStore: any, data: any) {
+export async function deleteStreet(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -656,7 +659,7 @@ export async function deleteStreet(productStore: any, commonStore: any, data: an
 	console.log(`(${shopName}) 등록정보:`, data);
 
 	try {
-		let apiKey = null;
+		let apiKey: Nullable<string> = null;
 
 		switch (data.DShopInfo.site_code) {
 			case 'A112': {
