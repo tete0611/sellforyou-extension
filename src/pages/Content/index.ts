@@ -19,6 +19,42 @@ import { CollectInfo, RuntimeMessage, Sender, Shop, User } from '../../type/type
 
 // const iconv = require('iconv-lite');
 
+const bulkCollectUsingApi = async (shopId: number, currentPage: number) => {
+	const resp = await fetch(
+		`https://www.vvic.com/apif/shop/itemlist?id=${shopId}&currentPage=${currentPage}&sort=up_time-desc&merge=0`,
+		{
+			headers: {
+				accept: 'application/json, text/plain, */*',
+				'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+				'sec-ch-ua': '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
+				'sec-ch-ua-mobile': '?0',
+				'sec-ch-ua-platform': '"Windows"',
+				'sec-fetch-dest': 'empty',
+				'sec-fetch-mode': 'cors',
+				'sec-fetch-site': 'same-origin',
+				token: 'RajToken',
+			},
+			referrer: `https://www.vvic.com/shop/list/${shopId}/content_all`,
+			referrerPolicy: 'strict-origin-when-cross-origin',
+			body: null,
+			method: 'GET',
+			mode: 'cors',
+			credentials: 'include',
+		},
+	);
+	if (resp.status !== 200) {
+		alert('상품수집 api Error\n채널톡에 문의 바랍니다.');
+		return [];
+	}
+	const json = await resp.json();
+	const urls = json?.data?.recordList?.map((v) => ({
+		url: `https://www.vvic.com/item/${v.vid}`,
+		productName: '',
+		productTags: '',
+	}));
+	return urls as CollectInfo['inputs'];
+};
+
 const pageRefresh = async (shop: Shop | null, page: number) => {
 	let url: string | null = null;
 	//페이지 검색 필터(검색필터) 문제
@@ -126,6 +162,7 @@ const bulkPage = async (
 		tabInfo: Sender;
 	},
 	shop: Shop | null,
+	useApi?: { shopId: number },
 ) => {
 	// console.log('구간4');
 	// await sleep(10000);
@@ -137,7 +174,10 @@ const bulkPage = async (
 	// console.log({ collect });
 	if (!collect) return;
 	if (collect.currentPage <= collect.pageEnd) {
-		const inputs = await bulkCollect(false, collect.useMedal);
+		const inputs = useApi
+			? await bulkCollectUsingApi(useApi.shopId, collect.currentPage)
+			: await bulkCollect(false, collect.useMedal);
+		console.log({ inputs });
 
 		if (inputs.length === 0) collect.currentPage = collect.pageEnd;
 
@@ -204,6 +244,7 @@ const floatingButton = async (
 	shop: Shop | null,
 	result: any,
 	bulk: boolean,
+	useApi?: { shopId: number }, // 사용자정의 대량수집시 url변동이 없어 api를 이용해야 하는 경우
 ) => {
 	if (!result) return;
 
@@ -928,18 +969,12 @@ const floatingButton = async (
 								categoryId: sfyCategoryInput.getAttribute('data-category-id'),
 								myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
 								currentPage: 1,
-
 								inputs: [],
-
 								maxLimits: parseInt(sfyAmount.value),
-
 								pageStart: 1,
 								pageEnd: 100,
-
 								sender: info.tabInfo,
-
 								type: 'amount',
-
 								useMedal: sfyGoldMedalEnabled.checked,
 								useStandardShipping: sfyStandardShippingEnabled.checked,
 							});
@@ -947,7 +982,6 @@ const floatingButton = async (
 							break;
 						}
 					}
-					// console.log({ collectInfo });
 					await setLocalStorage({ collectInfo });
 
 					pageRefresh(shop, parseInt(sfyPageStart.value));
@@ -1016,7 +1050,7 @@ const floatingButton = async (
 		}
 		// console.log('구간3');
 		// await sleep(10000);
-		bulkPage(info, shop);
+		bulkPage(info, shop, useApi ? { shopId: useApi.shopId } : undefined);
 	}
 
 	document.documentElement.appendChild(container);
@@ -1708,17 +1742,19 @@ const main = async () => {
 		const result = await new vvic().get(info.user);
 		floatingButton(info, 'vvic', result, false);
 
-		/** */
+		/** vvic 검색 페이지 */
 	} else if (/www.vvic.com\/.+\/search/.test(currentUrl) || /www.vvic.com\/.+\/topic/.test(currentUrl)) {
+		console.log(`vvic검색페이지진입`);
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 2);
 		floatingButton(info, 'vvic', true, true);
 
 		/** vvic 상점 페이지 */
-	} else if (/www.vvic.com\/shop/.test(currentUrl)) {
+	} else if (/www.vvic.com\/shop\/(\d+)/.test(currentUrl)) {
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 3);
-		floatingButton(info, 'vvic', true, true);
+		const shopId = parseInt(currentUrl.match(/\/shop\/(\d+)/)?.[1] ?? '0');
+		floatingButton(info, 'vvic', true, true, { shopId: shopId });
 
 		/** */
 	} else if (/www.vvic.com\/.+\/list/.test(currentUrl)) {
