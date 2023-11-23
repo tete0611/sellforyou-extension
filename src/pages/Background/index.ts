@@ -31,7 +31,7 @@ const addBulkInfo = async (source: any, sender: Sender, isExcel: boolean) => {
 	const tabs = await queryTabs({});
 	let bulkInfo = (await getLocalStorage<BulkInfo[]>('bulkInfo')) ?? [];
 
-	console.log({ source });
+	// console.log({ source });
 	// return false;
 
 	bulkInfo = bulkInfo.filter((v) => {

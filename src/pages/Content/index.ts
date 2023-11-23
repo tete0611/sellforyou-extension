@@ -177,7 +177,6 @@ const bulkPage = async (
 		const inputs = useApi
 			? await bulkCollectUsingApi(useApi.shopId, collect.currentPage)
 			: await bulkCollect(false, collect.useMedal);
-		console.log({ inputs });
 
 		if (inputs.length === 0) collect.currentPage = collect.pageEnd;
 
