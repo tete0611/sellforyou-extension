@@ -51,6 +51,32 @@ export type Product = {
 // 	type: string;
 // };
 
+export type AppInfo = {
+	id: string;
+	password: string;
+	accessToken: string;
+	refreshToken: string;
+	loading: boolean;
+	autoFill: boolean;
+	autoLogin: boolean;
+	pageSize: number;
+	gridView: boolean;
+	darkTheme: boolean;
+	ppgKey: string;
+};
+
+export type BulkInfo = {
+	current: number;
+	currentPage: number;
+	inputs: (CollectInfo['inputs'][number] & { keywardMemo?: string })[];
+	isBulk: boolean;
+	isCancel: boolean;
+	isComplete: boolean;
+	isExcel: boolean;
+	results: any[];
+	sender: Sender;
+};
+
 export type UploadInfo = {
 	stopped: boolean;
 	editable: boolean;
@@ -116,6 +142,7 @@ export type ManyPriceInfo = {
 	refundShippingFee: number;
 };
 
+/** common -> User타입 */
 export type User = {
 	userInfo: UserInfo;
 	createdToken?: any;
@@ -133,7 +160,7 @@ export type User = {
 /** ChromeAsync 런타임메시지 파라미터 타입 */
 export type RuntimeMessage = {
 	action: string;
-	source?: { data: any; retry?: boolean };
+	source?: Source;
 	form?: { url: string; requestInit?: RequestInit }; // fetch요청시 사용
 };
 
@@ -226,7 +253,6 @@ type Item = {
 	sillCodeA524: string;
 	sillCodeA525: string;
 	sillCodeB956: string;
-
 	sillDataA077: any;
 	sillDataB378: any;
 	sillDataA112: any;
@@ -240,6 +266,7 @@ type Item = {
 	sillDataB956: any;
 };
 
+/** common -> User -> UserInfo 타입 */
 type UserInfo = {
 	phone: string;
 	streetApiKey: string | undefined;
@@ -258,6 +285,7 @@ type UserInfo = {
 	coupangAccessKey: string;
 	coupangSecretKey: string;
 	coupangUseType: 'Y' | 'N';
+	coupangImageOpt: 'Y' | 'N';
 	streetUseKeyType: string;
 	streetUseType: 'Y' | 'N';
 	streetNormalUseKeyType: string;
@@ -346,4 +374,53 @@ type UserInfo = {
 	streetNormalApiMemo2: string;
 	streetNormalApiMemo3: string;
 	streetNormalApiMemo4: string;
+	asInfo: any;
+};
+
+/** 오픈마켓종류 정의 */
+export type Shop =
+	| 'alibaba'
+	| 'amazon'
+	| 'amazon1'
+	| 'amazon2'
+	| 'express'
+	| 'taobao1'
+	| 'taobao2'
+	| 'tmall1'
+	| 'tmall2'
+	| 'vvic';
+
+/** 대량수집시 크롬스토리지에 저장하는 수집정보타입 */
+export type CollectInfo = {
+	categoryId: string;
+	currentPage: number;
+	inputs: {
+		productName: string;
+		productTags: string;
+		url: string;
+	}[];
+	maxLimits: number;
+	myKeyward: string;
+	pageEnd: number;
+	pageStart: number;
+	sender: Sender;
+	type: string;
+	useMedal: boolean;
+	useStandardShipping: boolean;
+	pageList: any;
+};
+
+export type Sender = {
+	documentId: string;
+	documentLifecycle: string;
+	frameId: number;
+	id: string;
+	origin: string;
+	tab: chrome.tabs.Tab;
+	url: string;
+};
+
+export type Source = {
+	data: CollectInfo['inputs'];
+	retry: boolean;
 };

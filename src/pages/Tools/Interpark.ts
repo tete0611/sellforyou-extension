@@ -11,6 +11,8 @@ import {
 	transformContent,
 } from './Common';
 import { Buffer } from 'buffer';
+import { product } from '../../containers/stores/product';
+import { common } from '../../containers/stores/common';
 
 const iconv = require('iconv-lite');
 const xml2js = require('xml2js');
@@ -36,7 +38,7 @@ export async function interparkApiGateway(path: any) {
 }
 
 // 인터파크 상품등록
-export async function uploadInterpark(productStore: any, commonStore: any, data: any) {
+export async function uploadInterpark(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -228,7 +230,7 @@ export async function uploadInterpark(productStore: any, commonStore: any, data:
 					}
 				}
 
-				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code).video) {
+				if (!commonStore.uploadInfo.markets.find((v) => v.code === data.DShopInfo.site_code)!.video) {
 					market_item.misc1 = '';
 				}
 
@@ -279,7 +281,7 @@ export async function uploadInterpark(productStore: any, commonStore: any, data:
 
 				let name = byteSlice(market_item.name3, 120);
 
-				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
+				const itemInfo = productStore.itemInfo.items.find((v) => v.productCode === market_code)!;
 
 				const sillData = itemInfo[`sillData${data.DShopInfo.site_code}`]
 					? JSON.parse(itemInfo[`sillData${data.DShopInfo.site_code}`])
@@ -504,7 +506,7 @@ export async function uploadInterpark(productStore: any, commonStore: any, data:
 }
 
 // 인터파크 상품 등록해제
-export async function deleteInterpark(productStore: any, commonStore: any, data: any) {
+export async function deleteInterpark(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}

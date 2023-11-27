@@ -14,8 +14,8 @@ let papagoApiKey = '';
 type Customfabricobject = fabric.Object & { id: number; text: any; isEditing: boolean };
 
 /** 크롬스토리지 파파고 키 가져오기 */
-getLocalStorage('ppgKey').then((apiKey) => {
-	if (apiKey) papagoApiKey = apiKey as string;
+getLocalStorage<string>('ppgKey').then((apiKey) => {
+	if (apiKey) papagoApiKey = apiKey;
 });
 
 let applyWaterMarkText: any = document.getElementById('applyWaterMarkText');
@@ -4763,7 +4763,7 @@ let testLayerList: any = [];
 const main = async () => {
 	loading.style.display = '';
 
-	chrome.runtime.onMessage.addListener((request, sender: any, sendResponse) => {
+	chrome.runtime.onMessage.addListener((request, _: any, sendResponse) => {
 		switch (request.action) {
 			case 'auto-translate': {
 				autoTranslation().then(sendResponse);

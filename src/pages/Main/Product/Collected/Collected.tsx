@@ -51,7 +51,7 @@ export const Collected = observer(() => {
 		product.refreshProduct(common);
 
 		// 메시지 이벤트 설정 (이미지번역, 새로고침 등의 메시지를 받을 경우 처리)
-		chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+		chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
 			switch (request.action) {
 				case 'refresh': {
 					product.refreshProduct(common);

@@ -1,3 +1,5 @@
+import { common } from '../../containers/stores/common';
+import { product } from '../../containers/stores/product';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import QUERIES from '../Main/GraphQL/Queries';
 import gql from '../Main/GraphQL/Requests';
@@ -14,7 +16,7 @@ import {
 } from './Common';
 
 // 롯데온 상품등록해제
-export async function deleteLotteon(productStore: any, commonStore: any, data: any) {
+export async function deleteLotteon(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -117,7 +119,7 @@ export async function deleteLotteon(productStore: any, commonStore: any, data: a
 }
 
 // 롯데온 상품등록
-export async function uploadLotteon(productStore: any, commonStore: any, data: any) {
+export async function uploadLotteon(productStore: product, commonStore: common, data: any) {
 	if (!data) {
 		return false;
 	}
@@ -479,7 +481,7 @@ export async function uploadLotteon(productStore: any, commonStore: any, data: a
 
 				let video_lotteon: any = [];
 
-				if (!commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code).video) {
+				if (!commonStore.uploadInfo.markets.find((v) => v.code === data.DShopInfo.site_code)!.video) {
 					market_item.misc1 = '';
 				}
 
@@ -493,7 +495,7 @@ export async function uploadLotteon(productStore: any, commonStore: any, data: a
 					];
 				}
 
-				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
+				const itemInfo = productStore.itemInfo.items.find((v) => v.productCode === market_code)!;
 
 				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
 					? itemInfo[`sillCode${data.DShopInfo.site_code}`]
@@ -967,7 +969,7 @@ export async function productPreparedLotteon(commonStore: any, shopInfo: any) {
 		return [];
 	}
 
-	const orderList: any = await getLocalStorage('order');
+	const orderList = await getLocalStorage<any>('order');
 	const LotteonOrderList = orderList.filter((v: any) => v.marketCode === 'A524' || v.marketCode === 'A525');
 	console.log('LotteonOrderList', LotteonOrderList);
 	try {

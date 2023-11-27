@@ -1,7 +1,8 @@
+import { common } from '../../containers/stores/common';
+import { product } from '../../containers/stores/product';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import QUERIES from '../Main/GraphQL/Queries';
 import gql from '../Main/GraphQL/Requests';
-
 import {
 	convertWebpToJpg,
 	extractTmonContent,
@@ -17,10 +18,11 @@ import {
 } from './Common';
 
 // 티몬 상세페이지 지원형식 변환 함수
-async function convertB956Resources(content: any, type: any) {
+const convertB956Resources = async (content: any, type: any) => {
 	const contentHtml = new DOMParser().parseFromString(content, 'text/html');
 	const contentImgs: any = contentHtml.querySelectorAll('img');
-	if (type === 1) {
+
+	if (type === 1)
 		for (let i in contentImgs) {
 			try {
 				contentImgs[i].className = 'lazy';
@@ -33,7 +35,7 @@ async function convertB956Resources(content: any, type: any) {
 				continue;
 			}
 		}
-	} else {
+	else
 		for (let i in contentImgs) {
 			try {
 				contentImgs[i].className = 'lazy';
@@ -47,15 +49,13 @@ async function convertB956Resources(content: any, type: any) {
 				continue;
 			}
 		}
-	}
+
 	return contentHtml.body.innerHTML;
-}
+};
 
 // 티몬 상품등록
-export async function uploadTmon(productStore: any, commonStore: any, data: any) {
-	if (!data) {
-		return false;
-	}
+export const uploadTmon = async (productStore: product, commonStore: common, data: any) => {
+	if (!data) return false;
 
 	let shopName = data.DShopInfo.site_name;
 
@@ -64,7 +64,6 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 	try {
 		let time = getClock();
 		let partnerNo = parseInt(commonStore.user.userInfo.tmonId);
-
 		let loginResp: any = await request('https://spc-om.tmon.co.kr/api/partner/creatable-deal-count', { method: 'GET' });
 		let loginJson: any = null;
 
@@ -80,7 +79,6 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 
 			return false;
 		}
-
 		if (loginJson.data.partnerNo !== partnerNo) {
 			productStore.addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
@@ -88,8 +86,7 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 			return false;
 		}
 
-		const policy =
-			commonStore.uploadInfo.markets.find((v: any) => v.code === data.DShopInfo.site_code)?.policyInfo ?? null;
+		const policy = commonStore.uploadInfo.markets.find((v) => v.code === data.DShopInfo.site_code)?.policyInfo ?? null;
 
 		if (!policy) {
 			productStore.addConsoleText(`(${shopName}) 발송정책 조회 실패`);
@@ -148,16 +145,12 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 					method: 'POST',
 				});
 				let codeJson = JSON.parse(codeResp);
-
 				let dealNo = codeJson.data.data;
-
 				let categoryResp: any = await request(`https://spc-om.tmon.co.kr/api/categories/${market_item.cate_code}`, {
 					method: 'GET',
 				});
 				let categoryJson = JSON.parse(categoryResp);
-
 				let name = market_item.name3.slice(0, 60);
-
 				let tempBody = {
 					dealNo: dealNo,
 					partnerNo: partnerNo,
@@ -469,8 +462,7 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 					method: 'POST',
 				});
 
-				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
-
+				const itemInfo = productStore.itemInfo.items.find((v) => v.productCode === market_code)!;
 				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
 					? itemInfo[`sillCode${data.DShopInfo.site_code}`]
 					: '기타 재화';
@@ -491,16 +483,14 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 				const sillResult = [
 					{
 						productype: sillCode,
-						items: sillData.map((v) => {
-							return {
-								key: v.name,
-								value: {
-									contents: v.value ?? '상세설명참조',
-									refUseYN: 'N',
-								},
-								ref: null,
-							};
-						}),
+						items: sillData.map((v) => ({
+							key: v.name,
+							value: {
+								contents: v.value ?? '상세설명참조',
+								refUseYN: 'N',
+							},
+							ref: null,
+						})),
 					},
 				];
 
@@ -514,52 +504,35 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 					headers: {
 						'content-type': 'application/json',
 					},
-
 					body: JSON.stringify(infoBody),
 					method: 'POST',
 				});
 
 				let group: any = {};
-
 				let words = await gql(QUERIES.SELECT_WORD_TABLES_BY_SOMEONE, {}, false);
 				let words_list = words.data.selectWordTablesBySomeone;
-
 				let words_restrict: any = {};
 
-				for (let i in words_list) {
-					if (words_list[i].findWord && !words_list[i].replaceWord) {
-						if (market_item.name3.includes(words_list[i].findWord)) {
-							words_restrict['상품명'] = words_list[i].findWord;
-						}
-					}
-				}
+				for (let i in words_list)
+					if (words_list[i].findWord && !words_list[i].replaceWord)
+						if (market_item.name3.includes(words_list[i].findWord)) words_restrict['상품명'] = words_list[i].findWord;
 
 				for (let i in market_optn) {
-					if (market_optn[i].code === market_code) {
+					if (market_optn[i].code === market_code)
 						for (let j in market_optn[i]) {
-							if (j.includes('misc') && market_optn[i][j] !== '') {
-								group[market_optn[i][j]] = j.replace('misc', 'opt');
-							}
-
-							if (j.includes('opt') && j !== 'optimg' && market_optn[i][j] !== '') {
-								for (let k in words_list) {
-									if (words_list[k].findWord && !words_list[k].replaceWord) {
-										if (market_optn[i][j].includes(words_list[k].findWord)) {
+							if (j.includes('misc') && market_optn[i][j] !== '') group[market_optn[i][j]] = j.replace('misc', 'opt');
+							if (j.includes('opt') && j !== 'optimg' && market_optn[i][j] !== '')
+								for (let k in words_list)
+									if (words_list[k].findWord && !words_list[k].replaceWord)
+										if (market_optn[i][j].includes(words_list[k].findWord))
 											words_restrict['옵션명'] = words_list[k].findWord;
-										}
-									}
-								}
-							}
 						}
-					}
 				}
 
 				if (Object.keys(words_restrict).length > 0) {
 					let message = '';
 
-					for (let i in words_restrict) {
-						message += i + '에서 금지어(' + words_restrict[i] + ')가 발견되었습니다. ';
-					}
+					for (let i in words_restrict) message += i + '에서 금지어(' + words_restrict[i] + ')가 발견되었습니다. ';
 
 					productStore.addRegisteredFailed(Object.assign(market_item, { error: message }));
 					productStore.addConsoleText(`(${shopName}) [${market_code}] 금지어 발견됨`);
@@ -572,16 +545,12 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 				// 이미지 업로드
 				let result: any = await fetch(market_item.img1);
 
-				if (result.status !== 200) {
-					return;
-				}
+				if (result.status !== 200) return;
 
 				let formDataContent = new FormData();
 				let formDataSummary = new FormData();
-
 				let blob: any = await result.blob();
 				let base64: any = await readFileDataURL(blob);
-
 				let exts = base64.split(',')[1][0];
 
 				switch (exts) {
@@ -608,7 +577,6 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 
 					case 'U': {
 						blob = await convertWebpToJpg(base64);
-
 						formDataContent.append('Filedata', blob, 'image.jpg');
 						formDataSummary.append('file', blob, 'image.jpg');
 
@@ -630,18 +598,13 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 						body: formDataContent,
 					},
 				);
-
 				let imageJson = JSON.parse(imageResp);
-
 				let summaryResp: any = await request(`https://spc-om.tmon.co.kr/api/smartImage/uploadImg/${dealNo}/summary`, {
 					method: 'POST',
 					body: formDataSummary,
 				});
-
 				let summaryJson = JSON.parse(summaryResp);
-
 				let option_length = Object.keys(group).length;
-
 				let optionBody: any = {
 					optionHeaders: [],
 					options: [],
@@ -650,11 +613,9 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 				optionBody.optionHeaders.push('상품명');
 
 				if (option_length > 0) {
-					for (let i in group) {
-						optionBody.optionHeaders.push(i);
-					}
+					for (let i in group) optionBody.optionHeaders.push(i);
 
-					for (let i in market_optn) {
+					for (let i in market_optn)
 						if (market_optn[i].code === market_code) {
 							let option = {
 								optionType: 'NEW',
@@ -673,8 +634,7 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 
 							optionBody.options.push(option);
 						}
-					}
-				} else {
+				} else
 					optionBody.options.push({
 						optionType: 'NEW',
 						optionNo: '0',
@@ -689,13 +649,11 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 						option4: '',
 						option5: '',
 					});
-				}
 
 				const testtest: any = await request(`https://spc-om.tmon.co.kr/api/deals/${dealNo}/options`, {
 					headers: {
 						'content-type': 'application/json',
 					},
-
 					body: JSON.stringify(optionBody),
 					method: 'POST',
 				});
@@ -720,14 +678,12 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 					headers: {
 						'content-type': 'application/json;charset=UTF-8',
 					},
-
 					body: optionJson.data.options[0].optionNo,
 					method: 'POST',
 				});
 
 				let thumnailBody = {
 					saveType: 'DN',
-
 					data: JSON.stringify([
 						{
 							[optionJson.data.options[0].optionNo]: {
@@ -739,7 +695,6 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 							},
 						},
 					]),
-
 					mainData: JSON.stringify({
 						tmplNo: '1',
 						depth: '1',
@@ -812,7 +767,6 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 					headers: {
 						'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
 					},
-
 					body: urlEncodedObject(contentBody),
 					method: 'POST',
 				});
@@ -850,7 +804,6 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 					headers: {
 						'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
 					},
-
 					body: urlEncodedObject(descBody),
 					method: 'POST',
 				});
@@ -1164,7 +1117,6 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 					headers: {
 						'content-type': 'application/json',
 					},
-
 					body: JSON.stringify(productBody),
 					method: 'POST',
 				});
@@ -1198,13 +1150,11 @@ export async function uploadTmon(productStore: any, commonStore: any, data: any)
 	productStore.addConsoleText(`(${shopName}) 업로드 완료`);
 
 	return true;
-}
+};
 
 // 티몬 상품등록해제
-export async function deleteTmon(productStore: any, commonStore: any, data: any) {
-	if (!data) {
-		return false;
-	}
+export const deleteTmon = async (productStore: product, commonStore: common, data: any) => {
+	if (!data) return false;
 
 	let shopName = data.DShopInfo.site_name;
 
@@ -1212,7 +1162,6 @@ export async function deleteTmon(productStore: any, commonStore: any, data: any)
 
 	try {
 		let partnerNo = parseInt(commonStore.user.userInfo.tmonId);
-
 		let loginResp: any = await request('https://spc-om.tmon.co.kr/api/partner/creatable-deal-count', { method: 'GET' });
 		let loginJson: any = null;
 
@@ -1228,7 +1177,6 @@ export async function deleteTmon(productStore: any, commonStore: any, data: any)
 
 			return false;
 		}
-
 		if (loginJson.data.partnerNo !== partnerNo) {
 			productStore.addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
@@ -1241,15 +1189,11 @@ export async function deleteTmon(productStore: any, commonStore: any, data: any)
 				let market_code = data.DShopInfo.prod_codes[product];
 				let market_item = data.DShopInfo.DataDataSet.data[product];
 
-				if (market_item.cert) {
-					continue;
-				}
+				if (market_item.cert) continue;
 
 				let productId = market_item.name2;
 
-				if (!productId) {
-					continue;
-				}
+				if (!productId) continue;
 
 				const deleteResp: any = await request('https://spc-om.tmon.co.kr/api/deals/close', {
 					headers: {
@@ -1287,19 +1231,16 @@ export async function deleteTmon(productStore: any, commonStore: any, data: any)
 	productStore.addConsoleText(`(${shopName}) 상품 등록해제 완료`);
 
 	return true;
-}
+};
 
 // 티몬 신규주문
-export async function newOrderTmon(commonStore: any, shopInfo: any) {
+export const newOrderTmon = async (commonStore: common, shopInfo: any) => {
 	const shopName = shopInfo.name;
 
-	if (!shopInfo.connected || shopInfo.disabled) {
-		return [];
-	}
+	if (!shopInfo.connected || shopInfo.disabled) return [];
 
 	try {
 		let partnerNo = parseInt(commonStore.user.userInfo.tmonId);
-
 		let loginResp: any = await request('https://spc-om.tmon.co.kr/api/partner/creatable-deal-count', { method: 'GET' });
 		let loginJson: any = null;
 
@@ -1323,7 +1264,6 @@ export async function newOrderTmon(commonStore: any, shopInfo: any) {
 
 		const dateStart = getClockOffset(0, 0, -7, 0, 0, 0);
 		const dateEnd = getClock();
-
 		const orderResp = await fetch(
 			`https://spc.tmon.co.kr/delivery/getDeliveryList?orderConfirmYn=N&loginPartnerSrl=${partnerNo}&page=1&sortTarget=&sortDirection=&periodOption=BDATE&searchStartDate=${dateStart.YY}.${dateStart.MM}.${dateStart.DD}&searchEndDate=${dateEnd.YY}.${dateEnd.MM}.${dateEnd.DD}&deliveryStatus=D1&delayRequest=ALL&searchOption=&searchText=&dealListType=ALL&viewCount=50&mainDealSerial=`,
 			{
@@ -1379,4 +1319,4 @@ export async function newOrderTmon(commonStore: any, shopInfo: any) {
 
 		return [];
 	}
-}
+};

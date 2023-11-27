@@ -564,7 +564,7 @@ export class delivery {
 	};
 
 	initDeliveryInfo = async () => {
-		const stores: any = (await getLocalStorage(null)) ?? {};
+		const stores = (await getLocalStorage<any>(null)) ?? {};
 
 		await Promise.all(
 			Object.keys(stores).map(async (v) => {

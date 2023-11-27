@@ -6,6 +6,7 @@ import { injectScript } from './common/utils';
 import { sleep, getImageSize, getCookie } from '../../Tools/Common';
 // import { sendRuntimeMessage } from '../../Tools/ChromeAsync';
 import CryptoJS from 'crypto-js';
+import { User } from '../../../type/type';
 
 // 상품정보 크롤링
 async function scrape(items: any, user: any) {
@@ -473,7 +474,7 @@ export class alibaba {
 	}
 
 	// 수집하기 눌렀을 때
-	async get(user: any) {
+	async get(user: User) {
 		sessionStorage.removeItem('sfy-alibaba-item');
 
 		injectScript('alibaba');
@@ -556,7 +557,7 @@ export class alibaba {
 		const text1 = token + '&' + timestamp + '&' + appKey;
 		const signature = CryptoJS.MD5(text1).toString();
 		console.log(signature);
-		// let descText: any = await sendRuntimeMessage({
+		// let descText = await sendRuntimeMessage({
 		// 	action: 'fetch',
 		// 	form: {
 		// 		url: 'https://h5api.m.1688.com/h5/mtop.1688.shop.data.get/1.0/?jsv=2.7.0&appKey=12574478&t=1695605319561&sign=cdf21200c97ec5bd116639ca69c1e4f5&api=mtop.1688.shop.data.get&v=1.0&type=json&valueType=string&dataType=json&timeout=10000',

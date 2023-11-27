@@ -12,6 +12,7 @@ import { newOrderLotteon } from '../../pages/Tools/Lotteon';
 import { newOrderWemakeprice } from '../../pages/Tools/Wemakeprice';
 import { newOrderTmon } from '../../pages/Tools/Tmon';
 import { newOrderInterpark } from '../../pages/Tools/Interpark';
+import { common } from './common';
 
 export class dashboard {
 	currentNotice: any = {};
@@ -75,57 +76,57 @@ export class dashboard {
 	};
 
 	// 신규주문 수
-	getOrderCount = async (commonStore: any) => {
+	getOrderCount = async (commonStore: common) => {
 		const order = await Promise.all([
 			newOrderSmartStore(
 				commonStore,
-				commonStore.uploadInfo.markets.find((v: any) => v.code === 'A077'),
+				commonStore.uploadInfo.markets.find((v) => v.code === 'A077'),
 			),
 			newOrderCoupang(
 				commonStore,
-				commonStore.uploadInfo.markets.find((v: any) => v.code === 'B378'),
+				commonStore.uploadInfo.markets.find((v) => v.code === 'B378'),
 			),
 			newOrderStreet(
 				commonStore,
-				commonStore.uploadInfo.markets.find((v: any) => v.code === 'A112'),
+				commonStore.uploadInfo.markets.find((v) => v.code === 'A112'),
 			),
 			newOrderStreet(
 				commonStore,
-				commonStore.uploadInfo.markets.find((v: any) => v.code === 'A113'),
+				commonStore.uploadInfo.markets.find((v) => v.code === 'A113'),
 			),
 			newOrderESMPlus(
 				commonStore,
-				commonStore.uploadInfo.markets.find((v: any) => v.code === 'A001'),
+				commonStore.uploadInfo.markets.find((v) => v.code === 'A001'),
 			),
 			newOrderESMPlus(
 				commonStore,
-				commonStore.uploadInfo.markets.find((v: any) => v.code === 'A006'),
+				commonStore.uploadInfo.markets.find((v) => v.code === 'A006'),
 			),
 			newOrderInterpark(
 				commonStore,
-				commonStore.uploadInfo.markets.find((v: any) => v.code === 'A027'),
+				commonStore.uploadInfo.markets.find((v) => v.code === 'A027'),
 			),
 			newOrderWemakeprice(
 				commonStore,
-				commonStore.uploadInfo.markets.find((v: any) => v.code === 'B719'),
+				commonStore.uploadInfo.markets.find((v) => v.code === 'B719'),
 			),
 			newOrderLotteon(
 				commonStore,
-				commonStore.uploadInfo.markets.find((v: any) => v.code === 'A524'),
+				commonStore.uploadInfo.markets.find((v) => v.code === 'A524'),
 			),
 			newOrderLotteon(
 				commonStore,
-				commonStore.uploadInfo.markets.find((v: any) => v.code === 'A525'),
+				commonStore.uploadInfo.markets.find((v) => v.code === 'A525'),
 			),
 			newOrderTmon(
 				commonStore,
-				commonStore.uploadInfo.markets.find((v: any) => v.code === 'B956'),
+				commonStore.uploadInfo.markets.find((v) => v.code === 'B956'),
 			),
 		]);
 
 		let newOrders = [];
 
-		order.map((v: any) => {
+		order.map((v) => {
 			newOrders = newOrders.concat(v);
 		});
 

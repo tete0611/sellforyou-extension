@@ -50,6 +50,7 @@ import {
 
 import './Styles.css';
 import { MyButton } from './UI';
+import { AppInfo } from '../../../type/type';
 
 // 헤더 뷰
 export const Header = observer(() => {
@@ -115,11 +116,10 @@ export const Header = observer(() => {
 			return;
 		}
 
-		let appInfo: any = await getLocalStorage('appInfo');
+		let appInfo = await getLocalStorage<AppInfo>('appInfo');
 
 		appInfo = {
 			...appInfo,
-
 			accessToken: '',
 			refreshToken: '',
 			loading: false,

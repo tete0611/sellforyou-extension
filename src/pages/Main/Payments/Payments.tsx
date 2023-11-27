@@ -1,12 +1,9 @@
 // import "react-notion/src/styles.css";
-
 import { NotionRenderer } from 'react-notion';
-
 import React from 'react';
 import gql from '../../../pages/Main/GraphQL/Requests';
 import MUTATIONS from '../../../pages/Main/GraphQL/Mutations';
 import InfoIcon from '@mui/icons-material/Info';
-
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { readFileDataURL } from '../../Tools/Common';
@@ -66,14 +63,11 @@ const useStyles = makeStyles((theme) => ({
 export const Payments = observer(() => {
 	// MobX 스토리지 로드
 	const { common, payments } = React.useContext(AppContext);
-
 	const classes = useStyles();
 
 	// 사용자 정보 로드
 	React.useEffect(() => {
-		if (!common.loaded) {
-			return;
-		}
+		if (!common.loaded) return;
 
 		// 결제정보 초기화 (현재 로그인된 계정을 자동으로 체크하도록 설정)
 		payments.setPayInfo({
@@ -82,9 +76,7 @@ export const Payments = observer(() => {
 			accounts: common.user.connectedUsers.map((v) => {
 				let checked = false;
 
-				if (common.user.id === v.id) {
-					checked = true;
-				}
+				if (common.user.id === v.id) checked = true;
 
 				return {
 					...v,
@@ -118,9 +110,7 @@ export const Payments = observer(() => {
 	// 가격 정책이 변경될 때마다 실행
 	React.useEffect(() => {
 		// 기타금액 결제의 경우 실행되지 않음
-		if (payments.payInfo.etc === 'true') {
-			return;
-		}
+		if (payments.payInfo.etc === 'true') return;
 
 		// 가격 초기화
 		let priceInfo = {
@@ -133,7 +123,6 @@ export const Payments = observer(() => {
 
 		if (payments.payInfo.planLevel === '2') {
 			// 베이직
-
 			if (payments.payInfo.period === '1') {
 				priceInfo.base = 99000;
 				priceInfo.add = 55000;
@@ -253,7 +242,7 @@ export const Payments = observer(() => {
 				});
 
 				// 작업이 끝나면 셀포유 홈페이지를 자동으로 닫음
-				chrome.tabs.remove(tab.id);
+				if (tab.id) chrome.tabs.remove(tab.id);
 
 				// 결제중인 상태를 나타내는 모달 뷰를 끔
 				payments.togglePayCardModal(false);

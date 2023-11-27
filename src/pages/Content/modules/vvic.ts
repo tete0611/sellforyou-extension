@@ -226,7 +226,7 @@ const scrape = async (items: any, user: User) => {
 	return result;
 };
 
-const bulkTypeTwo = async (user) => {
+const bulkTypeTwo = async (user: User) => {
 	let timeout = 0;
 
 	while (true) {
@@ -236,7 +236,6 @@ const bulkTypeTwo = async (user) => {
 		let products: any = document.querySelectorAll(
 			'body > div.w.item-search-container > div.fl.search-main.j-search-main.item-search-main > div.goods-list.clearfix.type1 a',
 		);
-
 		for (let i in products) {
 			try {
 				let img = products[i].querySelector('img');
@@ -271,7 +270,7 @@ const bulkTypeTwo = async (user) => {
 	}
 };
 
-const bulkTypeThree = async (user) => {
+const bulkTypeThree = async (user: User) => {
 	let timeout = 0;
 
 	while (true) {
@@ -314,7 +313,7 @@ const bulkTypeThree = async (user) => {
 	}
 };
 
-const bulkTypeFour = async (user) => {
+const bulkTypeFour = async (user: User) => {
 	let timeout = 0;
 
 	while (true) {
@@ -365,7 +364,7 @@ export class vvic {
 		});
 	}
 
-	async get(user: any) {
+	async get(user: User) {
 		sessionStorage.removeItem('sfy-vvic-item');
 
 		injectScript('vvic');
