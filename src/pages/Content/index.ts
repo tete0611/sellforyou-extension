@@ -15,9 +15,27 @@ import {
 	uploadA077Resources,
 } from '../Tools/SmartStore';
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
-import { CollectInfo, RuntimeMessage, Sender, Shop, User } from '../../type/type';
+import { CollectInfo, Nullable, RuntimeMessage, Sender, Shop, User } from '../../type/type';
 
 // const iconv = require('iconv-lite');
+
+// 이벤트 리스너에 전달할 함수 정의
+const handleScroll = async () => {
+	console.log(window.scrollY);
+	if (window.scrollY >= 4000) {
+		const nextButton: Nullable<HTMLButtonElement> = document
+			.querySelector('#root')
+			?.querySelector('.next-pagination-pages')
+			?.querySelector('[class*="next-next"]');
+		console.log(nextButton);
+		document.removeEventListener('scroll', handleScroll);
+		await sleep(5000);
+		if (nextButton) nextButton.click();
+	}
+};
+
+// scroll 이벤트 리스너 등록
+document.addEventListener('scroll', handleScroll);
 
 const bulkCollectUsingApi = async (shopId: number, currentPage: number) => {
 	const resp = await fetch(
@@ -162,7 +180,7 @@ const bulkPage = async (
 		tabInfo: Sender;
 	},
 	shop: Shop | null,
-	useApi?: { shopId: number },
+	urlUnchangedPage?: { shopId: number; method: 'api' | 'element' },
 ) => {
 	// console.log('구간4');
 	// await sleep(10000);
@@ -174,9 +192,10 @@ const bulkPage = async (
 	// console.log({ collect });
 	if (!collect) return;
 	if (collect.currentPage <= collect.pageEnd) {
-		const inputs = useApi
-			? await bulkCollectUsingApi(useApi.shopId, collect.currentPage)
-			: await bulkCollect(false, collect.useMedal);
+		const inputs =
+			urlUnchangedPage?.method === 'api'
+				? await bulkCollectUsingApi(urlUnchangedPage.shopId, collect.currentPage)
+				: await bulkCollect(false, collect.useMedal);
 
 		if (inputs.length === 0) collect.currentPage = collect.pageEnd;
 
@@ -234,6 +253,15 @@ const bulkPage = async (
 };
 
 const skip = () => sendRuntimeMessage({ action: 'collect-finish' });
+/**
+ *
+ * @param info
+ * @param shop 마켓이름
+ * @param result any
+ * @param bulk 대량수집버튼인지 여부
+ * @param urlUnchangedPage 사용자정의 대량수집시 url변동이 없어 api를 이용해야 하는 경우
+ * @returns void
+ */
 const floatingButton = async (
 	info: {
 		user: User;
@@ -243,10 +271,9 @@ const floatingButton = async (
 	shop: Shop | null,
 	result: any,
 	bulk: boolean,
-	useApi?: { shopId: number }, // 사용자정의 대량수집시 url변동이 없어 api를 이용해야 하는 경우
+	urlUnchangedPage?: { shopId: number; method: 'api' | 'element' },
 ) => {
 	if (!result) return;
-
 	let isCollecting = false;
 	let container = document.createElement('table');
 	container.className = 'SELLFORYOU-FLOATING';
@@ -418,16 +445,12 @@ const floatingButton = async (
 				sfyCategoryInput.disabled = !e.target.checked;
 				sfyCategoryList.style.display = 'none';
 			});
-
 			sfyMyKeywardEnabled.addEventListener('change', (e: any) => (sfyMyKeywardInput.disabled = !e.target.checked));
-
 			sfyCategoryInput.addEventListener('focus', (e: any) => (sfyCategoryList.style.display = ''));
-
 			sfyMyKeywardInput.addEventListener('change', (e: any) => {
 				sfyMyKeywardInput.value = e.target.value.trim();
 				sfyMyKeywardInput.setAttribute('data-myKeyward-id', e.target.value.trim());
 			});
-
 			sfyCategoryInput.addEventListener('change', (e: any) => {
 				const input = e.target.value;
 				const filtered = categoryJson.filter(
@@ -450,12 +473,10 @@ const floatingButton = async (
 						categoryName += ' > ';
 						categoryName += v['중분류'];
 					}
-
 					if (v['소분류']) {
 						categoryName += ' > ';
 						categoryName += v['소분류'];
 					}
-
 					if (v['세분류']) {
 						categoryName += ' > ';
 						categoryName += v['세분류'];
@@ -516,7 +537,6 @@ const floatingButton = async (
 			};
 
 			sfyStart.addEventListener('click', () => startBulk());
-
 			sfyCancel.addEventListener('click', () => paper.remove());
 		} else {
 			isCollecting = true;
@@ -1049,7 +1069,11 @@ const floatingButton = async (
 		}
 		// console.log('구간3');
 		// await sleep(10000);
-		bulkPage(info, shop, useApi ? { shopId: useApi.shopId } : undefined);
+		bulkPage(
+			info,
+			shop,
+			urlUnchangedPage ? { shopId: urlUnchangedPage.shopId, method: urlUnchangedPage.method } : undefined,
+		);
 	}
 
 	document.documentElement.appendChild(container);
@@ -1210,7 +1234,7 @@ const resultDetails = async (data: any) => {
 	document.getElementById('sfyPage')?.addEventListener('click', () => (window.location.href = data.sender.tab.url));
 
 	document.getElementById('sfyRetry')?.addEventListener('click', () => {
-		const inputs = results.filter((v: any) => v.checked).map((v: any) => v.input);
+		const inputs = results.filter((v) => v.checked).map((v) => v.input) as CollectInfo['inputs'];
 
 		if (data.isExcel)
 			sendRuntimeMessage({
@@ -1615,6 +1639,7 @@ const main = async () => {
 		console.log('타오바오 리스트 페이지 진입');
 		const info = await initInfo(false);
 		await new taobao().bulkTypeOne(info.user);
+		// document.addEventListener('scroll', handleScroll);
 		floatingButton(info, 'taobao1', true, true);
 
 		/**  */
@@ -1753,7 +1778,7 @@ const main = async () => {
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 3);
 		const shopId = parseInt(currentUrl.match(/\/shop\/(\d+)/)?.[1] ?? '0');
-		floatingButton(info, 'vvic', true, true, { shopId: shopId });
+		floatingButton(info, 'vvic', true, true, { shopId: shopId, method: 'api' });
 
 		/** */
 	} else if (/www.vvic.com\/.+\/list/.test(currentUrl)) {

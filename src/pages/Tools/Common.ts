@@ -139,17 +139,17 @@ export const checkIndividualCustomUniqueCode = async (data: any, loop: boolean) 
 };
 
 /** 이미지 WEBP 확장자를 JPG 확장자로 변환 */
-export const convertWebpToJpg = (base64: any) => {
+export const convertWebpToJpg = (base64: string): Promise<Blob> => {
 	return new Promise((resolve, reject) => {
 		let image = new Image();
 
 		image.src = base64;
 		image.onload = async () => {
-			let canvas: any = document.createElement('canvas');
+			let canvas = document.createElement('canvas');
 
 			canvas.width = image.naturalWidth;
 			canvas.height = image.naturalHeight;
-			canvas.getContext('2d').drawImage(image, 0, 0);
+			canvas.getContext('2d')?.drawImage(image, 0, 0);
 
 			let fixed_base64 = canvas.toDataURL('image/jpeg');
 			let fixed_resp = await fetch(fixed_base64);
@@ -526,14 +526,14 @@ export const parseDecode = async (blob) => {
 };
 
 /** XHR Request 비동기 구현 */
-export const request = (url: string, opts: any) => {
+export const request = (url: string, opts: any): Promise<XMLHttpRequest['response']> => {
 	return new Promise(function (resolve, reject) {
 		let xhr = new XMLHttpRequest();
 
 		xhr.open(opts.method, url);
 
 		if (opts.headers)
-			Object.keys(opts.headers).map((v: any) => {
+			Object.keys(opts.headers).map((v) => {
 				xhr.setRequestHeader(v, opts.headers[v]);
 			});
 
@@ -565,7 +565,7 @@ export const readFileBinary = (blob: any) => {
 };
 
 /** 보통 이미지 파일을 업로드했을 때 base64 형식으로 변환해야할 경우 사용 */
-export const readFileDataURL = (blob: any) => {
+export const readFileDataURL = (blob: Blob): Promise<FileReader['result']> => {
 	return new Promise((resolve, reject) => {
 		let reader = new FileReader();
 

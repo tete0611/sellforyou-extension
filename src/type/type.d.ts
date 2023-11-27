@@ -68,12 +68,7 @@ export type AppInfo = {
 export type BulkInfo = {
 	current: number;
 	currentPage: number;
-	inputs: {
-		productName: string;
-		productTags: string;
-		url: string;
-		keywardMemo: string;
-	}[];
+	inputs: (CollectInfo['inputs'][number] & { keywardMemo?: string })[];
 	isBulk: boolean;
 	isCancel: boolean;
 	isComplete: boolean;
@@ -165,7 +160,7 @@ export type User = {
 /** ChromeAsync 런타임메시지 파라미터 타입 */
 export type RuntimeMessage = {
 	action: string;
-	source?: { data: any; retry?: boolean };
+	source?: Source;
 	form?: { url: string; requestInit?: RequestInit }; // fetch요청시 사용
 };
 
@@ -423,4 +418,9 @@ export type Sender = {
 	origin: string;
 	tab: chrome.tabs.Tab;
 	url: string;
+};
+
+export type Source = {
+	data: CollectInfo['inputs'];
+	retry: boolean;
 };

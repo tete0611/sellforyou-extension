@@ -8,6 +8,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Frame, SignPaper } from '../Common/UI';
 import { AppInfo } from '../../../type/type';
 
+const ppgKey = 'v1.7.9_ee61e6111a';
+
 // 로그인 뷰
 export const SignIn = () => {
 	const initAppInfo: AppInfo = {
@@ -35,7 +37,8 @@ export const SignIn = () => {
 
 			setAppInfo({
 				...info,
-				ppgKey: 'v1.7.6_fa52a4d6c8',
+				// ppgKey: 'v1.7.6_fa52a4d6c8',
+				ppgKey: ppgKey,
 				id: info.autoFill ? info.id : '',
 				password: info.autoFill ? info.password : '',
 				darkTheme: info.darkTheme,
@@ -96,7 +99,7 @@ export const SignIn = () => {
 				loading: false,
 			};
 
-			setLocalStorage({ appInfo: result, ppgKey: 'v1.7.6_fa52a4d6c8' }).then(initTabs);
+			setLocalStorage({ appInfo: result, ppgKey: ppgKey }).then(initTabs);
 
 			return result;
 		});
