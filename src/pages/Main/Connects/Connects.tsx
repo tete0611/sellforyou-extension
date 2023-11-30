@@ -1,7 +1,6 @@
 import React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
-
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Header } from '../Common/Header';
@@ -21,9 +20,23 @@ import {
 } from '@mui/material';
 import { Frame, Title } from '../Common/UI';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { SHOPCODE } from '../../../type/variable';
 
 // 오픈마켓 연동 뷰
 export const Connects = observer(() => {
+	const {
+		AUCTION_1,
+		COUPANG,
+		G_MARKET_1,
+		INTER_PARK,
+		LOTTE_ON_GLOBAL,
+		LOTTE_ON_NORMAL,
+		SMART_STORE,
+		STREET11_GLOBAL,
+		STREET11_NORMAL,
+		TMON,
+		WE_MAKE_PRICE,
+	} = SHOPCODE;
 	// MobX 스토리지 로드
 	const { common } = React.useContext(AppContext);
 
@@ -42,7 +55,6 @@ export const Connects = observer(() => {
 		<ThemeProvider theme={theme}>
 			<Frame dark={common.darkTheme}>
 				<Header />
-
 				<Container
 					maxWidth={'lg'}
 					sx={{
@@ -77,7 +89,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.naverUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v) => v.code === 'A077')?.connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === SMART_STORE)?.connected}
 												onChange={async (e) => {
 													const naverUseType = e.target.checked ? 'Y' : 'N';
 
@@ -127,7 +139,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_naver1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v) => v.code === 'A077')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === SMART_STORE)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -138,12 +150,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.naverStoreUrl}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																naverStoreUrl: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 											</Grid>
@@ -154,7 +166,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v) => v.code === 'A077')?.connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === SMART_STORE)?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -172,9 +184,7 @@ export const Connects = observer(() => {
 													sx={{
 														width: '100%',
 													}}
-													onClick={() => {
-														common.verifyConnectedInfo('A077');
-													}}
+													onClick={() => common.verifyConnectedInfo(SMART_STORE)}
 												>
 													연동하기
 												</Button>
@@ -202,7 +212,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.coupangUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === COUPANG)?.connected}
 												onChange={async (e) => {
 													const coupangUseType = e.target.checked ? 'Y' : 'N';
 
@@ -252,7 +262,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_coupang1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === COUPANG)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -263,12 +273,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.coupangLoginId}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																coupangLoginId: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 
@@ -295,7 +305,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_coupang2'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === COUPANG)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -306,12 +316,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.coupangVendorId}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																coupangVendorId: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 
@@ -338,7 +348,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_coupang3'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === COUPANG)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -349,12 +359,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.coupangAccessKey}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																coupangAccessKey: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 
@@ -381,7 +391,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_coupang4'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === COUPANG)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -392,12 +402,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.coupangSecretKey}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																coupangSecretKey: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 											</Grid>
@@ -408,7 +418,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v) => v.code === 'B378')?.connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === COUPANG)?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -426,9 +436,7 @@ export const Connects = observer(() => {
 													sx={{
 														width: '100%',
 													}}
-													onClick={() => {
-														common.verifyConnectedInfo('B378');
-													}}
+													onClick={() => common.verifyConnectedInfo(COUPANG)}
 												>
 													연동하기
 												</Button>
@@ -470,26 +478,13 @@ export const Connects = observer(() => {
 														height: 26,
 													}}
 													onClick={() => {
-														if (!common.user.userInfo.streetApiKey) {
-															alert('글로벌셀러 오픈 API 키 최초등록을 먼저 진행해주세요.');
-
-															return;
-														}
-
-														if (common.streetMaxmumCount > 3) {
-															alert('더 이상 추가할 수 없습니다.');
-
-															return;
-														}
+														if (!common.user.userInfo.streetApiKey)
+															return alert('글로벌셀러 오픈 API 키 최초등록을 먼저 진행해주세요.');
+														if (common.streetMaxmumCount > 3) return alert('더 이상 추가할 수 없습니다.');
 
 														const apiKey = prompt('글로벌셀러 오픈 API 키를 입력해주세요.');
 
-														if (!apiKey) {
-															alert('글로벌셀러 오픈 API 키가 입력되지 않았습니다.');
-
-															return;
-														}
-
+														if (!apiKey) return alert('글로벌셀러 오픈 API 키가 입력되지 않았습니다.');
 														if (!common.user.userInfo.streetApiKey2) {
 															common.setUserInfo({
 																...common.user.userInfo,
@@ -497,11 +492,8 @@ export const Connects = observer(() => {
 																streetApiKey2: common.user.userInfo.streetApiKey2 ? undefined : apiKey,
 															});
 
-															common.verifyConnectedInfo('A112');
-
-															return;
+															return common.verifyConnectedInfo(STREET11_GLOBAL);
 														}
-
 														if (!common.user.userInfo.streetApiKey3) {
 															common.setUserInfo({
 																...common.user.userInfo,
@@ -509,9 +501,7 @@ export const Connects = observer(() => {
 																streetApiKey3: common.user.userInfo.streetApiKey3 ? undefined : apiKey,
 															});
 
-															common.verifyConnectedInfo('A112');
-
-															return;
+															return common.verifyConnectedInfo(STREET11_GLOBAL);
 														}
 
 														if (!common.user.userInfo.streetApiKey4) {
@@ -521,9 +511,7 @@ export const Connects = observer(() => {
 																streetApiKey4: common.user.userInfo.streetApiKey4 ? undefined : apiKey,
 															});
 
-															common.verifyConnectedInfo('A112');
-
-															return;
+															return common.verifyConnectedInfo(STREET11_GLOBAL);
 														}
 													}}
 												>
@@ -534,7 +522,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.streetUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === STREET11_GLOBAL)?.connected}
 												onChange={async (e) => {
 													const streetUseType = e.target.checked ? 'Y' : 'N';
 
@@ -563,7 +551,7 @@ export const Connects = observer(() => {
 														streetUseKeyType: e.target.value,
 													});
 
-													common.verifyConnectedInfo('A112');
+													common.verifyConnectedInfo(STREET11_GLOBAL);
 												}}
 												value={common.user.userInfo.streetUseKeyType}
 											>
@@ -604,15 +592,12 @@ export const Connects = observer(() => {
 																		onClick={() => {
 																			const nick = prompt('별칭을 입력해주세요.');
 
-																			if (!nick) {
-																				return;
-																			}
+																			if (!nick) return;
 
 																			common.setUserInfo({
 																				...common.user.userInfo,
 																				streetApiMemo: nick,
 																			});
-
 																			common.testUserInfo({
 																				streetApiMemo: nick,
 																			});
@@ -648,7 +633,7 @@ export const Connects = observer(() => {
 														<TextField
 															id='connects_streetGlobal1'
 															size='small'
-															disabled={common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected}
+															disabled={common.uploadInfo.markets.find((v) => v.code === STREET11_GLOBAL)?.connected}
 															variant='outlined'
 															sx={{
 																width: '100%',
@@ -665,7 +650,7 @@ export const Connects = observer(() => {
 																	streetApiKey: e.target.value,
 																});
 
-																common.initConnectedInfo('A112');
+																common.initConnectedInfo(STREET11_GLOBAL);
 															}}
 														/>
 													</Grid>
@@ -701,15 +686,12 @@ export const Connects = observer(() => {
 																				onClick={() => {
 																					const nick = prompt('별칭을 입력해주세요.');
 
-																					if (!nick) {
-																						return;
-																					}
+																					if (!nick) return;
 
 																					common.setUserInfo({
 																						...common.user.userInfo,
 																						streetApiMemo2: nick,
 																					});
-
 																					common.testUserInfo({
 																						streetApiMemo2: nick,
 																					});
@@ -745,7 +727,9 @@ export const Connects = observer(() => {
 																<TextField
 																	id='connects_streetGlobal2'
 																	size='small'
-																	disabled={common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected}
+																	disabled={
+																		common.uploadInfo.markets.find((v) => v.code === STREET11_GLOBAL)?.connected
+																	}
 																	variant='outlined'
 																	sx={{
 																		width: '100%',
@@ -762,7 +746,7 @@ export const Connects = observer(() => {
 																			streetApiKey2: e.target.value,
 																		});
 
-																		common.initConnectedInfo('A112');
+																		common.initConnectedInfo(STREET11_GLOBAL);
 																	}}
 																/>
 															</Grid>
@@ -800,15 +784,12 @@ export const Connects = observer(() => {
 																				onClick={() => {
 																					const nick = prompt('별칭을 입력해주세요.');
 
-																					if (!nick) {
-																						return;
-																					}
+																					if (!nick) return;
 
 																					common.setUserInfo({
 																						...common.user.userInfo,
 																						streetApiMemo3: nick,
 																					});
-
 																					common.testUserInfo({
 																						streetApiMemo3: nick,
 																					});
@@ -844,7 +825,9 @@ export const Connects = observer(() => {
 																<TextField
 																	id='connects_streetGlobal3'
 																	size='small'
-																	disabled={common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected}
+																	disabled={
+																		common.uploadInfo.markets.find((v) => v.code === STREET11_GLOBAL)?.connected
+																	}
 																	variant='outlined'
 																	sx={{
 																		width: '100%',
@@ -861,7 +844,7 @@ export const Connects = observer(() => {
 																			streetApiKey3: e.target.value,
 																		});
 
-																		common.initConnectedInfo('A112');
+																		common.initConnectedInfo(STREET11_GLOBAL);
 																	}}
 																/>
 															</Grid>
@@ -899,15 +882,12 @@ export const Connects = observer(() => {
 																				onClick={() => {
 																					const nick = prompt('별칭을 입력해주세요.');
 
-																					if (!nick) {
-																						return;
-																					}
+																					if (!nick) return;
 
 																					common.setUserInfo({
 																						...common.user.userInfo,
 																						streetApiMemo4: nick,
 																					});
-
 																					common.testUserInfo({
 																						streetApiMemo4: nick,
 																					});
@@ -943,7 +923,9 @@ export const Connects = observer(() => {
 																<TextField
 																	id='connects_streetGlobal4'
 																	size='small'
-																	disabled={common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected}
+																	disabled={
+																		common.uploadInfo.markets.find((v) => v.code === STREET11_GLOBAL)?.connected
+																	}
 																	variant='outlined'
 																	sx={{
 																		width: '100%',
@@ -960,7 +942,7 @@ export const Connects = observer(() => {
 																			streetApiKey4: e.target.value,
 																		});
 
-																		common.initConnectedInfo('A112');
+																		common.initConnectedInfo(STREET11_GLOBAL);
 																	}}
 																/>
 															</Grid>
@@ -975,7 +957,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v) => v.code === 'A112')?.connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === STREET11_GLOBAL)?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -993,9 +975,7 @@ export const Connects = observer(() => {
 													sx={{
 														width: '100%',
 													}}
-													onClick={() => {
-														common.verifyConnectedInfo('A112');
-													}}
+													onClick={() => common.verifyConnectedInfo(STREET11_GLOBAL)}
 												>
 													연동하기
 												</Button>
@@ -1037,26 +1017,13 @@ export const Connects = observer(() => {
 														height: 26,
 													}}
 													onClick={() => {
-														if (!common.user.userInfo.streetNormalApiKey) {
-															alert('일반셀러 오픈 API 키 최초등록을 먼저 진행해주세요.');
-
-															return;
-														}
-
-														if (common.streetMaxmumCount > 3) {
-															alert('더 이상 추가할 수 없습니다.');
-
-															return;
-														}
+														if (!common.user.userInfo.streetNormalApiKey)
+															return alert('일반셀러 오픈 API 키 최초등록을 먼저 진행해주세요.');
+														if (common.streetMaxmumCount > 3) return alert('더 이상 추가할 수 없습니다.');
 
 														const apiKey = prompt('일반셀러 오픈 API 키를 입력해주세요.');
 
-														if (!apiKey) {
-															alert('일반셀러 오픈 API 키가 입력되지 않았습니다.');
-
-															return;
-														}
-
+														if (!apiKey) return alert('일반셀러 오픈 API 키가 입력되지 않았습니다.');
 														if (!common.user.userInfo.streetNormalApiKey2) {
 															common.setUserInfo({
 																...common.user.userInfo,
@@ -1064,11 +1031,8 @@ export const Connects = observer(() => {
 																streetNormalApiKey2: common.user.userInfo.streetNormalApiKey2 ? undefined : apiKey,
 															});
 
-															common.verifyConnectedInfo('A113');
-
-															return;
+															return common.verifyConnectedInfo(STREET11_NORMAL);
 														}
-
 														if (!common.user.userInfo.streetNormalApiKey3) {
 															common.setUserInfo({
 																...common.user.userInfo,
@@ -1076,9 +1040,7 @@ export const Connects = observer(() => {
 																streetNormalApiKey3: common.user.userInfo.streetNormalApiKey3 ? undefined : apiKey,
 															});
 
-															common.verifyConnectedInfo('A113');
-
-															return;
+															return common.verifyConnectedInfo(STREET11_NORMAL);
 														}
 
 														if (!common.user.userInfo.streetNormalApiKey4) {
@@ -1088,9 +1050,7 @@ export const Connects = observer(() => {
 																streetNormalApiKey4: common.user.userInfo.streetNormalApiKey4 ? undefined : apiKey,
 															});
 
-															common.verifyConnectedInfo('A113');
-
-															return;
+															return common.verifyConnectedInfo(STREET11_NORMAL);
 														}
 													}}
 												>
@@ -1101,7 +1061,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.streetNormalUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === STREET11_NORMAL)?.connected}
 												onChange={async (e) => {
 													const streetNormalUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1130,7 +1090,7 @@ export const Connects = observer(() => {
 														streetNormalUseKeyType: e.target.value,
 													});
 
-													common.verifyConnectedInfo('A113');
+													common.verifyConnectedInfo(STREET11_NORMAL);
 												}}
 												value={common.user.userInfo.streetNormalUseKeyType}
 											>
@@ -1171,15 +1131,12 @@ export const Connects = observer(() => {
 																		onClick={() => {
 																			const nick = prompt('별칭을 입력해주세요.');
 
-																			if (!nick) {
-																				return;
-																			}
+																			if (!nick) return;
 
 																			common.setUserInfo({
 																				...common.user.userInfo,
 																				streetNormalApiMemo: nick,
 																			});
-
 																			common.testUserInfo({
 																				streetNormalApiMemo: nick,
 																			});
@@ -1215,7 +1172,7 @@ export const Connects = observer(() => {
 														<TextField
 															id='connects_streetNormal1'
 															size='small'
-															disabled={common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected}
+															disabled={common.uploadInfo.markets.find((v) => v.code === STREET11_NORMAL)?.connected}
 															variant='outlined'
 															sx={{
 																width: '100%',
@@ -1232,7 +1189,7 @@ export const Connects = observer(() => {
 																	streetNormalApiKey: e.target.value,
 																});
 
-																common.initConnectedInfo('A113');
+																common.initConnectedInfo(STREET11_NORMAL);
 															}}
 														/>
 													</Grid>
@@ -1268,15 +1225,12 @@ export const Connects = observer(() => {
 																				onClick={() => {
 																					const nick = prompt('별칭을 입력해주세요.');
 
-																					if (!nick) {
-																						return;
-																					}
+																					if (!nick) return;
 
 																					common.setUserInfo({
 																						...common.user.userInfo,
 																						streetNormalApiMemo2: nick,
 																					});
-
 																					common.testUserInfo({
 																						streetNormalApiMemo2: nick,
 																					});
@@ -1312,7 +1266,9 @@ export const Connects = observer(() => {
 																<TextField
 																	id='connects_streetNormal2'
 																	size='small'
-																	disabled={common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected}
+																	disabled={
+																		common.uploadInfo.markets.find((v) => v.code === STREET11_NORMAL)?.connected
+																	}
 																	variant='outlined'
 																	sx={{
 																		width: '100%',
@@ -1329,7 +1285,7 @@ export const Connects = observer(() => {
 																			streetNormalApiKey2: e.target.value,
 																		});
 
-																		common.initConnectedInfo('A113');
+																		common.initConnectedInfo(STREET11_NORMAL);
 																	}}
 																/>
 															</Grid>
@@ -1367,15 +1323,12 @@ export const Connects = observer(() => {
 																				onClick={() => {
 																					const nick = prompt('별칭을 입력해주세요.');
 
-																					if (!nick) {
-																						return;
-																					}
+																					if (!nick) return;
 
 																					common.setUserInfo({
 																						...common.user.userInfo,
 																						streetNormalApiMemo3: nick,
 																					});
-
 																					common.testUserInfo({
 																						streetNormalApiMemo3: nick,
 																					});
@@ -1411,7 +1364,9 @@ export const Connects = observer(() => {
 																<TextField
 																	id='connects_streetNormal3'
 																	size='small'
-																	disabled={common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected}
+																	disabled={
+																		common.uploadInfo.markets.find((v) => v.code === STREET11_NORMAL)?.connected
+																	}
 																	variant='outlined'
 																	sx={{
 																		width: '100%',
@@ -1428,7 +1383,7 @@ export const Connects = observer(() => {
 																			streetNormalApiKey3: e.target.value,
 																		});
 
-																		common.initConnectedInfo('A113');
+																		common.initConnectedInfo(STREET11_NORMAL);
 																	}}
 																/>
 															</Grid>
@@ -1466,15 +1421,12 @@ export const Connects = observer(() => {
 																				onClick={() => {
 																					const nick = prompt('별칭을 입력해주세요.');
 
-																					if (!nick) {
-																						return;
-																					}
+																					if (!nick) return;
 
 																					common.setUserInfo({
 																						...common.user.userInfo,
 																						streetNormalApiMemo4: nick,
 																					});
-
 																					common.testUserInfo({
 																						streetNormalApiMemo4: nick,
 																					});
@@ -1510,7 +1462,9 @@ export const Connects = observer(() => {
 																<TextField
 																	id='connects_streetNormal4'
 																	size='small'
-																	disabled={common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected}
+																	disabled={
+																		common.uploadInfo.markets.find((v) => v.code === STREET11_NORMAL)?.connected
+																	}
 																	variant='outlined'
 																	sx={{
 																		width: '100%',
@@ -1527,7 +1481,7 @@ export const Connects = observer(() => {
 																			streetNormalApiKey4: e.target.value,
 																		});
 
-																		common.initConnectedInfo('A113');
+																		common.initConnectedInfo(STREET11_NORMAL);
 																	}}
 																/>
 															</Grid>
@@ -1542,7 +1496,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v) => v.code === 'A113')?.connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === STREET11_NORMAL)?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -1560,9 +1514,7 @@ export const Connects = observer(() => {
 													sx={{
 														width: '100%',
 													}}
-													onClick={() => {
-														common.verifyConnectedInfo('A113');
-													}}
+													onClick={() => common.verifyConnectedInfo(STREET11_NORMAL)}
 												>
 													연동하기
 												</Button>
@@ -1590,7 +1542,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.gmarketUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v) => v.code === 'A006')?.connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === G_MARKET_1)?.connected}
 												onChange={async (e) => {
 													const gmarketUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1640,7 +1592,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_gmarket1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v) => v.code === 'A006')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === G_MARKET_1)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -1667,7 +1619,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v) => v.code === 'A006')?.connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === G_MARKET_1)?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -1685,9 +1637,7 @@ export const Connects = observer(() => {
 													sx={{
 														width: '100%',
 													}}
-													onClick={() => {
-														common.verifyConnectedInfo('A006');
-													}}
+													onClick={() => common.verifyConnectedInfo(G_MARKET_1)}
 												>
 													연동하기
 												</Button>
@@ -1715,7 +1665,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.auctionUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v) => v.code === 'A001')?.connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === AUCTION_1)?.connected}
 												onChange={async (e) => {
 													const auctionUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1765,7 +1715,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_auction1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v) => v.code === 'A001')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === AUCTION_1)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -1776,12 +1726,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.esmplusAuctionId}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																esmplusAuctionId: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 											</Grid>
@@ -1792,7 +1742,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v) => v.code === 'A001')?.connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === AUCTION_1)?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -1810,9 +1760,7 @@ export const Connects = observer(() => {
 													sx={{
 														width: '100%',
 													}}
-													onClick={() => {
-														common.verifyConnectedInfo('A001');
-													}}
+													onClick={() => common.verifyConnectedInfo(AUCTION_1)}
 												>
 													연동하기
 												</Button>
@@ -1840,7 +1788,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.interparkUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === INTER_PARK)?.connected}
 												onChange={async (e) => {
 													const interparkUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1890,7 +1838,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_interpark1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === INTER_PARK)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -1901,12 +1849,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.interparkCertKey}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																interparkCertKey: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 
@@ -1933,7 +1881,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_interpark2'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === INTER_PARK)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -1944,12 +1892,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.interparkSecretKey}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																interparkSecretKey: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 
@@ -1976,7 +1924,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_interpark3'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === INTER_PARK)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -1987,12 +1935,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.interparkEditCertKey}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																interparkEditCertKey: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 
@@ -2019,7 +1967,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_interpark4'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === INTER_PARK)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -2030,12 +1978,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.interparkEditSecretKey}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																interparkEditSecretKey: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 											</Grid>
@@ -2046,7 +1994,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v) => v.code === 'A027')?.connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === INTER_PARK)?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -2064,9 +2012,7 @@ export const Connects = observer(() => {
 													sx={{
 														width: '100%',
 													}}
-													onClick={() => {
-														common.verifyConnectedInfo('A027');
-													}}
+													onClick={() => common.verifyConnectedInfo(INTER_PARK)}
 												>
 													연동하기
 												</Button>
@@ -2094,7 +2040,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.wemakepriceUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v) => v.code === 'B719')?.connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === WE_MAKE_PRICE)?.connected}
 												onChange={async (e) => {
 													const wemakepriceUseType = e.target.checked ? 'Y' : 'N';
 
@@ -2144,7 +2090,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_wemakeprice1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v) => v.code === 'B719')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === WE_MAKE_PRICE)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -2155,12 +2101,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.wemakepriceId}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																wemakepriceId: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 											</Grid>
@@ -2171,7 +2117,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v) => v.code === 'B719')?.connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === WE_MAKE_PRICE)?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -2189,9 +2135,7 @@ export const Connects = observer(() => {
 													sx={{
 														width: '100%',
 													}}
-													onClick={() => {
-														common.verifyConnectedInfo('B719');
-													}}
+													onClick={() => common.verifyConnectedInfo(WE_MAKE_PRICE)}
 												>
 													연동하기
 												</Button>
@@ -2221,8 +2165,8 @@ export const Connects = observer(() => {
 												checked={common.user.userInfo?.lotteonUseType === 'Y' ? true : false}
 												disabled={
 													!(
-														common.uploadInfo.markets.find((v) => v.code === 'A524')?.connected ||
-														common.uploadInfo.markets.find((v) => v.code === 'A525')?.connected
+														common.uploadInfo.markets.find((v) => v.code === LOTTE_ON_GLOBAL)?.connected ||
+														common.uploadInfo.markets.find((v) => v.code === LOTTE_ON_NORMAL)?.connected
 													)
 												}
 												onChange={async (e) => {
@@ -2275,8 +2219,8 @@ export const Connects = observer(() => {
 														id='connects_lotteon1'
 														size='small'
 														disabled={
-															common.uploadInfo.markets.find((v) => v.code === 'A524')?.connected &&
-															common.uploadInfo.markets.find((v) => v.code === 'A525')?.connected
+															common.uploadInfo.markets.find((v) => v.code === LOTTE_ON_GLOBAL)?.connected &&
+															common.uploadInfo.markets.find((v) => v.code === LOTTE_ON_NORMAL)?.connected
 														}
 														variant='outlined'
 														sx={{
@@ -2288,12 +2232,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.lotteonVendorId}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																lotteonVendorId: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 
@@ -2321,8 +2265,8 @@ export const Connects = observer(() => {
 														id='connects_lotteon2'
 														size='small'
 														disabled={
-															common.uploadInfo.markets.find((v) => v.code === 'A524')?.connected &&
-															common.uploadInfo.markets.find((v) => v.code === 'A525')?.connected
+															common.uploadInfo.markets.find((v) => v.code === LOTTE_ON_GLOBAL)?.connected &&
+															common.uploadInfo.markets.find((v) => v.code === LOTTE_ON_NORMAL)?.connected
 														}
 														variant='outlined'
 														sx={{
@@ -2334,12 +2278,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.lotteonApiKey}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																lotteonApiKey: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 											</Grid>
@@ -2350,8 +2294,8 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v) => v.code === 'A524')?.connected &&
-											common.uploadInfo.markets.find((v) => v.code === 'A525')?.connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === LOTTE_ON_GLOBAL)?.connected &&
+											common.uploadInfo.markets.find((v) => v.code === LOTTE_ON_NORMAL)?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -2369,9 +2313,7 @@ export const Connects = observer(() => {
 													sx={{
 														width: '100%',
 													}}
-													onClick={() => {
-														common.verifyConnectedInfo('A524/A525');
-													}}
+													onClick={() => common.verifyConnectedInfo(`${LOTTE_ON_GLOBAL}/${LOTTE_ON_NORMAL}`)}
 												>
 													연동하기
 												</Button>
@@ -2399,7 +2341,7 @@ export const Connects = observer(() => {
 											<Switch
 												size='small'
 												checked={common.user.userInfo?.tmonUseType === 'Y' ? true : false}
-												disabled={!common.uploadInfo.markets.find((v: any) => v.code === 'B956')?.connected}
+												disabled={!common.uploadInfo.markets.find((v) => v.code === TMON)?.connected}
 												onChange={async (e) => {
 													const tmonUseType = e.target.checked ? 'Y' : 'N';
 
@@ -2449,7 +2391,7 @@ export const Connects = observer(() => {
 													<TextField
 														id='connects_tmon1'
 														size='small'
-														disabled={common.uploadInfo.markets.find((v: any) => v.code === 'B956')?.connected}
+														disabled={common.uploadInfo.markets.find((v) => v.code === TMON)?.connected}
 														variant='outlined'
 														sx={{
 															width: '100%',
@@ -2460,12 +2402,12 @@ export const Connects = observer(() => {
 															},
 														}}
 														defaultValue={common.user.userInfo.tmonId}
-														onBlur={(e) => {
+														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
 																tmonId: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 											</Grid>
@@ -2476,7 +2418,7 @@ export const Connects = observer(() => {
 												p: 1,
 											}}
 										>
-											{common.uploadInfo.markets.find((v) => v.code === 'B956')?.connected ? (
+											{common.uploadInfo.markets.find((v) => v.code === TMON)?.connected ? (
 												<Button
 													disabled
 													variant='contained'
@@ -2494,9 +2436,7 @@ export const Connects = observer(() => {
 													sx={{
 														width: '100%',
 													}}
-													onClick={() => {
-														common.verifyConnectedInfo('B956');
-													}}
+													onClick={() => common.verifyConnectedInfo(TMON)}
 												>
 													연동하기
 												</Button>

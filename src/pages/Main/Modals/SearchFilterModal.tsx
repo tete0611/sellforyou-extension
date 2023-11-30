@@ -1,15 +1,16 @@
 import React from 'react';
-
 import { format } from 'date-fns';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Box, Grid, MenuItem, Modal, Paper, Select, Typography } from '@mui/material';
 import { Input, Search } from '../Common/UI';
+import { SHOPCODE } from '../../../type/variable';
 
 // 검색필터 모달 뷰
 export const SearchFilterModal = observer(() => {
 	// MobX 스토리지 로드
 	const { product } = React.useContext(AppContext);
+	const { SMART_STORE } = SHOPCODE;
 
 	return (
 		<Modal open={product.modalInfo.userFilter ?? false} onClose={() => product.toggleSearchFilterModal(false)}>
@@ -934,34 +935,25 @@ export const SearchFilterModal = observer(() => {
 											>
 												<Search
 													value={product.searchInfo.categoryInfo}
-													onChange={(e: any, value: any) => {
+													onChange={(e: any, value: any) =>
 														product.setSearchInfo({
 															...product.searchInfo,
-
 															categoryInfo: value,
-														});
-													}}
-													onInputChange={(e, value, reason) => {
-														if (reason !== 'input') {
-															return;
-														}
-
-														product.setCategoryInput('A077', value);
-													}}
+														})
+													}
+													onInputChange={(e, value, reason) =>
+														reason === 'input' && product.setCategoryInput(SMART_STORE, value)
+													}
 													options={
-														product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.input
-															? product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.data
+														product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.input
+															? product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.data
 															: [product.manyCategoryInfo.categoryInfoA077]
 													}
 													getOptionLabel={(option: any) => option.name ?? ''}
 													isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-													onOpen={() => {
-														product.getCategoryList('A077');
-													}}
-													onClose={() => {
-														product.setCategoryInput('A077', '');
-													}}
-													loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.loading}
+													onOpen={() => product.getCategoryList(SMART_STORE)}
+													onClose={() => product.setCategoryInput(SMART_STORE, '')}
+													loading={product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.loading}
 												/>
 											</Box>
 										</Grid>

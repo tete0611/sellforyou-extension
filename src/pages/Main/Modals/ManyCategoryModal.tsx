@@ -4,11 +4,25 @@ import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Box, Grid, Modal, Paper, Typography } from '@mui/material';
 import { MyButton, Search } from '../Common/UI';
+import { SHOPCODE } from '../../../type/variable';
 
 // 카테고리 일괄설정 모달 뷰
 export const ManyCategoryModal = observer(() => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
+	const {
+		AUCTION_1,
+		COUPANG,
+		G_MARKET_1,
+		INTER_PARK,
+		LOTTE_ON_GLOBAL,
+		LOTTE_ON_NORMAL,
+		SMART_STORE,
+		STREET11_GLOBAL,
+		STREET11_NORMAL,
+		TMON,
+		WE_MAKE_PRICE,
+	} = SHOPCODE;
 
 	return (
 		<Modal open={product.modalInfo.category} onClose={() => product.toggleManyCategoryModal(false)}>
@@ -113,18 +127,18 @@ export const ManyCategoryModal = observer(() => {
 											return;
 										}
 
-										product.setCategoryInput('A077', value);
+										product.setCategoryInput(SMART_STORE, value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v) => v.code === 'A077')!.input
-											? product.categoryInfo.markets.find((v) => v.code === 'A077')!.data
+										product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.input
+											? product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.data
 											: [product.manyCategoryInfo.categoryInfoA077]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-									onOpen={() => product.getCategoryList('A077')}
-									onClose={() => product.setCategoryInput('A077', '')}
-									loading={product.categoryInfo.markets.find((v) => v.code === 'A077')!.loading}
+									onOpen={() => product.getCategoryList(SMART_STORE)}
+									onClose={() => product.setCategoryInput(SMART_STORE, '')}
+									loading={product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.loading}
 								/>
 							</Grid>
 						</Grid>
@@ -161,29 +175,29 @@ export const ManyCategoryModal = observer(() => {
 								<Search
 									value={product.manyCategoryInfo.categoryInfoA077}
 									onChange={(e: any, value: any) => {
-										product.setManyCategory('A077', value);
+										product.setManyCategory(SMART_STORE, value);
 									}}
 									onInputChange={(e, value, reason) => {
 										if (reason !== 'input') {
 											return;
 										}
 
-										product.setCategoryInput('A077', value);
+										product.setCategoryInput(SMART_STORE, value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.data
+										product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.input
+											? product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.data
 											: [product.manyCategoryInfo.categoryInfoA077]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onOpen={() => {
-										product.getCategoryList('A077');
+										product.getCategoryList(SMART_STORE);
 									}}
 									onClose={() => {
-										product.setCategoryInput('A077', '');
+										product.setCategoryInput(SMART_STORE, '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.loading}
+									loading={product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.loading}
 								/>
 							</Grid>
 
@@ -210,29 +224,29 @@ export const ManyCategoryModal = observer(() => {
 								<Search
 									value={product.manyCategoryInfo.categoryInfoB378}
 									onChange={(e: any, value: any) => {
-										product.setManyCategory('B378', value);
+										product.setManyCategory(COUPANG, value);
 									}}
 									onInputChange={(e, value, reason) => {
 										if (reason !== 'input') {
 											return;
 										}
 
-										product.setCategoryInput('B378', value);
+										product.setCategoryInput(COUPANG, value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'B378')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'B378')!.data
+										product.categoryInfo.markets.find((v) => v.code === COUPANG)!.input
+											? product.categoryInfo.markets.find((v) => v.code === COUPANG)!.data
 											: [product.manyCategoryInfo.categoryInfoB378]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onOpen={() => {
-										product.getCategoryList('B378');
+										product.getCategoryList(COUPANG);
 									}}
 									onClose={() => {
-										product.setCategoryInput('B378', '');
+										product.setCategoryInput(COUPANG, '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'B378')!.loading}
+									loading={product.categoryInfo.markets.find((v) => v.code === COUPANG)!.loading}
 								/>
 							</Grid>
 
@@ -259,29 +273,29 @@ export const ManyCategoryModal = observer(() => {
 								<Search
 									value={product.manyCategoryInfo.categoryInfoA112}
 									onChange={(e: any, value: any) => {
-										product.setManyCategory('A112', value);
+										product.setManyCategory(STREET11_GLOBAL, value);
 									}}
 									onInputChange={(e, value, reason) => {
 										if (reason !== 'input') {
 											return;
 										}
 
-										product.setCategoryInput('A112', value);
+										product.setCategoryInput(STREET11_GLOBAL, value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A112')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A112')!.data
+										product.categoryInfo.markets.find((v) => v.code === STREET11_GLOBAL)!.input
+											? product.categoryInfo.markets.find((v) => v.code === STREET11_GLOBAL)!.data
 											: [product.manyCategoryInfo.categoryInfoA112]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onOpen={() => {
-										product.getCategoryList('A112');
+										product.getCategoryList(STREET11_GLOBAL);
 									}}
 									onClose={() => {
-										product.setCategoryInput('A112', '');
+										product.setCategoryInput(STREET11_GLOBAL, '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A112')!.loading}
+									loading={product.categoryInfo.markets.find((v) => v.code === STREET11_GLOBAL)!.loading}
 								/>
 							</Grid>
 
@@ -308,29 +322,29 @@ export const ManyCategoryModal = observer(() => {
 								<Search
 									value={product.manyCategoryInfo.categoryInfoA113}
 									onChange={(e: any, value: any) => {
-										product.setManyCategory('A113', value);
+										product.setManyCategory(STREET11_NORMAL, value);
 									}}
 									onInputChange={(e, value, reason) => {
 										if (reason !== 'input') {
 											return;
 										}
 
-										product.setCategoryInput('A113', value);
+										product.setCategoryInput(STREET11_NORMAL, value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A113')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A113')!.data
+										product.categoryInfo.markets.find((v) => v.code === STREET11_NORMAL)!.input
+											? product.categoryInfo.markets.find((v) => v.code === STREET11_NORMAL)!.data
 											: [product.manyCategoryInfo.categoryInfoA113]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onOpen={() => {
-										product.getCategoryList('A113');
+										product.getCategoryList(STREET11_NORMAL);
 									}}
 									onClose={() => {
-										product.setCategoryInput('A113', '');
+										product.setCategoryInput(STREET11_NORMAL, '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A113')!.loading}
+									loading={product.categoryInfo.markets.find((v) => v.code === STREET11_NORMAL)!.loading}
 								/>
 							</Grid>
 
@@ -357,29 +371,29 @@ export const ManyCategoryModal = observer(() => {
 								<Search
 									value={product.manyCategoryInfo.categoryInfoA006}
 									onChange={(e: any, value: any) => {
-										product.setManyCategory('A006', value);
+										product.setManyCategory(G_MARKET_1, value);
 									}}
 									onInputChange={(e, value, reason) => {
 										if (reason !== 'input') {
 											return;
 										}
 
-										product.setCategoryInput('A006', value);
+										product.setCategoryInput(G_MARKET_1, value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A006')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A006')!.data
+										product.categoryInfo.markets.find((v) => v.code === G_MARKET_1)!.input
+											? product.categoryInfo.markets.find((v) => v.code === G_MARKET_1)!.data
 											: [product.manyCategoryInfo.categoryInfoA006]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onOpen={() => {
-										product.getCategoryList('A006');
+										product.getCategoryList(G_MARKET_1);
 									}}
 									onClose={() => {
-										product.setCategoryInput('A006', '');
+										product.setCategoryInput(G_MARKET_1, '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A006')!.loading}
+									loading={product.categoryInfo.markets.find((v) => v.code === G_MARKET_1)!.loading}
 								/>
 							</Grid>
 
@@ -406,29 +420,29 @@ export const ManyCategoryModal = observer(() => {
 								<Search
 									value={product.manyCategoryInfo.categoryInfoA001}
 									onChange={(e: any, value: any) => {
-										product.setManyCategory('A001', value);
+										product.setManyCategory(AUCTION_1, value);
 									}}
 									onInputChange={(e, value, reason) => {
 										if (reason !== 'input') {
 											return;
 										}
 
-										product.setCategoryInput('A001', value);
+										product.setCategoryInput(AUCTION_1, value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A001')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A001')!.data
+										product.categoryInfo.markets.find((v) => v.code === AUCTION_1)!.input
+											? product.categoryInfo.markets.find((v) => v.code === AUCTION_1)!.data
 											: [product.manyCategoryInfo.categoryInfoA001]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onOpen={() => {
-										product.getCategoryList('A001');
+										product.getCategoryList(AUCTION_1);
 									}}
 									onClose={() => {
-										product.setCategoryInput('A001', '');
+										product.setCategoryInput(AUCTION_1, '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A001')!.loading}
+									loading={product.categoryInfo.markets.find((v) => v.code === AUCTION_1)!.loading}
 								/>
 							</Grid>
 
@@ -455,29 +469,29 @@ export const ManyCategoryModal = observer(() => {
 								<Search
 									value={product.manyCategoryInfo.categoryInfoA027}
 									onChange={(e: any, value: any) => {
-										product.setManyCategory('A027', value);
+										product.setManyCategory(INTER_PARK, value);
 									}}
 									onInputChange={(e, value, reason) => {
 										if (reason !== 'input') {
 											return;
 										}
 
-										product.setCategoryInput('A027', value);
+										product.setCategoryInput(INTER_PARK, value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A027')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A027')!.data
+										product.categoryInfo.markets.find((v) => v.code === INTER_PARK)!.input
+											? product.categoryInfo.markets.find((v) => v.code === INTER_PARK)!.data
 											: [product.manyCategoryInfo.categoryInfoA027]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onOpen={() => {
-										product.getCategoryList('A027');
+										product.getCategoryList(INTER_PARK);
 									}}
 									onClose={() => {
-										product.setCategoryInput('A027', '');
+										product.setCategoryInput(INTER_PARK, '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A027')!.loading}
+									loading={product.categoryInfo.markets.find((v) => v.code === INTER_PARK)!.loading}
 								/>
 							</Grid>
 
@@ -504,29 +518,29 @@ export const ManyCategoryModal = observer(() => {
 								<Search
 									value={product.manyCategoryInfo.categoryInfoB719}
 									onChange={(e: any, value: any) => {
-										product.setManyCategory('B719', value);
+										product.setManyCategory(WE_MAKE_PRICE, value);
 									}}
 									onInputChange={(e, value, reason) => {
 										if (reason !== 'input') {
 											return;
 										}
 
-										product.setCategoryInput('B719', value);
+										product.setCategoryInput(WE_MAKE_PRICE, value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'B719')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'B719')!.data
+										product.categoryInfo.markets.find((v) => v.code === WE_MAKE_PRICE)!.input
+											? product.categoryInfo.markets.find((v) => v.code === WE_MAKE_PRICE)!.data
 											: [product.manyCategoryInfo.categoryInfoB719]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onOpen={() => {
-										product.getCategoryList('B719');
+										product.getCategoryList(WE_MAKE_PRICE);
 									}}
 									onClose={() => {
-										product.setCategoryInput('B719', '');
+										product.setCategoryInput(WE_MAKE_PRICE, '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'B719')!.loading}
+									loading={product.categoryInfo.markets.find((v) => v.code === WE_MAKE_PRICE)!.loading}
 								/>
 							</Grid>
 
@@ -553,29 +567,29 @@ export const ManyCategoryModal = observer(() => {
 								<Search
 									value={product.manyCategoryInfo.categoryInfoA524}
 									onChange={(e: any, value: any) => {
-										product.setManyCategory('A524', value);
+										product.setManyCategory(LOTTE_ON_GLOBAL, value);
 									}}
 									onInputChange={(e, value, reason) => {
 										if (reason !== 'input') {
 											return;
 										}
 
-										product.setCategoryInput('A524', value);
+										product.setCategoryInput(LOTTE_ON_GLOBAL, value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A524')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A524')!.data
+										product.categoryInfo.markets.find((v) => v.code === LOTTE_ON_GLOBAL)!.input
+											? product.categoryInfo.markets.find((v) => v.code === LOTTE_ON_GLOBAL)!.data
 											: [product.manyCategoryInfo.categoryInfoA524]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onOpen={() => {
-										product.getCategoryList('A524');
+										product.getCategoryList(LOTTE_ON_GLOBAL);
 									}}
 									onClose={() => {
-										product.setCategoryInput('A524', '');
+										product.setCategoryInput(LOTTE_ON_GLOBAL, '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A524')!.loading}
+									loading={product.categoryInfo.markets.find((v) => v.code === LOTTE_ON_GLOBAL)!.loading}
 								/>
 							</Grid>
 
@@ -602,29 +616,29 @@ export const ManyCategoryModal = observer(() => {
 								<Search
 									value={product.manyCategoryInfo.categoryInfoA525}
 									onChange={(e: any, value: any) => {
-										product.setManyCategory('A525', value);
+										product.setManyCategory(LOTTE_ON_NORMAL, value);
 									}}
 									onInputChange={(e, value, reason) => {
 										if (reason !== 'input') {
 											return;
 										}
 
-										product.setCategoryInput('A525', value);
+										product.setCategoryInput(LOTTE_ON_NORMAL, value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'A525')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'A525')!.data
+										product.categoryInfo.markets.find((v) => v.code === LOTTE_ON_NORMAL)!.input
+											? product.categoryInfo.markets.find((v) => v.code === LOTTE_ON_NORMAL)!.data
 											: [product.manyCategoryInfo.categoryInfoA525]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onOpen={() => {
-										product.getCategoryList('A525');
+										product.getCategoryList(LOTTE_ON_NORMAL);
 									}}
 									onClose={() => {
-										product.setCategoryInput('A525', '');
+										product.setCategoryInput(LOTTE_ON_NORMAL, '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'A525')!.loading}
+									loading={product.categoryInfo.markets.find((v) => v.code === LOTTE_ON_NORMAL)!.loading}
 								/>
 							</Grid>
 
@@ -651,29 +665,29 @@ export const ManyCategoryModal = observer(() => {
 								<Search
 									value={product.manyCategoryInfo.categoryInfoB956}
 									onChange={(e: any, value: any) => {
-										product.setManyCategory('B956', value);
+										product.setManyCategory(TMON, value);
 									}}
 									onInputChange={(e, value, reason) => {
 										if (reason !== 'input') {
 											return;
 										}
 
-										product.setCategoryInput('B956', value);
+										product.setCategoryInput(TMON, value);
 									}}
 									options={
-										product.categoryInfo.markets.find((v: any) => v.code === 'B956')!.input
-											? product.categoryInfo.markets.find((v: any) => v.code === 'B956')!.data
+										product.categoryInfo.markets.find((v) => v.code === TMON)!.input
+											? product.categoryInfo.markets.find((v) => v.code === TMON)!.data
 											: [product.manyCategoryInfo.categoryInfoB956]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onOpen={() => {
-										product.getCategoryList('B956');
+										product.getCategoryList(TMON);
 									}}
 									onClose={() => {
-										product.setCategoryInput('B956', '');
+										product.setCategoryInput(TMON, '');
 									}}
-									loading={product.categoryInfo.markets.find((v: any) => v.code === 'B956')!.loading}
+									loading={product.categoryInfo.markets.find((v) => v.code === TMON)!.loading}
 								/>
 							</Grid>
 						</Grid>

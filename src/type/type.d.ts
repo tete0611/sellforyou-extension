@@ -1,5 +1,19 @@
 import { ITextOptions, TextOptions } from 'fabric/fabric-impl';
 
+/** 오픈마켓종류 정의 */
+export type Shop =
+	| 'alibaba'
+	| 'amazon'
+	| 'amazon1'
+	| 'amazon2'
+	| 'express'
+	| 'taobao1'
+	| 'taobao2'
+	| 'tmall1'
+	| 'tmall2'
+	| 'vvic';
+
+/** 상품 */
 export type Product = {
 	id: number;
 	productCode: string;
@@ -170,17 +184,17 @@ type Item = {
 	state: number;
 	createdAt: Date;
 	stockUpdatedAt: Date;
-	categoryInfoA077: any;
-	categoryInfoB378: any;
-	categoryInfoA112: any;
-	categoryInfoA113: any;
-	categoryInfoA006: any;
-	categoryInfoA001: any;
-	categoryInfoA027: any;
-	categoryInfoB719: any;
-	categoryInfoA524: any;
-	categoryInfoA525: any;
-	categoryInfoB956: any;
+	categoryInfoA077: { code: string; name: string; activeSillDataA077: any; sillInfoA077: any };
+	categoryInfoB378: { code: string; name: string; activeSillDataB378: any; sillInfoB378: any };
+	categoryInfoA112: { code: string; name: string; activeSillDataA112: any; sillInfoA112: any };
+	categoryInfoA113: { code: string; name: string; activeSillDataA113: any; sillInfoA113: any };
+	categoryInfoA006: { code: string; name: string; activeSillDataA006: any; sillInfoA006: any };
+	categoryInfoA001: { code: string; name: string; activeSillDataA001: any; sillInfoA001: any };
+	categoryInfoA027: { code: string; name: string; activeSillDataA027: any; sillInfoA027: any };
+	categoryInfoB719: { code: string; name: string; activeSillDataB719: any; sillInfoB719: any };
+	categoryInfoA524: { code: string; name: string; activeSillDataA524: any; sillInfoA524: any };
+	categoryInfoA525: { code: string; name: string; activeSillDataA525: any; sillInfoA525: any };
+	categoryInfoB956: { code: string; name: string; activeSillDataB956: any; sillInfoB956: any };
 	edited: any;
 	checked: boolean;
 	name: string;
@@ -221,11 +235,11 @@ type Item = {
 	tmonFee: number;
 	collapse: any;
 	optionCollapse: any;
-	activeProductStore: any;
+	activeProductStore: { siteCode: string; state: number; storeUrl: string; inflow: any }[];
 	myLock: any;
 	productCode: string;
 	tabs: any;
-	productStore: any;
+	productStore: { siteCode: string; state: number; storeUrl: string }[];
 	isImageTranslated: boolean;
 	error: boolean;
 	optionPriceError: boolean;
@@ -376,19 +390,6 @@ type UserInfo = {
 	streetNormalApiMemo4: string;
 	asInfo: any;
 };
-
-/** 오픈마켓종류 정의 */
-export type Shop =
-	| 'alibaba'
-	| 'amazon'
-	| 'amazon1'
-	| 'amazon2'
-	| 'express'
-	| 'taobao1'
-	| 'taobao2'
-	| 'tmall1'
-	| 'tmall2'
-	| 'vvic';
 
 /** 대량수집시 크롬스토리지에 저장하는 수집정보타입 */
 export type CollectInfo = {
