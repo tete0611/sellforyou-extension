@@ -11,6 +11,7 @@ import {
 	matchesCharacter,
 	notificationByEveryTime,
 	sendCallback,
+	sleep,
 	toISO,
 	transformContent,
 } from './Common';
@@ -29,7 +30,6 @@ interface CoupangProps {
 
 /** 쿠팡 API Endpoint 인터페이스 */
 export const coupangApiGateway = async (body: CoupangProps) => {
-	// console.log({ body });
 	const datetime = new Date().toISOString().substr(2, 17).replace(/:/gi, '').replace(/-/gi, '') + 'Z';
 	const method = body.method;
 	const path = body.path;
@@ -54,15 +54,14 @@ export const coupangApiGateway = async (body: CoupangProps) => {
 
 		body: method === 'GET' || method === 'HEAD' ? null : JSON.stringify(body.data),
 	});
-	// console.log({ coupang_resp });
+
 	if (coupang_resp.status === 403 && body.method === 'DELETE')
 		throw new Error('쿠팡 API 403에러발생.\n관리자에게 문의해주세요.');
 	const json = await coupang_resp.json();
-	// console.log({ json });
 	return json;
 };
 
-// 쿠팡 상품등록 API
+/** 쿠팡 상품등록 API */
 export const uploadCoupang = async (productStore: product, commonStore: common, data: any) => {
 	if (!data) return false;
 
@@ -567,14 +566,13 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 
 				// 상품 수정모드일 경우
 				if (!market_item.cert && commonStore.uploadInfo.editable) {
+					let callCount = 0; // 쿠팡 api 호출량 제한 정책으로 인한 카운트 값
 					let productId = market_item.name2;
 
 					if (!productId) {
 						productStore.addRegisteredFailed(Object.assign(market_item, { error: '상품 ID를 찾을 수 없습니다.' }));
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 실패`);
-
 						await sendCallback(commonStore, data, market_code, parseInt(product), 2, '상품 ID를 찾을 수 없습니다.');
-
 						continue;
 					}
 
@@ -592,62 +590,118 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 
 					if (search_json.code !== 'SUCCESS') {
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 조회 실패`);
-
 						continue;
 					}
+
+					productStore.addRegisteredQueue(market_item);
+					productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 중...`);
 
 					for (let i in search_json.data.items) {
 						optn_array[i]['sellerProductItemId'] = search_json.data.items[i]['sellerProductItemId'];
 						optn_array[i]['vendorItemId'] = search_json.data.items[i]['vendorItemId'];
 					}
 
-					// 옵션가 수정
-					await Promise.all(
-						optn_array.map(async (v: any) => {
-							let detail_body = {
-								accesskey: accesskey,
-								secretkey: secretkey,
-								path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/prices/${v['salePrice']}`,
-								query: '',
-								method: 'PUT',
-								data: {},
-							};
+					// 옵션가 수정 - map사용
+					// await Promise.all(
+					// 	optn_array.map(async (v: any) => {
+					// 		let detail_body = {
+					// 			accesskey: accesskey,
+					// 			secretkey: secretkey,
+					// 			path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/prices/${v['salePrice']}`,
+					// 			query: '',
+					// 			method: 'PUT',
+					// 			data: {},
+					// 		};
 
-							return await coupangApiGateway(detail_body);
-						}),
-					);
+					// 		return await coupangApiGateway(detail_body);
+					// 	}),
+					// );
 
-					// 판매가 수정
-					await Promise.all(
-						optn_array.map(async (v: any) => {
-							let detail_body = {
-								accesskey: accesskey,
-								secretkey: secretkey,
-								path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/original-prices/${v['originalPrice']}`,
-								query: '',
-								method: 'PUT',
-								data: {},
-							};
+					// 판매가 수정 - map 사용
+					// await Promise.all(
+					// 	optn_array.map(async (v: any) => {
+					// 		let detail_body = {
+					// 			accesskey: accesskey,
+					// 			secretkey: secretkey,
+					// 			path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/original-prices/${v['originalPrice']}`,
+					// 			query: '',
+					// 			method: 'PUT',
+					// 			data: {},
+					// 		};
 
-							return await coupangApiGateway(detail_body);
-						}),
-					);
+					// 		return await coupangApiGateway(detail_body);
+					// 	}),
+					// );
 
-					// 재고수량 수정
-					await Promise.all(
-						optn_array.map(async (v: any) => {
-							let detail_body = {
-								accesskey: accesskey,
-								secretkey: secretkey,
-								path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/quantities/${v['maximumBuyCount']}`,
-								query: '',
-								method: 'PUT',
-								data: {},
-							};
+					// 재고수량 수정 - map 사용
+					// await Promise.all(
+					// 	optn_array.map(async (v: any) => {
+					// 		let detail_body = {
+					// 			accesskey: accesskey,
+					// 			secretkey: secretkey,
+					// 			path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/quantities/${v['maximumBuyCount']}`,
+					// 			query: '',
+					// 			method: 'PUT',
+					// 			data: {},
+					// 		};
 
-							return await coupangApiGateway(detail_body);
-						}),
-					);
+					// 		return await coupangApiGateway(detail_body);
+					// 	}),
+					// );
+
+					// 옵션가 수정 - for문 사용
+					for (let v of optn_array) {
+						let detail_body = {
+							accesskey: accesskey,
+							secretkey: secretkey,
+							path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/prices/${v['salePrice']}`,
+							query: '',
+							method: 'PUT',
+							data: {},
+						};
+						if (callCount >= 10) {
+							await sleep(1000);
+							callCount = 0;
+						}
+						coupangApiGateway(detail_body);
+						callCount += 1;
+					}
+
+					// 판매가 수정 - for 사용
+					for (let v of optn_array) {
+						let detail_body = {
+							accesskey: accesskey,
+							secretkey: secretkey,
+							path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/original-prices/${v['originalPrice']}`,
+							query: '',
+							method: 'PUT',
+							data: {},
+						};
+						if (callCount >= 10) {
+							await sleep(1000);
+							callCount = 0;
+						}
+						coupangApiGateway(detail_body);
+						callCount += 1;
+					}
+
+					// 재고수량 수정 - for 사용
+					for (let v of optn_array) {
+						let detail_body = {
+							accesskey: accesskey,
+							secretkey: secretkey,
+							path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/quantities/${v['maximumBuyCount']}`,
+							query: '',
+							method: 'PUT',
+							data: {},
+						};
+						if (callCount >= 10) {
+							await sleep(1000);
+							callCount = 0;
+						}
+						coupangApiGateway(detail_body);
+						callCount += 1;
+					}
 
 					// 상품 수정 API
 					product_body = {
@@ -659,9 +713,6 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 						},
 						method: 'PUT',
 					};
-
-					productStore.addRegisteredQueue(market_item);
-					productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 중...`);
 
 					let product_json = await coupangApiGateway(product_body);
 
@@ -717,9 +768,11 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 
 /** 쿠팡 상품등록해제 */
 export const deleteCoupang = async (productStore: product, commonStore: common, data: any) => {
+	console.time('등록해제 경과시간');
 	if (!data) return false;
 
 	let shopName = data.DShopInfo.site_name;
+	let callCount = 0; // 호출량 제한용
 
 	console.log(`(${shopName}) 등록정보:`, data);
 
@@ -743,7 +796,11 @@ export const deleteCoupang = async (productStore: product, commonStore: common, 
 					method: 'GET',
 					data: {},
 				};
-
+				if (callCount >= 10) {
+					await sleep(1000);
+					callCount = 0;
+				}
+				callCount += 1;
 				let searchJson = await coupangApiGateway(searchBody);
 
 				if (searchJson.code !== 'SUCCESS') continue;
@@ -760,20 +817,38 @@ export const deleteCoupang = async (productStore: product, commonStore: common, 
 					continue;
 				}
 
-				await Promise.all(
-					searchJson.data.items.map(async (v: any) => {
-						let stopBody = {
-							accesskey: accesskey,
-							secretkey: secretkey,
-							path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v.vendorItemId}/sales/stop`,
-							query: '',
-							method: 'PUT',
-							data: {},
-						};
-
-						return await coupangApiGateway(stopBody);
-					}),
-				);
+				/** for사용 */
+				for (let v of searchJson.data.items) {
+					let stopBody = {
+						accesskey: accesskey,
+						secretkey: secretkey,
+						path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v.vendorItemId}/sales/stop`,
+						query: '',
+						method: 'PUT',
+						data: {},
+					};
+					if (callCount >= 10) {
+						await sleep(1000);
+						callCount = 0;
+					}
+					coupangApiGateway(stopBody);
+					callCount += 1;
+				}
+				/** map사용 */
+				// await Promise.all(
+				// 	searchJson.data.items.map(async (v: any) => {
+				// 		let stopBody = {
+				// 			accesskey: accesskey,
+				// 			secretkey: secretkey,
+				// 			path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v.vendorItemId}/sales/stop`,
+				// 			query: '',
+				// 			method: 'PUT',
+				// 			data: {},
+				// 		};
+				// 		return await coupangApiGateway(stopBody); // 1
+				// 	}),
+				// );
+				console.timeEnd('등록해제 경과시간'); // 제한전 : 504ms , // 제한후 : 4323ms
 
 				let deleteBody = {
 					accesskey: accesskey,
@@ -784,7 +859,7 @@ export const deleteCoupang = async (productStore: product, commonStore: common, 
 					data: {},
 				};
 
-				const deleteJson = await coupangApiGateway(deleteBody);
+				const deleteJson = await coupangApiGateway(deleteBody); // 2
 
 				if (deleteJson.code === 'SUCCESS') {
 					const progressValue = Math.round(((parseInt(product) + 1) * 100) / data.DShopInfo.prod_codes.length);

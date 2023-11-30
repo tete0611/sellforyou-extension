@@ -3,7 +3,6 @@
 import gql from '../../pages/Main/GraphQL/Requests';
 import QUERIES from '../../pages/Main/GraphQL/Queries';
 import MUTATIONS from '../../pages/Main/GraphQL/Mutations';
-
 import { runInAction, makeAutoObservable } from 'mobx';
 import { getLocalStorage, setLocalStorage } from '../../pages/Tools/ChromeAsync';
 import { coupangApiGateway } from '../../pages/Tools/Coupang';
@@ -11,6 +10,7 @@ import { streetApiGateway } from '../../pages/Tools/Street';
 import { floatingToast, request } from '../../pages/Tools/Common';
 import { refreshToken } from '../../pages/Tools/Auth';
 import { AppInfo, Nullable, UploadDisabledInfo, UploadInfo, User, UserInfo } from '../../type/type';
+import { SHOPCODE } from '../../type/variable';
 
 export class common {
 	notionPage = null;
@@ -388,6 +388,21 @@ export class common {
 		};
 
 		runInAction(() => {
+			const {
+				AUCTION_1,
+				COUPANG,
+				G_MARKET_1,
+				AUCTION_2,
+				G_MARKET_2,
+				INTER_PARK,
+				LOTTE_ON_GLOBAL,
+				LOTTE_ON_NORMAL,
+				SMART_STORE,
+				STREET11_GLOBAL,
+				STREET11_NORMAL,
+				TMON,
+				WE_MAKE_PRICE,
+			} = SHOPCODE;
 			this.user = response.data.selectMyInfoByUser;
 			console.log('유저정보', this.user);
 			if (!this.user.createdToken) {
@@ -412,7 +427,7 @@ export class common {
 
 			// 오픈마켓 연동상태 설정
 			if (this.user.userInfo.naverStoreUrl) {
-				let result = this.uploadInfo.markets.find((v) => v.code === 'A077');
+				let result = this.uploadInfo.markets.find((v) => v.code === SMART_STORE);
 
 				result!.connected = true;
 
@@ -429,7 +444,7 @@ export class common {
 				this.user.userInfo.coupangAccessKey &&
 				this.user.userInfo.coupangSecretKey
 			) {
-				let result = this.uploadInfo.markets.find((v) => v.code === 'B378');
+				let result = this.uploadInfo.markets.find((v) => v.code === COUPANG);
 
 				result!.connected = true;
 
@@ -448,7 +463,7 @@ export class common {
 				(this.user.userInfo.streetApiKey3 && this.user.userInfo.streetUseKeyType === '3') ||
 				(this.user.userInfo.streetApiKey4 && this.user.userInfo.streetUseKeyType === '4')
 			) {
-				let result = this.uploadInfo.markets.find((v) => v.code === 'A112');
+				let result = this.uploadInfo.markets.find((v) => v.code === STREET11_GLOBAL);
 
 				result!.connected = true;
 
@@ -465,7 +480,7 @@ export class common {
 				(this.user.userInfo.streetNormalApiKey3 && this.user.userInfo.streetNormalUseKeyType === '3') ||
 				(this.user.userInfo.streetNormalApiKey4 && this.user.userInfo.streetNormalUseKeyType === '4')
 			) {
-				let result = this.uploadInfo.markets.find((v) => v.code === 'A113');
+				let result = this.uploadInfo.markets.find((v) => v.code === STREET11_NORMAL);
 
 				result!.connected = true;
 
@@ -477,7 +492,7 @@ export class common {
 			}
 
 			if (this.user.userInfo.esmplusGmarketId) {
-				let result = this.uploadInfo.markets.find((v) => v.code === 'A006');
+				let result = this.uploadInfo.markets.find((v) => v.code === G_MARKET_1);
 
 				result!.connected = true;
 
@@ -489,7 +504,7 @@ export class common {
 			}
 
 			if (this.user.userInfo.esmplusGmarketId) {
-				let result = this.uploadInfo.markets.find((v) => v.code === 'A523');
+				let result = this.uploadInfo.markets.find((v) => v.code === G_MARKET_2);
 
 				result!.connected = true;
 
@@ -501,7 +516,7 @@ export class common {
 			}
 
 			if (this.user.userInfo.esmplusAuctionId) {
-				let result = this.uploadInfo.markets.find((v) => v.code === 'A522');
+				let result = this.uploadInfo.markets.find((v) => v.code === AUCTION_2);
 
 				result!.connected = true;
 
@@ -512,7 +527,7 @@ export class common {
 				}
 			}
 			if (this.user.userInfo.esmplusAuctionId) {
-				let result = this.uploadInfo.markets.find((v) => v.code === 'A001');
+				let result = this.uploadInfo.markets.find((v) => v.code === AUCTION_1);
 
 				result!.connected = true;
 
@@ -529,7 +544,7 @@ export class common {
 				this.user.userInfo.interparkEditCertKey &&
 				this.user.userInfo.interparkEditSecretKey
 			) {
-				let result = this.uploadInfo.markets.find((v) => v.code === 'A027');
+				let result = this.uploadInfo.markets.find((v) => v.code === INTER_PARK);
 
 				result!.connected = true;
 
@@ -541,7 +556,7 @@ export class common {
 			}
 
 			if (this.user.userInfo.wemakepriceId) {
-				let result = this.uploadInfo.markets.find((v) => v.code === 'B719');
+				let result = this.uploadInfo.markets.find((v) => v.code === WE_MAKE_PRICE);
 
 				result!.connected = true;
 
@@ -555,8 +570,8 @@ export class common {
 			if (this.user.userInfo.lotteonVendorId && this.user.userInfo.lotteonApiKey) {
 				let result: any = null;
 
-				let result1 = this.uploadInfo.markets.find((v) => v.code === 'A524');
-				let result2 = this.uploadInfo.markets.find((v) => v.code === 'A525');
+				let result1 = this.uploadInfo.markets.find((v) => v.code === LOTTE_ON_GLOBAL);
+				let result2 = this.uploadInfo.markets.find((v) => v.code === LOTTE_ON_NORMAL);
 
 				result1!.connected = true;
 				result2!.connected = true;
@@ -573,7 +588,7 @@ export class common {
 			}
 
 			if (this.user.userInfo.tmonId) {
-				let result = this.uploadInfo.markets.find((v) => v.code === 'B956');
+				let result = this.uploadInfo.markets.find((v) => v.code === TMON);
 
 				result!.connected = true;
 
@@ -628,8 +643,21 @@ export class common {
 
 	// 연동정보 검증
 	verifyConnectedInfo = async (marketCode: string) => {
+		const {
+			SMART_STORE,
+			AUCTION_1,
+			COUPANG,
+			G_MARKET_1,
+			INTER_PARK,
+			LOTTE_ON_GLOBAL,
+			LOTTE_ON_NORMAL,
+			STREET11_GLOBAL,
+			STREET11_NORMAL,
+			TMON,
+			WE_MAKE_PRICE,
+		} = SHOPCODE;
 		switch (marketCode) {
-			case 'A077': {
+			case SMART_STORE: {
 				if (!this.user.userInfo.naverStoreUrl) return alert('(스마트스토어) 주소가 입력되지 않았습니다.');
 				if (!this.user.userInfo.naverStoreUrl.includes('https://smartstore.naver.com/'))
 					return alert(
@@ -643,7 +671,7 @@ export class common {
 				if (this.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + storeId)
 					return alert('(스마트스토어) 입력된 정보가 로그인 정보와 일치하지 않습니다.');
 
-				this.uploadInfo.markets.find((v) => v.code === 'A077')!.connected = true;
+				this.uploadInfo.markets.find((v) => v.code === SMART_STORE)!.connected = true;
 				this.testUserInfo({
 					naverStoreUrl: this.user.userInfo.naverStoreUrl,
 				});
@@ -651,7 +679,7 @@ export class common {
 				break;
 			}
 
-			case 'B378': {
+			case COUPANG: {
 				if (!this.user.userInfo.coupangLoginId) return alert('(쿠팡) 아이디가 입력되지 않았습니다.');
 				if (!this.user.userInfo.coupangVendorId) return alert('(쿠팡) 업체코드가 입력되지 않았습니다.');
 				if (!this.user.userInfo.coupangAccessKey) return alert('(쿠팡) 액세스키가 입력되지 않았습니다.');
@@ -693,31 +721,27 @@ export class common {
 				break;
 			}
 
-			case 'A112': {
+			case STREET11_GLOBAL: {
 				let apiKey: Nullable<string> = null;
 
 				switch (this.user.userInfo.streetUseKeyType) {
 					case '1': {
 						apiKey = this.user.userInfo.streetApiKey;
-
 						break;
 					}
 
 					case '2': {
 						apiKey = this.user.userInfo.streetApiKey2;
-
 						break;
 					}
 
 					case '3': {
 						apiKey = this.user.userInfo.streetApiKey3;
-
 						break;
 					}
 
 					case '4': {
 						apiKey = this.user.userInfo.streetApiKey4;
-
 						break;
 					}
 				}
@@ -736,8 +760,7 @@ export class common {
 				if (!sgoList['ns2:inOutAddresss'])
 					return alert('(11번가 글로벌) 연동에 실패하였습니다.\n오픈 API 키를 확인해주세요.');
 
-				this.uploadInfo.markets.find((v) => v.code === 'A112')!.connected = true;
-
+				this.uploadInfo.markets.find((v) => v.code === STREET11_GLOBAL)!.connected = true;
 				this.testUserInfo({
 					streetUseKeyType: this.user.userInfo.streetUseKeyType,
 					streetApiKey: this.user.userInfo.streetApiKey,
@@ -745,37 +768,32 @@ export class common {
 					streetApiKey3: this.user.userInfo.streetApiKey3,
 					streetApiKey4: this.user.userInfo.streetApiKey4,
 				});
-
 				this.streetMaxmumCount += 1;
 
 				break;
 			}
 
-			case 'A113': {
+			case STREET11_NORMAL: {
 				let apiKey: Nullable<string> = null;
 
 				switch (this.user.userInfo.streetNormalUseKeyType) {
 					case '1': {
 						apiKey = this.user.userInfo.streetNormalApiKey;
-
 						break;
 					}
 
 					case '2': {
 						apiKey = this.user.userInfo.streetNormalApiKey2;
-
 						break;
 					}
 
 					case '3': {
 						apiKey = this.user.userInfo.streetNormalApiKey3;
-
 						break;
 					}
 
 					case '4': {
 						apiKey = this.user.userInfo.streetNormalApiKey4;
-
 						break;
 					}
 				}
@@ -794,8 +812,7 @@ export class common {
 				if (!sgoList['ns2:inOutAddresss'])
 					return alert('(11번가 일반) 연동에 실패하였습니다.\n오픈 API 키를 확인해주세요.');
 
-				this.uploadInfo.markets.find((v) => v.code === 'A113')!.connected = true;
-
+				this.uploadInfo.markets.find((v) => v.code === STREET11_NORMAL)!.connected = true;
 				this.testUserInfo({
 					streetNormalUseKeyType: this.user.userInfo.streetNormalUseKeyType,
 					streetNormalApiKey: this.user.userInfo.streetNormalApiKey,
@@ -803,23 +820,20 @@ export class common {
 					streetNormalApiKey3: this.user.userInfo.streetNormalApiKey3,
 					streetNormalApiKey4: this.user.userInfo.streetNormalApiKey4,
 				});
-
 				this.streetMaxmumCount += 1;
 
 				break;
 			}
 
-			case 'A006': {
+			case G_MARKET_1: {
 				if (!this.user.userInfo.esmplusGmarketId) return alert('(지마켓) ID가 입력되지 않았습니다.');
 
 				try {
 					let gg_resp = await fetch('https://www.esmplus.com/Member/AntiMoneyLaundering/GetAMLSellerList');
 					let gg_text = await gg_resp.json();
 					let gg_json = JSON.parse(gg_text);
-
 					let user_g_resp = await fetch('https://www.esmplus.com/Home/HomeSellerActivityBalanceGmktData?sellerid=');
 					let user_g_json = await user_g_resp.json();
-
 					let matched = false;
 
 					if (this.user.userInfo.esmplusGmarketId === user_g_json.sellerid) matched = true;
@@ -827,7 +841,6 @@ export class common {
 						for (let i in gg_json) {
 							if (gg_json[i].SiteId === 2 && this.user.userInfo.esmplusGmarketId === gg_json[i].SellerId) {
 								matched = true;
-
 								break;
 							}
 						}
@@ -837,7 +850,7 @@ export class common {
 					return alert('(지마켓) ESMPLUS 로그인 후 재시도 바랍니다.');
 				}
 
-				this.uploadInfo.markets.find((v) => v.code === 'A006')!.connected = true;
+				this.uploadInfo.markets.find((v) => v.code === G_MARKET_1)!.connected = true;
 				this.testUserInfo({
 					esmplusGmarketId: this.user.userInfo.esmplusGmarketId,
 				});
@@ -845,17 +858,15 @@ export class common {
 				break;
 			}
 
-			case 'A001': {
+			case AUCTION_1: {
 				if (!this.user.userInfo.esmplusAuctionId) return alert('(옥션) ID가 입력되지 않았습니다.');
 
 				try {
 					let gg_resp = await fetch('https://www.esmplus.com/Member/AntiMoneyLaundering/GetAMLSellerList');
 					let gg_text = await gg_resp.json();
 					let gg_json = JSON.parse(gg_text);
-
 					let user_a_resp = await fetch('https://www.esmplus.com/Home/HomeSellerActivityBalanceIacData?sellerid=');
 					let user_a_json = await user_a_resp.json();
-
 					let matched = false;
 
 					if (this.user.userInfo.esmplusAuctionId === user_a_json.sellerid) matched = true;
@@ -863,7 +874,6 @@ export class common {
 						for (let i in gg_json) {
 							if (gg_json[i].SiteId === 1 && this.user.userInfo.esmplusAuctionId === gg_json[i].SellerId) {
 								matched = true;
-
 								break;
 							}
 						}
@@ -873,7 +883,7 @@ export class common {
 					return alert('(옥션) ESMPLUS 로그인 후 재시도 바랍니다.');
 				}
 
-				this.uploadInfo.markets.find((v) => v.code === 'A001')!.connected = true;
+				this.uploadInfo.markets.find((v) => v.code === AUCTION_1)!.connected = true;
 				this.testUserInfo({
 					esmplusAuctionId: this.user.userInfo.esmplusAuctionId,
 				});
@@ -881,14 +891,14 @@ export class common {
 				break;
 			}
 
-			case 'A027': {
+			case INTER_PARK: {
 				if (!this.user.userInfo.interparkCertKey) return alert('(인터파크) 상품등록 인증키가 입력되지 않았습니다.');
 				if (!this.user.userInfo.interparkSecretKey) return alert('(인터파크) 상품등록 비밀키가 입력되지 않았습니다.');
 				if (!this.user.userInfo.interparkEditCertKey) return alert('(인터파크) 상품수정 인증키가 입력되지 않았습니다.');
 				if (!this.user.userInfo.interparkEditSecretKey)
 					return alert('(인터파크) 상품수정 비밀키가 입력되지 않았습니다.');
 
-				this.uploadInfo.markets.find((v) => v.code === 'A027')!.connected = true;
+				this.uploadInfo.markets.find((v) => v.code === INTER_PARK)!.connected = true;
 				this.testUserInfo({
 					interparkCertKey: this.user.userInfo.interparkCertKey,
 					interparkSecretKey: this.user.userInfo.interparkSecretKey,
@@ -899,7 +909,7 @@ export class common {
 				break;
 			}
 
-			case 'B719': {
+			case WE_MAKE_PRICE: {
 				if (!this.user.userInfo.wemakepriceId) return alert('(위메프) ID가 입력되지 않았습니다.');
 
 				try {
@@ -912,7 +922,7 @@ export class common {
 					alert('(위메프) 위메프 파트너 로그인 후 재시도 바랍니다.');
 				}
 
-				this.uploadInfo.markets.find((v) => v.code === 'B719')!.connected = true;
+				this.uploadInfo.markets.find((v) => v.code === WE_MAKE_PRICE)!.connected = true;
 				this.testUserInfo({
 					wemakepriceId: this.user.userInfo.wemakepriceId,
 				});
@@ -920,12 +930,12 @@ export class common {
 				break;
 			}
 
-			case 'A524/A525': {
+			case `${LOTTE_ON_GLOBAL}/${LOTTE_ON_NORMAL}`: {
 				if (!this.user.userInfo.lotteonVendorId) return alert('(롯데온) 거래처번호가 입력되지 않았습니다.');
 				if (!this.user.userInfo.lotteonApiKey) return alert('(롯데온) 인증키가 입력되지 않았습니다.');
 
-				this.uploadInfo.markets.find((v) => v.code === 'A524')!.connected = true;
-				this.uploadInfo.markets.find((v) => v.code === 'A525')!.connected = true;
+				this.uploadInfo.markets.find((v) => v.code === LOTTE_ON_GLOBAL)!.connected = true;
+				this.uploadInfo.markets.find((v) => v.code === LOTTE_ON_NORMAL)!.connected = true;
 				this.testUserInfo({
 					lotteonVendorId: this.user.userInfo.lotteonVendorId,
 					lotteonApiKey: this.user.userInfo.lotteonApiKey,
@@ -934,7 +944,7 @@ export class common {
 				break;
 			}
 
-			case 'B956': {
+			case TMON: {
 				if (!this.user.userInfo.tmonId) return alert('(티몬) 파트너번호가 입력되지 않았습니다.');
 
 				let loginResp: any = await request('https://spc-om.tmon.co.kr/api/partner/creatable-deal-count', {
@@ -952,7 +962,7 @@ export class common {
 				if (loginJson.data.partnerNo.toString() !== this.user.userInfo.tmonId)
 					return alert('(티몬) 입력된 정보가 로그인 정보와 일치하지 않습니다.');
 
-				this.uploadInfo.markets.find((v) => v.code === 'B956')!.connected = true;
+				this.uploadInfo.markets.find((v) => v.code === TMON)!.connected = true;
 				this.testUserInfo({
 					tmonId: this.user.userInfo.tmonId,
 				});
@@ -981,7 +991,6 @@ export class common {
 					method: 'GET',
 					data: {},
 				};
-
 				let coList = await coupangApiGateway(body);
 
 				body.path =
@@ -1004,25 +1013,21 @@ export class common {
 				switch (this.user.userInfo.streetUseKeyType) {
 					case '1': {
 						apiKey = this.user.userInfo.streetApiKey;
-
 						break;
 					}
 
 					case '2': {
 						apiKey = this.user.userInfo.streetApiKey2;
-
 						break;
 					}
 
 					case '3': {
 						apiKey = this.user.userInfo.streetApiKey3;
-
 						break;
 					}
 
 					case '4': {
 						apiKey = this.user.userInfo.streetApiKey4;
-
 						break;
 					}
 				}
@@ -1035,9 +1040,7 @@ export class common {
 				};
 
 				const sgoList: any = await streetApiGateway(body);
-
 				body.path = 'areaservice/inboundarea';
-
 				const sgiList: any = await streetApiGateway(body);
 
 				runInAction(() => {
@@ -1056,25 +1059,21 @@ export class common {
 				switch (this.user.userInfo.streetNormalUseKeyType) {
 					case '1': {
 						apiKey = this.user.userInfo.streetNormalApiKey;
-
 						break;
 					}
 
 					case '2': {
 						apiKey = this.user.userInfo.streetNormalApiKey2;
-
 						break;
 					}
 
 					case '3': {
 						apiKey = this.user.userInfo.streetNormalApiKey3;
-
 						break;
 					}
 
 					case '4': {
 						apiKey = this.user.userInfo.streetNormalApiKey4;
-
 						break;
 					}
 				}
@@ -1087,9 +1086,7 @@ export class common {
 				};
 
 				const snoList: any = await streetApiGateway(body);
-
 				body.path = 'areaservice/inboundarea';
-
 				const sniList: any = await streetApiGateway(body);
 
 				runInAction(() => {

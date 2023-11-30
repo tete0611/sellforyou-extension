@@ -15,7 +15,7 @@ import { createTabCompletely, sendTabMessage } from './ChromeAsync';
 import { product } from '../../containers/stores/product';
 import { common } from '../../containers/stores/common';
 
-// 스마트스토어 이미지업로드
+/** 스마트스토어 이미지업로드 */
 export const uploadA077Images = async (image_list: string[]) => {
 	let image_data: { index: string; data: any }[] = [];
 
@@ -26,11 +26,12 @@ export const uploadA077Images = async (image_list: string[]) => {
 
 		let formData = new FormData();
 		let blob = await result.blob();
-		// console.log(`blobType = ${blob.type}`);
 		// 이미지 확장자별 예외처리
 		switch (blob.type) {
 			case 'image/jpg': {
-				formData.append('files[' + i.toString() + ']', blob, 'image.jpg');
+				let base64: any = await readFileDataURL(blob);
+				let blob2 = await convertWebpToJpg(base64);
+				formData.append('files[' + i.toString() + ']', blob2, 'image.jpg');
 				break;
 			}
 			case 'image/jpeg': {
@@ -61,9 +62,6 @@ export const uploadA077Images = async (image_list: string[]) => {
 				break;
 			}
 		}
-		// formData.forEach((v) => {
-		// 	console.log(v.toString);
-		// });
 		/** 업로드 API */
 		// 간혹 452 에러를 반환할때가 있음 (리소스저작권 문제나 네트워크 문제같은데 확실하지 않음)
 		// 버전1 : https://sell.smartstore.naver.com/api/file/photoinfra/uploads?acceptedPatterns=image%2Fjpeg,image%2Fgif,image%2Fpng,image%2Fbmp
@@ -75,9 +73,7 @@ export const uploadA077Images = async (image_list: string[]) => {
 				body: formData,
 			},
 		);
-		// console.log({ image_resp });
 		let image_json = await JSON.parse(image_resp);
-		// console.log({ image_json });
 
 		image_data.push({
 			index: i,
@@ -88,7 +84,7 @@ export const uploadA077Images = async (image_list: string[]) => {
 	return image_data;
 };
 
-// 스마트스토어 리소스업로드 (이미지 & 동영상)
+/** 스마트스토어 리소스업로드 (이미지 & 동영상) */
 export const uploadA077Resources = async (input: any) => {
 	try {
 		let image_list: string[] = [];

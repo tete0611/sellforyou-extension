@@ -5,6 +5,7 @@ import QUERIES from '../../pages/Main/GraphQL/Queries';
 
 import { runInAction, makeAutoObservable } from 'mobx';
 import { getClock, getClockOffset } from '../../pages/Tools/Common';
+import { SHOPCODE } from '../../type/variable';
 
 export class inflow {
 	chartOption: any = {
@@ -87,7 +88,6 @@ export class inflow {
 		// 조회기간 초기값 설정 (일주일 전 ~ 현재)
 		const time1 = getClockOffset(0, 0, -14, 0, 0, 0);
 		const time2 = getClock();
-
 		this.searchInfo.timeStart = `${time1.YY}-${time1.MM}-${time1.DD}`;
 		this.searchInfo.timeEnd = `${time2.YY}-${time2.MM}-${time2.DD}`;
 
@@ -106,11 +106,9 @@ export class inflow {
 		makeAutoObservable(this);
 	}
 
-	setFilterInfo = (value: any) => {
-		this.filterInfo = value;
-	};
+	setFilterInfo = (value: any) => (this.filterInfo = value);
 
-	// 유입수 조회
+	/** 유입수 조회 */
 	getInflowCounts = async (start, end) => {
 		const time1 = new Date(start);
 		const time2 = new Date(end);
@@ -132,18 +130,12 @@ export class inflow {
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
+		if (response.errors) return alert(response.errors[0].message);
 
-			return;
-		}
-
-		runInAction(() => {
-			this.dataCounts = JSON.parse(response.data.selectProductViewLogByUser);
-		});
+		runInAction(() => (this.dataCounts = JSON.parse(response.data.selectProductViewLogByUser)));
 	};
 
-	// 유입데이터 조회
+	/** 유입데이터 조회 */
 	getInflowInfos = async (start, end) => {
 		const time1 = new Date(start);
 		const time2 = new Date(end);
@@ -153,11 +145,7 @@ export class inflow {
 		let keyword = this.filterInfo.keyword ? this.filterInfo.keyword : undefined;
 
 		if (keyword && this.filterInfo.type === 'PCODE') {
-			if (!this.filterInfo.keyword.includes('SFY_')) {
-				alert('상품코드는 SFY_000 형식으로 입력해주세요.');
-
-				return;
-			}
+			if (!this.filterInfo.keyword.includes('SFY_')) return alert('상품코드는 SFY_000 형식으로 입력해주세요.');
 
 			keyword = parseInt(this.filterInfo.keyword.split('_')[1], 36);
 		}
@@ -179,48 +167,32 @@ export class inflow {
 			false,
 		);
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-
-			return;
-		}
+		if (response.errors) return alert(response.errors[0].message);
 
 		const timeDiff = time2.getTime() - time1.getTime();
 
 		let longTerm = false;
 
-		if (timeDiff > 86400000 * 2) {
-			longTerm = true;
-		}
+		if (timeDiff > 86400000 * 2) longTerm = true;
 
 		runInAction(() => {
 			const mapInfos = new Map();
 			const mapGroup = new Map();
-
 			const logData = JSON.parse(response.data.selectProductViewLogDatefilterByUser);
 
 			logData.map((v) => {
 				const date = new Date(v.viewTime);
 
-				if (!longTerm) {
-					date.setHours(date.getHours() + 9);
-				}
+				if (!longTerm) date.setHours(date.getHours() + 9);
 
 				const Y = date.getFullYear();
 				const M = date.getMonth() + 1;
 				const D = date.getDate();
-
 				const h = date.getHours();
-
 				const time = new Date(`${Y}-${M}-${D} ${longTerm ? '09' : h}:00:00`).getTime();
-
 				const itemArray = mapInfos.get(time);
 
-				if (!itemArray) {
-					mapInfos.set(time, [v]);
-
-					return;
-				}
+				if (!itemArray) return mapInfos.set(time, [v]);
 
 				itemArray.push(v);
 
@@ -241,53 +213,46 @@ export class inflow {
 				},
 			];
 
-			if (this.searchInfo.siteCode !== 'ALL') {
+			if (this.searchInfo.siteCode !== 'ALL')
 				this.dataInfos.push({
 					name:
-						this.searchInfo.siteCode === 'A077'
+						this.searchInfo.siteCode === SHOPCODE.SMART_STORE
 							? '스마트스토어'
-							: this.searchInfo.siteCode === 'B378'
+							: this.searchInfo.siteCode === SHOPCODE.COUPANG
 							? '쿠팡'
-							: this.searchInfo.siteCode === 'A112'
+							: this.searchInfo.siteCode === SHOPCODE.LOTTE_ON_GLOBAL
 							? '11번가(글로벌)'
-							: this.searchInfo.siteCode === 'A113'
+							: this.searchInfo.siteCode === SHOPCODE.LOTTE_ON_NORMAL
 							? '11번가(일반)'
-							: this.searchInfo.siteCode === 'A006'
+							: this.searchInfo.siteCode === SHOPCODE.G_MARKET_1
 							? '지마켓'
-							: this.searchInfo.siteCode === 'A001'
+							: this.searchInfo.siteCode === SHOPCODE.AUCTION_1
 							? '옥션'
-							: this.searchInfo.siteCode === 'A027'
+							: this.searchInfo.siteCode === SHOPCODE.INTER_PARK
 							? '인터파크'
-							: this.searchInfo.siteCode === 'B719'
+							: this.searchInfo.siteCode === SHOPCODE.WE_MAKE_PRICE
 							? '위메프'
-							: this.searchInfo.siteCode === 'A524'
+							: this.searchInfo.siteCode === SHOPCODE.LOTTE_ON_GLOBAL
 							? '롯데온(글로벌)'
-							: this.searchInfo.siteCode === 'A525'
+							: this.searchInfo.siteCode === SHOPCODE.LOTTE_ON_NORMAL
 							? '롯데온(일반)'
-							: this.searchInfo.siteCode === 'B956'
+							: this.searchInfo.siteCode === SHOPCODE.TMON
 							? '티몬'
-							: this.searchInfo.siteCode === 'A523'
+							: this.searchInfo.siteCode === SHOPCODE.G_MARKET_2
 							? '지마켓(2.0)'
-							: this.searchInfo.siteCode === 'A522'
-							? '옥션(1.0)'
+							: this.searchInfo.siteCode === SHOPCODE.AUCTION_2
+							? '옥션(2.0)'
 							: null,
-					data: logTime.map((v) => {
-						return {
-							x: v[0],
-							y: v[1].filter((w) => w.siteCode === this.searchInfo.siteCode).length,
-						};
-					}),
+					data: logTime.map((v) => ({
+						x: v[0],
+						y: v[1].filter((w) => w.siteCode === this.searchInfo.siteCode).length,
+					})),
 				});
-			}
 
 			logData.map((v) => {
 				const itemArray = mapGroup.get(v.productId);
 
-				if (!itemArray) {
-					mapGroup.set(v.productId, [v]);
-
-					return;
-				}
+				if (!itemArray) return mapGroup.set(v.productId, [v]);
 
 				itemArray.push(v);
 
@@ -303,13 +268,10 @@ export class inflow {
 	// 검색 정보
 	setSearchInfo = (value: any) => {
 		this.searchInfo = value;
-
 		this.getInflowCounts(this.searchInfo.timeStart, this.searchInfo.timeEnd);
 		this.getInflowInfos(this.searchInfo.timeStart, this.searchInfo.timeEnd);
 	};
 
 	// 차트 설정
-	setChartOption = (value: any) => {
-		this.chartOption = value;
-	};
+	setChartOption = (value: any) => (this.chartOption = value);
 }
