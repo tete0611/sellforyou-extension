@@ -58,7 +58,6 @@ export const coupangApiGateway = async (body: CoupangProps) => {
 	if (coupang_resp.status === 403 && body.method === 'DELETE')
 		throw new Error('쿠팡 API 403에러발생.\n관리자에게 문의해주세요.');
 	const json = await coupang_resp.json();
-	console.log({ json });
 	return json;
 };
 
@@ -663,13 +662,9 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 						if (callCount >= 10) {
 							await sleep(1000);
 							callCount = 0;
-						} else {
-							coupangApiGateway(detail_body).then((v) => {
-								console.log(`옵션가 ${callCount} 번째 리턴`);
-								console.log(v);
-							});
-							callCount += 1;
 						}
+						coupangApiGateway(detail_body);
+						callCount += 1;
 					}
 
 					// 판매가 수정 - for 사용
@@ -685,13 +680,9 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 						if (callCount >= 10) {
 							await sleep(1000);
 							callCount = 0;
-						} else {
-							coupangApiGateway(detail_body).then((v) => {
-								console.log(`판매가 ${callCount} 번째 리턴`);
-								console.log(v);
-							});
-							callCount += 1;
 						}
+						coupangApiGateway(detail_body);
+						callCount += 1;
 					}
 
 					// 재고수량 수정 - for 사용
@@ -707,13 +698,9 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 						if (callCount >= 10) {
 							await sleep(1000);
 							callCount = 0;
-						} else {
-							coupangApiGateway(detail_body).then((v) => {
-								console.log(`재고수량 ${callCount} 번째 리턴`);
-								console.log(v);
-							});
-							callCount += 1;
 						}
+						coupangApiGateway(detail_body);
+						callCount += 1;
 					}
 
 					// 상품 수정 API
@@ -781,9 +768,11 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 
 /** 쿠팡 상품등록해제 */
 export const deleteCoupang = async (productStore: product, commonStore: common, data: any) => {
+	console.time('등록해제 경과시간');
 	if (!data) return false;
 
 	let shopName = data.DShopInfo.site_name;
+	let callCount = 0; // 호출량 제한용
 
 	console.log(`(${shopName}) 등록정보:`, data);
 
@@ -807,7 +796,11 @@ export const deleteCoupang = async (productStore: product, commonStore: common, 
 					method: 'GET',
 					data: {},
 				};
-
+				if (callCount >= 10) {
+					await sleep(1000);
+					callCount = 0;
+				}
+				callCount += 1;
 				let searchJson = await coupangApiGateway(searchBody);
 
 				if (searchJson.code !== 'SUCCESS') continue;
@@ -824,20 +817,38 @@ export const deleteCoupang = async (productStore: product, commonStore: common, 
 					continue;
 				}
 
-				await Promise.all(
-					searchJson.data.items.map(async (v: any) => {
-						let stopBody = {
-							accesskey: accesskey,
-							secretkey: secretkey,
-							path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v.vendorItemId}/sales/stop`,
-							query: '',
-							method: 'PUT',
-							data: {},
-						};
-
-						return await coupangApiGateway(stopBody); // 1
-					}),
-				);
+				/** for사용 */
+				for (let v of searchJson.data.items) {
+					let stopBody = {
+						accesskey: accesskey,
+						secretkey: secretkey,
+						path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v.vendorItemId}/sales/stop`,
+						query: '',
+						method: 'PUT',
+						data: {},
+					};
+					if (callCount >= 10) {
+						await sleep(1000);
+						callCount = 0;
+					}
+					coupangApiGateway(stopBody);
+					callCount += 1;
+				}
+				/** map사용 */
+				// await Promise.all(
+				// 	searchJson.data.items.map(async (v: any) => {
+				// 		let stopBody = {
+				// 			accesskey: accesskey,
+				// 			secretkey: secretkey,
+				// 			path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v.vendorItemId}/sales/stop`,
+				// 			query: '',
+				// 			method: 'PUT',
+				// 			data: {},
+				// 		};
+				// 		return await coupangApiGateway(stopBody); // 1
+				// 	}),
+				// );
+				console.timeEnd('등록해제 경과시간'); // 제한전 : 504ms , // 제한후 : 4323ms
 
 				let deleteBody = {
 					accesskey: accesskey,
