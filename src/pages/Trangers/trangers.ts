@@ -15,7 +15,8 @@ type Customfabricobject = fabric.Object & { id: number; text: any; isEditing: bo
 
 /** 크롬스토리지 파파고 키 가져오기 */
 getLocalStorage<string>('ppgKey').then((apiKey) => {
-	if (apiKey) papagoApiKey = apiKey;
+	if (apiKey && apiKey !== '') papagoApiKey = apiKey;
+	else alert('파파고 APIKey 조회에러\n 관리자에게 문의해주세요');
 });
 
 let applyWaterMarkText: any = document.getElementById('applyWaterMarkText');

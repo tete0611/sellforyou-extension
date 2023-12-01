@@ -812,6 +812,10 @@ const QUERIES = {
             )
         }
     `,
+	SELECT_PAPAGO_API_KEY_BY_EVERYONE: `
+    query {
+        selectPapagoApiKeyByEveryone
+  }`,
 };
 
 export default QUERIES;

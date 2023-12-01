@@ -7,8 +7,7 @@ import { Box, Button, Checkbox, Container, FormControlLabel, Link, TextField, Ty
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Frame, SignPaper } from '../Common/UI';
 import { AppInfo } from '../../../type/type';
-
-const ppgKey = 'v1.7.9_ee61e6111a';
+import QUERIES from '../GraphQL/Queries';
 
 // 로그인 뷰
 export const SignIn = () => {
@@ -23,7 +22,6 @@ export const SignIn = () => {
 		pageSize: 10,
 		gridView: false,
 		darkTheme: false,
-		ppgKey: '',
 	};
 
 	// 회원정보 상태관리
@@ -37,8 +35,6 @@ export const SignIn = () => {
 
 			setAppInfo({
 				...info,
-				// ppgKey: 'v1.7.6_fa52a4d6c8',
-				ppgKey: ppgKey,
 				id: info.autoFill ? info.id : '',
 				password: info.autoFill ? info.password : '',
 				darkTheme: info.darkTheme,
@@ -85,6 +81,9 @@ export const SignIn = () => {
 			setAppInfo({ ...appInfo, loading: false });
 			return;
 		}
+		// 파파고 API 키 받아오기
+		const ppgKey = await gql(QUERIES.SELECT_PAPAGO_API_KEY_BY_EVERYONE, {}, false);
+		const resultKey = ppgKey.data.selectPapagoApiKeyByEveryone as string;
 
 		// 회원정보 설정 후 PC 저장
 		setAppInfo((state) => {
@@ -99,7 +98,7 @@ export const SignIn = () => {
 				loading: false,
 			};
 
-			setLocalStorage({ appInfo: result, ppgKey: ppgKey }).then(initTabs);
+			setLocalStorage({ appInfo: result, ppgKey: resultKey || '' }).then(initTabs);
 
 			return result;
 		});

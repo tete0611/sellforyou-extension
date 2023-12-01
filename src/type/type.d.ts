@@ -76,7 +76,6 @@ export type AppInfo = {
 	pageSize: number;
 	gridView: boolean;
 	darkTheme: boolean;
-	ppgKey: string;
 };
 
 export type BulkInfo = {
