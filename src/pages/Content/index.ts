@@ -19,24 +19,6 @@ import { CollectInfo, Nullable, RuntimeMessage, Sender, Shop, User } from '../..
 
 // const iconv = require('iconv-lite');
 
-// 이벤트 리스너에 전달할 함수 정의
-const handleScroll = async () => {
-	console.log(window.scrollY);
-	if (window.scrollY >= 4000) {
-		const nextButton: Nullable<HTMLButtonElement> = document
-			.querySelector('#root')
-			?.querySelector('.next-pagination-pages')
-			?.querySelector('[class*="next-next"]');
-		console.log(nextButton);
-		document.removeEventListener('scroll', handleScroll);
-		await sleep(5000);
-		if (nextButton) nextButton.click();
-	}
-};
-
-// scroll 이벤트 리스너 등록
-document.addEventListener('scroll', handleScroll);
-
 const bulkCollectUsingApi = async (shopId: number, currentPage: number) => {
 	const resp = await fetch(
 		`https://www.vvic.com/apif/shop/itemlist?id=${shopId}&currentPage=${currentPage}&sort=up_time-desc&merge=0`,
