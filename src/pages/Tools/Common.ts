@@ -717,3 +717,6 @@ export const urlEncodedObject = (urlEncodedData: any) => {
 
 	return urlEncodedContent.join('&');
 };
+
+/** 문자열 앞뒤의 공백을 제거 */
+export const trimSpaces = (input: string) => input.replace(/^\s+|\s+$/g, '');
