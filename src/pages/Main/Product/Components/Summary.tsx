@@ -896,12 +896,12 @@ export const Summary = observer((props: Props) => {
 													if (test)
 														product.updateLockProduct(props.index, {
 															productId: props.item.id,
-															mylock: props.item.myLock === 1 ? 2 : 1,
+															mylock: 1,
 														});
 												} else
 													product.updateLockProduct(props.index, {
 														productId: props.item.id,
-														mylock: props.item.myLock === 1 ? 2 : 1,
+														mylock: 2,
 													});
 											}}
 										>

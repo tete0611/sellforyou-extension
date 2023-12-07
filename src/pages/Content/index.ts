@@ -1757,6 +1757,7 @@ const main = async () => {
 
 		/** vvic 상점 페이지 */
 	} else if (/www.vvic.com\/shop\/(\d+)/.test(currentUrl)) {
+		console.log('vvic shop page entered');
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 3);
 		const shopId = parseInt(currentUrl.match(/\/shop\/(\d+)/)?.[1] ?? '0');
@@ -1764,9 +1765,11 @@ const main = async () => {
 
 		/** */
 	} else if (/www.vvic.com\/.+\/list/.test(currentUrl)) {
+		console.log('vvic list page entered');
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 4);
-		floatingButton(info, 'vvic', true, true);
+		const shopId = parseInt(currentUrl.match(/\/list\/(\d+)/)?.[1] ?? '0');
+		floatingButton(info, 'vvic', true, true, { shopId: shopId, method: 'api' });
 
 		/** */
 	} else if (/www.amazon.com\/.+\/dp\//.test(currentUrl) || /www.amazon.com\/dp/.test(currentUrl)) {

@@ -65,20 +65,26 @@ export class dashboard {
 
 	// 관리상품 수
 	getProductCount = async () => {
-		const collectJson = await gql(QUERIES.SELECT_MY_PRODUCT_COUNT_BY_USER, { where: { state: { equals: 6 } } }, false);
-		const registeredJson = await gql(
-			QUERIES.SELECT_MY_PRODUCT_COUNT_BY_USER,
-			{ where: { state: { equals: 7 } } },
-			false,
-		);
-		const lockJson = await gql(QUERIES.SELECT_MY_PRODUCT_COUNT_BY_USER, { where: { myLock: { equals: 2 } } }, false);
+		const { SELECT_MY_PRODUCT_COUNT_BY_USER } = QUERIES;
+		let collectJson;
+		let registeredJson;
+		let lockJson;
+		await Promise.all([
+			gql(SELECT_MY_PRODUCT_COUNT_BY_USER, { where: { state: { equals: 6 } } }, false).then((response) => {
+				if (!response.errors) collectJson = response.data.selectMyProductsCountByUser.toString();
+			}),
+			gql(SELECT_MY_PRODUCT_COUNT_BY_USER, { where: { state: { equals: 7 } } }, false).then((response) => {
+				if (!response.errors) registeredJson = response.data.selectMyProductsCountByUser.toString();
+			}),
+			gql(SELECT_MY_PRODUCT_COUNT_BY_USER, { where: { myLock: { equals: 2 } } }, false).then((response) => {
+				if (!response.errors) lockJson = response.data.selectMyProductsCountByUser.toString();
+			}),
+		]);
 
 		runInAction(() => {
-			if (!collectJson.errors)
-				this.countInfo.product.collected = collectJson.data.selectMyProductsCountByUser.toString();
-			if (!registeredJson.errors)
-				this.countInfo.product.registered = registeredJson.data.selectMyProductsCountByUser.toString();
-			if (!lockJson.errors) this.countInfo.product.locked = lockJson.data.selectMyProductsCountByUser.toString();
+			this.countInfo.product.collected = collectJson;
+			this.countInfo.product.registered = registeredJson;
+			this.countInfo.product.locked = lockJson;
 		});
 	};
 

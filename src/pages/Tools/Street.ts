@@ -846,9 +846,7 @@ export async function newOrderStreet(commonStore: any, shopInfo: any) {
 
 				const orderJson: any = await streetApiGateway(body);
 
-				console.log(shopName, orderJson['ns2:orders']['ns2:order']);
-
-				if (!orderJson['ns2:orders']['ns2:order']) {
+				if (!orderJson?.['ns2:orders']?.['ns2:order']) {
 					return [];
 				}
 
