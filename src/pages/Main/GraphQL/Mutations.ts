@@ -700,6 +700,7 @@ const MUTATIONS = {
         myKeyward : $myKeyward
     )
   }`,
+	/** 개인분류 초기화 */
 	RESET_KEYWARD_LIST: `
   mutation($userId: Int!){
     resetKeywardList(

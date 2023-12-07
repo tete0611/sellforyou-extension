@@ -2,7 +2,7 @@ import gql from '../../pages/Main/GraphQL/Requests';
 import QUERIES from '../../pages/Main/GraphQL/Queries';
 import MUTATIONS from '../../pages/Main/GraphQL/Mutations';
 
-import { runInAction, makeAutoObservable, keys } from 'mobx';
+import { runInAction, makeAutoObservable } from 'mobx';
 import {
 	cartesian,
 	downloadExcel,
@@ -22,7 +22,7 @@ import { deleteLotteon, uploadLotteon } from '../../pages/Tools/Lotteon';
 import { deleteTmon, uploadTmon } from '../../pages/Tools/Tmon';
 import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from '../../pages/Tools/ChromeAsync';
 import { common } from './common';
-import { AppInfo, ItemInfo, ManyPriceInfo, ModalInfo, User } from '../../type/type';
+import { AppInfo, Item, ItemInfo, ManyPriceInfo, ModalInfo, User } from '../../type/type';
 import { UpdateProductMyKeywardInPut } from '../../type/mutation';
 import { SHOPCODE } from '../../type/variable';
 
@@ -926,6 +926,7 @@ export class product {
 
 	// 상품 정보
 	getProduct = async (commonStore: common, p: number) => {
+		console.time('상품 정보 로드시간');
 		this.itemInfo.loading = true;
 		// Backup
 		const oldItems = this.itemInfo.items;
@@ -1007,10 +1008,10 @@ export class product {
 			if (response2.errors) return alert(response2.errors[0].message);
 
 			result = await Promise.all(
-				response2.data.selectMyProductByUser.map(async (v: any) => {
+				response2.data.selectMyProductByUser.map(async (v: Item) => {
 					v.attribute = v.attribute ? JSON.parse(v.attribute) : [];
 
-					v.imageThumbnail = v.imageThumbnail.map((w: any) =>
+					v.imageThumbnail = v.imageThumbnail.map((w) =>
 						/^https?/.test(w) ? w : `${process.env.SELLFORYOU_MINIO_HTTPS}/${w}`,
 					);
 
@@ -1019,8 +1020,8 @@ export class product {
 							? v.activeTaobaoProduct.videoUrl
 							: 'https:' + v.activeTaobaoProduct.videoUrl;
 
-					v.productOptionName.map((w: any) =>
-						w.productOptionValue.map((x: any) => {
+					v.productOptionName.map((w) =>
+						w.productOptionValue.map((x) => {
 							if (x.image)
 								x.image = /^https?/.test(x.image) ? x.image : `${process.env.SELLFORYOU_MINIO_HTTPS}/${x.image}`;
 						}),
@@ -1046,7 +1047,7 @@ export class product {
 					if (descHtml) {
 						v.descriptionImages = [];
 
-						const imageList: any = descHtml.querySelectorAll('img');
+						const imageList = descHtml.querySelectorAll('img');
 
 						for (let i in imageList) {
 							if (imageList[i].src) {
@@ -1262,7 +1263,7 @@ export class product {
 					}
 
 					const tagInfo = this.tagDict.find((w: any) => w.code === v.categoryInfoA077?.code)?.tagJson;
-					const checked = oldItems.find((w: any) => w.id === v.id)?.checked ?? false;
+					const checked = oldItems.find((w) => w.id === v.id)?.checked ?? false;
 
 					return {
 						...v,
@@ -1294,6 +1295,7 @@ export class product {
 				}),
 			);
 		}
+		console.timeEnd('상품 정보 로드시간');
 
 		runInAction(() => {
 			this.itemInfo.items = result;

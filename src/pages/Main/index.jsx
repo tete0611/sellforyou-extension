@@ -6,7 +6,7 @@ import { render } from 'react-dom';
 import './index.css';
 
 render(
-	<App />,
+	// <App />,
 
 	window.document.querySelector('#app-container'),
 );

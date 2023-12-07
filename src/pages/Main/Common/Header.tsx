@@ -32,7 +32,6 @@ import {
 	CircularProgress,
 	Divider,
 	Drawer,
-	Fab,
 	IconButton,
 	List,
 	ListItem,
@@ -81,7 +80,20 @@ export const Header = observer(() => {
 		sideBar,
 	} = common;
 	const { markets } = uploadInfo;
-	const { AUCTION_1, AUCTION_2, COUPANG, TMON } = SHOPCODE;
+	const { purchaseInfo2, userInfo, productCount, email, credit, id } = user;
+	const {
+		AUCTION_1,
+		COUPANG,
+		TMON,
+		G_MARKET_1,
+		INTER_PARK,
+		LOTTE_ON_GLOBAL,
+		LOTTE_ON_NORMAL,
+		SMART_STORE,
+		STREET11_GLOBAL,
+		STREET11_NORMAL,
+		WE_MAKE_PRICE,
+	} = SHOPCODE;
 
 	React.useEffect(() => {
 		// 브라우저 창 크기가 바뀔때마다 갱신해서 반응형으로 동작하도록 구현
@@ -103,25 +115,17 @@ export const Header = observer(() => {
 		Promise.all(
 			notionPageList.map(async (v, i) => {
 				const response = await getNotionPage(v);
-				// console.log(i);
-				if (i === 0) {
-					setNotionPage(response);
-				}
-
-				if (i === 1) {
+				if (i === 0) setNotionPage(response);
+				if (i === 1)
 					for (let key in response) {
-						if (response[key]?.value?.properties?.title[0][0]?.includes('http')) {
+						if (response[key]?.value?.properties?.title[0][0]?.includes('http'))
 							setBanner01Url(response[key].value.properties.title[0][0]);
-						}
 					}
-				}
-				if (i === 2) {
+				if (i === 2)
 					for (let key in response) {
-						if (response[key]?.value?.properties?.title[0][0]?.includes('http')) {
+						if (response[key]?.value?.properties?.title[0][0]?.includes('http'))
 							setBanner01Image(response[key].value.properties.title[0][0]);
-						}
 					}
-				}
 			}),
 		);
 	}, []);
@@ -136,14 +140,9 @@ export const Header = observer(() => {
 
 	// 로그아웃 눌렀을 때
 	const signOut = async () => {
-		const accept = confirm('로그아웃하시겠습니까?');
-
-		if (!accept) {
-			return;
-		}
+		if (!confirm('로그아웃하시겠습니까?')) return;
 
 		let appInfo = await getLocalStorage<AppInfo>('appInfo');
-
 		appInfo = {
 			...appInfo,
 			accessToken: '',
@@ -158,16 +157,12 @@ export const Header = observer(() => {
 	};
 
 	// 결제하기 눌렀을 때
-	const payment = () => {
-		window.location.href = '/payments.html';
+	const payment = () => (window.location.href = '/payments.html');
 
-		// window.open("https://www.sellforyou.co.kr/user/payment");
-	};
+	// window.open("https://www.sellforyou.co.kr/user/payment");
 
 	// 비밀번호 변경 눌렀을 때
-	const changePassword = () => {
-		window.location.href = '/changepassword.html';
-	};
+	const changePassword = () => (window.location.href = '/changepassword.html');
 
 	// 좌측 삼지창 메뉴아이콘 클릭 시 나타나는 레이아웃
 	const menuList = () => (
@@ -242,7 +237,7 @@ export const Header = observer(() => {
 					<ListItem key={text} disablePadding>
 						<ListItemButton
 							onClick={() =>
-								user.purchaseInfo2.level < 3
+								purchaseInfo2.level < 3
 									? alert('[프로] 등급부터 사용 가능한 기능입니다.')
 									: addToStack({
 											name: '잠금상품관리',
@@ -558,9 +553,7 @@ export const Header = observer(() => {
 							sx={{
 								minWidth: 80,
 							}}
-							onClick={() => {
-								window.open(`${banner01Url}`);
-							}}
+							onClick={() => window.open(`${banner01Url}`)}
 						>
 							무료수입대행
 						</MyButton>
@@ -572,9 +565,9 @@ export const Header = observer(() => {
 							sx={{
 								minWidth: 80,
 							}}
-							onClick={() => {
-								window.open('https://sellforyou.channel.io/lounge', '팝업', 'width=400px,height=700px,scrollbars=yes');
-							}}
+							onClick={() =>
+								window.open('https://sellforyou.channel.io/lounge', '팝업', 'width=400px,height=700px,scrollbars=yes')
+							}
 						>
 							실시간상담
 						</MyButton>
@@ -584,9 +577,7 @@ export const Header = observer(() => {
 								ml: 0.5,
 								minWidth: 80,
 							}}
-							onClick={() => {
-								window.open('https://open.kakao.com/o/gfCffF3e');
-							}}
+							onClick={() => window.open('https://open.kakao.com/o/gfCffF3e')}
 						>
 							오픈채팅방
 						</MyButton>
@@ -596,9 +587,7 @@ export const Header = observer(() => {
 								ml: 0.5,
 								minWidth: 80,
 							}}
-							onClick={() => {
-								window.open('https://cafe.naver.com/sellfor');
-							}}
+							onClick={() => window.open('https://cafe.naver.com/sellfor')}
 						>
 							네이버카페
 						</MyButton>
@@ -608,42 +597,28 @@ export const Header = observer(() => {
 								ml: 0.5,
 								minWidth: 80,
 							}}
-							onClick={() => {
-								window.open('https://panoramic-butternut-291.notion.site/2619a31e8a93438fa308dcfaae76666a');
-							}}
+							onClick={() =>
+								window.open('https://panoramic-butternut-291.notion.site/2619a31e8a93438fa308dcfaae76666a')
+							}
 						>
 							이용가이드
 						</MyButton>
 						&nbsp; &nbsp;
 						<Tooltip title={darkTheme ? '다크모드: 켜짐' : '다크모드: 꺼짐'}>
-							<IconButton
-								size='large'
-								color='inherit'
-								onClick={(e) => {
-									toggleTheme();
-								}}
-							>
+							<IconButton size='large' color='inherit' onClick={(e) => toggleTheme()}>
 								{darkTheme ? <DarkModeIcon /> : <LightModeIcon />}
 							</IconButton>
 						</Tooltip>
 						&nbsp;
 						<Tooltip title='내 정보'>
-							<IconButton
-								size='large'
-								color='inherit'
-								onClick={(e) => {
-									setPopOverAnchor(e.currentTarget);
-								}}
-							>
+							<IconButton size='large' color='inherit' onClick={(e) => setPopOverAnchor(e.currentTarget)}>
 								<AccountCircle />
 							</IconButton>
 						</Tooltip>
 						<Popover
 							open={popOver}
 							anchorEl={popOverAnchor}
-							onClose={() => {
-								setPopOverAnchor(null);
-							}}
+							onClose={() => setPopOverAnchor(null)}
 							anchorOrigin={{
 								vertical: 'bottom',
 								horizontal: 'left',
@@ -656,7 +631,7 @@ export const Header = observer(() => {
 									width: 250,
 								}}
 							>
-								{user.userInfo ? (
+								{userInfo ? (
 									<>
 										<Box
 											sx={{
@@ -687,13 +662,13 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{user.purchaseInfo2?.level === 1 ? (
+														{purchaseInfo2?.level === 1 ? (
 															<Chip size='small' label='체험판' color='warning' sx={{ width: 65 }} />
-														) : user.purchaseInfo2?.level === 2 ? (
+														) : purchaseInfo2?.level === 2 ? (
 															<Chip size='small' label='베이직' color='info' sx={{ width: 65 }} />
-														) : user.purchaseInfo2?.level === 3 ? (
+														) : purchaseInfo2?.level === 3 ? (
 															<Chip size='small' label='프로' color='secondary' sx={{ width: 65 }} />
-														) : user.purchaseInfo2?.level === 4 ? (
+														) : purchaseInfo2?.level === 4 ? (
 															<Chip size='small' label='프리미엄' color='error' sx={{ width: 65 }} />
 														) : (
 															<Chip size='small' label='미설정' sx={{ width: 65 }} />
@@ -704,7 +679,7 @@ export const Header = observer(() => {
 																fontSize: 13,
 															}}
 														>
-															{user.email}
+															{email}
 														</Typography>
 													</Box>
 
@@ -730,7 +705,7 @@ export const Header = observer(() => {
 																fontSize: 13,
 															}}
 														>
-															{user.productCount} 개
+															{productCount} 개
 														</Typography>
 													</Box>
 
@@ -756,7 +731,7 @@ export const Header = observer(() => {
 																fontSize: 13,
 															}}
 														>
-															{user.credit.toLocaleString('ko-KR')} P
+															{credit.toLocaleString('ko-KR')} P
 														</Typography>
 													</Box>
 
@@ -774,9 +749,7 @@ export const Header = observer(() => {
 															sx={{
 																width: '100%',
 															}}
-															onClick={() => {
-																togglePayHistoryModal(user.id, true);
-															}}
+															onClick={() => togglePayHistoryModal(id, true)}
 														>
 															결제내역
 														</MyButton>
@@ -860,7 +833,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{uploadInfo.markets.find((v) => v.code === 'A077' && v.connected) ? (
+														{markets.find((v) => v.code === SMART_STORE && v.connected) ? (
 															<img src='/resources/icon-smartstore.png' />
 														) : (
 															<img src='/resources/icon-smartstore-gray.png' />
@@ -868,21 +841,23 @@ export const Header = observer(() => {
 
 														<Switch
 															size='small'
-															checked={user.userInfo?.naverUseType === 'Y' ? true : false}
-															disabled={!uploadInfo.markets.find((v) => v.code === 'A077')?.connected}
+															checked={userInfo?.naverUseType === 'Y' ? true : false}
+															disabled={!markets.find((v) => v.code === SMART_STORE)?.connected}
 															onChange={async (e) => {
 																const naverUseType = e.target.checked ? 'Y' : 'N';
 
 																await testUserInfo({ naverUseType });
 
 																setUserInfo({
-																	...user.userInfo,
+																	...userInfo,
 																	naverUseType,
 																});
 
-																uploadInfo.markets.find((v) => v.code === 'A077')!.disabled = !e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'A077')!.upload = e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'A077')!.video = e.target.checked;
+																let tmp = markets.find((v) => v.code === SMART_STORE)!;
+
+																tmp.disabled = !e.target.checked;
+																tmp.upload = e.target.checked;
+																tmp.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -895,7 +870,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{uploadInfo.markets.find((v) => v.code === 'B378' && v.connected) ? (
+														{markets.find((v) => v.code === COUPANG && v.connected) ? (
 															<img src='/resources/icon-coupang.png' />
 														) : (
 															<img src='/resources/icon-coupang-gray.png' />
@@ -903,21 +878,23 @@ export const Header = observer(() => {
 
 														<Switch
 															size='small'
-															checked={user.userInfo?.coupangUseType === 'Y' ? true : false}
-															disabled={!uploadInfo.markets.find((v) => v.code === 'B378')?.connected}
+															checked={userInfo?.coupangUseType === 'Y' ? true : false}
+															disabled={!markets.find((v) => v.code === COUPANG)?.connected}
 															onChange={async (e) => {
 																const coupangUseType = e.target.checked ? 'Y' : 'N';
 
 																await testUserInfo({ coupangUseType });
 
 																setUserInfo({
-																	...user.userInfo,
+																	...userInfo,
 																	coupangUseType,
 																});
 
-																uploadInfo.markets.find((v) => v.code === 'B378')!.disabled = !e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'B378')!.upload = e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'B378')!.video = e.target.checked;
+																let tmp = markets.find((v) => v.code === COUPANG)!;
+
+																tmp.disabled = !e.target.checked;
+																tmp.upload = e.target.checked;
+																tmp.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -930,7 +907,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{uploadInfo.markets.find((v) => v.code === 'A112' && v.connected) ? (
+														{markets.find((v) => v.code === STREET11_GLOBAL && v.connected) ? (
 															<img src='/resources/icon-street-global.png' />
 														) : (
 															<img src='/resources/icon-street-global-gray.png' />
@@ -938,21 +915,23 @@ export const Header = observer(() => {
 
 														<Switch
 															size='small'
-															checked={user.userInfo?.streetUseType === 'Y' ? true : false}
-															disabled={!uploadInfo.markets.find((v) => v.code === 'A112')?.connected}
+															checked={userInfo?.streetUseType === 'Y' ? true : false}
+															disabled={!markets.find((v) => v.code === STREET11_GLOBAL)?.connected}
 															onChange={async (e) => {
 																const streetUseType = e.target.checked ? 'Y' : 'N';
 
 																await testUserInfo({ streetUseType });
 
 																setUserInfo({
-																	...user.userInfo,
+																	...userInfo,
 																	streetUseType,
 																});
 
-																uploadInfo.markets.find((v) => v.code === 'A112')!.disabled = !e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'A112')!.upload = e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'A112')!.video = e.target.checked;
+																let tmp = markets.find((v) => v.code === STREET11_GLOBAL)!;
+
+																tmp.disabled = !e.target.checked;
+																tmp.upload = e.target.checked;
+																tmp.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -965,7 +944,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{uploadInfo.markets.find((v) => v.code === 'A113' && v.connected) ? (
+														{markets.find((v) => v.code === STREET11_NORMAL && v.connected) ? (
 															<img src='/resources/icon-street-normal.png' />
 														) : (
 															<img src='/resources/icon-street-normal-gray.png' />
@@ -973,8 +952,8 @@ export const Header = observer(() => {
 
 														<Switch
 															size='small'
-															checked={user.userInfo?.streetNormalUseType === 'Y' ? true : false}
-															disabled={!uploadInfo.markets.find((v) => v.code === 'A113')?.connected}
+															checked={userInfo?.streetNormalUseType === 'Y' ? true : false}
+															disabled={!markets.find((v) => v.code === STREET11_NORMAL)?.connected}
 															onChange={async (e) => {
 																const streetNormalUseType = e.target.checked ? 'Y' : 'N';
 
@@ -983,13 +962,15 @@ export const Header = observer(() => {
 																});
 
 																setUserInfo({
-																	...user.userInfo,
+																	...userInfo,
 																	streetNormalUseType,
 																});
 
-																uploadInfo.markets.find((v) => v.code === 'A113')!.disabled = !e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'A113')!.upload = e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'A113')!.video = e.target.checked;
+																let tmp = markets.find((v) => v.code === STREET11_NORMAL)!;
+
+																tmp.disabled = !e.target.checked;
+																tmp.upload = e.target.checked;
+																tmp.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -1002,7 +983,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{uploadInfo.markets.find((v) => v.code === 'A006' && v.connected) ? (
+														{markets.find((v) => v.code === G_MARKET_1 && v.connected) ? (
 															<img src='/resources/icon-gmarket.png' />
 														) : (
 															<img src='/resources/icon-gmarket-gray.png' />
@@ -1010,21 +991,23 @@ export const Header = observer(() => {
 
 														<Switch
 															size='small'
-															checked={user.userInfo?.gmarketUseType === 'Y' ? true : false}
-															disabled={!uploadInfo.markets.find((v) => v.code === 'A006')?.connected}
+															checked={userInfo?.gmarketUseType === 'Y' ? true : false}
+															disabled={!markets.find((v) => v.code === G_MARKET_1)?.connected}
 															onChange={async (e) => {
 																const gmarketUseType = e.target.checked ? 'Y' : 'N';
 
 																await testUserInfo({ gmarketUseType });
 
 																setUserInfo({
-																	...user.userInfo,
+																	...userInfo,
 																	gmarketUseType,
 																});
 
-																uploadInfo.markets.find((v) => v.code === 'A006')!.disabled = !e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'A006')!.upload = e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'A006')!.video = e.target.checked;
+																let tmp = markets.find((v) => v.code === G_MARKET_1)!;
+
+																tmp.disabled = !e.target.checked;
+																tmp.upload = e.target.checked;
+																tmp.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -1037,7 +1020,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{uploadInfo.markets.find((v) => v.code === 'A001' && v.connected) ? (
+														{markets.find((v) => v.code === AUCTION_1 && v.connected) ? (
 															<img src='/resources/icon-auction.png' />
 														) : (
 															<img src='/resources/icon-auction-gray.png' />
@@ -1045,21 +1028,23 @@ export const Header = observer(() => {
 
 														<Switch
 															size='small'
-															checked={user.userInfo?.auctionUseType === 'Y' ? true : false}
-															disabled={!uploadInfo.markets.find((v) => v.code === 'A001')?.connected}
+															checked={userInfo?.auctionUseType === 'Y' ? true : false}
+															disabled={!markets.find((v) => v.code === AUCTION_1)?.connected}
 															onChange={async (e) => {
 																const auctionUseType = e.target.checked ? 'Y' : 'N';
 
 																await testUserInfo({ auctionUseType });
 
 																setUserInfo({
-																	...user.userInfo,
+																	...userInfo,
 																	auctionUseType,
 																});
 
-																uploadInfo.markets.find((v) => v.code === 'A001')!.disabled = !e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'A001')!.upload = e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'A001')!.video = e.target.checked;
+																let tmp = markets.find((v) => v.code === AUCTION_1)!;
+
+																tmp.disabled = !e.target.checked;
+																tmp.upload = e.target.checked;
+																tmp.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -1072,7 +1057,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{uploadInfo.markets.find((v) => v.code === 'A027' && v.connected) ? (
+														{markets.find((v) => v.code === INTER_PARK && v.connected) ? (
 															<img src='/resources/icon-interpark.png' />
 														) : (
 															<img src='/resources/icon-interpark-gray.png' />
@@ -1080,21 +1065,23 @@ export const Header = observer(() => {
 
 														<Switch
 															size='small'
-															checked={user.userInfo?.interparkUseType === 'Y' ? true : false}
-															disabled={!uploadInfo.markets.find((v) => v.code === 'A027')?.connected}
+															checked={userInfo?.interparkUseType === 'Y' ? true : false}
+															disabled={!markets.find((v) => v.code === INTER_PARK)?.connected}
 															onChange={async (e) => {
 																const interparkUseType = e.target.checked ? 'Y' : 'N';
 
 																await testUserInfo({ interparkUseType });
 
 																setUserInfo({
-																	...user.userInfo,
+																	...userInfo,
 																	interparkUseType,
 																});
 
-																uploadInfo.markets.find((v) => v.code === 'A027')!.disabled = !e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'A027')!.upload = e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'A027')!.video = e.target.checked;
+																let tmp = markets.find((v) => v.code === INTER_PARK)!;
+
+																tmp.disabled = !e.target.checked;
+																tmp.upload = e.target.checked;
+																tmp.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -1107,7 +1094,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{uploadInfo.markets.find((v) => v.code === 'B719' && v.connected) ? (
+														{markets.find((v) => v.code === WE_MAKE_PRICE && v.connected) ? (
 															<img src='/resources/icon-wemakeprice.png' />
 														) : (
 															<img src='/resources/icon-wemakeprice-gray.png' />
@@ -1115,8 +1102,8 @@ export const Header = observer(() => {
 
 														<Switch
 															size='small'
-															checked={user.userInfo?.wemakepriceUseType === 'Y' ? true : false}
-															disabled={!uploadInfo.markets.find((v) => v.code === 'B719')?.connected}
+															checked={userInfo?.wemakepriceUseType === 'Y' ? true : false}
+															disabled={!markets.find((v) => v.code === WE_MAKE_PRICE)?.connected}
 															onChange={async (e) => {
 																const wemakepriceUseType = e.target.checked ? 'Y' : 'N';
 
@@ -1125,13 +1112,15 @@ export const Header = observer(() => {
 																});
 
 																setUserInfo({
-																	...user.userInfo,
+																	...userInfo,
 																	wemakepriceUseType,
 																});
 
-																uploadInfo.markets.find((v) => v.code === 'B719')!.disabled = !e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'B719')!.upload = e.target.checked;
-																uploadInfo.markets.find((v) => v.code === 'B719')!.video = e.target.checked;
+																let tmp = markets.find((v) => v.code === WE_MAKE_PRICE)!;
+
+																tmp.disabled = !e.target.checked;
+																tmp.upload = e.target.checked;
+																tmp.video = e.target.checked;
 															}}
 														/>
 													</Box>
@@ -1144,7 +1133,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{uploadInfo.markets.find((v) => v.code === 'A524' && v.connected) ? (
+														{markets.find((v) => v.code === LOTTE_ON_GLOBAL && v.connected) ? (
 															<img src='/resources/icon-lotteon-global.png' />
 														) : (
 															<img src='/resources/icon-lotteon-global-gray.png' />
@@ -1152,11 +1141,11 @@ export const Header = observer(() => {
 
 														<Switch
 															size='small'
-															checked={user.userInfo?.lotteonUseType === 'Y' ? true : false}
+															checked={userInfo?.lotteonUseType === 'Y' ? true : false}
 															disabled={
 																!(
-																	uploadInfo.markets.find((v) => v.code === 'A524')?.connected ||
-																	uploadInfo.markets.find((v) => v.code === 'A525')?.connected
+																	markets.find((v) => v.code === LOTTE_ON_GLOBAL)?.connected ||
+																	markets.find((v) => v.code === LOTTE_ON_NORMAL)?.connected
 																)
 															}
 															onChange={async (e) => {
@@ -1165,18 +1154,22 @@ export const Header = observer(() => {
 																await testUserInfo({ lotteonUseType });
 
 																setUserInfo({
-																	...user.userInfo,
+																	...userInfo,
 																	lotteonUseType,
 																});
 
-																if (user.userInfo.lotteonSellerType === 'G') {
-																	uploadInfo.markets.find((v) => v.code === 'A524')!.disabled = !e.target.checked;
-																	uploadInfo.markets.find((v) => v.code === 'A524')!.upload = e.target.checked;
-																	uploadInfo.markets.find((v) => v.code === 'A524')!.video = e.target.checked;
+																if (userInfo.lotteonSellerType === 'G') {
+																	let tmp_1 = markets.find((v) => v.code === LOTTE_ON_GLOBAL)!;
+
+																	tmp_1.disabled = !e.target.checked;
+																	tmp_1.upload = e.target.checked;
+																	tmp_1.video = e.target.checked;
 																} else {
-																	uploadInfo.markets.find((v) => v.code === 'A525')!.disabled = !e.target.checked;
-																	uploadInfo.markets.find((v) => v.code === 'A525')!.upload = e.target.checked;
-																	uploadInfo.markets.find((v) => v.code === 'A525')!.video = e.target.checked;
+																	let tmp_2 = markets.find((v) => v.code === LOTTE_ON_NORMAL)!;
+
+																	tmp_2.disabled = !e.target.checked;
+																	tmp_2.upload = e.target.checked;
+																	tmp_2.video = e.target.checked;
 																}
 															}}
 														/>
@@ -1190,7 +1183,7 @@ export const Header = observer(() => {
 															mb: 1,
 														}}
 													>
-														{uploadInfo.markets.find((v) => v.code === 'A525' && v.connected) ? (
+														{markets.find((v) => v.code === LOTTE_ON_NORMAL && v.connected) ? (
 															<img src='/resources/icon-lotteon-normal.png' />
 														) : (
 															<img src='/resources/icon-lotteon-normal-gray.png' />
@@ -1198,11 +1191,11 @@ export const Header = observer(() => {
 
 														<Switch
 															size='small'
-															checked={user.userInfo?.lotteonUseType === 'Y' ? true : false}
+															checked={userInfo?.lotteonUseType === 'Y' ? true : false}
 															disabled={
 																!(
-																	uploadInfo.markets.find((v) => v.code === 'A524')?.connected ||
-																	uploadInfo.markets.find((v) => v.code === 'A525')?.connected
+																	markets.find((v) => v.code === LOTTE_ON_GLOBAL)?.connected ||
+																	markets.find((v) => v.code === LOTTE_ON_NORMAL)?.connected
 																)
 															}
 															onChange={async (e) => {
@@ -1211,18 +1204,22 @@ export const Header = observer(() => {
 																await testUserInfo({ lotteonUseType });
 
 																setUserInfo({
-																	...user.userInfo,
+																	...userInfo,
 																	lotteonUseType,
 																});
 
-																if (user.userInfo.lotteonSellerType === 'G') {
-																	uploadInfo.markets.find((v) => v.code === 'A524')!.disabled = !e.target.checked;
-																	uploadInfo.markets.find((v) => v.code === 'A524')!.upload = e.target.checked;
-																	uploadInfo.markets.find((v) => v.code === 'A524')!.video = e.target.checked;
+																if (userInfo.lotteonSellerType === 'G') {
+																	let tmp_1 = markets.find((v) => v.code === LOTTE_ON_GLOBAL)!;
+
+																	tmp_1.disabled = !e.target.checked;
+																	tmp_1.upload = e.target.checked;
+																	tmp_1.video = e.target.checked;
 																} else {
-																	uploadInfo.markets.find((v) => v.code === 'A525')!.disabled = !e.target.checked;
-																	uploadInfo.markets.find((v) => v.code === 'A525')!.upload = e.target.checked;
-																	uploadInfo.markets.find((v) => v.code === 'A525')!.video = e.target.checked;
+																	let tmp_2 = markets.find((v) => v.code === LOTTE_ON_NORMAL)!;
+
+																	tmp_2.disabled = !e.target.checked;
+																	tmp_2.upload = e.target.checked;
+																	tmp_2.video = e.target.checked;
 																}
 															}}
 														/>
@@ -1244,20 +1241,23 @@ export const Header = observer(() => {
 
 														<Switch
 															size='small'
-															checked={user.userInfo?.tmonUseType === 'Y' ? true : false}
+															checked={userInfo?.tmonUseType === 'Y' ? true : false}
 															disabled={!markets.find((v) => v.code === TMON)?.connected}
 															onChange={async (e) => {
 																const tmonUseType = e.target.checked ? 'Y' : 'N';
+
 																await testUserInfo({ tmonUseType });
+
 																setUserInfo({
-																	...user.userInfo,
+																	...userInfo,
 																	tmonUseType,
 																});
+
 																let tmp = markets.find((v) => v.code === TMON)!;
+
 																tmp.disabled = !e.target.checked;
 																tmp.upload = e.target.checked;
 																tmp.video = e.target.checked;
-																console.log(common.uploadInfo.markets.find((v) => v.code === TMON));
 															}}
 														/>
 													</Box>
@@ -1265,7 +1265,7 @@ export const Header = observer(() => {
 											</Accordion>
 										</Box>
 
-										{user.purchaseInfo2?.level > 1 ? (
+										{purchaseInfo2?.level > 1 ? (
 											<Paper
 												variant='outlined'
 												sx={{
@@ -1300,11 +1300,11 @@ export const Header = observer(() => {
 												size='small'
 												variant='outlined'
 												color='info'
-												onClick={() => {
+												onClick={() =>
 													window.open(
 														'https://chrome.google.com/webstore/detail/%EC%85%80%ED%8F%AC%EC%9C%A0/cdghhijdbghkgklajgahabkbbpijddlo?hl=ko',
-													);
-												}}
+													)
+												}
 											>
 												최신버전 확인
 											</Button>

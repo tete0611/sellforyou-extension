@@ -1421,7 +1421,7 @@ export const TabAttribute = observer((props: Props) => {
 							>
 								<Table stickyHeader>
 									<TableBody>
-										{props.item.attribute.map((v: any) => {
+										{props.item.attribute.map((v) => {
 											return (
 												<TableRow>
 													<StyledTableCell width={'40%'}>

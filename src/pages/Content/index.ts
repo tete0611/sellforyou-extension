@@ -19,24 +19,6 @@ import { CollectInfo, Nullable, RuntimeMessage, Sender, Shop, User } from '../..
 
 // const iconv = require('iconv-lite');
 
-// 이벤트 리스너에 전달할 함수 정의
-const handleScroll = async () => {
-	console.log(window.scrollY);
-	if (window.scrollY >= 4000) {
-		const nextButton: Nullable<HTMLButtonElement> = document
-			.querySelector('#root')
-			?.querySelector('.next-pagination-pages')
-			?.querySelector('[class*="next-next"]');
-		console.log(nextButton);
-		document.removeEventListener('scroll', handleScroll);
-		await sleep(5000);
-		if (nextButton) nextButton.click();
-	}
-};
-
-// scroll 이벤트 리스너 등록
-document.addEventListener('scroll', handleScroll);
-
 const bulkCollectUsingApi = async (shopId: number, currentPage: number) => {
 	const resp = await fetch(
 		`https://www.vvic.com/apif/shop/itemlist?id=${shopId}&currentPage=${currentPage}&sort=up_time-desc&merge=0`,
@@ -1775,6 +1757,7 @@ const main = async () => {
 
 		/** vvic 상점 페이지 */
 	} else if (/www.vvic.com\/shop\/(\d+)/.test(currentUrl)) {
+		console.log('vvic shop page entered');
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 3);
 		const shopId = parseInt(currentUrl.match(/\/shop\/(\d+)/)?.[1] ?? '0');
@@ -1782,9 +1765,11 @@ const main = async () => {
 
 		/** */
 	} else if (/www.vvic.com\/.+\/list/.test(currentUrl)) {
+		console.log('vvic list page entered');
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 4);
-		floatingButton(info, 'vvic', true, true);
+		const shopId = parseInt(currentUrl.match(/\/list\/(\d+)/)?.[1] ?? '0');
+		floatingButton(info, 'vvic', true, true, { shopId: shopId, method: 'api' });
 
 		/** */
 	} else if (/www.amazon.com\/.+\/dp\//.test(currentUrl) || /www.amazon.com\/dp/.test(currentUrl)) {

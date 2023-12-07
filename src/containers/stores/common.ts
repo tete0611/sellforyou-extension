@@ -1138,7 +1138,7 @@ export class common {
 
 	// 탭 삭제
 	deleteFromStack = (index: number) => {
-		this.chips = this.chips.filter((v: any, i: number) => (i === index ? false : true));
+		this.chips = this.chips.filter((_: any, i: number) => (i === index ? false : true));
 
 		const stack = JSON.parse(JSON.stringify(this.chips));
 
@@ -1150,6 +1150,7 @@ export class common {
 	// 배송정책 설정
 	setPolicyInfo = (marketCode: string, value: any) =>
 		(this.uploadInfo.markets.find((v) => v.code === marketCode)!.policyInfo = value);
+
 	// 등록해제 시 퍼센테이지
 	setDisabledProgressValue = (marketCode: string, value: number) =>
 		(this.uploadDisabledInfo.markets.find((v) => v.code === marketCode)!.progress = value);

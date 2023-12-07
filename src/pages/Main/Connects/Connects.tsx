@@ -21,6 +21,7 @@ import {
 import { Frame, Title } from '../Common/UI';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { SHOPCODE } from '../../../type/variable';
+import { trimSpaces } from '../../Tools/Common';
 
 // 오픈마켓 연동 뷰
 export const Connects = observer(() => {
@@ -319,7 +320,7 @@ export const Connects = observer(() => {
 														onBlur={(e) =>
 															common.setUserInfo({
 																...common.user.userInfo,
-																coupangVendorId: e.target.value,
+																coupangVendorId: trimSpaces(e.target.value),
 															})
 														}
 													/>

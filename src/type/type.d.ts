@@ -76,7 +76,6 @@ export type AppInfo = {
 	pageSize: number;
 	gridView: boolean;
 	darkTheme: boolean;
-	ppgKey: string;
 };
 
 export type BulkInfo = {
@@ -184,29 +183,29 @@ type Item = {
 	state: number;
 	createdAt: Date;
 	stockUpdatedAt: Date;
-	categoryInfoA077: { code: string; name: string; activeSillDataA077: any; sillInfoA077: any };
-	categoryInfoB378: { code: string; name: string; activeSillDataB378: any; sillInfoB378: any };
-	categoryInfoA112: { code: string; name: string; activeSillDataA112: any; sillInfoA112: any };
-	categoryInfoA113: { code: string; name: string; activeSillDataA113: any; sillInfoA113: any };
-	categoryInfoA006: { code: string; name: string; activeSillDataA006: any; sillInfoA006: any };
-	categoryInfoA001: { code: string; name: string; activeSillDataA001: any; sillInfoA001: any };
-	categoryInfoA027: { code: string; name: string; activeSillDataA027: any; sillInfoA027: any };
-	categoryInfoB719: { code: string; name: string; activeSillDataB719: any; sillInfoB719: any };
-	categoryInfoA524: { code: string; name: string; activeSillDataA524: any; sillInfoA524: any };
-	categoryInfoA525: { code: string; name: string; activeSillDataA525: any; sillInfoA525: any };
-	categoryInfoB956: { code: string; name: string; activeSillDataB956: any; sillInfoB956: any };
+	categoryInfoA077: { code: string | null; name: string; activeSillDataA077?: any; sillInfoA077?: any };
+	categoryInfoB378: { code: string | null; name: string; activeSillDataB378?: any; sillInfoB378?: any };
+	categoryInfoA112: { code: string | null; name: string; activeSillDataA112?: any; sillInfoA112?: any };
+	categoryInfoA113: { code: string | null; name: string; activeSillDataA113?: any; sillInfoA113?: any };
+	categoryInfoA006: { code: string | null; name: string; activeSillDataA006?: any; sillInfoA006?: any };
+	categoryInfoA001: { code: string | null; name: string; activeSillDataA001?: any; sillInfoA001?: any };
+	categoryInfoA027: { code: string | null; name: string; activeSillDataA027?: any; sillInfoA027?: any };
+	categoryInfoB719: { code: string | null; name: string; activeSillDataB719?: any; sillInfoB719?: any };
+	categoryInfoA524: { code: string | null; name: string; activeSillDataA524?: any; sillInfoA524?: any };
+	categoryInfoA525: { code: string | null; name: string; activeSillDataA525?: any; sillInfoA525?: any };
+	categoryInfoB956: { code: string | null; name: string; activeSillDataB956?: any; sillInfoB956?: any };
 	edited: any;
 	checked: boolean;
 	name: string;
 	delete: boolean;
-	searchTags: any;
-	immSearchTags: any;
+	searchTags: string;
+	immSearchTags: string;
 	immSearchTagsTemp: any;
 	imageThumbnail: string[];
 	price: number;
 	cnyRate: number;
 	marginRate: number;
-	marginUnitType: any;
+	marginUnitType: string;
 	productOption: any;
 	activeTaobaoProduct: any;
 	productOptionName: {
@@ -221,7 +220,7 @@ type Item = {
 	refundShippingFee: number;
 	localShippingCode: string;
 	descriptionImages: any;
-	description: any;
+	description: string;
 	naverFee: number;
 	coupangFee: number;
 	streetFee: number;
@@ -236,7 +235,7 @@ type Item = {
 	collapse: any;
 	optionCollapse: any;
 	activeProductStore: { siteCode: string; state: number; storeUrl: string; inflow: any }[];
-	myLock: any;
+	myLock: number;
 	productCode: string;
 	tabs: any;
 	productStore: { siteCode: string; state: number; storeUrl: string }[];
@@ -249,9 +248,9 @@ type Item = {
 	descriptionImageError: boolean;
 	searchTagError: any;
 	imageCheckList: any;
-	myKeyward: any;
+	myKeyward: string;
 	attribute: any;
-	manuFacturer: any;
+	manuFacturer: string;
 	brandName: string;
 	modelName: string;
 	translate: boolean;
@@ -267,17 +266,17 @@ type Item = {
 	sillCodeA524: string;
 	sillCodeA525: string;
 	sillCodeB956: string;
-	sillDataA077: any;
-	sillDataB378: any;
-	sillDataA112: any;
-	sillDataA113: any;
-	sillDataA001: any;
-	sillDataA006: any;
-	sillDataA027: any;
-	sillDataB719: any;
-	sillDataA524: any;
-	sillDataA525: any;
-	sillDataB956: any;
+	sillDataA077: string;
+	sillDataB378: string;
+	sillDataA112: string;
+	sillDataA113: string;
+	sillDataA001: string;
+	sillDataA006: string;
+	sillDataA027: string;
+	sillDataB719: string;
+	sillDataA524: string;
+	sillDataA525: string;
+	sillDataB956: string;
 };
 
 /** common -> User -> UserInfo 타입 */
