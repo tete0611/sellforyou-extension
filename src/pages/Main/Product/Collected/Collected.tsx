@@ -118,7 +118,7 @@ export const Collected = observer(() => {
 										ml: 0.5,
 										minWidth: 100,
 									}}
-									onClick={() => product.itemToExcel()}
+									onClick={() => confirm('현재 페이지의 상품정보를 다운로드 하시겠습니까?') && product.itemToExcel()}
 								>
 									상품정보저장
 								</MyButton>

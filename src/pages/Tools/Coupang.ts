@@ -831,7 +831,7 @@ export const deleteCoupang = async (productStore: product, commonStore: common, 
 						await sleep(1000);
 						callCount = 0;
 					}
-					coupangApiGateway(stopBody);
+					await coupangApiGateway(stopBody);
 					callCount += 1;
 				}
 				/** map사용 */

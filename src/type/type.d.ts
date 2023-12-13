@@ -424,3 +424,15 @@ export type Source = {
 	data: CollectInfo['inputs'];
 	retry: boolean;
 };
+
+export type CategoryInfo = {
+	code: string;
+	depth1: string;
+	depth2?: string;
+	depth3?: string;
+	depth4?: string;
+	depth5?: string;
+	depth6?: string;
+	name: string;
+	sill_code: string;
+};

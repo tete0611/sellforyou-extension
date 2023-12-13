@@ -8,9 +8,10 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Header } from '../Common/Header';
-import { readFileDataURL } from '../../Tools/Common';
+import { downloadExcel, readFileDataURL } from '../../Tools/Common';
 import {
 	Box,
+	Button,
 	Container,
 	Grid,
 	IconButton,
@@ -24,6 +25,8 @@ import {
 import { Frame, Title } from '../Common/UI';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { REG_EXP } from '../../../../common/regex';
+// import { data } from '../../../assets/datas/street_11_category';
+import { CategoryInfo } from '../../../type/type';
 
 // 다른 GQL과 달리 formData 형식으로 백엔드에 요청해야 해서 별도로 구현
 async function uploadImage(data: any) {
@@ -5072,6 +5075,255 @@ export const Settings = observer(() => {
 									<Grid item xs={6} md={9}></Grid>
 								</Grid>
 							</Paper>
+							{/* 관리자 메뉴 */}
+							{user.email === 'developer@naver.com' && (
+								<Paper
+									variant='outlined'
+									sx={{
+										mt: 1,
+									}}
+								>
+									<Title dark={darkTheme}>관리자 메뉴</Title>
+									<Grid
+										container
+										spacing={1}
+										sx={{
+											textAlign: 'center',
+											p: 1,
+										}}
+									>
+										<Grid item xs={6} md={3}>
+											<Paper
+												variant='outlined'
+												sx={{
+													p: 1,
+												}}
+											>
+												<Grid container spacing={1}>
+													<Grid
+														item
+														xs={6}
+														md={6}
+														sx={{
+															margin: 'auto',
+														}}
+													>
+														<Box
+															sx={{
+																display: 'flex',
+																alignItems: 'center',
+																justifyContent: 'space-between',
+															}}
+														>
+															<Typography fontSize={14}>11번가 카테고리 엑셀변환</Typography>
+
+															<Tooltip title='xml파일을 업로드하여 excel로 다운받습니다.'>
+																<HelpOutlineIcon
+																	color='info'
+																	sx={{
+																		fontSize: 14,
+																	}}
+																/>
+															</Tooltip>
+														</Box>
+													</Grid>
+
+													<Grid
+														item
+														xs={6}
+														md={6}
+														sx={{
+															margin: 'auto',
+														}}
+													>
+														<Box
+															sx={{
+																display: 'flex',
+																alignItems: 'center',
+																justifyContent: 'space-between',
+															}}
+														>
+															<Button
+																disableElevation
+																component='label'
+																variant='outlined'
+																color='info'
+																sx={{
+																	width: '100%',
+																	height: '100%',
+																}}
+															>
+																업로드
+																<input
+																	hidden
+																	type='file'
+																	// 11번가카테고리 xml 문자열 -> excel 변환 다운로드 코드
+																	onChange={async (e) => {
+																		/** xmlData는 아래와 같은 구조로 넣어야함 */
+																		//<ns2:categorys>
+																		// <ns2:category>
+																		//   <depth>1</depth>
+																		//   <dispNm>여행/숙박/항공</dispNm>
+																		//   <dispNo>2878</dispNo>
+																		//   <engDispYn>Y</engDispYn>
+																		//   <gblDlvYn>Y</gblDlvYn>
+																		//   <leafYn>N</leafYn>
+																		//   <parentDispNo>0</parentDispNo>
+																		// </ns2:category>
+																		// <ns2:category>
+																		//   <depth>2</depth>
+																		//   <dispNm>[전시대기]*여행수수료</dispNm>
+																		//   <dispNo>131670</dispNo>
+																		//   <engDispYn>N</engDispYn>
+																		//   <gblDlvYn>N</gblDlvYn>
+																		//   <leafYn>N</leafYn>
+																		//   <parentDispNo>2878</parentDispNo>
+																		// </ns2:category>
+																		//
+																		// ...생략
+																		//
+																		//</ns2:categorys>
+
+																		// const xmlData = data;
+																		const xmlData = ``;
+																		const parser = new DOMParser();
+																		const xmlDoc = parser.parseFromString(xmlData, 'text/xml');
+
+																		/** parentCode 매칭 재귀함수 */
+																		const dp = (depth: number, index: number, parentCode: number): void => {
+																			if (depth > 1) {
+																				categoryDict[index][`depth${depth}`] =
+																					categoryDict[parentCode][`depth${depth}`];
+																				return dp(depth - 1, index, parseInt(categoryDict[parentCode].parentCode));
+																			} else
+																				return (categoryDict[index][`depth${depth}`] =
+																					categoryDict[parentCode][`depth${depth}`]);
+																		};
+
+																		/** dom 파싱해서 객체로 변환 함수 */
+																		const parseCategoryNode = (node: Element): Object => {
+																			const category = {};
+																			for (let i = 0; i < node.children.length; i++) {
+																				const child = node.children[i];
+																				const tagName = child.tagName.replace('ns2:', ''); // 네임스페이스 제거
+
+																				if (child.children.length > 0) category[tagName] = parseCategoryNode(child);
+																				else category[tagName] = child.textContent?.trim();
+																			}
+																			return category;
+																		};
+
+																		const categoryNodes = xmlDoc.querySelectorAll('ns2\\:category');
+																		//@ts-ignore
+																		const categories: {
+																			depth: string;
+																			dispNm: string;
+																			dispNo: string;
+																			engDispYn: string;
+																			gblDlvYn: string;
+																			leafYn: string;
+																			parentDispNo: string;
+																		}[] = await Promise.all(Array.from(categoryNodes).map(parseCategoryNode));
+
+																		const categoryDict = new Array(2000000).fill(null).map(() => ({
+																			id: 0,
+																			code: '',
+																			depth: 0,
+																			depth1: '',
+																			depth2: '',
+																			depth3: '',
+																			depth4: '',
+																			depth5: '',
+																			depth6: '',
+																			sillCode: '',
+																			name: '',
+																			parentCode: '',
+																		}));
+																		console.log({ categories });
+
+																		for (let i = 0; i < categories.length; i++) {
+																			const v = categories[i];
+																			let tmp = categoryDict[parseInt(v.dispNo)];
+																			if (!tmp?.id) {
+																				tmp['id'] = i + 1;
+																				tmp['code'] = v.dispNo;
+																				tmp[`depth${v.depth}`] = v.dispNm;
+																				tmp['parentCode'] = v.parentDispNo;
+																				tmp['depth'] = parseInt(v.depth);
+																			}
+																		}
+																		for (let j = 0; j < categoryDict.length; j++) {
+																			if (!categoryDict[j].id) continue;
+																			if (categoryDict[j].depth > 1)
+																				dp(categoryDict[j].depth - 1, j, parseInt(categoryDict[j].parentCode));
+
+																			const depthValues: string[] = [];
+
+																			for (let k = 1; k <= 6; k++) {
+																				const depthValue = categoryDict[j][`depth${k}`];
+																				if (depthValue !== '') depthValues.push(depthValue);
+																			}
+																			categoryDict[j]['name'] = depthValues.join(' > ');
+																		}
+
+																		console.log({ categoryDict });
+
+																		const result: CategoryInfo[] = categoryDict
+																			.filter((v) => v.id)
+																			.map((v) => ({
+																				code: v.code,
+																				depth1: v.depth1,
+																				depth2: v.depth2,
+																				depth3: v.depth3,
+																				depth4: v.depth4,
+																				depth5: v.depth5,
+																				depth6: v.depth6,
+																				name: v.name,
+																				sill_code: '',
+																			}));
+
+																		const global = result.filter((v) => v.depth1 === '해외직구');
+																		const normal = result.filter((v) => v.depth1 !== '해외직구');
+																		console.log({ global });
+																		console.log({ normal });
+
+																		downloadExcel(
+																			global,
+																			`11번가카테고리_글로벌`,
+																			`11번가카테고리_글로벌`,
+																			false,
+																			'xlsx',
+																		);
+																		downloadExcel(normal, `11번가카테고리_노말`, `11번가카테고리_노말`, false, 'xlsx');
+
+																		/** 현재DB와 새로운데이터 간의 다른 카테고리목록이 필요한 경우 주석 해제(11번가일반) */
+																		// const dbHave_newNotHave = dbData.filter(
+																		// 	(oldCategory) =>
+																		// 		!normal.some((newCategory) => newCategory.code === oldCategory.code),
+																		// );
+
+																		// console.log({ dbHave_newNotHave });
+
+																		// downloadExcel(
+																		// 	dbHave_newNotHave,
+																		// 	`11번가_노말_없는카테고리`,
+																		// 	`11번가_노말_없는카테고리`,
+																		// 	false,
+																		// 	'xlsx',
+																		// );
+																	}}
+																/>
+															</Button>
+														</Box>
+													</Grid>
+												</Grid>
+											</Paper>
+										</Grid>
+
+										<Grid item xs={6} md={9}></Grid>
+									</Grid>
+								</Paper>
+							)}
 						</>
 					) : null}
 				</Container>
