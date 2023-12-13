@@ -874,7 +874,7 @@ export const UploadDisabledModal = observer(() => {
 					}}
 				>
 					<Button
-						disabled={!uploadable}
+						disabled={!uploadable || markets.every((v) => !v.upload)}
 						disableElevation
 						variant='contained'
 						color='info'
