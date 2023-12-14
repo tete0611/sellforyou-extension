@@ -1,14 +1,13 @@
 import React from 'react';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
-import ReorderIcon from '@mui/icons-material/Reorder';
-// import * as XLSX from 'xlsx';
-// import path from 'path-browserify';
+import {
+	FilterAlt as FilterAltIcon,
+	ViewModule as ViewModuleIcon,
+	Reorder as ReorderIcon,
+	AutoFixHigh as AutoFixHighIcon,
+} from '@mui/icons-material';
 import { byteSlice } from '../../../Tools/Common';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
-// import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
 
 import {
 	styled,

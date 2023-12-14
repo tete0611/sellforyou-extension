@@ -1,6 +1,5 @@
 import React from 'react';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
+import { Add as AddIcon, Edit as EditIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Header } from '../Common/Header';

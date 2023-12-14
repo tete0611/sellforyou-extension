@@ -1,10 +1,12 @@
 import React from 'react';
-import ErrorIcon from '@mui/icons-material/Error';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import TranslateIcon from '@mui/icons-material/Translate';
-import LockIcon from '@mui/icons-material/Lock';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
+import {
+	Error as ErrorIcon,
+	AutoFixHigh as AutoFixHighIcon,
+	Translate as TranslateIcon,
+	Lock as LockIcon,
+	LockOpen as LockOpenIcon,
+	LooksTwoOutlined as LooksTwoOutlinedIcon,
+} from '@mui/icons-material';
 import { format } from 'date-fns';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';

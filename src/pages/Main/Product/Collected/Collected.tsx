@@ -1,37 +1,37 @@
 import React from 'react';
-import SyncIcon from '@mui/icons-material/Sync';
-import SearchIcon from '@mui/icons-material/Search';
-
+import { Sync as SyncIcon, Search as SearchIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { Header } from '../../Common/Header';
 import { ProductTables } from '../Components/ProductTables';
-import { UploadModal } from '../../Modals/UploadModal';
+import {
+	UploadModal,
+	ManyCategoryModal,
+	ManyNameModal,
+	ManyPriceModal,
+	MyKeywardModal,
+	ManyTagModal,
+	SearchFilterModal,
+	DescriptionModal,
+	UploadFailedModal,
+	ManyFeeModal,
+	CollectExcelModal,
+	ManyAttributeModal,
+} from '../../Modals';
 import { AppContext } from '../../../../containers/AppContext';
-import { ManyCategoryModal } from '../../Modals/ManyCategoryModal';
-import { ManyNameModal } from '../../Modals/ManyNameModal';
-import { ManyPriceModal } from '../../Modals/ManyPriceModal';
-import { MyKeywardModal } from '../../Modals/MyKeywardModal';
-import { ManyTagModal } from '../../Modals/ManyTagModal';
-import { SearchFilterModal } from '../../Modals/SearchFilterModal';
 import { Box, Container, IconButton, MenuItem, Pagination, Paper, Tooltip, Typography } from '@mui/material';
-import { DescriptionModal } from '../../Modals/DescriptionModal';
-import { ImagePopOver } from '../../PopOver/ImagePopOver';
-import { AddOptionNamePopOver } from '../../PopOver/AddOptionNamePopOver';
-import { UploadFailedModal } from '../../Modals/UploadFailedModal';
-import { AddOptionPricePopOver } from '../../PopOver/AddOptionPricePopOver';
-import { SetOptionPricePopOver } from '../../PopOver/SetOptionPricePopOver';
-import { SetOptionStockPopOver } from '../../PopOver/SetOptionStockPopOver';
-import { SubtractOptionPricePopOver } from '../../PopOver/SubtractOptionPricePopOver';
-import { ManyFeeModal } from '../../Modals/ManyFeeModal';
+import {
+	ImagePopOver,
+	AddOptionNamePopOver,
+	AddOptionPricePopOver,
+	SetOptionPricePopOver,
+	SetOptionStockPopOver,
+	SubtractOptionPricePopOver,
+	SetProductSillDataPopOver,
+	UpdateManyProductPopOver,
+	ReplaceOptionNamePopOver,
+} from '../../PopOver';
 import { ComboBox, Frame, Input, MyButton, Title } from '../../Common/UI';
-import { CollectExcelModal } from '../../Modals/CollectExcelModal';
-import { ManyAttributeModal } from '../../Modals/ManyAttributeModal';
-import { SetProductSillDataPopOver } from '../../PopOver/SetProductSillDataPopOver';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { UpdateManyProductPopOver } from '../../PopOver/UpdateManyProductPopOver';
-import { ReplaceOptionNamePopOver } from '../../PopOver/ReplaceOptionNamePopOver';
-// import { Esm2UploadModal } from '../../Modals/Esm2UploadModal';
-// import { PreviewModal } from '../../Modals/PreviewModal';
 
 // 상품수집관리 목록 테이블 뷰
 export const Collected = observer(() => {

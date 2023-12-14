@@ -4,7 +4,7 @@ import Chart from 'react-apexcharts';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Header } from '../Common/Header';
-import { NoticeModal } from '../Modals/NoticeModal';
+import { NoticeModal } from '../Modals';
 import {
 	styled,
 	Box,
@@ -28,7 +28,7 @@ import { List, AutoSizer } from 'react-virtualized';
 
 import { ComboBox } from '../Common/UI';
 import { Summary } from './Components/Summary';
-import { ImagePopOver } from '../PopOver/ImagePopOver';
+import { ImagePopOver } from '../PopOver';
 
 // 커스텀 테이블 컬럼 스타일 설정
 const StyledTableCell = styled(TableCell)({

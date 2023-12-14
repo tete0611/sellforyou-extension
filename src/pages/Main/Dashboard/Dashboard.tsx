@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Header } from '../Common/Header';
-import { NoticeModal } from '../Modals/NoticeModal';
+import { NoticeModal } from '../Modals';
 import { Box, Button, CircularProgress, Container, Grid, Paper, Tooltip, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Frame } from '../Common/UI';

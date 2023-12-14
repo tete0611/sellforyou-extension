@@ -5,8 +5,8 @@ import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
 import { Header } from '../../Common/Header';
 import { Box, Chip, Container, Paper } from '@mui/material';
-import { OrderDetailModal } from '../../Modals/OrderDetailModal';
-import { ImagePopOver } from '../../PopOver/ImagePopOver';
+import { OrderDetailModal } from '../../Modals';
+import { ImagePopOver } from '../../PopOver';
 import { Frame, Title } from '../../Common/UI';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 

@@ -1,13 +1,11 @@
 import React from 'react';
 import ReactQuill from 'react-quill';
-import ClearIcon from '@mui/icons-material/Clear';
-import ErrorIcon from '@mui/icons-material/Error';
+import { Clear as ClearIcon, Error as ErrorIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { ListManager } from 'react-beautiful-dnd-grid';
 import { AppContext } from '../../../../../containers/AppContext';
 import { Box, Button, CircularProgress, Grid, IconButton, Paper, Typography } from '@mui/material';
 import { Image, Title } from '../../../Common/UI';
-import { makeStyles } from '@material-ui/core/styles';
 import { Item } from '../../../../../type/type';
 
 interface Props {
@@ -17,15 +15,15 @@ interface Props {
 }
 
 // MUI Box 사용자 지정 스타일
-const useStyles = makeStyles((theme) => ({
-	defaultBox: {
-		background: '#d1e8ff',
-	},
+// const useStyles = makeStyles((theme) => ({
+// 	defaultBox: {
+// 		background: '#d1e8ff',
+// 	},
 
-	errorBox: {
-		background: '#ffd1d1',
-	},
-}));
+// 	errorBox: {
+// 		background: '#ffd1d1',
+// 	},
+// }));
 
 // 상세페이지 탭 하위 컴포넌트
 export const TabDescriptions = observer((props: Props) => {

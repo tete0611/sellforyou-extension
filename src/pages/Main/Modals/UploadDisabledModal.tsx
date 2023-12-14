@@ -16,7 +16,7 @@ import {
 	TableCell,
 	Typography,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Close as CloseIcon } from '@mui/icons-material';
 
 // 커스텀 테이블 열 스타일 설정
 const StyledTableCell = styled(TableCell)({
