@@ -3,32 +3,9 @@ import { Sync as SyncIcon, Search as SearchIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { Header } from '../../Common/Header';
 import { AppContext } from '../../../../containers/AppContext';
-import {
-	UploadModal,
-	ManyCategoryModal,
-	ManyAttributeModal,
-	ManyNameModal,
-	ManyPriceModal,
-	MyKeywardModal,
-	ManyTagModal,
-	SearchFilterModal,
-	DescriptionModal,
-	ManyFeeModal,
-	UploadFailedModal,
-	CollectExcelModal,
-} from '../../Modals';
+import { SearchFilterModal } from '../../Modals';
 import { Box, Container, IconButton, MenuItem, Pagination, Paper, Tooltip, Typography } from '@mui/material';
-import {
-	ImagePopOver,
-	AddOptionNamePopOver,
-	AddOptionPricePopOver,
-	SetOptionPricePopOver,
-	SetOptionStockPopOver,
-	SubtractOptionPricePopOver,
-	SetProductSillDataPopOver,
-	UpdateManyProductPopOver,
-	ReplaceOptionNamePopOver,
-} from '../../PopOver';
+import { ImagePopOver } from '../../PopOver';
 import { ComboBox, Frame, Input, Title } from '../../Common/UI';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ErroredProductTables from '../Components/ErroredProductTables';
