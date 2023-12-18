@@ -1304,18 +1304,18 @@ export class product {
 		});
 	};
 
-	// 상품 삭제
+	/** 상품 삭제 */
 	deleteProduct = async (commonStore: common, productId: number) => {
-		let productIds: any = [];
+		let productIds: number[] = [];
 
 		if (productId === -1) {
-			this.itemInfo.items.filter((v: any) => v.checked).map((v: any) => productIds.push(v.id));
+			this.itemInfo.items.filter((v) => v.checked).map((v) => productIds.push(v.id));
 
 			if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
 			if (!confirm(`선택한 상품 ${productIds.length}개를 삭제하시겠습니까?\n삭제된 상품은 다시 복구하실 수 없습니다.`))
 				return;
 
-			this.itemInfo.items.filter((v: any) => v.checked).map((v: any) => (v.delete = true));
+			this.itemInfo.items.filter((v) => v.checked).map((v) => (v.delete = true));
 		} else {
 			productIds.push(productId);
 
@@ -1329,6 +1329,39 @@ export class product {
 		this.getProduct(commonStore, this.page);
 	};
 
+	/** 상품 강제 삭제 ( confirm메시지만 다를뿐 코드는 같음 )*/
+	forceDeleteProduct = async (commonStore: common, productId: number) => {
+		let productIds: number[] = [];
+
+		if (productId === -1) {
+			this.itemInfo.items.filter((v) => v.checked).map((v) => productIds.push(v.id));
+
+			if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
+			if (
+				!confirm(
+					`선택한 상품 ${productIds.length}개를 삭제하시겠습니까?\n\n• 등록된 상품이 포함되어있는 경우 오픈마켓에 그대로 존재하게됩니다.\n• 삭제된 상품은 다시 복구하실 수 없습니다.`,
+				)
+			)
+				return;
+
+			this.itemInfo.items.filter((v) => v.checked).map((v) => (v.delete = true));
+		} else {
+			productIds.push(productId);
+
+			if (
+				!confirm(
+					`상품을 삭제하시겠습니까?\n\n• 등록된 상품의 경우 오픈마켓에 그대로 존재하게됩니다.\n• 삭제된 상품은 다시 복구하실 수 없습니다.`,
+				)
+			)
+				return;
+
+			this.itemInfo.items.find((v) => v.id === productId)!.delete = true;
+		}
+
+		await gql(MUTATIONS.DELETE_PRODUCT_BY_USER, { productId: productIds }, false);
+
+		this.getProduct(commonStore, this.page);
+	};
 	// 상품명 설정
 	setProductName = (data: any, index: number) => {
 		this.itemInfo.items[index].name = data;
@@ -2971,36 +3004,6 @@ export class product {
 		this.modalInfo.uploadDisabled = value;
 	};
 
-	// 상품 등록해제 모달
-	// toggleEsm2UploadDisabledModal = (index: number, value: boolean, commonStore: common) => {
-	// 	if (value) {
-	// 		if (index > -1) {
-	// 			commonStore.uploadDisabledInfo.markets.map((v: any) => {
-	// 				const matched = this.itemInfo.items[index].activeProductStore.find((w: any) => w.siteCode === v.code);
-
-	// 				v.disabled = !matched;
-	// 				v.upload = matched;
-	// 			});
-	// 		} else {
-	// 			commonStore.uploadDisabledInfo.markets.map((v: any) => {
-	// 				v.disabled = false;
-	// 				v.upload = true;
-	// 			});
-	// 		}
-	// 	}
-
-	// 	this.Esm2uploadDisabledIndex = index;
-	// 	this.modalInfo.Esm2uploadDisabled = value;
-	// };
-
-	// esm2.0 상품 등록실패 모달
-	// toggleEsm2UploadFailedModal = (index: number, value: boolean) => {
-	// 	if (index > -1) {
-	// 		this.Esm2uploadFailedIndex = index;
-	// 	}
-
-	// 	this.modalInfo.Esm2uploadFailed = value;
-	// };
 	// 상품 등록실패 모달
 	toggleUploadFailedModal = (index: number, value: boolean) => {
 		if (index > -1) this.uploadFailedIndex = index;
@@ -3055,11 +3058,14 @@ export class product {
 	// 	this.itemInfo.current = index;
 	// };
 
-	// 검색결과 조회
-	getSearchResult = (commonStore: common) => {
+	/** 검색결과 조회
+	 * @param commonStore common
+	 * @param removeState 강제관리탭인 경우 -> 등록,잠금,수집 상품 모두조회
+	 * */
+	getSearchResult = (commonStore: common, removeState?: boolean) => {
 		this.setSearchWhereAndInput([
-			{ state: { equals: this.state } },
-			{ myLock: this.state === 7 && this.myLock === 1 ? {} : { equals: this.myLock } },
+			!removeState ? { state: { equals: this.state } } : {},
+			{ myLock: (this.state === 7 && this.myLock === 1) || removeState ? {} : { equals: this.myLock } },
 			{
 				categoryInfoA077: this.searchInfo.categoryInfo.code
 					? { code: { equals: this.searchInfo.categoryInfo.code } }
@@ -3126,7 +3132,7 @@ export class product {
 			},
 			{
 				productStore:
-					this.state === 6
+					this.state === 6 || removeState
 						? {}
 						: {
 								some: {
@@ -3233,11 +3239,11 @@ export class product {
 			case 'PCODE': {
 				if (!this.searchInfo.searchKeyword.includes('SFY_')) return alert('상품코드는 SFY_000 형식으로 입력해주세요.');
 
-				let list: any = [];
-				let parseList: any = [];
+				let list: string[] = [];
+				let parseList: number[] = [];
 
 				list = this.searchInfo.searchKeyword.split(',');
-				list.map((v: any) => {
+				list.map((v) => {
 					if (!v.includes('SFY_')) return alert('모든 상품코드는 SFY_000 형식으로 입력해주세요.');
 
 					parseList.push(parseInt(v.split('_')[1], 36));

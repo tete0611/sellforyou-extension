@@ -2,7 +2,6 @@ import React from 'react';
 import { Sync as SyncIcon, Search as SearchIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { Header } from '../../Common/Header';
-import { ProductTables } from '../Components/ProductTables';
 import { AppContext } from '../../../../containers/AppContext';
 import {
 	UploadModal,
@@ -32,6 +31,7 @@ import {
 } from '../../PopOver';
 import { ComboBox, Frame, Input, Title } from '../../Common/UI';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import ErroredProductTables from '../Components/ErroredProductTables';
 
 // 강제관리 탭 목록 테이블 뷰
 export const Errored = observer(() => {
@@ -43,10 +43,6 @@ export const Errored = observer(() => {
 		// 태그사전 데이터 가져오기
 		product.getTagDict();
 
-		// 검색조건 설정
-		product.setState(6);
-		product.setSearchWhereAndInput([{ state: { equals: product.state } }]);
-
 		// 상품 정보 가져오기
 		product.refreshProduct(common);
 
@@ -55,12 +51,6 @@ export const Errored = observer(() => {
 			switch (request.action) {
 				case 'refresh': {
 					product.refreshProduct(common);
-					sendResponse(true);
-					break;
-				}
-
-				case 'trangers': {
-					product.updateImageTranslatedData(request.source);
 					sendResponse(true);
 					break;
 				}
@@ -103,25 +93,6 @@ export const Errored = observer(() => {
 									display: 'flex',
 								}}
 							>
-								{/* <MyButton
-									color='info'
-									sx={{
-										minWidth: 100,
-									}}
-									onClick={() => product.toggleCollectExcelModal(true)}
-								>
-									엑셀대량수집
-								</MyButton> */}
-								{/* <MyButton
-									color='info'
-									sx={{
-										ml: 0.5,
-										minWidth: 100,
-									}}
-									onClick={() => confirm('현재 페이지의 상품정보를 다운로드 하시겠습니까?') && product.itemToExcel()}
-								>
-									상품정보저장
-								</MyButton> */}
 								&nbsp;
 								<ComboBox
 									value={product.etcPageSize ? 0 : product.pageSize}
@@ -212,32 +183,13 @@ export const Errored = observer(() => {
 								/>
 							</Box>
 						</Title>
-						<ProductTables />
+						<ErroredProductTables />
 					</Paper>
 				</Container>
 
-				<AddOptionNamePopOver />
-				<ReplaceOptionNamePopOver />
-				<AddOptionPricePopOver />
 				<ImagePopOver />
-				<SubtractOptionPricePopOver />
-				<SetOptionPricePopOver />
-				<SetOptionStockPopOver />
-				<SetProductSillDataPopOver />
-				<UpdateManyProductPopOver />
 
-				<CollectExcelModal />
-				<DescriptionModal />
-				<ManyPriceModal />
-				<ManyFeeModal />
-				<ManyCategoryModal />
-				<ManyNameModal />
-				<ManyAttributeModal />
-				<ManyTagModal />
-				<MyKeywardModal />
 				<SearchFilterModal />
-				<UploadModal />
-				<UploadFailedModal />
 			</Frame>
 		</ThemeProvider>
 	);
