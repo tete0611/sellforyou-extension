@@ -163,37 +163,36 @@ const scrape = async (items: any, user: User) => {
 
 	try {
 		for (let i in items.skuMap) {
-			let properties = items.skuMap[i].skuid.split(';');
+			let properties = i.split(';');
 			let properties_id = '';
 			let properties_name = '';
 
-			for (let j = 1; j < properties.length; j++) {
-				if (j < properties.length - 1) {
-					properties_id += properties[j];
-					properties_name += properties[j] + ':' + result['item']['props_list'][properties[j]];
-				}
-				if (j < properties.length - 2) {
-					properties_id += ';';
-					properties_name += ';';
-				}
-			}
+			properties_id += properties[0] + ';' + properties[1];
+			properties_name +=
+				properties[0] +
+				':' +
+				result['item']['props_list'][properties[0]] +
+				';' +
+				properties[1] +
+				':' +
+				result['item']['props_list'][properties[1]];
 
 			let quantity = 999;
 
 			if (quantity > 0)
 				result['item']['skus']['sku'].push({
-					price: items.skuMap[i].discount_price ?? items.skuMap[i].price,
+					price: items.skuMap[i].discount_price ?? parseInt(items.skuMap[i].price), // 49
 					total_price: 0,
-					original_price: items.skuMap[i].price,
-					properties: properties_id,
-					properties_name: properties_name,
+					original_price: parseInt(items.skuMap[i].price), // 49
+					properties: properties_id, // "20509:142;1627207:9999906"
+					properties_name: properties_name, // "20509:142:尺码:大码L;1627207:9999906:颜色:咖色"
 					quantity:
 						user.userInfo.collectStock === 0
 							? quantity > 99999
 								? '99999'
 								: quantity.toString()
-							: user.userInfo.collectStock.toString(),
-					sku_id: items.skuMap[i].id.toString(),
+							: user.userInfo.collectStock.toString(), // 150
+					sku_id: items.skuMap[i].skuId.toString(), // "401302558"
 				});
 		}
 	} catch (e) {

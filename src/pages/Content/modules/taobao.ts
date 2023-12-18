@@ -238,6 +238,17 @@ const scrape = async (items: any, user: User) => {
 		}
 	}
 
+	/** script_option 구조
+	 * {
+	 * 		;1627207:22114789071;:{
+	 * 			oversold: false,
+	 * 			price: "19.00",
+	 * 			skuId: "4930638320875",
+	 * 			stock: "2",
+	 * 		},
+	 * 		...
+	 * }
+	 */
 	try {
 		for (let i in script_option) {
 			let properties = i.split(';');
