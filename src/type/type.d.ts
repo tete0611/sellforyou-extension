@@ -436,3 +436,19 @@ export type CategoryInfo = {
 	name: string;
 	sill_code: string;
 };
+
+export type RestrictWordInfo = {
+	banChecked: boolean[];
+	banList: { id: number; findWord: string; replaceWord: null }[];
+	banExcelInput: any;
+	banWordInput: string;
+
+	findWordInput: string;
+
+	replaceChecked: boolean[];
+	replaceList: { id: number; findWord: string; replaceWord: string }[];
+	replaceExcelInput: any;
+	replaceWordInput: string;
+
+	loading: boolean;
+};
