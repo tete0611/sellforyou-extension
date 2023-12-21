@@ -1356,7 +1356,7 @@ export const TabAttribute = observer((props: Props) => {
 												<Grid item xs={6} md={12}>
 													<Paper variant='outlined'>
 														<Title dark={common.darkTheme} subTitle>
-															[{props.item.productCode}] 개인 분류
+															[{props.item.productCode}] 개인분류
 															{/* <Button color='error' size='small' variant='contained' onClick={() => alert('준비중')}>
 																삭제
 															</Button> */}

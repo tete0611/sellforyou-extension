@@ -38,6 +38,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 export const Registered = observer(() => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
+	const checkLength = product.itemInfo.items.filter((v) => v.checked).length;
 
 	// console.log('common', common);
 	// 컴포넌트 초기화
@@ -100,7 +101,12 @@ export const Registered = observer(() => {
 									display: 'flex',
 								}}
 							>
-								<Typography color='text.primary'>등록상품목록 ({product.count})</Typography>
+								<Typography color='text.primary'>
+									등록상품목록 ({product.count}){' '}
+									{checkLength > 0 && (
+										<span style={{ color: '#01579b', fontWeight: 600 }}>{`중 ${checkLength}개 선택`}</span>
+									)}
+								</Typography>
 							</Box>
 
 							<Box

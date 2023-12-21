@@ -14,6 +14,7 @@ import ErroredProductTables from '../Components/ErroredProductTables';
 export const Errored = observer(() => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
+	const checkLength = product.itemInfo.items.filter((v) => v.checked).length;
 
 	// 컴포넌트 초기설정
 	React.useEffect(() => {
@@ -62,7 +63,12 @@ export const Errored = observer(() => {
 									display: 'flex',
 								}}
 							>
-								<Typography color='text.primary'>상품목록 ({product.count})</Typography>
+								<Typography color='text.primary'>
+									상품목록 ({product.count}){' '}
+									{checkLength > 0 && (
+										<span style={{ color: '#d32f2f', fontWeight: 600 }}>{`중 ${checkLength}개 선택`}</span>
+									)}
+								</Typography>
 							</Box>
 							<Box
 								sx={{
