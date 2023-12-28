@@ -43,6 +43,7 @@
 				"product/collected.html",
 				"product/registered.html",
 				"product/Locked.html",
+				"product/errored.html",
 				"settings.html",
 				"sourcing.html",
 				"trangers_single.html",

@@ -1,7 +1,10 @@
 import React from 'react';
-import EditIcon from '@mui/icons-material/Edit';
-import ErrorIcon from '@mui/icons-material/Error';
-
+import {
+	Edit as EditIcon,
+	Error as ErrorIcon,
+	AutoFixHigh as AutoFixHighIcon,
+	Restore as RestoreIcon,
+} from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../../containers/AppContext';
 import {
@@ -23,9 +26,6 @@ import {
 	Paper,
 } from '@mui/material';
 import { Image, Input, Title } from '../../../Common/UI';
-
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import RestoreIcon from '@mui/icons-material/Restore';
 import { byteLength } from '../../../../Tools/Common';
 import { Item } from '../../../../../type/type';
 

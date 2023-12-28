@@ -1,25 +1,27 @@
 import React from 'react';
-
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import SellIcon from '@mui/icons-material/Sell';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import SettingsIcon from '@mui/icons-material/Settings';
-import StoreIcon from '@mui/icons-material/Store';
-import LogoutIcon from '@mui/icons-material/Logout';
-import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
-import PaymentIcon from '@mui/icons-material/Payment';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LockIcon from '@mui/icons-material/Lock';
+import {
+	Lock as LockIcon,
+	Warning as WarningIcon,
+	Store as StoreIcon,
+	Logout as LogoutIcon,
+	Settings as SettingsIcon,
+	Payment as PaymentIcon,
+	Inventory as InventoryIcon,
+	Dashboard as DashboardIcon,
+	ExpandMore as ExpandMoreIcon,
+	DarkMode as DarkModeIcon,
+	LightMode as LightModeIcon,
+	BarChart as BarChartIcon,
+	ShoppingCart as ShoppingCartIcon,
+	Sell as SellIcon,
+	AccountCircle as AccountCircleIcon,
+	Menu as MenuIcon,
+	PublishedWithChanges as PublishedWithChangesIcon,
+} from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { getLocalStorage, setLocalStorage } from '../../Tools/ChromeAsync';
-import { PayHistoryModal } from '../Modals/PayHistoryModal';
+import { PayHistoryModal } from '../Modals';
 import { NotionRenderer } from 'react-notion';
 import {
 	AppBar,
@@ -247,6 +249,28 @@ export const Header = observer(() => {
 						>
 							<ListItemIcon>
 								<LockIcon />
+							</ListItemIcon>
+
+							<ListItemText primary={text} />
+						</ListItemButton>
+					</ListItem>
+				))}
+
+				{['상품강제삭제'].map((text) => (
+					<ListItem key={text} disablePadding>
+						<ListItemButton
+							onClick={() =>
+								confirm(
+									'마켓에 업로드된 상태와 관계없이 셀포유에서 상품정보를 모두 삭제 또는 해제하는 기능입니다.\n삭제 전 마켓에 업로드 유무를 꼭 확인해주세요.\n진입하시겠습니까?',
+								) &&
+								addToStack({
+									name: '상품강제삭제',
+									url: '/product/errored.html',
+								})
+							}
+						>
+							<ListItemIcon>
+								<WarningIcon />
 							</ListItemIcon>
 
 							<ListItemText primary={text} />
@@ -612,7 +636,7 @@ export const Header = observer(() => {
 						&nbsp;
 						<Tooltip title='내 정보'>
 							<IconButton size='large' color='inherit' onClick={(e) => setPopOverAnchor(e.currentTarget)}>
-								<AccountCircle />
+								<AccountCircleIcon />
 							</IconButton>
 						</Tooltip>
 						<Popover

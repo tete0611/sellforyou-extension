@@ -3,7 +3,7 @@ import { NotionRenderer } from 'react-notion';
 import React from 'react';
 import gql from '../../../pages/Main/GraphQL/Requests';
 import MUTATIONS from '../../../pages/Main/GraphQL/Mutations';
-import InfoIcon from '@mui/icons-material/Info';
+import { Info as InfoIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { readFileDataURL } from '../../Tools/Common';
@@ -31,9 +31,8 @@ import {
 	ListItemText,
 	ListItemAvatar,
 } from '@mui/material';
-import { PayCardModal } from '../Modals/PayCardModal';
+import { PayCardModal, PayHistoryModal } from '../Modals';
 import { createTabCompletely, sendTabMessage } from '../../Tools/ChromeAsync';
-import { PayHistoryModal } from '../Modals/PayHistoryModal';
 import { Frame, MyButton, Title } from '../Common/UI';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 

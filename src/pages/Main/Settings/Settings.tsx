@@ -1,10 +1,12 @@
 import React from 'react';
 import gql from '../../../pages/Main/GraphQL/Requests';
 import MUTATIONS from '../../../pages/Main/GraphQL/Mutations';
-import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
-import LinkIcon from '@mui/icons-material/Link';
-import DeleteIcon from '@mui/icons-material/Delete';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import {
+	InsertPhoto as InsertPhotoIcon,
+	Link as LinkIcon,
+	Delete as DeleteIcon,
+	HelpOutline as HelpOutlineIcon,
+} from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Header } from '../Common/Header';

@@ -1,19 +1,11 @@
 import React from 'react';
-import {
-	FilterAlt as FilterAltIcon,
-	ViewModule as ViewModuleIcon,
-	Reorder as ReorderIcon,
-	AutoFixHigh as AutoFixHighIcon,
-} from '@mui/icons-material';
-import { byteSlice } from '../../../Tools/Common';
+import { FilterAlt as FilterAltIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
 
 import {
 	styled,
 	Box,
-	Button,
-	ButtonGroup,
 	Checkbox,
 	CircularProgress,
 	Grid,
@@ -31,7 +23,7 @@ import {
 } from '@mui/material';
 import { List, AutoSizer } from 'react-virtualized';
 import { Input, MyButton } from '../../Common/UI';
-import { Summary } from './Summary';
+import { ErroredSummary } from './ErroredSummary';
 import { Details } from './Details/Details';
 import '../../Common/Styles.css';
 import { ImageSummary } from './ImageSummary';
@@ -44,7 +36,7 @@ const StyledTableCell = styled(TableCell)({
 });
 
 // 상품관리목록 테이블 뷰
-export const ProductTables = observer(() => {
+export const ErroredProductTables = observer(() => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
 	// 테이블 엘리먼트 참조변수 생성
@@ -61,7 +53,7 @@ export const ProductTables = observer(() => {
 					}}
 				>
 					<Table>
-						<Summary tableRef={tableRef} item={item} index={props.index} />
+						<ErroredSummary tableRef={tableRef} item={item} index={props.index} />
 						<Details item={item} index={props.index} />
 					</Table>
 				</Box>
@@ -176,7 +168,7 @@ export const ProductTables = observer(() => {
 														searchKeyword: e.target.value,
 													})
 												}
-												onKeyPress={(e: any) => e.key === 'Enter' && product.getSearchResult(common)}
+												onKeyPress={(e: any) => e.key === 'Enter' && product.getSearchResult(common, true)}
 											/>
 											<MyButton
 												disableElevation
@@ -186,46 +178,10 @@ export const ProductTables = observer(() => {
 													minWidth: 60,
 													ml: 0.5,
 												}}
-												onClick={() => product.getSearchResult(common)}
+												onClick={() => product.getSearchResult(common, true)}
 											>
 												검색
 											</MyButton>
-
-											{product.gridView ? null : (
-												<Tooltip title='상품명최적화(특수문자제거&길이조절)-일괄'>
-													<Button
-														disableElevation
-														size='small'
-														color='info'
-														variant='contained'
-														sx={{
-															ml: 0.5,
-															minWidth: 30,
-															height: 30,
-															p: 0,
-														}}
-														onClick={async () => {
-															const regExp = /[^가-힣a-zA-Z0-9 ]+/g;
-															product.itemInfo.items.map((v: any, i: number) => {
-																if (!v.checked) return null;
-
-																const name1 = v.name.replace(regExp, ' ');
-																const name2 = byteSlice(name1, 100);
-
-																const nameList = name2.split(' ');
-																const nameListFixed = [...new Set(nameList)];
-
-																const name3 = nameListFixed.join(' ');
-																const name4 = name3.replaceAll('  ', ' ');
-																product.setProductName(name4, i);
-																product.updateProductName(i);
-															});
-														}}
-													>
-														<AutoFixHighIcon fontSize='small' />
-													</Button>
-												</Tooltip>
-											)}
 										</Box>
 									</Grid>
 
@@ -245,126 +201,16 @@ export const ProductTables = observer(() => {
 												mr: 1,
 											}}
 										>
-											<ButtonGroup
-												disableElevation
-												variant='contained'
-												aria-label='Disabled elevation buttons'
-												color='inherit'
-											>
-												<Tooltip title='유사이미지 순으로 정렬 후 그리드로 보여줍니다.'>
-													<MyButton
-														color={product.gridView ? 'secondary' : 'inherit'}
-														onClick={() => {
-															if (common.user.purchaseInfo2.level < 3)
-																return alert('[프로] 등급부터 사용 가능한 기능입니다.');
-
-															product.setGridView(common, true);
-														}}
-													>
-														<ViewModuleIcon />
-													</MyButton>
-												</Tooltip>
-
-												<Tooltip title='최근 수집 순으로 정렬 후 리스트로 보여줍니다.'>
-													<MyButton
-														color={product.gridView ? 'inherit' : 'secondary'}
-														onClick={() => {
-															if (common.user.purchaseInfo2.level < 3)
-																return alert('[프로] 등급부터 사용 가능한 기능입니다.');
-
-															product.setGridView(common, false);
-														}}
-													>
-														<ReorderIcon />
-													</MyButton>
-												</Tooltip>
-											</ButtonGroup>
 											<MyButton
+												color='error'
 												sx={{
 													ml: 0.5,
 													minWidth: 60,
 												}}
-												onClick={(e: any) =>
-													product.setUpdateManyProductPopOver({
-														...product.popOverInfo.updateManyProduct,
-														element: e.target,
-														open: true,
-													})
-												}
+												onClick={() => product.forceDeleteProduct(common, -1)}
 											>
-												일괄설정
+												일괄강제삭제
 											</MyButton>
-
-											<MyButton
-												disabled={product.itemInfo.items.find((v) => v.translate)}
-												color='secondary'
-												sx={{
-													ml: 0.5,
-													minWidth: 60,
-												}}
-												onClick={(e: any) => {
-													if (common.user.purchaseInfo2.level < 3)
-														return alert('[프로] 등급부터 사용 가능한 기능입니다.');
-
-													product.autoImageTranslate(-1, 0);
-												}}
-											>
-												일괄번역
-											</MyButton>
-											<span style={{ marginLeft: '5px' }}>|</span>
-
-											{product.state === 7 && (
-												<MyButton
-													color='info'
-													sx={{
-														ml: 0.5,
-														minWidth: 60,
-													}}
-													onClick={() => {
-														common.setEditedUpload(true);
-														product.toggleUploadModal(-1, true);
-													}}
-												>
-													일괄수정
-												</MyButton>
-											)}
-											<MyButton
-												color='info'
-												sx={{
-													ml: 0.5,
-													minWidth: 60,
-												}}
-												onClick={() => {
-													common.setEditedUpload(false);
-													product.toggleUploadModal(-1, true);
-												}}
-											>
-												일괄등록
-											</MyButton>
-											{(product.state === 7 || product.myLock === 2) && (
-												<MyButton
-													color='error'
-													sx={{
-														ml: 0.5,
-														minWidth: 60,
-													}}
-													onClick={() => product.toggleUploadDisabledModal(-1, true, common)}
-												>
-													일괄해제
-												</MyButton>
-											)}
-											{product.state === 6 && (
-												<MyButton
-													color='error'
-													sx={{
-														ml: 0.5,
-														minWidth: 60,
-													}}
-													onClick={() => product.deleteProduct(common, -1)}
-												>
-													일괄삭제
-												</MyButton>
-											)}
 										</Box>
 									</Grid>
 								</Grid>
@@ -373,96 +219,76 @@ export const ProductTables = observer(() => {
 					</TableRow>
 
 					<TableRow>
-						{product.gridView ? (
-							<StyledTableCell colSpan={4}>
+						<>
+							<StyledTableCell width={50}></StyledTableCell>
+
+							<StyledTableCell width={90}>
 								<Box
 									sx={{
 										fontSize: 11,
 									}}
 								>
-									이미지/상품코드
+									상품코드/{product.state === 6 ? '수집일' : '등록일'}
 								</Box>
 							</StyledTableCell>
-						) : (
-							<>
-								<StyledTableCell width={50}></StyledTableCell>
 
-								<StyledTableCell width={90}>
-									<Box
+							<StyledTableCell width={100}>
+								<Box
+									sx={{
+										fontSize: 11,
+									}}
+								>
+									이미지
+								</Box>
+							</StyledTableCell>
+
+							<StyledTableCell>
+								<Grid container spacing={0.5}>
+									<Grid
+										item
+										xs={6}
+										md={4.5}
 										sx={{
-											fontSize: 11,
+											margin: 'auto',
 										}}
 									>
-										상품코드/{product.state === 6 ? '수집일' : '등록일'}
-									</Box>
-								</StyledTableCell>
-
-								<StyledTableCell width={100}>
-									<Box
-										sx={{
-											fontSize: 11,
-										}}
-									>
-										이미지
-									</Box>
-								</StyledTableCell>
-
-								<StyledTableCell>
-									<Grid container spacing={0.5}>
-										<Grid
-											item
-											xs={6}
-											md={4.5}
+										<Box
 											sx={{
-												margin: 'auto',
+												fontSize: 11,
 											}}
 										>
-											<Box
-												sx={{
-													fontSize: 11,
-												}}
-											>
-												상품명
-											</Box>
-										</Grid>
-
-										<Grid
-											item
-											xs={6}
-											md={2.7}
-											sx={{
-												margin: 'auto',
-											}}
-										>
-											<Box
-												sx={{
-													fontSize: 11,
-												}}
-											>
-												도매가/판매가{product.state === 6 ? '' : '/등록마켓'}
-											</Box>
-										</Grid>
-
-										<Grid
-											item
-											xs={6}
-											md={4.8}
-											sx={{
-												margin: 'auto',
-											}}
-										>
-											<Box
-												sx={{
-													fontSize: 11,
-												}}
-											>
-												카테고리
-											</Box>
-										</Grid>
+											상품명
+										</Box>
 									</Grid>
-								</StyledTableCell>
-							</>
-						)}
+
+									<Grid
+										item
+										xs={6}
+										md={2.7}
+										sx={{
+											margin: 'auto',
+										}}
+									></Grid>
+
+									<Grid
+										item
+										xs={6}
+										md={4.8}
+										sx={{
+											margin: 'auto',
+										}}
+									>
+										<Box
+											sx={{
+												fontSize: 11,
+											}}
+										>
+											카테고리
+										</Box>
+									</Grid>
+								</Grid>
+							</StyledTableCell>
+						</>
 					</TableRow>
 				</TableHead>
 
@@ -563,4 +389,4 @@ export const ProductTables = observer(() => {
 		</>
 	);
 });
-export default ProductTables;
+export default ErroredProductTables;

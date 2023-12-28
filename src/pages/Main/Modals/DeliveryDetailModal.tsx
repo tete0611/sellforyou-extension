@@ -1,8 +1,5 @@
 import React from 'react';
-import ErrorIcon from '@mui/icons-material/Error';
-import WarningIcon from '@mui/icons-material/Warning';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
+import { Error as ErrorIcon, Warning as WarningIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Box, Chip, Grid, Modal, Paper, Typography } from '@mui/material';
