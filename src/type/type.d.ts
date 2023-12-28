@@ -434,7 +434,7 @@ export type CategoryInfo = {
 	depth5?: string;
 	depth6?: string;
 	name: string;
-	sill_code: string;
+	sillCode: string;
 };
 
 export type RestrictWordInfo = {
