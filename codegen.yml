@@ -1,0 +1,8 @@
+overwrite: true
+schema: ${SELLFORYOU_API_SERVER}/graphql
+generates:
+  ./src/type/schema.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'

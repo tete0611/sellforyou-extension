@@ -37,6 +37,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 export const Collected = observer(() => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
+	const checkLength = product.itemInfo.items.filter((v) => v.checked).length;
 
 	// 컴포넌트 초기설정
 	React.useEffect(() => {
@@ -95,7 +96,12 @@ export const Collected = observer(() => {
 									display: 'flex',
 								}}
 							>
-								<Typography color='text.primary'>수집상품목록 ({product.count})</Typography>
+								<Typography color='text.primary'>
+									수집상품목록 ({product.count}){' '}
+									{checkLength > 0 && (
+										<span style={{ color: '#01579b', fontWeight: 600 }}>{`중 ${checkLength}개 선택`}</span>
+									)}
+								</Typography>
 							</Box>
 							<Box
 								sx={{

@@ -1,5 +1,4 @@
-import React from 'react';
-
+import React, { useContext, useState, useMemo, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Header } from '../Common/Header';
@@ -22,6 +21,7 @@ import {
 import { readFileDataURL } from '../../Tools/Common';
 import { Frame, Title } from '../Common/UI';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { REG_EXP } from '../../../../common/regex';
 
 // 커스텀 테이블 컬럼 생성
 const StyledTableCell = styled(TableCell)({
@@ -34,15 +34,29 @@ const StyledTableCell = styled(TableCell)({
 // 금지어/치환어 뷰
 export const BanWords = observer(() => {
 	// MobX 스토리지 로드
-	const { common, restrict } = React.useContext(AppContext);
+	const { common, restrict } = useContext(AppContext);
+	const {
+		restrictWordInfo,
+		getRestrictWords,
+		deleteWordTable,
+		toggleBanCheckedAll,
+		toggleBanChecked,
+		setRestrictWordInfo,
+		addWordTable,
+		uploadExcel,
+		toggleReplaceCheckedAll,
+		toggleReplaceChecked,
+	} = restrict;
+	const [banWordToggle, setBanWordToggle] = useState(true); // 금지어버튼 토글
+	const [replaceWordToggle, setReplaceWordToggle] = useState(true); // 치환어버튼 토글
 
 	// 금지어/치환어 불러오기
-	React.useEffect(() => {
-		restrict.getRestrictWords();
+	useEffect(() => {
+		getRestrictWords();
 	}, []);
 
 	// 다크모드 지원 설정
-	const theme = React.useMemo(
+	const theme = useMemo(
 		() =>
 			createTheme({
 				palette: {
@@ -57,7 +71,7 @@ export const BanWords = observer(() => {
 			<Frame dark={common.darkTheme}>
 				<Header />
 
-				{restrict.restrictWordInfo.loading ? (
+				{restrictWordInfo.loading ? (
 					<>
 						<Container maxWidth={'lg'}>
 							<Grid
@@ -86,7 +100,10 @@ export const BanWords = observer(() => {
 													width: 100,
 													height: 30,
 												}}
-												onClick={restrict.deleteBanWordFromTable}
+												onClick={async () => {
+													const result = await deleteWordTable({ type: 'banWord' });
+													if (result) window.location.reload();
+												}}
 											>
 												삭제
 											</Button>
@@ -108,11 +125,7 @@ export const BanWords = observer(() => {
 																background: common.darkTheme ? '#303030' : '#ebebeb',
 															}}
 														>
-															<Checkbox
-																onChange={(e) => {
-																	restrict.toggleBanCheckedAll(e.target.checked);
-																}}
-															/>
+															<Checkbox onChange={(e) => toggleBanCheckedAll(e.target.checked)} />
 														</StyledTableCell>
 
 														<StyledTableCell
@@ -126,14 +139,12 @@ export const BanWords = observer(() => {
 												</TableHead>
 
 												<TableBody>
-													{restrict.restrictWordInfo.banList?.map((v: any, index: number) => (
+													{restrictWordInfo.banList?.map((v, index) => (
 														<TableRow hover>
 															<StyledTableCell>
 																<Checkbox
-																	checked={restrict.restrictWordInfo.banChecked[index]}
-																	onChange={(e) => {
-																		restrict.toggleBanChecked(e.target.checked, index);
-																	}}
+																	checked={restrictWordInfo.banChecked[index]}
+																	onChange={(e) => toggleBanChecked(e.target.checked, index)}
 																/>
 															</StyledTableCell>
 
@@ -167,6 +178,7 @@ export const BanWords = observer(() => {
 													}}
 												>
 													<TextField
+														placeholder='금지어를 입력하세요'
 														id='banWords_banWordInput'
 														variant='outlined'
 														size='small'
@@ -178,13 +190,30 @@ export const BanWords = observer(() => {
 																fontSize: 14,
 															},
 														}}
-														onBlur={(e) => {
-															restrict.setRestrictWordInfo({
-																...restrict.restrictWordInfo,
+														// setState 이벤트 딜레이가 심해서 최소한의 setState작동으로 코드 작성함
+														onChange={(e) => {
+															if (REG_EXP.onlyWhiteSpaces.test(e.currentTarget.value) && !banWordToggle)
+																setBanWordToggle(true);
+															else if (!REG_EXP.onlyWhiteSpaces.test(e.currentTarget.value) && banWordToggle)
+																setBanWordToggle(false);
+														}}
+														onKeyDown={async (e) => {
+															if (e.key === 'Enter' && !banWordToggle) {
+																const result = await addWordTable({
+																	//@ts-ignore
+																	findWord: e.target.value,
+																	replaceWord: null,
+																});
+																if (result) window.location.reload();
+															}
+														}}
+														onBlur={(e) =>
+															setRestrictWordInfo({
+																...restrictWordInfo,
 
 																banWordInput: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 
@@ -198,12 +227,19 @@ export const BanWords = observer(() => {
 												>
 													<Button
 														disableElevation
+														disabled={banWordToggle}
 														variant='contained'
 														color='info'
 														sx={{
 															width: '100%',
 														}}
-														onClick={restrict.addBanWordTable}
+														onClick={async () => {
+															const result = await addWordTable({
+																findWord: restrictWordInfo.banWordInput,
+																replaceWord: null,
+															});
+															if (result) window.location.reload();
+														}}
 													>
 														등록
 													</Button>
@@ -237,7 +273,7 @@ export const BanWords = observer(() => {
 
 																await readFileDataURL(fileList[0]);
 
-																restrict.uploadExcel({
+																uploadExcel({
 																	data: fileList[0],
 																	isReplace: false,
 																});
@@ -261,9 +297,9 @@ export const BanWords = observer(() => {
 														sx={{
 															width: '100%',
 														}}
-														onClick={() => {
-															window.open(`${process.env.SELLFORYOU_MINIO_HTTPS}/data/셀포유 금지어 양식.xlsx`);
-														}}
+														onClick={() =>
+															window.open(`${process.env.SELLFORYOU_MINIO_HTTPS}/data/셀포유 금지어 양식.xlsx`)
+														}
 													>
 														금지어 대량등록 양식 다운로드
 													</Button>
@@ -292,7 +328,11 @@ export const BanWords = observer(() => {
 													width: 100,
 													height: 30,
 												}}
-												onClick={restrict.deleteReplaceWordFromTable}
+												onClick={async () => {
+													const result = await deleteWordTable({ type: 'replaceWord' });
+
+													if (result) window.location.reload();
+												}}
 											>
 												삭제
 											</Button>
@@ -314,11 +354,7 @@ export const BanWords = observer(() => {
 																background: common.darkTheme ? '#303030' : '#ebebeb',
 															}}
 														>
-															<Checkbox
-																onChange={(e) => {
-																	restrict.toggleReplaceCheckedAll(e.target.checked);
-																}}
-															/>
+															<Checkbox onChange={(e) => toggleReplaceCheckedAll(e.target.checked)} />
 														</StyledTableCell>
 
 														<StyledTableCell
@@ -340,14 +376,12 @@ export const BanWords = observer(() => {
 												</TableHead>
 
 												<TableBody>
-													{restrict.restrictWordInfo.replaceList?.map((v: any, index: number) => (
+													{restrictWordInfo.replaceList?.map((v, index) => (
 														<TableRow hover>
 															<StyledTableCell>
 																<Checkbox
-																	checked={restrict.restrictWordInfo.replaceChecked[index]}
-																	onChange={(e) => {
-																		restrict.toggleReplaceChecked(e.target.checked, index);
-																	}}
+																	checked={restrictWordInfo.replaceChecked[index]}
+																	onChange={(e) => toggleReplaceChecked(e.target.checked, index)}
 																/>
 															</StyledTableCell>
 
@@ -385,6 +419,7 @@ export const BanWords = observer(() => {
 													}}
 												>
 													<TextField
+														placeholder='검색어를 입력하세요'
 														id='banWords_findWordInput'
 														variant='outlined'
 														size='small'
@@ -396,13 +431,29 @@ export const BanWords = observer(() => {
 																fontSize: 14,
 															},
 														}}
-														onBlur={(e) => {
-															restrict.setRestrictWordInfo({
-																...restrict.restrictWordInfo,
+														onChange={(e) => {
+															if (REG_EXP.onlyWhiteSpaces.test(e.currentTarget.value) && !replaceWordToggle)
+																setReplaceWordToggle(true);
+															else if (!REG_EXP.onlyWhiteSpaces.test(e.currentTarget.value) && replaceWordToggle)
+																setReplaceWordToggle(false);
+														}}
+														onKeyDown={async (e) => {
+															if (e.key === 'Enter' && !replaceWordToggle) {
+																const result = await addWordTable({
+																	//@ts-ignore
+																	findWord: e.target.value,
+																	replaceWord: restrictWordInfo.replaceWordInput,
+																});
+																if (result) window.location.reload();
+															}
+														}}
+														onBlur={(e) =>
+															setRestrictWordInfo({
+																...restrictWordInfo,
 
 																findWordInput: e.target.value,
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 
@@ -415,6 +466,17 @@ export const BanWords = observer(() => {
 													}}
 												>
 													<TextField
+														onKeyDown={async (e) => {
+															if (e.key === 'Enter' && !replaceWordToggle) {
+																const result = await addWordTable({
+																	findWord: restrictWordInfo.findWordInput,
+																	//@ts-ignore
+																	replaceWord: e.target.value ?? '',
+																});
+																if (result) window.location.reload();
+															}
+														}}
+														placeholder='치환어를 입력하세요'
 														id='banWords_replaceWordInput'
 														variant='outlined'
 														size='small'
@@ -426,13 +488,13 @@ export const BanWords = observer(() => {
 																fontSize: 14,
 															},
 														}}
-														onBlur={(e) => {
-															restrict.setRestrictWordInfo({
-																...restrict.restrictWordInfo,
+														onBlur={(e) =>
+															setRestrictWordInfo({
+																...restrictWordInfo,
 
 																replaceWordInput: e.target.value ?? '',
-															});
-														}}
+															})
+														}
 													/>
 												</Grid>
 
@@ -446,12 +508,19 @@ export const BanWords = observer(() => {
 												>
 													<Button
 														disableElevation
+														disabled={replaceWordToggle}
 														variant='contained'
 														color='info'
 														sx={{
 															width: '100%',
 														}}
-														onClick={restrict.addReplaceWordTable}
+														onClick={async () => {
+															const result = await addWordTable({
+																findWord: restrictWordInfo.findWordInput,
+																replaceWord: restrictWordInfo.replaceWordInput,
+															});
+															if (result) window.location.reload();
+														}}
 													>
 														등록
 													</Button>
@@ -485,7 +554,7 @@ export const BanWords = observer(() => {
 
 																await readFileDataURL(fileList[0]);
 
-																restrict.uploadExcel({
+																uploadExcel({
 																	data: fileList[0],
 																	isReplace: true,
 																});
@@ -509,9 +578,9 @@ export const BanWords = observer(() => {
 														sx={{
 															width: '100%',
 														}}
-														onClick={() => {
-															window.open(`${process.env.SELLFORYOU_MINIO_HTTPS}/data/셀포유 치환 양식.xlsx`);
-														}}
+														onClick={() =>
+															window.open(`${process.env.SELLFORYOU_MINIO_HTTPS}/data/셀포유 치환 양식.xlsx`)
+														}
 													>
 														치환어 대량등록 양식 다운로드
 													</Button>
