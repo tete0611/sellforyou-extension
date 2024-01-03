@@ -4,11 +4,17 @@
   "description": "sellforyou",
   "scripts": {
     "build": "node utils/build.js",
-    "start": "node utils/webserver.js"
+    "start": "node utils/webserver.js",
+    "generate": "graphql-codegen -r dotenv/config --debug"
   },
   "dependencies": {
+    "@apollo/client": "^3.8.8",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-operations": "^4.0.1",
+    "@graphql-codegen/typescript-react-apollo": "^4.1.0",
     "@hot-loader/react-dom": "^17.0.2",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
@@ -23,6 +29,7 @@
     "dotenv": "^16.0.1",
     "fabric": "^5.2.1",
     "gbk-encode": "^1.0.1",
+    "graphql": "^16.8.1",
     "html2canvas": "^1.4.1",
     "iconv-lite": "^0.6.3",
     "mobx": "^6.5.0",
@@ -39,6 +46,7 @@
     "react-hot-loader": "^4.13.0",
     "react-notion": "^0.10.0",
     "react-quill": "^1.3.5",
+    "react-router-dom": "^6.21.1",
     "react-virtualized": "^9.22.3",
     "stream-browserify": "^3.0.0",
     "timers-browserify": "^2.0.12",
@@ -46,9 +54,9 @@
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.0",
+    "@babel/core": "^7.23.6",
     "@babel/plugin-proposal-class-properties": "^7.16.7",
-    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-env": "^7.23.6",
     "@babel/preset-react": "^7.16.7",
     "@types/autosuggest-highlight": "^3.2.0",
     "@types/chrome": "^0.0.177",

@@ -1,11 +1,11 @@
 {
-  "presets": [
-    // "@babel/preset-env"
-    "@babel/preset-react"
-    // "react-app"
-  ],
-  "plugins": [
-    // "@babel/plugin-proposal-class-properties",
-    "react-hot-loader/babel" // 컴포넌트 수정시 변경사항 자동반영 및 업데이트시 새로고침 불필요
-  ]
+	"presets": [
+		// "@babel/preset-env",
+		"@babel/preset-react"
+		// "react-app"
+	],
+	"plugins": [
+		// "@babel/plugin-proposal-class-properties",
+		"react-hot-loader/babel" // 컴포넌트 수정시 변경사항 자동반영 및 업데이트시 새로고침 불필요
+	]
 }

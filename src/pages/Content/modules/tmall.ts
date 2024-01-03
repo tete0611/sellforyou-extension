@@ -536,9 +536,7 @@ const scrape = async (items: any, user: User) => {
 export class tmall {
 	constructor() {
 		checkLogin('tmall').then((auth) => {
-			if (!auth) {
-				return null;
-			}
+			if (!auth) return null;
 		});
 	}
 
