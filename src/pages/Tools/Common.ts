@@ -1,4 +1,5 @@
 // 자주사용하는 유용한 함수 모음
+import { ApolloError } from '@apollo/client';
 import { common } from '../../containers/stores/common';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import gql from '../Main/GraphQL/Requests';
@@ -720,3 +721,11 @@ export const urlEncodedObject = (urlEncodedData: any) => {
 
 /** 문자열 앞뒤의 공백을 제거 */
 export const trimSpaces = (input: string) => input.replace(/^\s+|\s+$/g, '');
+
+/** 아폴로 에러 함수 */
+export const onApolloError = (error: ApolloError) => {
+	if (error) {
+		alert(error.message);
+		console.log(error);
+	}
+};

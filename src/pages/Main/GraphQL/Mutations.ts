@@ -1,3 +1,5 @@
+import { gql } from '@apollo/client';
+
 const MUTATIONS = {
 	/** 로그인 */
 	SIGN_IN_USER_BY_EVERYONE: `
@@ -965,6 +967,12 @@ const MUTATIONS = {
             )
         }
     `,
+	/** 카테고리 삭제 뮤테이션 */
+	DeleteCategoryInfoByAdmin: gql`
+		mutation ($data: [String!]!, $shopCode: String!) {
+			deleteCategoryInfoByAdmin(data: $data, shopCode: $shopCode)
+		}
+	`,
 };
 
 export default MUTATIONS;
