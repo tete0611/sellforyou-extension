@@ -5,25 +5,14 @@ import { Settings } from './Settings/Settings';
 import { client } from './GraphQL/Client';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { Dashboard } from './Dashboard/Dashboard';
+import App from './App'
 
 import './index.css';
 
 const router = createMemoryRouter([
 	{
 		path: '/',
-		element: <Dashboard />,
-	},
-	{
-		path: '/settings.html',
-		element: <Settings />,
-	},
-	{
-		path: '/tttt.html',
-		element: (
-			<>
-				<div>1231231231231</div>
-			</>
-		),
+		element: <App />,
 	},
 ]);
 

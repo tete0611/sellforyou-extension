@@ -1,7 +1,6 @@
 import React from 'react';
 import { Sync as SyncIcon, Search as SearchIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
-import { Header } from '../../Common/Header';
 import { ProductTables } from '../Components/ProductTables';
 import {
 	UploadModal,
@@ -31,11 +30,11 @@ import {
 	UpdateManyProductPopOver,
 	ReplaceOptionNamePopOver,
 } from '../../PopOver';
-import { ComboBox, Frame, Input, MyButton, Title } from '../../Common/UI';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ComboBox, Input, MyButton, Title } from '../../Common/UI';
+import { createTheme } from '@mui/material/styles';
 
 // 상품등록관리 목록 테이블 뷰
-export const Registered = observer(() => {
+const Registered = observer(() => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
 	const checkLength = product.itemInfo.items.filter((v) => v.checked).length;
@@ -88,210 +87,211 @@ export const Registered = observer(() => {
 	);
 
 	return (
-		<ThemeProvider theme={theme}>
-			<Frame dark={common.darkTheme}>
-				<Header />
+		// <ThemeProvider theme={theme}>
+		// <Frame dark={common.darkTheme}>
+		// <Header />
+		<>
+			<Container maxWidth={'xl'}>
+				<Paper variant='outlined'>
+					<Title dark={common.darkTheme}>
+						<Box
+							sx={{
+								alignItems: 'center',
+								display: 'flex',
+							}}
+						>
+							<Typography color='text.primary'>
+								등록상품목록 ({product.count}){' '}
+								{checkLength > 0 && (
+									<span style={{ color: '#01579b', fontWeight: 600 }}>{`중 ${checkLength}개 선택`}</span>
+								)}
+							</Typography>
+						</Box>
 
-				<Container maxWidth={'xl'}>
-					<Paper variant='outlined'>
-						<Title dark={common.darkTheme}>
-							<Box
+						<Box
+							sx={{
+								alignItems: 'center',
+								display: 'flex',
+							}}
+						>
+							<MyButton
+								color='info'
 								sx={{
-									alignItems: 'center',
-									display: 'flex',
+									minWidth: 100,
+								}}
+								onClick={() => {
+									product.itemToExcel();
 								}}
 							>
-								<Typography color='text.primary'>
-									등록상품목록 ({product.count}){' '}
-									{checkLength > 0 && (
-										<span style={{ color: '#01579b', fontWeight: 600 }}>{`중 ${checkLength}개 선택`}</span>
-									)}
-								</Typography>
-							</Box>
+								상품정보저장
+							</MyButton>
+							&nbsp;
+							<ComboBox
+								value={product.etcPageSize ? 0 : product.pageSize}
+								onChange={async (e: any) => {
+									let pageSize = 10;
 
-							<Box
-								sx={{
-									alignItems: 'center',
-									display: 'flex',
+									if (e.target.value === 0) {
+										const input = prompt('페이지 당 조회할 상품 수를 입력해주세요. (최대 50개까지 입력 가능)');
+
+										if (!input) {
+											alert('조회할 상품 수 입력이 잘못되었습니다.');
+
+											return;
+										}
+
+										pageSize = parseInt(input);
+
+										if (isNaN(pageSize)) {
+											alert('조회할 상품 수는 숫자만 입력 가능합니다.');
+
+											return;
+										}
+
+										if (pageSize < 1) {
+											alert('조회할 상품 수는 1개 이상으로 입력해주세요.');
+
+											return;
+										}
+
+										const pageLimit = product.gridView ? 200 : 50;
+
+										if (pageSize > pageLimit) {
+											alert(`조회할 상품 수는 ${pageLimit}개 이하로 입력해주세요.`);
+
+											return;
+										}
+
+										product.toggleETCPageSize(true);
+									} else {
+										pageSize = e.target.value;
+
+										product.toggleETCPageSize(false);
+									}
+
+									await product.setPageSize(pageSize);
+									await product.getProduct(common, 1);
 								}}
 							>
-								<MyButton
-									color='info'
+								<MenuItem value={10}>10개 보기</MenuItem>
+								<MenuItem value={20}>20개 보기</MenuItem>
+								<MenuItem value={50}>50개 보기</MenuItem>
+
+								{product.gridView ? <MenuItem value={100}>100개 보기</MenuItem> : null}
+								{product.gridView ? <MenuItem value={200}>200개 보기</MenuItem> : null}
+
+								<MenuItem>-----------</MenuItem>
+
+								{product.etcPageSize ? (
+									<MenuItem value={0}>{product.pageSize}개 보기</MenuItem>
+								) : (
+									<MenuItem value={0}>직접 입력</MenuItem>
+								)}
+							</ComboBox>
+							<Tooltip title='페이지새로고침'>
+								<IconButton
 									sx={{
-										minWidth: 100,
+										ml: 0.5,
 									}}
+									size='small'
 									onClick={() => {
-										product.itemToExcel();
+										product.refreshProduct(common);
 									}}
 								>
-									상품정보저장
-								</MyButton>
-								&nbsp;
-								<ComboBox
-									value={product.etcPageSize ? 0 : product.pageSize}
-									onChange={async (e: any) => {
-										let pageSize = 10;
+									<SyncIcon />
+								</IconButton>
+							</Tooltip>
+							<Input
+								id='product_page'
+								type='number'
+								width={50}
+								value={product.pageTemp}
+								onChange={(e: any) => {
+									product.setPageTemp(e.target.value);
+								}}
+								onBlur={(e: any) => {
+									const page = parseInt(e.target.value);
 
-										if (e.target.value === 0) {
-											const input = prompt('페이지 당 조회할 상품 수를 입력해주세요. (최대 50개까지 입력 가능)');
+									if (!page || isNaN(page)) {
+										return;
+									}
 
-											if (!input) {
-												alert('조회할 상품 수 입력이 잘못되었습니다.');
+									product.setPageTemp(page);
+								}}
+								onKeyPress={(e: any) => {
+									if (e.key !== 'Enter') {
+										return;
+									}
 
-												return;
-											}
+									const page = parseInt(e.target.value);
 
-											pageSize = parseInt(input);
+									if (!page || isNaN(page)) {
+										return;
+									}
 
-											if (isNaN(pageSize)) {
-												alert('조회할 상품 수는 숫자만 입력 가능합니다.');
-
-												return;
-											}
-
-											if (pageSize < 1) {
-												alert('조회할 상품 수는 1개 이상으로 입력해주세요.');
-
-												return;
-											}
-
-											const pageLimit = product.gridView ? 200 : 50;
-
-											if (pageSize > pageLimit) {
-												alert(`조회할 상품 수는 ${pageLimit}개 이하로 입력해주세요.`);
-
-												return;
-											}
-
-											product.toggleETCPageSize(true);
-										} else {
-											pageSize = e.target.value;
-
-											product.toggleETCPageSize(false);
-										}
-
-										await product.setPageSize(pageSize);
-										await product.getProduct(common, 1);
+									product.setPageTemp(page);
+									product.getProduct(common, product.pageTemp);
+								}}
+							/>
+							<Tooltip title='페이지이동'>
+								<IconButton
+									sx={{
+										ml: 0.5,
 									}}
-								>
-									<MenuItem value={10}>10개 보기</MenuItem>
-									<MenuItem value={20}>20개 보기</MenuItem>
-									<MenuItem value={50}>50개 보기</MenuItem>
-
-									{product.gridView ? <MenuItem value={100}>100개 보기</MenuItem> : null}
-									{product.gridView ? <MenuItem value={200}>200개 보기</MenuItem> : null}
-
-									<MenuItem>-----------</MenuItem>
-
-									{product.etcPageSize ? (
-										<MenuItem value={0}>{product.pageSize}개 보기</MenuItem>
-									) : (
-										<MenuItem value={0}>직접 입력</MenuItem>
-									)}
-								</ComboBox>
-								<Tooltip title='페이지새로고침'>
-									<IconButton
-										sx={{
-											ml: 0.5,
-										}}
-										size='small'
-										onClick={() => {
-											product.refreshProduct(common);
-										}}
-									>
-										<SyncIcon />
-									</IconButton>
-								</Tooltip>
-								<Input
-									id='product_page'
-									type='number'
-									width={50}
-									value={product.pageTemp}
-									onChange={(e: any) => {
-										product.setPageTemp(e.target.value);
-									}}
-									onBlur={(e: any) => {
-										const page = parseInt(e.target.value);
-
-										if (!page || isNaN(page)) {
-											return;
-										}
-
-										product.setPageTemp(page);
-									}}
-									onKeyPress={(e: any) => {
-										if (e.key !== 'Enter') {
-											return;
-										}
-
-										const page = parseInt(e.target.value);
-
-										if (!page || isNaN(page)) {
-											return;
-										}
-
-										product.setPageTemp(page);
+									size='small'
+									onClick={() => {
 										product.getProduct(common, product.pageTemp);
 									}}
-								/>
-								<Tooltip title='페이지이동'>
-									<IconButton
-										sx={{
-											ml: 0.5,
-										}}
-										size='small'
-										onClick={() => {
-											product.getProduct(common, product.pageTemp);
-										}}
-									>
-										<SearchIcon />
-									</IconButton>
-								</Tooltip>
-								<Pagination
-									size='small'
-									count={product.pages}
-									page={product.page}
-									color='primary'
-									shape='rounded'
-									onChange={(e, p) => {
-										product.setPageTemp(p);
-										product.getProduct(common, p);
-									}}
-								/>
-							</Box>
-						</Title>
+								>
+									<SearchIcon />
+								</IconButton>
+							</Tooltip>
+							<Pagination
+								size='small'
+								count={product.pages}
+								page={product.page}
+								color='primary'
+								shape='rounded'
+								onChange={(e, p) => {
+									product.setPageTemp(p);
+									product.getProduct(common, p);
+								}}
+							/>
+						</Box>
+					</Title>
 
-						<ProductTables />
-					</Paper>
-				</Container>
+					<ProductTables />
+				</Paper>
+			</Container>
 
-				<AddOptionNamePopOver />
-				<AddOptionPricePopOver />
-				<ReplaceOptionNamePopOver />
-				<ImagePopOver />
-				<SubtractOptionPricePopOver />
-				<SetOptionPricePopOver />
-				<SetOptionStockPopOver />
-				<SetProductSillDataPopOver />
-				<UpdateManyProductPopOver />
+			{/* 팝오버 */}
+			<AddOptionNamePopOver />
+			<AddOptionPricePopOver />
+			<ReplaceOptionNamePopOver />
+			<ImagePopOver />
+			<SubtractOptionPricePopOver />
+			<SetOptionPricePopOver />
+			<SetOptionStockPopOver />
+			<SetProductSillDataPopOver />
+			<UpdateManyProductPopOver />
 
-				<DescriptionModal />
-				{/* <PreviewModal /> */}
-				<ManyPriceModal />
-				<ManyFeeModal />
-				<ManyCategoryModal />
-				<ManyNameModal />
-				<ManyLockModal />
-				<ManyAttributeModal />
-				<ManyTagModal />
-				<MyKeywardModal />
-				<SearchFilterModal />
-				<UploadModal />
-				{/* <Esm2UploadModal /> */}
-				<UploadFailedModal />
-				<UploadDisabledModal />
-				{/* <Esm2UploadDisabledModal /> */}
-			</Frame>
-		</ThemeProvider>
+			{/* 모달 */}
+			<DescriptionModal />
+			<ManyPriceModal />
+			<ManyFeeModal />
+			<ManyCategoryModal />
+			<ManyNameModal />
+			<ManyLockModal />
+			<ManyAttributeModal />
+			<ManyTagModal />
+			<MyKeywardModal />
+			<SearchFilterModal />
+			<UploadModal />
+			<UploadFailedModal />
+			<UploadDisabledModal />
+		</>
+		// </Frame>
+		// </ThemeProvider>
 	);
 });
+export default Registered;

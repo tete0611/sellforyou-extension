@@ -9,8 +9,9 @@ import { coupangApiGateway } from '../../pages/Tools/Coupang';
 import { streetApiGateway } from '../../pages/Tools/Street';
 import { floatingToast, request } from '../../pages/Tools/Common';
 import { refreshToken } from '../../pages/Tools/Auth';
-import { AppInfo, Nullable, UploadDisabledInfo, UploadInfo, User, UserInfo } from '../../type/type';
+import { AppInfo, Nullable, SideBarItem, UploadDisabledInfo, UploadInfo, User, UserInfo } from '../../type/type';
 import { SHOPCODE } from '../../type/variable';
+import { useSearchParams } from 'react-router-dom';
 
 export class common {
 	notionPage = null;
@@ -27,7 +28,7 @@ export class common {
 
 	loaded: boolean = false;
 
-	chips: any = [];
+	chips: Partial<SideBarItem>[] = [];
 	user: User = {
 		userInfo: null as any,
 		productCount: 0,
@@ -1116,34 +1117,22 @@ export class common {
 	};
 
 	// 탭 추가
-	addToStack = (data: any) => {
-		window.location.href = data.url;
+	addToStack = (data: Partial<SideBarItem>) => {
+		if (this.chips.some((v) => v.engName === data.engName)) return;
 
-		let found = false;
-
-		this.chips.map((v: any) => {
-			if (v.url === data.url) found = true;
-		});
-
-		if (found) return;
-
-		this.chips.push(data);
-
-		const stack = JSON.parse(JSON.stringify(this.chips));
+		this.chips.push({ name: data.name, engName: data.engName, customFunction: data.customFunction });
 
 		setLocalStorage({
-			stack: stack,
+			stack: JSON.parse(JSON.stringify(this.chips)),
 		});
 	};
 
 	// 탭 삭제
 	deleteFromStack = (index: number) => {
-		this.chips = this.chips.filter((_: any, i: number) => (i === index ? false : true));
-
-		const stack = JSON.parse(JSON.stringify(this.chips));
+		this.chips = this.chips.filter((_, i) => (i === index ? false : true));
 
 		setLocalStorage({
-			stack: stack,
+			stack: JSON.parse(JSON.stringify(this.chips)),
 		});
 	};
 
