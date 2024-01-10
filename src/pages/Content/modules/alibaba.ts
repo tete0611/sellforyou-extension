@@ -4,7 +4,6 @@ import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
 import { sleep, getImageSize, getCookie } from '../../Tools/Common';
-// import { sendRuntimeMessage } from '../../Tools/ChromeAsync';
 import CryptoJS from 'crypto-js';
 import { User } from '../../../type/type';
 
@@ -504,13 +503,35 @@ export class alibaba {
 
 	// 대량수집 페이지별 체크표시
 	async bulkTypeOne(user) {
-		document.addEventListener('DOMNodeInserted', (e: any) => {
+		/** 초기 페이지에 한번 체크박스를 삽입 */
+		const space_common_offerlist = document.querySelector('.space-common-offerlist');
+		const space_offer_card_box = space_common_offerlist?.querySelectorAll('.space-offer-card-box');
+
+		space_offer_card_box?.forEach((v, i) => {
+			const link = v.querySelector('.mojar-element-image')?.querySelector('a');
+
+			if (link) {
+				let input = document.createElement('input');
+				let picker: any = document.getElementById('sfyPicker');
+
+				input.id = link?.href ?? '없음';
+				input.className = 'SELLFORYOU-CHECKBOX';
+				input.checked = picker?.value === 'false' ? false : true;
+				input.type = 'checkbox';
+
+				if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+				else input.setAttribute('style', 'right: 0px !important');
+
+				link.style.position = 'relative';
+				link.appendChild(input);
+			}
+		});
+
+		document.addEventListener('DOMNodeInserted', async (e: any) => {
 			try {
-				if (
-					e.target.getAttribute('class') === 'list' ||
-					e.target.getAttribute('class') === 'space-offer-card-box' ||
-					e.target.getAttribute('class').includes('normalcommon-offer-card')
-				) {
+				const attr = e.target.getAttribute('class');
+				/** 1~4열 상품 */
+				if (attr === 'list' || attr === 'space-offer-card-box' || attr.includes('normalcommon-offer-card')) {
 					let products = e.target.querySelectorAll('a');
 
 					for (let i in products) {
@@ -519,6 +540,7 @@ export class alibaba {
 								products[i].parentNode.className === 'cate1688-offer b2b-ocms-fusion-comp' ||
 								products[i].parentNode.className === 'mojar-element-image'
 							) {
+								if (products[i].querySelector('.SELLFORYOU-CHECKBOX')) continue;
 								let input = document.createElement('input');
 								let picker: any = document.getElementById('sfyPicker');
 
@@ -535,6 +557,26 @@ export class alibaba {
 							}
 						} catch (e) {
 							continue;
+						}
+					}
+				} else if (attr === '1688-search-ad-offer-item ad-item ') {
+					let products = e.target.querySelectorAll('a');
+
+					for (let product of products) {
+						if (product.parentNode.className === 'zr-render-container') {
+							let input = document.createElement('input');
+							let picker: any = document.getElementById('sfyPicker');
+
+							input.id = product.getAttribute('href');
+							input.className = 'SELLFORYOU-CHECKBOX';
+							input.checked = picker?.value === 'false' ? false : true;
+							input.type = 'checkbox';
+
+							if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+							else input.setAttribute('style', 'right: 0px !important');
+
+							product.style.position = 'relative';
+							product.appendChild(input);
 						}
 					}
 				}
