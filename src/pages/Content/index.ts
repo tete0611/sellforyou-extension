@@ -1601,6 +1601,9 @@ const main = async () => {
 			case 'order-vvic': {
 				break;
 			}
+			case 'console': {
+				console.log(request.source);
+			}
 		}
 	});
 	/** 상품수집하는 방법 : 3가지
@@ -1724,12 +1727,13 @@ const main = async () => {
 		const result = await new alibaba().get(info.user);
 		floatingButton(info, 'alibaba', result, false);
 
-		/** 1688 상점 페이지 인듯? */
+		/** 1688 상점 페이지 and 검색 페이지 */
 	} else if (
 		/s.1688.com\/selloffer\/offer_search.htm/.test(currentUrl) ||
 		/1688.com\/page\/offerlist/.test(currentUrl) ||
 		/s.1688.com\/youyuan\/index.htm/.test(currentUrl)
 	) {
+		console.log(`1688 상점/검색 페이지`);
 		const info = await initInfo(false);
 		await new alibaba().bulkTypeOne(info.user);
 		await new alibaba().bulkTypeTwo(info.user);

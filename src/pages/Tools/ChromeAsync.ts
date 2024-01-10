@@ -70,7 +70,10 @@ export const sendRuntimeMessage = <T>(obj: RuntimeMessage): Promise<T | null> =>
 };
 
 /** 메시지 전송 (확장프로그램 -> 콘텐츠스크립트) */
-export const sendTabMessage = <T>(tabid: number | undefined, obj: any): Promise<T | null> | undefined => {
+export const sendTabMessage = <T>(
+	tabid: number | undefined,
+	obj: { action: string; source?: any },
+): Promise<T | null> | undefined => {
 	console.log(tabid, obj);
 	if (tabid === undefined) return;
 	return new Promise((resolve, reject) => {
@@ -133,8 +136,8 @@ export const createTabCompletely = async (
 	while (true) {
 		if (timeout === limit) return tab;
 
-		const tabs: any = await queryTabs({});
-		const result: any = tabs.find((v: any) => v.id === tab.id && v.status === 'complete');
+		const tabs = await queryTabs({});
+		const result = tabs.find((v) => v.id === tab.id && v.status === 'complete');
 
 		if (result) return result;
 

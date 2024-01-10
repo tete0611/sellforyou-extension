@@ -10,7 +10,7 @@ import {
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Header } from '../Common/Header';
-import { downloadExcel, readFileBinary, readFileDataURL } from '../../Tools/Common';
+import { downloadExcel, onApolloError, readFileBinary, readFileDataURL } from '../../Tools/Common';
 import {
 	Box,
 	Button,
@@ -30,6 +30,8 @@ import { REG_EXP } from '../../../../common/regex';
 // import { data } from '../../../assets/datas/street_11_category';
 import { CategoryInfo } from '../../../type/type';
 // import { data, dbData_global, dbData_normal } from '../../../assets/datas/street_11_category';
+// import { useMutation } from '@apollo/client';
+// import { Mutation, MutationDeleteCategoryInfoByAdminArgs } from '../../../type/schema';
 
 const XLSX = require('xlsx');
 
@@ -128,6 +130,14 @@ export const Settings = observer(() => {
 	const { common, delivery } = React.useContext(AppContext);
 	const { darkTheme, loaded, user, testUserInfo, setUserInfo, deliveryPolicy } = common;
 	const { getDeliveryInfo, deliveryList, deliveryData, initDeliveryInfo } = delivery;
+
+	// const [deleteCategoryInfoByAdmin] = useMutation<
+	// 	{ deleteCategoryInfoByAdmin: Mutation['deleteCategoryInfoByAdmin'] },
+	// 	MutationDeleteCategoryInfoByAdminArgs
+	// >(MUTATIONS.DeleteCategoryInfoByAdmin, {
+	// 	notifyOnNetworkStatusChange: true,
+	// 	onError: onApolloError,
+	// });
 
 	// 사용자 정보 로드
 	React.useEffect(() => {
@@ -5911,7 +5921,7 @@ export const Settings = observer(() => {
 
 																		let response: any = null;
 																		let workbook = XLSX.read(fileData, { type: 'binary' });
-																		let excelData: { old: string; new: string }[] = workbook.SheetNames.map((name) => {
+																		let excelData: string[] = workbook.SheetNames.map((name) => {
 																			return XLSX.utils.sheet_to_json(workbook.Sheets[name], {
 																				header: header,
 																				defval: '',
@@ -5926,22 +5936,17 @@ export const Settings = observer(() => {
 																				`선택된 파일은 "${fileList?.[0].name}" 입니다\n오픈마켓코드를 입력해주세요.`,
 																			) ?? '';
 
-																		if (
-																			confirm(
-																				`${excelData.length} 개의 코드가 업로드 되었습니다.\nDB에서 삭제하시겠습니까?.`,
-																			)
-																		)
-																			response = await gql(
-																				MUTATIONS.DELETE_CATEGORYINFO_BY_ADMIN,
-																				{ data: excelData, shopCode: shopCode },
-																				false,
-																			);
-
-																		console.log(response?.data?.deleteCategoryInfoByAdmin);
-
-																		return alert(
-																			`${response?.data?.updateCategoryInfoA077MatchingByAdmin}개의 데이터가 삭제되었습니다.`,
-																		);
+																		// if (
+																		// 	confirm(
+																		// 		`${excelData.length} 개의 코드가 업로드 되었습니다.\nDB에서 삭제하시겠습니까?.`,
+																		// 	)
+																		// )
+																		// deleteCategoryInfoByAdmin({
+																		// 	variables: { shopCode: shopCode, data: ['980330'] },
+																		// 	onCompleted: (v) => {
+																		// 		alert(`${v.deleteCategoryInfoByAdmin}개의 데이터가 삭제되었습니다.`);
+																		// 	},
+																		// });
 																	}}
 																/>
 															</Button>
