@@ -17,6 +17,7 @@ import { BulkInfo, CollectInfo, RuntimeMessage, Sender, Source } from '../../typ
 // 티몰에 상품 수집하려고 페이지 들어가면 탭이 생겼다가 사라지는게 이 기능
 const tmallCORS = async (args: RuntimeMessage['form']): Promise<string | undefined | null> => {
 	const tab = await createTabCompletely({ active: false, url: args?.url }, 5);
+	//@ts-ignore
 	const res = await sendTabMessage<string>(tab.id, { action: 'fetch', form: args });
 	if (tab.id) chrome.tabs.remove(tab.id);
 
