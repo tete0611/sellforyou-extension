@@ -142,8 +142,12 @@ const notionPageList = [
 	'01-url-56daded2fc8044f9ac969b87afc9c296',
 ];
 
+interface Props {
+	setDarkTheme?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 /** 헤더 */
-export const Header = observer(() => {
+export const Header = observer((props: Props) => {
 	// MobX 스토리지 로드
 	const { common } = React.useContext(AppContext);
 	const {
@@ -337,7 +341,14 @@ export const Header = observer(() => {
 						</MyButton>
 						&nbsp; &nbsp;
 						<Tooltip title={darkTheme ? '다크모드: 켜짐' : '다크모드: 꺼짐'}>
-							<IconButton size='large' color='inherit' onClick={(e) => toggleTheme()}>
+							<IconButton
+								size='large'
+								color='inherit'
+								onClick={(e) => {
+									toggleTheme();
+									if (props.setDarkTheme) props?.setDarkTheme((p) => !p);
+								}}
+							>
 								{darkTheme ? <DarkModeIcon /> : <LightModeIcon />}
 							</IconButton>
 						</Tooltip>

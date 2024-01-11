@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { render } from 'react-dom';
-import { Analysis } from './Analysis';
+import  Analysis  from './Analysis';
 
 import './index.css';
 

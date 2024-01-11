@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { render } from 'react-dom';
-import { BanWords } from './BanWords';
+import  BanWords  from './BanWords';
 
 import './index.css';
 
