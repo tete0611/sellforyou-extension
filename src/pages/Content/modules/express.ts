@@ -4,12 +4,6 @@ import { injectScript } from './common/utils';
 import { sleep, getImageSize } from '../../Tools/Common';
 import { User } from '../../../type/type';
 
-// const waitFor3Seconds = () => {
-// 	return new Promise((resolve) => {
-// 		setTimeout(resolve, 5000); // 3000 밀리초(3초) 후에 resolve 호출
-// 	});
-// };
-
 /** 하단까지 스크롤을 부드럽게 해주는 함수 , 기본값:0.5초 */
 const scrollToBottomSmooth = async (duration: number = 500) => {
 	const scrollElement = document.documentElement || document.body;
@@ -975,49 +969,62 @@ export class express {
 	}
 
 	async bulkTypeThree(user) {
-		let timeout = 0;
+		const insertSFYBOX = (dom: ChildNode | null) => {
+			let localCount = 0;
 
-		while (true) {
-			if (timeout === 10) return 0;
+			if (dom) {
+				const items_div = dom.childNodes as NodeListOf<Element>;
+				for (let i of items_div) {
+					try {
+						const a = i.querySelector('a');
+						if (!a) continue;
 
-			let count = 0;
-			let products: any = document.querySelectorAll(
-				'#node-gallery > div.module.m-o.m-o-large-all-detail > div > div a',
-			);
+						let input: any = document.createElement('input');
+						let picker: any = document.getElementById('sfyPicker');
 
-			for (let i in products) {
-				try {
-					let image = products[i].querySelector('img');
+						input.id = /^https?:/.test(a.getAttribute('href')!)
+							? a.getAttribute('href')
+							: 'https:' + a.getAttribute('href');
+						input.className = 'SELLFORYOU-CHECKBOX';
+						input.checked = picker?.value === 'false' ? false : true;
+						input.type = 'checkbox';
 
-					if (!image) continue;
+						if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+						else input.setAttribute('style', 'right: 0px !important');
 
-					let input: any = document.createElement('input');
-					let picker: any = document.getElementById('sfyPicker');
-
-					input.id = /^https?:/.test(products[i].getAttribute('href'))
-						? products[i].getAttribute('href')
-						: 'https:' + products[i].getAttribute('href');
-					input.className = 'SELLFORYOU-CHECKBOX';
-					input.checked = picker?.value === 'false' ? false : true;
-					input.type = 'checkbox';
-
-					if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
-					else input.setAttribute('style', 'right: 0px !important');
-
-					products[i].style.position = 'relative';
-					products[i].appendChild(input);
-
-					count++;
-				} catch (e) {
-					continue;
+						a.style.position = 'relative';
+						i.insertBefore(input, a);
+						localCount++;
+					} catch (e) {
+						continue;
+					}
 				}
 			}
 
-			if (count > 0) return count;
+			return localCount;
+		};
+		let timeout = 0;
+		let count = 0;
 
+		while (true) {
+			let grid_container = document.querySelector('[style*="grid"]');
+			let observeBox = document.getElementById('right');
+			let observer: MutationObserver | null = null;
+
+			if (grid_container && observeBox) {
+				observer = new MutationObserver((e) => {
+					count = insertSFYBOX(e[1]?.target.childNodes?.[2]);
+				});
+				observer.observe(observeBox, { childList: true, subtree: true });
+				count = insertSFYBOX(grid_container);
+				break;
+			}
+
+			if (timeout === 10) return 0;
 			await sleep(1000 * 1);
 
 			timeout++;
 		}
+		return count;
 	}
 }
