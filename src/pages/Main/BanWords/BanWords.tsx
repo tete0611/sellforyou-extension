@@ -203,7 +203,13 @@ const BanWords = observer(() => {
 																findWord: e.target.value,
 																replaceWord: null,
 															});
-															if (result) window.location.reload();
+															if (result) {
+																setRestrictWordInfo({
+																	...restrictWordInfo,
+																	banWordInput: '',
+																});
+																getRestrictWords();
+															}
 														}
 													}}
 													onBlur={(e) =>
