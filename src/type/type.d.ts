@@ -452,3 +452,11 @@ export type RestrictWordInfo = {
 
 	loading: boolean;
 };
+
+/** 사이드바 타입 */
+export type SideBarList = {
+	items: SideBarItem[];
+}[];
+
+/** 사이드바 자식 타입 */
+export type SideBarItem = { name: string; engName: string; icon: ReactNode; customFunction?: () => void };

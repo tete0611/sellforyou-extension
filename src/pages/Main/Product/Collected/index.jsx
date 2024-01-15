@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { render } from 'react-dom';
-import { Collected } from './Collected';
+import Collected from './Collected';
 
 import './index.css';
 

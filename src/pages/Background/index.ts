@@ -297,29 +297,34 @@ const addToInventory = async (sender: Sender, origin: any) => {
 			secretkey = '5d4e2bce5dd8337285b634100c6a198d1b31327a';
 		}
 
-		let categoryJson = await coupangApiGateway({
-			accesskey: accesskey,
-			secretkey: secretkey,
-
-			path: `/v2/providers/openapi/apis/api/v1/categorization/predict`,
-			query: '',
-			method: 'POST',
-
-			data: {
-				productName: productName,
-			},
-		});
-
 		try {
-			if (categoryJson?.error) {
+			let categoryJson = await coupangApiGateway({
+				accesskey: accesskey,
+				secretkey: secretkey,
+				path: `/v2/providers/openapi/apis/api/v1/categorization/predict`,
+				query: '',
+				method: 'POST',
+				data: {
+					productName: productName,
+				},
+			});
+
+			if (categoryJson?.error || categoryJson.code === 'ERROR') {
 				if (categoryJson.message.includes('Not allowed IP'))
 					return await finishCollect(
 						sender,
 						'failed',
 						'쿠팡 seller에 등록된 IP와 셀포유를 사용중인 PC의 IP가 같은지 확인바랍니다.',
 					);
-				else return await finishCollect(sender, 'failed', '쿠팡 카테고리 자동설정 도중 오류가 발생하였습니다.');
+				else
+					return await finishCollect(
+						sender,
+						'failed',
+						'쿠팡 카테고리 자동설정 도중 오류가 발생하였습니다.\n관리자 문의 요망',
+					);
 			}
+
+			origin.item.cid = categoryJson.data.predictedCategoryId;
 		} catch (e) {
 			return await finishCollect(
 				sender,
@@ -327,8 +332,6 @@ const addToInventory = async (sender: Sender, origin: any) => {
 				'쿠팡 카테고리 자동설정 도중 오류가 발생하였습니다.\n관리자 문의 요망',
 			);
 		}
-
-		origin.item.cid = categoryJson.data.predictedCategoryId;
 	}
 	// 카테고리 사전설정값이 있는 경우 해당 카테고리번호를 할당
 	else origin.item.nid = collect.categoryId;
@@ -490,7 +493,9 @@ chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender, sendRespo
 	switch (request.action) {
 		// 상품 수집 액션
 		case 'collect': {
+			console.log('콜렉트수신');
 			addToInventory(sender as Sender, request.source).then(sendResponse);
+			console.log('콜렉트끝');
 
 			return true;
 		}

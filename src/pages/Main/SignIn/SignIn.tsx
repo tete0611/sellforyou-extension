@@ -59,7 +59,7 @@ export const SignIn = () => {
 				}),
 		);
 
-		window.location.href = '/dashboard.html';
+		window.location.href = '/app.html';
 	};
 
 	// 로그인 버튼을 클릭했을 때

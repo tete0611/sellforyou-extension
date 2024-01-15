@@ -1715,8 +1715,9 @@ const main = async () => {
 			});
 		});
 
-		/** */
+		/** 알리 상점 페이지 */
 	} else if (/aliexpress.com\/store/.test(currentUrl)) {
+		console.log('알리 상점 페이지 진입');
 		const info = await initInfo(false);
 		await new express().bulkTypeThree(info.user);
 		floatingButton(info, 'express', true, true);

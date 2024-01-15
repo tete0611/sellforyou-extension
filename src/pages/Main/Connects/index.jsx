@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { render } from 'react-dom';
-import { Connects } from './Connects';
+import  Connects  from './Connects';
 
 import './index.css';
 

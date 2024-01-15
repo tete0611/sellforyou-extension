@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment, ReactNode } from 'react';
 import {
 	Lock as LockIcon,
 	Warning as WarningIcon,
@@ -51,11 +51,103 @@ import {
 
 import './Styles.css';
 import { MyButton } from './UI';
-import { AppInfo } from '../../../type/type';
+import { AppInfo, SideBarList } from '../../../type/type';
 import { SHOPCODE } from '../../../type/variable';
+import { useSearchParams } from 'react-router-dom';
 
-// 헤더 뷰
-export const Header = observer(() => {
+/** 결제하기 */
+const payment = () => (window.location.href = '/payments.html');
+
+/** 로그아웃 */
+const signOut = async () => {
+	if (!confirm('로그아웃하시겠습니까?')) return;
+
+	let appInfo = await getLocalStorage<AppInfo>('appInfo');
+	appInfo = {
+		...appInfo,
+		accessToken: '',
+		refreshToken: '',
+		loading: false,
+		autoLogin: false,
+	};
+
+	await setLocalStorage({ appInfo });
+
+	window.location.href = '/signin.html';
+};
+
+/** 사이드바 목록 */
+const sideBarList: SideBarList = [
+	{ items: [{ name: '대시보드', engName: 'dashboard', icon: <DashboardIcon /> }] },
+	{
+		items: [
+			{ name: '수집상품관리', engName: 'collected', icon: <InventoryIcon /> },
+			{ name: '등록상품관리', engName: 'registered', icon: <SellIcon /> },
+			{ name: '잠금상품관리', engName: 'rocked', icon: <LockIcon /> },
+			{ name: '상품강제삭제', engName: 'errored', icon: <WarningIcon /> },
+		],
+	},
+	{ items: [{ name: '신규주문관리', engName: 'newOrder', icon: <ShoppingCartIcon /> }] },
+	{
+		items: [
+			{ name: '유입수분석', engName: 'inflow', icon: <BarChartIcon /> },
+			{ name: '키워드분석', engName: 'analysis', icon: <BarChartIcon /> },
+			{ name: '소싱기', engName: 'sourcing', icon: <BarChartIcon /> },
+		],
+	},
+	{
+		items: [
+			{ name: '기본설정', engName: 'settings', icon: <SettingsIcon /> },
+			{ name: '오픈마켓연동', engName: 'connects', icon: <StoreIcon /> },
+			{ name: '금지어/치환어설정', engName: 'banwords', icon: <PublishedWithChangesIcon /> },
+		],
+	},
+	{
+		items: [
+			{
+				name: '결제하기',
+				engName: 'payment',
+				icon: <PaymentIcon />,
+				customFunction: payment,
+			},
+			{
+				name: '로그아웃',
+				engName: 'logout',
+				icon: <LogoutIcon />,
+				customFunction: signOut,
+			},
+		],
+	},
+];
+
+/** 오픈마켓 코드 */
+const {
+	AUCTION_1,
+	COUPANG,
+	TMON,
+	G_MARKET_1,
+	INTER_PARK,
+	LOTTE_ON_GLOBAL,
+	LOTTE_ON_NORMAL,
+	SMART_STORE,
+	STREET11_GLOBAL,
+	STREET11_NORMAL,
+	WE_MAKE_PRICE,
+} = SHOPCODE;
+
+/** 노션 카카오톡 비밀번호 부분 , 베너광고 들 */
+const notionPageList = [
+	'e530d2af14e2463a8cdfc71564f7ba11',
+	'url-bacb5130d12641d588fb599b71192eaf',
+	'01-url-56daded2fc8044f9ac969b87afc9c296',
+];
+
+interface Props {
+	setDarkTheme?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+/** 헤더 */
+export const Header = observer((props: Props) => {
 	// MobX 스토리지 로드
 	const { common } = React.useContext(AppContext);
 	const {
@@ -83,19 +175,8 @@ export const Header = observer(() => {
 	} = common;
 	const { markets } = uploadInfo;
 	const { purchaseInfo2, userInfo, productCount, email, credit, id } = user;
-	const {
-		AUCTION_1,
-		COUPANG,
-		TMON,
-		G_MARKET_1,
-		INTER_PARK,
-		LOTTE_ON_GLOBAL,
-		LOTTE_ON_NORMAL,
-		SMART_STORE,
-		STREET11_GLOBAL,
-		STREET11_NORMAL,
-		WE_MAKE_PRICE,
-	} = SHOPCODE;
+	const [searchParams, setSearchParams] = useSearchParams();
+	const currentComponent = searchParams.get('page');
 
 	React.useEffect(() => {
 		// 브라우저 창 크기가 바뀔때마다 갱신해서 반응형으로 동작하도록 구현
@@ -105,13 +186,6 @@ export const Header = observer(() => {
 				height: window.innerHeight,
 			});
 		});
-
-		// 노션 카카오톡 비밀번호 부분 , 베너광고 들
-		const notionPageList = [
-			'e530d2af14e2463a8cdfc71564f7ba11',
-			'url-bacb5130d12641d588fb599b71192eaf',
-			'01-url-56daded2fc8044f9ac969b87afc9c296',
-		];
 
 		// 노션 데이터 상태 관리
 		Promise.all(
@@ -133,384 +207,16 @@ export const Header = observer(() => {
 	}, []);
 
 	// 노션 페이지 API 요청
-	const getNotionPage = async (id) => {
+	const getNotionPage = async (id: string) => {
 		const pageResp = await fetch(`https://notion-api.splitbee.io/v1/page/${id}`);
 		const pageJson = await pageResp.json();
 
 		return pageJson;
 	};
 
-	// 로그아웃 눌렀을 때
-	const signOut = async () => {
-		if (!confirm('로그아웃하시겠습니까?')) return;
-
-		let appInfo = await getLocalStorage<AppInfo>('appInfo');
-		appInfo = {
-			...appInfo,
-			accessToken: '',
-			refreshToken: '',
-			loading: false,
-			autoLogin: false,
-		};
-
-		await setLocalStorage({ appInfo });
-
-		window.location.href = '/signin.html';
-	};
-
-	// 결제하기 눌렀을 때
-	const payment = () => (window.location.href = '/payments.html');
-
-	// window.open("https://www.sellforyou.co.kr/user/payment");
-
-	// 비밀번호 변경 눌렀을 때
-	const changePassword = () => (window.location.href = '/changepassword.html');
-
-	// 좌측 삼지창 메뉴아이콘 클릭 시 나타나는 레이아웃
-	const menuList = () => (
-		<Box
-			sx={{
-				width: 250,
-			}}
-		>
-			<List>
-				{['대시보드'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton
-							onClick={() =>
-								addToStack({
-									name: '대시보드',
-									url: '/dashboard.html',
-								})
-							}
-						>
-							<ListItemIcon>
-								<DashboardIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
-
-			<Divider />
-
-			<List>
-				{['수집상품관리'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton
-							onClick={() =>
-								addToStack({
-									name: '수집상품관리',
-									url: '/product/collected.html',
-								})
-							}
-						>
-							<ListItemIcon>
-								<InventoryIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-
-				{['등록상품관리'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton
-							onClick={() =>
-								addToStack({
-									name: '등록상품관리',
-									url: '/product/registered.html',
-								})
-							}
-						>
-							<ListItemIcon>
-								<SellIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-
-				{['잠금상품관리'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton
-							onClick={() =>
-								purchaseInfo2.level < 3
-									? alert('[프로] 등급부터 사용 가능한 기능입니다.')
-									: addToStack({
-											name: '잠금상품관리',
-											url: '/product/locked.html',
-									  })
-							}
-						>
-							<ListItemIcon>
-								<LockIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-
-				{['상품강제삭제'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton
-							onClick={() =>
-								confirm(
-									'마켓에 업로드된 상태와 관계없이 셀포유에서 상품정보를 모두 삭제 또는 해제하는 기능입니다.\n삭제 전 마켓에 업로드 유무를 꼭 확인해주세요.\n진입하시겠습니까?',
-								) &&
-								addToStack({
-									name: '상품강제삭제',
-									url: '/product/errored.html',
-								})
-							}
-						>
-							<ListItemIcon>
-								<WarningIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
-
-			<Divider />
-
-			<List>
-				{['신규주문관리'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton
-							onClick={() =>
-								addToStack({
-									name: '신규주문관리',
-									url: '/order/new.html',
-								})
-							}
-						>
-							<ListItemIcon>
-								<ShoppingCartIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-
-				{/* {["주문발송관리"].map((text) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton
-              onClick={() =>
-                addToStack({
-                  name: "주문발송관리",
-                  url: "/order/delivery.html",
-                })
-              }
-            >
-              <ListItemIcon>
-                <LocalShippingIcon />
-              </ListItemIcon>
-
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))} */}
-
-				{/* {["세무자료관리"].map((text) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton
-              onClick={() =>
-                addToStack({
-                  name: "세무자료관리",
-                  url: "/order/tax.html",
-                })
-              }
-            >
-              <ListItemIcon>
-                <ReceiptIcon />
-              </ListItemIcon>
-
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))} */}
-			</List>
-
-			<Divider />
-
-			<List>
-				{['유입수분석'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton
-							onClick={() =>
-								addToStack({
-									name: '유입수분석',
-									url: '/inflow.html',
-								})
-							}
-						>
-							<ListItemIcon>
-								<BarChartIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-
-				{['키워드분석'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton
-							onClick={() =>
-								addToStack({
-									name: '키워드분석',
-									url: '/keyword/analysis.html',
-								})
-							}
-						>
-							<ListItemIcon>
-								<BarChartIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-
-				{/* {['키워드추천'].map((text) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton onClick={() => addToStack({
-                            name: '키워드추천',
-                            url: '/keyword/reference.html'
-                        })}>
-                            <ListItemIcon>
-                                <BarChartIcon />
-                            </ListItemIcon>
-
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))} */}
-
-				{['소싱기'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton
-							onClick={() =>
-								addToStack({
-									name: '소싱기',
-									url: '/sourcing.html',
-								})
-							}
-						>
-							<ListItemIcon>
-								<BarChartIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
-
-			<Divider />
-
-			<List>
-				{['기본설정'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton
-							onClick={() =>
-								addToStack({
-									name: '기본설정',
-									url: '/settings.html',
-								})
-							}
-						>
-							<ListItemIcon>
-								<SettingsIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-
-				{['오픈마켓연동'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton
-							onClick={() =>
-								addToStack({
-									name: '오픈마켓연동',
-									url: '/connects.html',
-								})
-							}
-						>
-							<ListItemIcon>
-								<StoreIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-
-				{['금지어/치환어설정'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton
-							onClick={() =>
-								addToStack({
-									name: '금지어/치환어설정',
-									url: '/banwords.html',
-								})
-							}
-						>
-							<ListItemIcon>
-								<PublishedWithChangesIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
-
-			<Divider />
-
-			<List>
-				{['결제하기'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton onClick={payment}>
-							<ListItemIcon>
-								<PaymentIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-
-				{['로그아웃'].map((text) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton onClick={signOut}>
-							<ListItemIcon>
-								<LogoutIcon />
-							</ListItemIcon>
-
-							<ListItemText primary={text} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
-		</Box>
-	);
-
 	return (
 		<>
 			<AppBar
-				// position="fixed"
 				elevation={0}
 				style={{
 					background: darkTheme ? '#303030' : '#ebebeb',
@@ -536,20 +242,26 @@ export const Header = observer(() => {
 
 					<Box>
 						<Stack direction='row' spacing={0}>
-							{chips?.map((v: any, i: number) => (
+							{chips.map((v, i) => (
 								<>
 									<Chip
 										label={v.name}
-										onClick={() => (window.location.href = v.url)}
+										onClick={() => {
+											if (!v?.customFunction) {
+												searchParams.set('page', v?.engName!);
+												setSearchParams(searchParams, { replace: true });
+											} else v.customFunction();
+										}}
 										onDelete={() => deleteFromStack(i)}
 										sx={{
-											bgcolor: v.url.includes(window.location.pathname)
-												? darkTheme
-													? '#242424'
-													: '#f5f5f5'
-												: darkTheme
-												? '#303030'
-												: '#ebebeb',
+											bgcolor:
+												currentComponent === v.engName
+													? darkTheme
+														? '#242424'
+														: '#f5f5f5'
+													: darkTheme
+													? '#303030'
+													: '#ebebeb',
 											color: darkTheme ? 'white' : 'black',
 											p: 1,
 										}}
@@ -629,7 +341,14 @@ export const Header = observer(() => {
 						</MyButton>
 						&nbsp; &nbsp;
 						<Tooltip title={darkTheme ? '다크모드: 켜짐' : '다크모드: 꺼짐'}>
-							<IconButton size='large' color='inherit' onClick={(e) => toggleTheme()}>
+							<IconButton
+								size='large'
+								color='inherit'
+								onClick={(e) => {
+									toggleTheme();
+									if (props.setDarkTheme) props?.setDarkTheme((p) => !p);
+								}}
+							>
 								{darkTheme ? <DarkModeIcon /> : <LightModeIcon />}
 							</IconButton>
 						</Tooltip>
@@ -803,7 +522,7 @@ export const Header = observer(() => {
 															sx={{
 																width: '100%',
 															}}
-															onClick={changePassword}
+															onClick={() => (window.location.href = '/changepassword.html')}
 														>
 															비밀번호 변경
 														</MyButton>
@@ -1370,9 +1089,45 @@ export const Header = observer(() => {
 					height: 48,
 				}}
 			/>
-
+			{/* 사이드바 컴포넌트 */}
 			<Drawer anchor={'left'} open={sideBar} onClose={toggleSideBar}>
-				{menuList()}
+				<Box
+					sx={{
+						width: 250,
+					}}
+				>
+					{sideBarList.map((v, i) => (
+						<Fragment key={i}>
+							<List>
+								{v.items.map((v2) => {
+									return (
+										<ListItem disablePadding>
+											<ListItemButton
+												onClick={() => {
+													if (!v2?.customFunction) {
+														searchParams.set('page', v2.engName);
+														setSearchParams(searchParams, { replace: true });
+														addToStack({
+															name: v2.name,
+															engName: v2.engName,
+															customFunction: v2.customFunction,
+														});
+													} else v2.customFunction();
+
+													toggleSideBar();
+												}}
+											>
+												<ListItemIcon>{v2.icon}</ListItemIcon>
+												<ListItemText primary={v2.name} />
+											</ListItemButton>
+										</ListItem>
+									);
+								})}
+							</List>
+							<Divider />
+						</Fragment>
+					))}
+				</Box>
 			</Drawer>
 
 			<PayHistoryModal />

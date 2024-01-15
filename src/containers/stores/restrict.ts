@@ -89,7 +89,7 @@ export class restrict {
 			alert(response.errors[0].message);
 			return false;
 		}
-
+		alert('추가되었습니다.');
 		return true;
 	};
 
