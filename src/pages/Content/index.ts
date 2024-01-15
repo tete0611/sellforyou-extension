@@ -1693,28 +1693,6 @@ const main = async () => {
 		await new express().bulkTypeTwo(info.user);
 		floatingButton(info, 'express', true, true);
 
-		/** 알리검색 페이지는 페이지이동을 해도 refresh가 되지않기 때문에 수집코드를 한번더 진행 */
-		const pageNationEl = document?.querySelector('ul.comet-pagination');
-		const currentPage = parseInt(new URLSearchParams(window.location.search).get('page') ?? '1');
-		// a태그 , 1~5 및 ... 버튼에 이벤트부여
-		pageNationEl?.querySelectorAll('a').forEach((a, index) => {
-			a.addEventListener('click', async () => {
-				if (a.innerText !== '') await pageRefresh('express', parseInt(a.innerText));
-				else index < 2 ? await pageRefresh('express', currentPage - 5) : await pageRefresh('express', currentPage + 5);
-			});
-		});
-		// button태그 , 앞,뒤 확인하다 버튼에 이벤트부여
-		pageNationEl?.querySelectorAll('button').forEach((button, index) => {
-			button.addEventListener('click', async () => {
-				if (index === 0) await pageRefresh('express', currentPage - 1);
-				else if (index === 1) await pageRefresh('express', currentPage + 1);
-				else {
-					const jump = pageNationEl.querySelector('li.comet-pagination-options')?.querySelector('input')?.value;
-					if (jump && !isNaN(Number(jump))) await pageRefresh('express', parseInt(jump));
-				}
-			});
-		});
-
 		/** 알리 상점 페이지 */
 	} else if (/aliexpress.com\/store/.test(currentUrl)) {
 		console.log('알리 상점 페이지 진입');
