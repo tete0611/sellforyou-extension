@@ -47,7 +47,8 @@ export class restrict {
 			return;
 		}
 
-		window.location.reload();
+		alert('등록되었습니다.');
+		return true;
 	};
 
 	/** 금지어/치환어 조회 */
@@ -64,11 +65,15 @@ export class restrict {
 			(v: any) => v.findWord && v.replaceWord,
 		);
 		this.restrictWordInfo.replaceList.map(() => this.restrictWordInfo.replaceChecked.push(false));
+
+		this.restrictWordInfo.banChecked.fill(false);
+		this.restrictWordInfo.replaceChecked.fill(false);
+
 		this.restrictWordInfo.loading = true;
 	};
 
 	/** 금지어/치환어 설정정보 */
-	setRestrictWordInfo = (data: any) => (this.restrictWordInfo = data);
+	setRestrictWordInfo = (data: RestrictWordInfo) => (this.restrictWordInfo = data);
 
 	/** 금지어/치환어 추가
 	 * @description replaceWord = null 입력시 금지어 그렇지않으면 치환어
@@ -116,6 +121,9 @@ export class restrict {
 			return false;
 		}
 
+		alert('삭제되었습니다.');
+		if (type === 'banWord') banChecked.fill(false);
+		else replaceChecked.fill(false);
 		return true;
 	};
 
