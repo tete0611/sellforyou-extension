@@ -729,3 +729,19 @@ export const onApolloError = (error: ApolloError) => {
 		console.log(error);
 	}
 };
+
+/** 올바른 url 형식 만들어서 반환 */
+export const normalizeUrl = (input: string): string => {
+	try {
+		new URL(input);
+		return input;
+	} catch (e) {
+		const correctedUrl = `https://${input}`;
+		try {
+			new URL(correctedUrl);
+			return correctedUrl;
+		} catch {
+			return input;
+		}
+	}
+};

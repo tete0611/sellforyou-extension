@@ -5,7 +5,7 @@ import { alibaba } from './modules/alibaba';
 import { vvic } from './modules/vvic';
 import { amazon } from './modules/amazon';
 import { getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../Tools/ChromeAsync';
-import { getCookie, sleep, updateQueryStringParameter } from '../Tools/Common';
+import { getCookie, normalizeUrl, sleep, updateQueryStringParameter } from '../Tools/Common';
 import { getTaobaoData } from '../Tools/Taobao';
 import {
 	deleteA077Products,
@@ -17,8 +17,33 @@ import {
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
 import { CollectInfo, Nullable, RuntimeMessage, Sender, Shop, User } from '../../type/type';
 
-// const iconv = require('iconv-lite');
+/** SELLFORYOU-CHECKBOX 삽입 함수 */
+export const onInsertDom = ({
+	element, // 삽입하고자 하는 element
+	picker, // 상품일괄 선택/해제 박스
+	user, // User 객체
+}: {
+	element: Nullable<HTMLAnchorElement>;
+	picker: HTMLButtonElement | null;
+	user: User;
+}) => {
+	if (!element) return;
+	if (element.querySelector('.SELLFORYOU-CHECKBOX')) return;
+	if (!element.href || element.href === '') return;
 
+	const input = Object.assign(document.createElement('input'), {
+		className: 'SELLFORYOU-CHECKBOX',
+		checked: picker?.value !== 'false',
+		type: 'checkbox',
+		id: normalizeUrl(element.href),
+		style: user.userInfo.collectCheckPosition === 'L' ? 'left: 0px !important' : 'right: 0px !important',
+	});
+
+	element.style.position = 'relative';
+	element.appendChild(input);
+};
+
+/** vvic 상점페이지 api로 대량수집하기 함수 */
 const bulkCollectUsingApi = async (shopId: number, currentPage: number) => {
 	const resp = await fetch(
 		`https://www.vvic.com/apif/shop/itemlist?id=${shopId}&currentPage=${currentPage}&sort=up_time-desc&merge=0`,

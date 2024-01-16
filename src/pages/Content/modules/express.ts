@@ -920,35 +920,6 @@ export class express {
 	async bulkTypeTwo(user) {
 		let timeout = 0;
 
-		/** 알리 검색페이지 상품 리스트 url */
-		// const resp = await fetch('https://ko.aliexpress.com/fn/search-pc/index', {
-		// 	headers: {
-		// 		accept: '*/*',
-		// 		'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-		// 		'bx-v': '2.5.3',
-		// 		'content-type': 'application/json;charset=UTF-8',
-		// 		'sec-ch-ua': '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
-		// 		'sec-ch-ua-mobile': '?0',
-		// 		'sec-ch-ua-platform': '"Windows"',
-		// 		'sec-fetch-dest': 'empty',
-		// 		'sec-fetch-mode': 'cors',
-		// 		'sec-fetch-site': 'same-origin',
-		// 	},
-		// 	referrer:
-		// 		'https://ko.aliexpress.com/w/wholesale-%EC%A0%84%EA%B5%AC.html?page=2&g=y&SearchText=%EC%A0%84%EA%B5%AC',
-		// 	referrerPolicy: 'strict-origin-when-cross-origin',
-		// 	body: '{"pageVersion":"76cea70e82a7e928f556677984719aa1","target":"root","data":{"page":2,"g":"y","SearchText":"전구","origin":"y"},"eventName":"onChange","dependency":[]}',
-		// 	method: 'POST',
-		// 	mode: 'cors',
-		// 	credentials: 'include',
-		// });
-		// console.log({ resp });
-		// const json = await resp.json();
-		// console.log({ json });
-		// const productIds = json?.data?.result?.mods?.itemList?.content.map((v) => v.productId);
-		// console.log({ productIds });
-		/** */
-
 		/** refresh 또는 url이동으로 동작함 */
 		while (true) {
 			if (timeout === 10) return 0;

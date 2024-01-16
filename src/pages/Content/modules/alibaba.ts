@@ -6,6 +6,7 @@ import { injectScript } from './common/utils';
 import { sleep, getImageSize, getCookie } from '../../Tools/Common';
 import CryptoJS from 'crypto-js';
 import { User } from '../../../type/type';
+import { onInsertDom } from '..';
 
 // 상품정보 크롤링
 async function scrape(items: any, user: any) {
@@ -502,26 +503,8 @@ export class alibaba {
 	}
 
 	// 대량수집 페이지별 체크표시
-	async bulkTypeOne(user) {
-		/** SELLFORYOU-CHECKBOX 삽입 함수 */
-		const onInsertDom = ({ element, insertBefore }: { element: HTMLAnchorElement; insertBefore?: boolean }) => {
-			if (element.querySelector('.SELLFORYOU-CHECKBOX')) return;
-			if (!element.href || element.href === '') return;
-
-			let input = document.createElement('input');
-			let picker: any = document.getElementById('sfyPicker');
-
-			input.id = element.href;
-			input.className = 'SELLFORYOU-CHECKBOX';
-			input.checked = picker?.value === 'false' ? false : true;
-			input.type = 'checkbox';
-
-			if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
-			else input.setAttribute('style', 'right: 0px !important');
-
-			element.style.position = 'relative';
-			element.appendChild(input);
-		};
+	async bulkTypeOne(user: User) {
+		const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
 
 		/** 초기 페이지에 한번 체크박스를 삽입 (몇몇 상품은 미리상품이 생겨있어서 DOMNodeInserted 에 캐치되지못함) */
 		while (true) {
@@ -531,7 +514,7 @@ export class alibaba {
 			space_offer_card_box?.forEach((v) => {
 				const link = v.querySelector('.mojar-element-image')?.querySelector('a');
 
-				if (link) onInsertDom({ element: link });
+				if (link) onInsertDom({ element: link, picker: picker, user: user });
 			});
 
 			if (space_offer_card_box) break;
@@ -540,6 +523,8 @@ export class alibaba {
 		}
 
 		document.addEventListener('DOMNodeInserted', async (e: any) => {
+			const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
+
 			try {
 				const attr = e.target?.getAttribute('class');
 				/** 1~5열 상품 */
@@ -552,7 +537,8 @@ export class alibaba {
 								products[i].parentNode.className === 'cate1688-offer b2b-ocms-fusion-comp' ||
 								products[i].parentNode.className === 'mojar-element-image'
 							)
-								onInsertDom({ element: products[i] });
+								onInsertDom({ element: products[i], picker: picker, user: user });
+							continue;
 						} catch (e) {
 							continue;
 						}
@@ -561,7 +547,8 @@ export class alibaba {
 					let products = e.target.querySelectorAll('a');
 
 					for (let product of products)
-						if (product.parentNode.className === 'zr-render-container') onInsertDom({ element: product });
+						if (product.parentNode.className === 'zr-render-container')
+							onInsertDom({ element: product, picker: picker, user: user });
 				}
 			} catch (e) {
 				return 0;
