@@ -307,7 +307,6 @@ export class common {
 
 		appInfo = {
 			...appInfo,
-
 			darkTheme: this.darkTheme,
 		};
 

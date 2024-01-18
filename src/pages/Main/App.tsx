@@ -1,9 +1,11 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import React, { useContext, useMemo, lazy, Suspense, useState } from 'react';
+import React, { useContext, useMemo, lazy, Suspense, useState, useEffect } from 'react';
 import { AppContext } from '../../containers/AppContext';
 import { Frame } from './Common/UI';
 import { Header } from './Common/Header';
 import { useSearchParams } from 'react-router-dom';
+import { getLocalStorage } from '../Tools/ChromeAsync';
+import { AppInfo } from '../../type/type';
 
 const Dashboard = lazy(() => import('./Dashboard/Dashboard'));
 const Collected = lazy(() => import('./Product/Collected/Collected'));
@@ -23,6 +25,12 @@ const App = () => {
 	const [searchParams] = useSearchParams();
 	const currentComponent = searchParams.get('page');
 	const [darkTheme, setDarkTheme] = useState(common.darkTheme);
+
+	useEffect(() => {
+		getLocalStorage<AppInfo>('appInfo').then((v) => {
+			setDarkTheme(v.darkTheme);
+		});
+	}, []);
 
 	// 다크모드 지원 설정
 	const theme = useMemo(
