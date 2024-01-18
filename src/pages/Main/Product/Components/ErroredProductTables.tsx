@@ -26,7 +26,7 @@ import { Input, MyButton } from '../../Common/UI';
 import { ErroredSummary } from './ErroredSummary';
 import { Details } from './Details/Details';
 import '../../Common/Styles.css';
-import { ImageSummary } from './ImageSummary';
+import { ImageSummary } from './';
 
 // 커스텀 테이블 컬럼 스타일
 const StyledTableCell = styled(TableCell)({
@@ -389,4 +389,3 @@ export const ErroredProductTables = observer(() => {
 		</>
 	);
 });
-export default ErroredProductTables;

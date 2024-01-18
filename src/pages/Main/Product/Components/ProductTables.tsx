@@ -31,10 +31,10 @@ import {
 } from '@mui/material';
 import { List, AutoSizer } from 'react-virtualized';
 import { Input, MyButton } from '../../Common/UI';
-import { Summary } from './Summary';
-import { Details } from './Details/Details';
+import { Summary } from './';
+import { Details } from './Details';
 import '../../Common/Styles.css';
-import { ImageSummary } from './ImageSummary';
+import { ImageSummary } from './';
 
 // 커스텀 테이블 컬럼 스타일
 const StyledTableCell = styled(TableCell)({
@@ -563,4 +563,3 @@ export const ProductTables = observer(() => {
 		</>
 	);
 });
-export default ProductTables;

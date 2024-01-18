@@ -3,16 +3,16 @@ import React from 'react';
 import { format } from 'date-fns';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
-import { Header } from '../Common/Header';
 import { NoticeModal } from '../Modals';
 import { Box, Button, CircularProgress, Container, Grid, Paper, Tooltip, Typography } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Frame } from '../Common/UI';
+import { createTheme } from '@mui/material/styles';
+import { useSearchParams } from 'react-router-dom';
 
 // 대시보드 뷰
 const Dashboard = observer(() => {
 	// MobX 스토리지 로드
 	const { common, dashboard, inflow } = React.useContext(AppContext);
+	const [searchParams, setSearchParams] = useSearchParams();
 
 	React.useEffect(() => {
 		if (!common.loaded) return;
@@ -279,7 +279,10 @@ const Dashboard = observer(() => {
 															fontWeight: 'bold',
 															textDecoration: 'underline',
 														}}
-														onClick={() => (window.location.href = '/product/collected.html')}
+														onClick={() => {
+															searchParams.set('page', 'collected');
+															setSearchParams(searchParams, { replace: true });
+														}}
 													>
 														{dashboard.countInfo.product.collected}
 													</Typography>
@@ -317,7 +320,10 @@ const Dashboard = observer(() => {
 															fontWeight: 'bold',
 															textDecoration: 'underline',
 														}}
-														onClick={() => (window.location.href = '/product/registered.html')}
+														onClick={() => {
+															searchParams.set('page', 'registered');
+															setSearchParams(searchParams, { replace: true });
+														}}
 													>
 														{dashboard.countInfo.product.registered}
 													</Typography>
@@ -355,7 +361,10 @@ const Dashboard = observer(() => {
 															fontWeight: 'bold',
 															textDecoration: 'underline',
 														}}
-														onClick={() => (window.location.href = '/product/locked.html')}
+														onClick={() => {
+															searchParams.set('page', 'rocked');
+															setSearchParams(searchParams, { replace: true });
+														}}
 													>
 														{dashboard.countInfo.product.locked}
 													</Typography>
@@ -419,7 +428,10 @@ const Dashboard = observer(() => {
 															fontWeight: 'bold',
 															textDecoration: 'underline',
 														}}
-														onClick={() => (window.location.href = '/order/new.html')}
+														onClick={() => {
+															searchParams.set('page', 'newOrder');
+															setSearchParams(searchParams, { replace: true });
+														}}
 													>
 														{dashboard.countInfo.order.countAll}
 													</Typography>
@@ -898,7 +910,10 @@ const Dashboard = observer(() => {
 															fontWeight: 'bold',
 															textDecoration: 'underline',
 														}}
-														onClick={() => (window.location.href = '/inflow.html')}
+														onClick={() => {
+															searchParams.set('page', 'inflow');
+															setSearchParams(searchParams, { replace: true });
+														}}
 													>
 														{common?.user?.purchaseInfo2?.level >= 3 ? inflow.dataCounts.total : '-'}
 													</Typography>
@@ -1461,7 +1476,8 @@ const Dashboard = observer(() => {
 														width: '100%',
 													}}
 													onClick={() => {
-														window.location.href = '/banwords.html';
+														searchParams.set('page', 'banwords');
+														setSearchParams(searchParams, { replace: true });
 													}}
 												>
 													금지어/치환어설정 바로가기
@@ -1529,7 +1545,10 @@ const Dashboard = observer(() => {
 													sx={{
 														width: '100%',
 													}}
-													onClick={() => (window.location.href = '/keyword/analysis.html')}
+													onClick={() => {
+														searchParams.set('page', 'analysis');
+														setSearchParams(searchParams, { replace: true });
+													}}
 												>
 													키워드분석 바로가기
 												</Button>
@@ -1596,7 +1615,10 @@ const Dashboard = observer(() => {
 													sx={{
 														width: '100%',
 													}}
-													onClick={() => (window.location.href = '/sourcing.html')}
+													onClick={() => {
+														searchParams.set('page', 'sourcing');
+														setSearchParams(searchParams, { replace: true });
+													}}
 												>
 													소싱기 바로가기
 												</Button>

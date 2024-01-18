@@ -1727,6 +1727,7 @@ const main = async () => {
 
 		/** 1688 단일상품 페이지 */
 	} else if (/detail.1688.com/.test(currentUrl)) {
+		console.log('1688 단일상품 페이지');
 		const info = await initInfo(true);
 		const result = await new alibaba().get(info.user);
 		floatingButton(info, 'alibaba', result, false);

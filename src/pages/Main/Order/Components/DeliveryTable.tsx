@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { List, AutoSizer } from 'react-virtualized';
 import { MyButton } from '../../Common/UI';
-import { DeliverySummary } from './DeliverySummary';
+import { DeliverySummary } from './';
 
 import '../../Common/Styles.css';
 
@@ -438,5 +438,3 @@ export const DeliveryTable = observer(() => {
 		</>
 	);
 });
-
-export default DeliveryTable;

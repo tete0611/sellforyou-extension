@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
 import { Header } from '../../Common/Header';
 import { Box, Chip, Container, MenuItem, Paper } from '@mui/material';
-import { DeliveryTable } from '../Components/DeliveryTable';
+import { DeliveryTable } from '../Components';
 import { ImagePopOver } from '../../PopOver';
 import { DeliveryDetailModal, ManyDeliveryInfoModal } from '../../Modals';
 import { ComboBox, Frame, Title } from '../../Common/UI';
