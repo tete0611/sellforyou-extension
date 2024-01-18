@@ -29,8 +29,7 @@ import {
 	UpdateManyProductPopOver,
 	ReplaceOptionNamePopOver,
 } from '../../PopOver';
-import { ComboBox, Frame, Input, MyButton, Title } from '../../Common/UI';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ComboBox, Input, MyButton, Title } from '../../Common/UI';
 
 // 상품수집관리 목록 테이블 뷰
 const Collected = observer(() => {
@@ -71,17 +70,6 @@ const Collected = observer(() => {
 		});
 	}, []);
 
-	// 다크모드 지원 설정
-	const theme = React.useMemo(
-		() =>
-			createTheme({
-				palette: {
-					mode: common.darkTheme ? 'dark' : 'light',
-				},
-			}),
-		[common.darkTheme],
-	);
-
 	return (
 		//<ThemeProvider theme={theme}>
 		//	<Frame dark={common.darkTheme}>
@@ -97,7 +85,7 @@ const Collected = observer(() => {
 							}}
 						>
 							<Typography color='text.primary'>
-								수집상품목록 ({product.count}){' '}
+								{`수집상품목록 (${product.itemInfo.loading ? ' ... ' : product.count}) `}
 								{checkLength > 0 && (
 									<span style={{ color: '#01579b', fontWeight: 600 }}>{`중 ${checkLength}개 선택`}</span>
 								)}

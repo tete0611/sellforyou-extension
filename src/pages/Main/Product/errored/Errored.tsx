@@ -20,6 +20,9 @@ const Errored = observer(() => {
 		// 태그사전 데이터 가져오기
 		product.getTagDict();
 
+		// 검색조건 설정
+		product.setSearchWhereAndInput([]);
+
 		// 상품 정보 가져오기
 		product.refreshProduct(common);
 
@@ -64,7 +67,7 @@ const Errored = observer(() => {
 							}}
 						>
 							<Typography color='text.primary'>
-								상품목록 ({product.count}){' '}
+								{`상품목록 (${product.itemInfo.loading ? ' ... ' : product.count}) `}
 								{checkLength > 0 && (
 									<span style={{ color: '#d32f2f', fontWeight: 600 }}>{`중 ${checkLength}개 선택`}</span>
 								)}

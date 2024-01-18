@@ -45,6 +45,8 @@ export const ErroredProductTables = observer(() => {
 	const rowRenderer = (props) => {
 		const item = product.itemInfo.items[props.index];
 
+		props.style.height = 83;
+
 		return (
 			<div key={props.key} style={props.style}>
 				<Box
@@ -69,6 +71,7 @@ export const ErroredProductTables = observer(() => {
 		let lastRow = false;
 
 		if (!product.itemInfo.items[lastIndex]) lastRow = true;
+		props.style.height = 83;
 
 		return (
 			<div key={props.key} style={props.style}>
@@ -352,15 +355,16 @@ export const ErroredProductTables = observer(() => {
 															height={height}
 															rowCount={product.itemInfo.items.length}
 															rowRenderer={rowRenderer}
-															rowHeight={({ index }) =>
-																product.itemInfo.items[index].collapse
-																	? product.state === 7
-																		? 577 + 30
-																		: 577
-																	: product.state === 7
-																	? 83 + 30
-																	: 83
-															}
+															rowHeight={83}
+															// rowHeight={({ index }) =>
+															// 	product.itemInfo.items[index].collapse
+															// 		? product.state === 7
+															// 			? 577 + 30
+															// 			: 577
+															// 		: product.state === 7
+															// 		? 83 + 30
+															// 		: 83
+															// }
 															ref={tableRef}
 														/>
 													)}
