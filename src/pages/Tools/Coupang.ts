@@ -1,11 +1,9 @@
 // 쿠팡 API
 // https://developers.coupangcorp.com/hc/ko
-
 import CryptoJS from 'crypto-js';
 import gql from '../Main/GraphQL/Requests';
 import QUERIES from '../Main/GraphQL/Queries';
 import MUTATIONS from '../Main/GraphQL/Mutations';
-
 import {
 	getClock,
 	getClockOffset,
@@ -13,19 +11,29 @@ import {
 	matchesCharacter,
 	notificationByEveryTime,
 	sendCallback,
+	sleep,
 	toISO,
 	transformContent,
 } from './Common';
 import { getLocalStorage } from './ChromeAsync';
+import { product } from '../../containers/stores/product';
+import { common } from '../../containers/stores/common';
 
-// 쿠팡 API Endpoint 인터페이스
-export async function coupangApiGateway(body: any) {
+interface CoupangProps {
+	method: string;
+	path: string;
+	query?: string;
+	accesskey: string;
+	secretkey: string;
+	data: any;
+}
+
+/** 쿠팡 API Endpoint 인터페이스 */
+export const coupangApiGateway = async (body: CoupangProps) => {
 	const datetime = new Date().toISOString().substr(2, 17).replace(/:/gi, '').replace(/-/gi, '') + 'Z';
-
 	const method = body.method;
 	const path = body.path;
 	const queried = body.query;
-
 	const message = datetime + method + path + queried;
 
 	let urlpath = path + '?' + queried;
@@ -33,13 +41,11 @@ export async function coupangApiGateway(body: any) {
 	const accesskey = body.accesskey;
 	const secretkey = body.secretkey;
 	const signature = CryptoJS.HmacSHA256(message, secretkey).toString(CryptoJS.enc.Hex);
-
 	const authorization =
 		'CEA algorithm=HmacSHA256, access-key=' + accesskey + ', signed-date=' + datetime + ', signature=' + signature;
 
 	let coupang_resp = await fetch(`https://api-gateway.coupang.com${urlpath}`, {
 		method: method,
-
 		headers: {
 			'Content-Type': 'application/json; charset=UTF-8',
 			Authorization: authorization,
@@ -49,14 +55,15 @@ export async function coupangApiGateway(body: any) {
 		body: method === 'GET' || method === 'HEAD' ? null : JSON.stringify(body.data),
 	});
 
-	return await coupang_resp.json();
-}
+	if (coupang_resp.status === 403 && body.method === 'DELETE')
+		throw new Error('쿠팡 API 403에러발생.\n관리자에게 문의해주세요.');
+	const json = await coupang_resp.json();
+	return json;
+};
 
-// 쿠팡 상품등록 API
-export async function uploadCoupang(productStore: any, commonStore: any, data: any) {
-	if (!data) {
-		return false;
-	}
+/** 쿠팡 상품등록 API */
+export const uploadCoupang = async (productStore: product, commonStore: common, data: any) => {
+	if (!data) return false;
 
 	let shopName = data.DShopInfo.site_name;
 
@@ -136,24 +143,21 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 				}
 
 				let count = 0;
-
 				let images_coupang: any = [];
 
 				// 카테고리 조회 API
 				const category_body = {
 					accesskey: accesskey,
 					secretkey: secretkey,
-
 					path:
 						'/v2/providers/seller_api/apis/api/v1/marketplace/meta/category-related-metas/display-category-codes/' +
 						market_item.cate_code,
 					query: '',
 					method: 'GET',
-
 					data: {},
 				};
 
-				const itemInfo = productStore.itemInfo.items.find((v: any) => v.productCode === market_code);
+				const itemInfo = productStore.itemInfo.items.find((v) => v.productCode === market_code)!;
 
 				// 고시정보 설정
 				const sillCode = itemInfo[`sillCode${data.DShopInfo.site_code}`]
@@ -181,9 +185,8 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 
 				// 카테고리 필수 옵션 정보를 가져옴 -> 나중에 옵션정보 비교해서 교체
 				for (let i in category_json['data']['attributes']) {
-					if (category_json['data']['attributes'][i]['required'] === 'MANDATORY') {
+					if (category_json['data']['attributes'][i]['required'] === 'MANDATORY')
 						category_option_array.push(category_json['data']['attributes'][i]['attributeTypeName']);
-					}
 				}
 
 				// 썸네일 이미지
@@ -191,16 +194,15 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 					if (i.match(/img[0-9]/) && !i.includes('blob')) {
 						if (market_item[i] !== '') {
 							let output = {};
-
 							let img = /^https?:/.test(market_item[i]) ? market_item[i] : 'http:' + market_item[i];
 
-							if (i === 'img1') {
+							if (i === 'img1')
 								output = {
 									imageOrder: 0,
 									imageType: 'REPRESENTATION',
 									vendorPath: img,
 								};
-							} else {
+							else {
 								output = {
 									imageOrder: count,
 									imageType: 'DETAIL',
@@ -216,38 +218,25 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 				}
 
 				let optn_array: any = [];
-
 				let group: any = {};
-
 				let words = await gql(QUERIES.SELECT_WORD_TABLES_BY_SOMEONE, {}, false);
 				let words_list = words.data.selectWordTablesBySomeone;
-
 				let words_restrict: any = {};
 
 				for (let i in words_list) {
-					if (words_list[i].findWord && !words_list[i].replaceWord) {
-						if (market_item.name3.includes(words_list[i].findWord)) {
-							words_restrict['상품명'] = words_list[i].findWord;
-						}
-					}
+					if (words_list[i].findWord && !words_list[i].replaceWord)
+						if (market_item.name3.includes(words_list[i].findWord)) words_restrict['상품명'] = words_list[i].findWord;
 				}
-
 				for (let i in market_optn) {
 					if (market_optn[i].code === market_code) {
 						for (let j in market_optn[i]) {
-							if (j.includes('misc') && market_optn[i][j] !== '') {
-								group[market_optn[i][j]] = j.replace('misc', 'opt');
-							}
-
-							if (j.includes('opt') && j !== 'optimg' && market_optn[i][j] !== '') {
+							if (j.includes('misc') && market_optn[i][j] !== '') group[market_optn[i][j]] = j.replace('misc', 'opt');
+							if (j.includes('opt') && j !== 'optimg' && market_optn[i][j] !== '')
 								for (let k in words_list) {
-									if (words_list[k].findWord && !words_list[k].replaceWord) {
-										if (market_optn[i][j].includes(words_list[k].findWord)) {
+									if (words_list[k].findWord && !words_list[k].replaceWord)
+										if (market_optn[i][j].includes(words_list[k].findWord))
 											words_restrict['옵션명'] = words_list[k].findWord;
-										}
-									}
 								}
-							}
 						}
 					}
 				}
@@ -256,9 +245,7 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 				if (Object.keys(words_restrict).length > 0) {
 					let message = '';
 
-					for (let i in words_restrict) {
-						message += i + '에서 금지어(' + words_restrict[i] + ')가 발견되었습니다. ';
-					}
+					for (let i in words_restrict) message += i + '에서 금지어(' + words_restrict[i] + ')가 발견되었습니다. ';
 
 					productStore.addRegisteredFailed(Object.assign(market_item, { error: message }));
 					productStore.addConsoleText(`(${shopName}) [${market_code}] 금지어 발견됨`);
@@ -269,19 +256,14 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 				}
 
 				let option_count = Object.keys(group).length;
-
 				let search_tags = market_item.keyword1 === '' ? [] : market_item.keyword1.split(',');
 
 				// 태그 개수가 20개를 넘어가면 20개로 자름
-				if (search_tags.length > 20) {
-					search_tags = search_tags.slice(0, 20);
-				}
+				if (search_tags.length > 20) search_tags = search_tags.slice(0, 20);
 
 				// 각 태그가 20자를 초과하면 20자로 자름
 				for (let i in search_tags) {
-					if (search_tags[i].length > 20) {
-						search_tags[i] = search_tags[i].slice(0, 20);
-					}
+					if (search_tags[i].length > 20) search_tags[i] = search_tags[i].slice(0, 20);
 				}
 
 				// 옵션이 있는경우
@@ -303,25 +285,20 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 								if (commonStore.user.userInfo.coupangImageOpt !== 'N') {
 									let j_formatted = j.toLowerCase();
 
-									if (j_formatted.includes('색깔') || j_formatted.includes('color') || j_formatted.includes('색상')) {
+									if (j_formatted.includes('색깔') || j_formatted.includes('color') || j_formatted.includes('색상'))
 										j_formatted = '색상';
-									}
-
 									if (
 										j_formatted.includes('치수') ||
 										j_formatted.includes('크기') ||
 										j_formatted.includes('size') ||
 										j_formatted.includes('사이즈')
-									) {
+									)
 										j_formatted = '사이즈';
-									}
 
 									for (let k in category_option_array) {
 										let optn_matched = await matchesCharacter(j_formatted, category_option_array[k]);
 
-										if (optn_matched.length > 1) {
-											optn_type = category_option_array[k];
-										}
+										if (optn_matched.length > 1) optn_type = category_option_array[k];
 									}
 								}
 
@@ -463,30 +440,23 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 								],
 							},
 						],
-
 						skuInfo: {},
 						skuChecked: false,
-
 						globalInfo: {
 							material: {},
 						},
-
 						itemName: '단일상품',
 						attributes: [],
 						saleAgentCommission: 10.5,
-
 						notices: category_sill_array,
-
 						maximumBuyForPerson: 0,
 						maximumBuyForPersonPeriod: 1,
-
 						certifications: [
 							{
 								certificationType: 'NOT_REQUIRED',
 								certificationCode: '',
 							},
 						],
-
 						taxType: 'TAX',
 						adultOnly: 'EVERYONE',
 						parallelImported: 'NOT_PARALLEL_IMPORTED',
@@ -500,48 +470,33 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 
 				let deliveryCharge = market_item.deliv_fee;
 				let deliveryChargeOnReturn = commonStore.user.userInfo.refundShippingFee;
-
 				let returnCharge = commonStore.user.userInfo.refundShippingFee;
 
 				//유료배송비가 있는 경우
 				if (deliveryCharge > 0) {
-					if (market_item.sprice <= 20000) {
-						if (returnCharge > 15000) {
-							returnCharge = 15000;
-						}
-					} else if (market_item.sprice > 40000) {
-						if (returnCharge > 100000) {
-							returnCharge = 100000;
-						}
-					} else {
-						if (returnCharge > 20000) {
-							returnCharge = 20000;
-						}
-					}
+					if (market_item.sprice <= 20000)
+						if (returnCharge > 15000) returnCharge = 15000;
+						else if (market_item.sprice > 40000)
+							if (returnCharge > 100000) returnCharge = 100000;
+							else if (returnCharge > 20000) returnCharge = 20000;
 
-					if (returnCharge > market_item.sprice) {
-						returnCharge = market_item.sprice;
-					}
+					if (returnCharge > market_item.sprice) returnCharge = market_item.sprice;
 				} else {
 					let sumCharge1 = deliveryChargeOnReturn + returnCharge;
 
 					//초도반품비 + 반품비
-					if (market_item.sprice <= 20000) {
+					if (market_item.sprice <= 20000)
 						if (sumCharge1 > 15000) {
 							deliveryChargeOnReturn = 7500;
 							returnCharge = 7500;
-						}
-					} else if (market_item.sprice > 40000) {
-						if (sumCharge1 > 100000) {
-							deliveryChargeOnReturn = 50000;
-							returnCharge = 50000;
-						}
-					} else {
-						if (sumCharge1 > 20000) {
-							deliveryChargeOnReturn = 20000;
-							returnCharge = 20000;
-						}
-					}
+						} else if (market_item.sprice > 40000)
+							if (sumCharge1 > 100000) {
+								deliveryChargeOnReturn = 50000;
+								returnCharge = 50000;
+							} else if (sumCharge1 > 20000) {
+								deliveryChargeOnReturn = 20000;
+								returnCharge = 20000;
+							}
 
 					let sumCharge2 = deliveryChargeOnReturn + returnCharge;
 
@@ -555,11 +510,9 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 				let product_body: any = {
 					accesskey: accesskey,
 					secretkey: secretkey,
-
 					path: '/v2/providers/seller_api/apis/api/v1/marketplace/seller-products',
 					query: '',
 					method: 'POST',
-
 					data: {
 						displayCategoryCode: market_item.cate_code,
 						sellerProductName: market_item.name3,
@@ -613,14 +566,13 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 
 				// 상품 수정모드일 경우
 				if (!market_item.cert && commonStore.uploadInfo.editable) {
+					let callCount = 0; // 쿠팡 api 호출량 제한 정책으로 인한 카운트 값
 					let productId = market_item.name2;
 
 					if (!productId) {
 						productStore.addRegisteredFailed(Object.assign(market_item, { error: '상품 ID를 찾을 수 없습니다.' }));
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 실패`);
-
 						await sendCallback(commonStore, data, market_code, parseInt(product), 2, '상품 ID를 찾을 수 없습니다.');
-
 						continue;
 					}
 
@@ -628,11 +580,9 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 					let search_body = {
 						accesskey: accesskey,
 						secretkey: secretkey,
-
 						path: `/v2/providers/seller_api/apis/api/v1/marketplace/seller-products/${productId}`,
 						query: '',
 						method: 'GET',
-
 						data: {},
 					};
 
@@ -640,86 +590,129 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 
 					if (search_json.code !== 'SUCCESS') {
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 조회 실패`);
-
 						continue;
 					}
+
+					productStore.addRegisteredQueue(market_item);
+					productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 중...`);
 
 					for (let i in search_json.data.items) {
 						optn_array[i]['sellerProductItemId'] = search_json.data.items[i]['sellerProductItemId'];
 						optn_array[i]['vendorItemId'] = search_json.data.items[i]['vendorItemId'];
 					}
 
-					// 옵션가 수정
-					await Promise.all(
-						optn_array.map(async (v: any) => {
-							let detail_body = {
-								accesskey: accesskey,
-								secretkey: secretkey,
+					// 옵션가 수정 - map사용
+					// await Promise.all(
+					// 	optn_array.map(async (v: any) => {
+					// 		let detail_body = {
+					// 			accesskey: accesskey,
+					// 			secretkey: secretkey,
+					// 			path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/prices/${v['salePrice']}`,
+					// 			query: '',
+					// 			method: 'PUT',
+					// 			data: {},
+					// 		};
 
-								path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/prices/${v['salePrice']}`,
-								query: '',
-								method: 'PUT',
+					// 		return await coupangApiGateway(detail_body);
+					// 	}),
+					// );
 
-								data: {},
-							};
+					// 판매가 수정 - map 사용
+					// await Promise.all(
+					// 	optn_array.map(async (v: any) => {
+					// 		let detail_body = {
+					// 			accesskey: accesskey,
+					// 			secretkey: secretkey,
+					// 			path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/original-prices/${v['originalPrice']}`,
+					// 			query: '',
+					// 			method: 'PUT',
+					// 			data: {},
+					// 		};
 
-							return await coupangApiGateway(detail_body);
-						}),
-					);
+					// 		return await coupangApiGateway(detail_body);
+					// 	}),
+					// );
 
-					// 판매가 수정
-					await Promise.all(
-						optn_array.map(async (v: any) => {
-							let detail_body = {
-								accesskey: accesskey,
-								secretkey: secretkey,
+					// 재고수량 수정 - map 사용
+					// await Promise.all(
+					// 	optn_array.map(async (v: any) => {
+					// 		let detail_body = {
+					// 			accesskey: accesskey,
+					// 			secretkey: secretkey,
+					// 			path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/quantities/${v['maximumBuyCount']}`,
+					// 			query: '',
+					// 			method: 'PUT',
+					// 			data: {},
+					// 		};
 
-								path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/original-prices/${v['originalPrice']}`,
-								query: '',
-								method: 'PUT',
+					// 		return await coupangApiGateway(detail_body);
+					// 	}),
+					// );
 
-								data: {},
-							};
+					// 옵션가 수정 - for문 사용
+					for (let v of optn_array) {
+						let detail_body = {
+							accesskey: accesskey,
+							secretkey: secretkey,
+							path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/prices/${v['salePrice']}`,
+							query: '',
+							method: 'PUT',
+							data: {},
+						};
+						if (callCount >= 10) {
+							await sleep(1000);
+							callCount = 0;
+						}
+						coupangApiGateway(detail_body);
+						callCount += 1;
+					}
 
-							return await coupangApiGateway(detail_body);
-						}),
-					);
+					// 판매가 수정 - for 사용
+					for (let v of optn_array) {
+						let detail_body = {
+							accesskey: accesskey,
+							secretkey: secretkey,
+							path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/original-prices/${v['originalPrice']}`,
+							query: '',
+							method: 'PUT',
+							data: {},
+						};
+						if (callCount >= 10) {
+							await sleep(1000);
+							callCount = 0;
+						}
+						coupangApiGateway(detail_body);
+						callCount += 1;
+					}
 
-					// 재고수량 수정
-					await Promise.all(
-						optn_array.map(async (v: any) => {
-							let detail_body = {
-								accesskey: accesskey,
-								secretkey: secretkey,
-
-								path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/quantities/${v['maximumBuyCount']}`,
-								query: '',
-								method: 'PUT',
-
-								data: {},
-							};
-
-							return await coupangApiGateway(detail_body);
-						}),
-					);
+					// 재고수량 수정 - for 사용
+					for (let v of optn_array) {
+						let detail_body = {
+							accesskey: accesskey,
+							secretkey: secretkey,
+							path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/quantities/${v['maximumBuyCount']}`,
+							query: '',
+							method: 'PUT',
+							data: {},
+						};
+						if (callCount >= 10) {
+							await sleep(1000);
+							callCount = 0;
+						}
+						coupangApiGateway(detail_body);
+						callCount += 1;
+					}
 
 					// 상품 수정 API
 					product_body = {
 						...product_body,
-
 						data: {
 							...product_body['data'],
-
 							sellerProductId: productId,
-
 							items: optn_array,
 						},
-
 						method: 'PUT',
 					};
-
-					productStore.addRegisteredQueue(market_item);
-					productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 중...`);
 
 					let product_json = await coupangApiGateway(product_body);
 
@@ -738,6 +731,9 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 					productStore.addRegisteredQueue(market_item);
 					productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 중...`);
 
+					// console.log({ product_body });
+					// productStore.addConsoleText(`(${shopName}) [${market_code}] 테스트`);
+					// return false;
 					let product_json = await coupangApiGateway(product_body);
 
 					if (product_json.code === 'ERROR') {
@@ -768,14 +764,15 @@ export async function uploadCoupang(productStore: any, commonStore: any, data: a
 	productStore.addConsoleText(`(${shopName}) 업로드 완료`);
 
 	return true;
-}
+};
 
-// 쿠팡 상품등록해제
-export async function deleteCoupang(productStore: any, commonStore: any, data: any) {
-	if (!data) {
-		return false;
-	}
+/** 쿠팡 상품등록해제 */
+export const deleteCoupang = async (productStore: product, commonStore: common, data: any) => {
+	console.time('등록해제 경과시간');
+	if (!data) return false;
+
 	let shopName = data.DShopInfo.site_name;
+	let callCount = 0; // 호출량 제한용
 
 	console.log(`(${shopName}) 등록정보:`, data);
 
@@ -788,29 +785,25 @@ export async function deleteCoupang(productStore: any, commonStore: any, data: a
 				let market_code = data.DShopInfo.prod_codes[product];
 				let market_item = data.DShopInfo.DataDataSet.data[product];
 
-				if (market_item.cert) {
-					continue;
-				}
+				if (market_item.cert) continue;
 
 				let productId = market_item.name2;
-
 				let searchBody = {
 					accesskey: accesskey,
 					secretkey: secretkey,
-
 					path: `/v2/providers/seller_api/apis/api/v1/marketplace/seller-products/${productId}`,
 					query: '',
 					method: 'GET',
-
 					data: {},
 				};
-
+				if (callCount >= 10) {
+					await sleep(1000);
+					callCount = 0;
+				}
+				callCount += 1;
 				let searchJson = await coupangApiGateway(searchBody);
 
-				if (searchJson.code !== 'SUCCESS') {
-					continue;
-				}
-
+				if (searchJson.code !== 'SUCCESS') continue;
 				if (searchJson.data.status === 'DELETED') {
 					const progressValue = Math.round(((parseInt(product) + 1) * 100) / data.DShopInfo.prod_codes.length);
 
@@ -824,35 +817,49 @@ export async function deleteCoupang(productStore: any, commonStore: any, data: a
 					continue;
 				}
 
-				await Promise.all(
-					searchJson.data.items.map(async (v: any) => {
-						let stopBody = {
-							accesskey: accesskey,
-							secretkey: secretkey,
-
-							path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v.vendorItemId}/sales/stop`,
-							query: '',
-							method: 'PUT',
-
-							data: {},
-						};
-
-						return await coupangApiGateway(stopBody);
-					}),
-				);
+				/** for사용 */
+				for (let v of searchJson.data.items) {
+					let stopBody = {
+						accesskey: accesskey,
+						secretkey: secretkey,
+						path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v.vendorItemId}/sales/stop`,
+						query: '',
+						method: 'PUT',
+						data: {},
+					};
+					if (callCount >= 10) {
+						await sleep(1000);
+						callCount = 0;
+					}
+					await coupangApiGateway(stopBody);
+					callCount += 1;
+				}
+				/** map사용 */
+				// await Promise.all(
+				// 	searchJson.data.items.map(async (v: any) => {
+				// 		let stopBody = {
+				// 			accesskey: accesskey,
+				// 			secretkey: secretkey,
+				// 			path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v.vendorItemId}/sales/stop`,
+				// 			query: '',
+				// 			method: 'PUT',
+				// 			data: {},
+				// 		};
+				// 		return await coupangApiGateway(stopBody); // 1
+				// 	}),
+				// );
+				console.timeEnd('등록해제 경과시간'); // 제한전 : 504ms , // 제한후 : 4323ms
 
 				let deleteBody = {
 					accesskey: accesskey,
 					secretkey: secretkey,
-
 					path: `/v2/providers/seller_api/apis/api/v1/marketplace/seller-products/${productId}`,
 					query: '',
 					method: 'DELETE',
-
 					data: {},
 				};
 
-				const deleteJson = await coupangApiGateway(deleteBody);
+				const deleteJson = await coupangApiGateway(deleteBody); // 2
 
 				if (deleteJson.code === 'SUCCESS') {
 					const progressValue = Math.round(((parseInt(product) + 1) * 100) / data.DShopInfo.prod_codes.length);
@@ -880,22 +887,18 @@ export async function deleteCoupang(productStore: any, commonStore: any, data: a
 	productStore.addConsoleText(`(${shopName}) 상품 등록해제 완료`);
 
 	return true;
-}
+};
 
-// 쿠팡 신규주문 조회
-export async function newOrderCoupang(commonStore: any, shopInfo: any) {
+/** 쿠팡 신규주문 조회 */
+export const newOrderCoupang = async (commonStore: common, shopInfo: any) => {
 	const shopName = shopInfo.name;
 
-	if (!shopInfo.connected || shopInfo.disabled) {
-		return [];
-	}
+	if (!shopInfo.connected || shopInfo.disabled) return [];
 
 	try {
 		let accesskey = commonStore.user.userInfo.coupangAccessKey;
 		let secretkey = commonStore.user.userInfo.coupangSecretKey;
-
 		let vendorId = commonStore.user.userInfo.coupangVendorId;
-
 		let dateStart = getClockOffset(0, 0, -7, 0, 0, 0);
 		let dateEnd = getClock();
 
@@ -909,11 +912,9 @@ export async function newOrderCoupang(commonStore: any, shopInfo: any) {
 		const orderData = {
 			accesskey: accesskey,
 			secretkey: secretkey,
-
 			path: `/v2/providers/openapi/apis/api/v4/vendors/${vendorId}/ordersheets`,
 			query: `createdAtFrom=${dateStart.YY}-${dateStart.MM}-${dateStart.DD}&createdAtTo=${dateEnd.YY}-${dateEnd.MM}-${dateEnd.DD}&maxPerPage=50&status=ACCEPT`,
 			method: 'GET',
-
 			data: {},
 		};
 
@@ -924,7 +925,7 @@ export async function newOrderCoupang(commonStore: any, shopInfo: any) {
 		let orderList: any = [];
 
 		orderJson.data.map((v: any) => {
-			v.orderItems.map((w: any) => {
+			v.orderItems.map((w: any) =>
 				orderList.push({
 					productId: w.productId,
 					marketCode: shopInfo.code,
@@ -945,8 +946,8 @@ export async function newOrderCoupang(commonStore: any, shopInfo: any) {
 					receiverIntegratedAddress: v.receiver.addr1,
 					receiverZipCode: v.receiver.postCode,
 					productOrderMemo: v.parcelPrintMessage,
-				});
-			});
+				}),
+			);
 		});
 
 		return orderList;
@@ -955,27 +956,23 @@ export async function newOrderCoupang(commonStore: any, shopInfo: any) {
 
 		return [];
 	}
-}
+};
 
-// 쿠팡 발주확인 처리
-export async function productPreparedCoupang(commonStore: any, shopInfo: any) {
+/** 쿠팡 발주확인 처리 */
+export const productPreparedCoupang = async (commonStore: common, shopInfo: any) => {
 	const shopName = shopInfo.name;
-	const orderList: any = await getLocalStorage('order');
+	const orderList = await getLocalStorage<any>('order');
 	const coupangOrderList = orderList.filter((v: any) => v.marketCode === 'B378');
 
 	let orderNo: any = [];
 
 	coupangOrderList.map((v: any, i: number) => {
 		console.log(`i = ${i},v = ${v}`);
-		if (i < 50) {
-			orderNo.push(parseInt(v.orderNo));
-		}
+		if (i < 50) orderNo.push(parseInt(v.orderNo));
 	});
 
 	//한번에 50개까지 가능
-	if (!shopInfo.connected || shopInfo.disabled) {
-		return [];
-	}
+	if (!shopInfo.connected || shopInfo.disabled) return [];
 
 	try {
 		let accesskey = commonStore.user.userInfo.coupangAccessKey;
@@ -985,10 +982,8 @@ export async function productPreparedCoupang(commonStore: any, shopInfo: any) {
 		const orderData = {
 			accesskey: accesskey,
 			secretkey: secretkey,
-
 			path: `/v2/providers/openapi/apis/api/v4/vendors/${vendorId}/ordersheets/acknowledgement`,
 			method: 'PUT',
-
 			data: {
 				vendorId: vendorId,
 				shipmentBoxIds: orderNo,
@@ -1006,22 +1001,18 @@ export async function productPreparedCoupang(commonStore: any, shopInfo: any) {
 
 		return [];
 	}
-}
+};
 
-// 쿠팡 발송처리 주문조회
-export async function deliveryOrderCoupang(commonStore: any, shopInfo: any) {
+/** 쿠팡 발송처리 주문조회 */
+export const deliveryOrderCoupang = async (commonStore: common, shopInfo: any) => {
 	const shopName = shopInfo.name;
 
-	if (!shopInfo.connected || shopInfo.disabled) {
-		return [];
-	}
+	if (!shopInfo.connected || shopInfo.disabled) return [];
 
 	try {
 		let accesskey = commonStore.user.userInfo.coupangAccessKey;
 		let secretkey = commonStore.user.userInfo.coupangSecretKey;
-
 		let vendorId = commonStore.user.userInfo.coupangVendorId;
-
 		let dateStart = getClockOffset(0, 0, -7, 0, 0, 0);
 		let dateEnd = getClock();
 
@@ -1035,11 +1026,9 @@ export async function deliveryOrderCoupang(commonStore: any, shopInfo: any) {
 		const orderData = {
 			accesskey: accesskey,
 			secretkey: secretkey,
-
 			path: `/v2/providers/openapi/apis/api/v4/vendors/${vendorId}/ordersheets`,
 			query: `createdAtFrom=${dateStart.YY}-${dateStart.MM}-${dateStart.DD}&createdAtTo=${dateEnd.YY}-${dateEnd.MM}-${dateEnd.DD}&maxPerPage=50&status=DEPARTURE`,
 			method: 'GET',
-
 			data: {},
 		};
 
@@ -1050,7 +1039,7 @@ export async function deliveryOrderCoupang(commonStore: any, shopInfo: any) {
 		let orderList: any = [];
 
 		orderJson.data.map((v: any) => {
-			v.orderItems.map((w: any) => {
+			v.orderItems.map((w: any) =>
 				orderList.push({
 					productId: w.productId,
 					marketCode: shopInfo.code,
@@ -1071,8 +1060,8 @@ export async function deliveryOrderCoupang(commonStore: any, shopInfo: any) {
 					receiverIntegratedAddress: v.receiver.addr1,
 					receiverZipCode: v.receiver.postCode,
 					productOrderMemo: v.parcelPrintMessage,
-				});
-			});
+				}),
+			);
 		});
 
 		return orderList;
@@ -1081,4 +1070,4 @@ export async function deliveryOrderCoupang(commonStore: any, shopInfo: any) {
 
 		return [];
 	}
-}
+};

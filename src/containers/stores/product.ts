@@ -22,8 +22,25 @@ import { deleteLotteon, uploadLotteon } from '../../pages/Tools/Lotteon';
 import { deleteTmon, uploadTmon } from '../../pages/Tools/Tmon';
 import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from '../../pages/Tools/ChromeAsync';
 import { common } from './common';
-import { ItemInfo, ManyPriceInfo, ModalInfo } from '../../type/type';
+import { AppInfo, Item, ItemInfo, ManyPriceInfo, ModalInfo, User } from '../../type/type';
 import { UpdateProductMyKeywardInPut } from '../../type/mutation';
+import { SHOPCODE } from '../../type/variable';
+
+const {
+	AUCTION_1,
+	AUCTION_2,
+	COUPANG,
+	G_MARKET_1,
+	G_MARKET_2,
+	INTER_PARK,
+	LOTTE_ON_GLOBAL,
+	LOTTE_ON_NORMAL,
+	SMART_STORE,
+	STREET11_GLOBAL,
+	STREET11_NORMAL,
+	TMON,
+	WE_MAKE_PRICE,
+} = SHOPCODE;
 
 export class product {
 	gridView: boolean = false;
@@ -423,7 +440,7 @@ export class product {
 
 	// PC 기본값 설정
 	loadAppInfo = async () => {
-		let auth: any = await getLocalStorage('appInfo');
+		let auth = await getLocalStorage<AppInfo>('appInfo');
 
 		runInAction(() => {
 			this.pageSize = auth.pageSize ?? 10;
@@ -468,7 +485,22 @@ export class product {
 	setUpdateManyProductPopOver = (data: any) => (this.popOverInfo.updateManyProduct = data);
 
 	// 카테고리 정보 가져오기
-	getCategoryList = async (marketCode: string) => {
+	getCategoryList = async (marketCode: SHOPCODE) => {
+		const {
+			AUCTION_1,
+			AUCTION_2,
+			COUPANG,
+			G_MARKET_1,
+			G_MARKET_2,
+			INTER_PARK,
+			LOTTE_ON_GLOBAL,
+			LOTTE_ON_NORMAL,
+			SMART_STORE,
+			STREET11_GLOBAL,
+			STREET11_NORMAL,
+			TMON,
+			WE_MAKE_PRICE,
+		} = SHOPCODE;
 		let result = this.categoryInfo.markets.find((v) => v.code === marketCode)!;
 
 		if (result.data.length > 0) return;
@@ -478,37 +510,37 @@ export class product {
 		let categories: any = null;
 
 		switch (marketCode) {
-			case 'A077':
+			case SMART_STORE:
 				categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A077_BY_SOMEONE, {}, false);
 				break;
-			case 'B378':
+			case COUPANG:
 				categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_B378_BY_SOMEONE, {}, false);
 				break;
-			case 'A112':
+			case STREET11_GLOBAL:
 				categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A112_BY_SOMEONE, {}, false);
 				break;
-			case 'A113':
+			case STREET11_NORMAL:
 				categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A113_BY_SOMEONE, {}, false);
 				break;
-			case 'A006':
+			case G_MARKET_1:
 				categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A006_BY_SOMEONE, {}, false);
 				break;
-			case 'A001':
+			case AUCTION_1:
 				categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A001_BY_SOMEONE, {}, false);
 				break;
-			case 'A027':
+			case INTER_PARK:
 				categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A027_BY_SOMEONE, {}, false);
 				break;
-			case 'B719':
+			case WE_MAKE_PRICE:
 				categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_B719_BY_SOMEONE, {}, false);
 				break;
-			case 'A524':
+			case LOTTE_ON_GLOBAL:
 				categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A524_BY_SOMEONE, {}, false);
 				break;
-			case 'A525':
+			case LOTTE_ON_NORMAL:
 				categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_A525_BY_SOMEONE, {}, false);
 				break;
-			case 'B956':
+			case TMON:
 				categories = await gql(QUERIES.SEARCH_CATEGORY_INFO_B956_BY_SOMEONE, {}, false);
 				break;
 		}
@@ -517,37 +549,37 @@ export class product {
 
 		runInAction(() => {
 			switch (marketCode) {
-				case 'A077':
+				case SMART_STORE:
 					result.data = categories.data.searchCategoryInfoA077BySomeone;
 					break;
-				case 'B378':
+				case COUPANG:
 					result.data = categories.data.searchCategoryInfoB378BySomeone;
 					break;
-				case 'A112':
+				case STREET11_GLOBAL:
 					result.data = categories.data.searchCategoryInfoA112BySomeone;
 					break;
-				case 'A113':
+				case STREET11_NORMAL:
 					result.data = categories.data.searchCategoryInfoA113BySomeone;
 					break;
-				case 'A006':
+				case G_MARKET_1:
 					result.data = categories.data.searchCategoryInfoA006BySomeone;
 					break;
-				case 'A001':
+				case AUCTION_1:
 					result.data = categories.data.searchCategoryInfoA001BySomeone;
 					break;
-				case 'A027':
+				case INTER_PARK:
 					result.data = categories.data.searchCategoryInfoA027BySomeone;
 					break;
-				case 'B719':
+				case WE_MAKE_PRICE:
 					result.data = categories.data.searchCategoryInfoB719BySomeone;
 					break;
-				case 'A524':
+				case LOTTE_ON_GLOBAL:
 					result.data = categories.data.searchCategoryInfoA524BySomeone;
 					break;
-				case 'A525':
+				case LOTTE_ON_NORMAL:
 					result.data = categories.data.searchCategoryInfoA525BySomeone;
 					break;
-				case 'B956':
+				case TMON:
 					result.data = categories.data.searchCategoryInfoB956BySomeone;
 					break;
 			}
@@ -557,43 +589,56 @@ export class product {
 	};
 
 	// 카테고리 입력정보
-	setCategoryInput = (marketCode: string, value: string) =>
+	setCategoryInput = (marketCode: SHOPCODE, value: string) =>
 		(this.categoryInfo.markets.find((v) => v.code === marketCode)!.input = value);
 
 	// 카테고리 일괄설정
-	setManyCategory = (marketCode: string, value: any) => {
+	setManyCategory = (marketCode: SHOPCODE, value: any) => {
+		const {
+			AUCTION_1,
+			COUPANG,
+			G_MARKET_1,
+			INTER_PARK,
+			LOTTE_ON_GLOBAL,
+			LOTTE_ON_NORMAL,
+			SMART_STORE,
+			STREET11_GLOBAL,
+			STREET11_NORMAL,
+			TMON,
+			WE_MAKE_PRICE,
+		} = SHOPCODE;
 		switch (marketCode) {
-			case 'A077':
+			case SMART_STORE:
 				this.manyCategoryInfo.categoryInfoA077 = value;
 				break;
-			case 'B378':
+			case COUPANG:
 				this.manyCategoryInfo.categoryInfoB378 = value;
 				break;
-			case 'A112':
+			case STREET11_GLOBAL:
 				this.manyCategoryInfo.categoryInfoA112 = value;
 				break;
-			case 'A113':
+			case STREET11_NORMAL:
 				this.manyCategoryInfo.categoryInfoA113 = value;
 				break;
-			case 'A006':
+			case G_MARKET_1:
 				this.manyCategoryInfo.categoryInfoA006 = value;
 				break;
-			case 'A001':
+			case AUCTION_1:
 				this.manyCategoryInfo.categoryInfoA001 = value;
 				break;
-			case 'A027':
+			case INTER_PARK:
 				this.manyCategoryInfo.categoryInfoA027 = value;
 				break;
-			case 'B719':
+			case WE_MAKE_PRICE:
 				this.manyCategoryInfo.categoryInfoB719 = value;
 				break;
-			case 'A524':
+			case LOTTE_ON_GLOBAL:
 				this.manyCategoryInfo.categoryInfoA524 = value;
 				break;
-			case 'A525':
+			case LOTTE_ON_NORMAL:
 				this.manyCategoryInfo.categoryInfoA525 = value;
 				break;
-			case 'B956':
+			case TMON:
 				this.manyCategoryInfo.categoryInfoB956 = value;
 				break;
 		}
@@ -617,8 +662,8 @@ export class product {
 			categoryInfoB956: this.manyCategoryInfo.categoryInfoB956,
 		});
 
-	// 카테고리 업데이트
-	updateCategory = async (marketCode: string, value: any, index: number) => {
+	/** 카테고리 업데이트 */
+	updateCategory = async (marketCode: SHOPCODE, value: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.baseInfo = 0);
 
 		this.itemInfo.items[index].edited.baseInfo = 2;
@@ -639,11 +684,11 @@ export class product {
 
 		let sillInfo: any = null;
 
-		if (marketCode === 'A077') sillInfo = parsedSillInfo[0][`sillInfo${marketCode}`];
+		if (marketCode === SHOPCODE.SMART_STORE) sillInfo = parsedSillInfo[0][`sillInfo${marketCode}`];
 		else sillInfo = parsedSillInfo;
 
 		runInAction(() => {
-			if (marketCode === 'A077')
+			if (marketCode === SHOPCODE.SMART_STORE)
 				this.itemInfo.items[index].tagInfo = this.tagDict.find((w: any) => w.code === value.code).tagJson;
 
 			this.itemInfo.items[index][`categoryInfo${marketCode}`] = {
@@ -862,7 +907,7 @@ export class product {
 
 	// 한 페이지에 표시하는 상품 수
 	setPageSize = async (value: number) => {
-		let auth: any = await getLocalStorage('appInfo');
+		let auth = await getLocalStorage<AppInfo>('appInfo');
 
 		auth.pageSize = value;
 
@@ -881,6 +926,7 @@ export class product {
 
 	// 상품 정보
 	getProduct = async (commonStore: common, p: number) => {
+		console.time('상품 정보 로드시간');
 		this.itemInfo.loading = true;
 		// Backup
 		const oldItems = this.itemInfo.items;
@@ -928,7 +974,6 @@ export class product {
 					const thumbResp = await fetch(v.imageThumbnail[0]);
 					const thumbBlob = await thumbResp.blob();
 					const thumbData = await readFileDataURL(thumbBlob);
-
 					const checked = oldItems.find((w: any) => w.id === v.id)?.checked ?? false;
 
 					return {
@@ -963,10 +1008,10 @@ export class product {
 			if (response2.errors) return alert(response2.errors[0].message);
 
 			result = await Promise.all(
-				response2.data.selectMyProductByUser.map(async (v: any) => {
+				response2.data.selectMyProductByUser.map(async (v: Item) => {
 					v.attribute = v.attribute ? JSON.parse(v.attribute) : [];
 
-					v.imageThumbnail = v.imageThumbnail.map((w: any) =>
+					v.imageThumbnail = v.imageThumbnail.map((w) =>
 						/^https?/.test(w) ? w : `${process.env.SELLFORYOU_MINIO_HTTPS}/${w}`,
 					);
 
@@ -975,8 +1020,8 @@ export class product {
 							? v.activeTaobaoProduct.videoUrl
 							: 'https:' + v.activeTaobaoProduct.videoUrl;
 
-					v.productOptionName.map((w: any) =>
-						w.productOptionValue.map((x: any) => {
+					v.productOptionName.map((w) =>
+						w.productOptionValue.map((x) => {
 							if (x.image)
 								x.image = /^https?/.test(x.image) ? x.image : `${process.env.SELLFORYOU_MINIO_HTTPS}/${x.image}`;
 						}),
@@ -1002,7 +1047,7 @@ export class product {
 					if (descHtml) {
 						v.descriptionImages = [];
 
-						const imageList: any = descHtml.querySelectorAll('img');
+						const imageList = descHtml.querySelectorAll('img');
 
 						for (let i in imageList) {
 							if (imageList[i].src) {
@@ -1017,6 +1062,7 @@ export class product {
 
 					if (!commonStore.user.userInfo?.sillFromCategory)
 						return confirm('일시적인 상품조회 오류, 새로고침해주세요.') ? window.location.reload() : null;
+
 					if (!v.categoryInfoA077)
 						v.categoryInfoA077 = {
 							code: null,
@@ -1217,7 +1263,7 @@ export class product {
 					}
 
 					const tagInfo = this.tagDict.find((w: any) => w.code === v.categoryInfoA077?.code)?.tagJson;
-					const checked = oldItems.find((w: any) => w.id === v.id)?.checked ?? false;
+					const checked = oldItems.find((w) => w.id === v.id)?.checked ?? false;
 
 					return {
 						...v,
@@ -1249,28 +1295,27 @@ export class product {
 				}),
 			);
 		}
+		console.timeEnd('상품 정보 로드시간');
 
 		runInAction(() => {
 			this.itemInfo.items = result;
 			this.itemInfo.loading = false;
 			this.itemInfo.checkedAll = false;
 		});
-
-		// console.log(this.itemInfo);
 	};
 
-	// 상품 삭제
+	/** 상품 삭제 */
 	deleteProduct = async (commonStore: common, productId: number) => {
-		let productIds: any = [];
+		let productIds: number[] = [];
 
 		if (productId === -1) {
-			this.itemInfo.items.filter((v: any) => v.checked).map((v: any) => productIds.push(v.id));
+			this.itemInfo.items.filter((v) => v.checked).map((v) => productIds.push(v.id));
 
 			if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
 			if (!confirm(`선택한 상품 ${productIds.length}개를 삭제하시겠습니까?\n삭제된 상품은 다시 복구하실 수 없습니다.`))
 				return;
 
-			this.itemInfo.items.filter((v: any) => v.checked).map((v: any) => (v.delete = true));
+			this.itemInfo.items.filter((v) => v.checked).map((v) => (v.delete = true));
 		} else {
 			productIds.push(productId);
 
@@ -1284,6 +1329,39 @@ export class product {
 		this.getProduct(commonStore, this.page);
 	};
 
+	/** 상품 강제 삭제 ( confirm메시지만 다를뿐 코드는 같음 )*/
+	forceDeleteProduct = async (commonStore: common, productId: number) => {
+		let productIds: number[] = [];
+
+		if (productId === -1) {
+			this.itemInfo.items.filter((v) => v.checked).map((v) => productIds.push(v.id));
+
+			if (productIds.length < 1) return alert('상품이 선택되지 않았습니다.');
+			if (
+				!confirm(
+					`선택한 상품 ${productIds.length}개를 삭제하시겠습니까?\n\n• 등록된 상품이 포함되어있는 경우 오픈마켓에 그대로 존재하게됩니다.\n• 삭제된 상품은 다시 복구하실 수 없습니다.`,
+				)
+			)
+				return;
+
+			this.itemInfo.items.filter((v) => v.checked).map((v) => (v.delete = true));
+		} else {
+			productIds.push(productId);
+
+			if (
+				!confirm(
+					`상품을 삭제하시겠습니까?\n\n• 등록된 상품의 경우 오픈마켓에 그대로 존재하게됩니다.\n• 삭제된 상품은 다시 복구하실 수 없습니다.`,
+				)
+			)
+				return;
+
+			this.itemInfo.items.find((v) => v.id === productId)!.delete = true;
+		}
+
+		await gql(MUTATIONS.DELETE_PRODUCT_BY_USER, { productId: productIds }, false);
+
+		this.getProduct(commonStore, this.page);
+	};
 	// 상품명 설정
 	setProductName = (data: any, index: number) => {
 		this.itemInfo.items[index].name = data;
@@ -2493,50 +2571,63 @@ export class product {
 		});
 	};
 
-	// 오픈마켓수수료 설정
-	setProductFee = (marketCode: string, data: any, index: number) => {
+	/** 오픈마켓수수료 설정 */
+	setProductFee = (marketCode: SHOPCODE, data: any, index: number) => {
+		const {
+			AUCTION_1,
+			COUPANG,
+			G_MARKET_1,
+			INTER_PARK,
+			LOTTE_ON_GLOBAL,
+			LOTTE_ON_NORMAL,
+			SMART_STORE,
+			STREET11_GLOBAL,
+			STREET11_NORMAL,
+			TMON,
+			WE_MAKE_PRICE,
+		} = SHOPCODE;
 		switch (marketCode) {
-			case 'A077': {
+			case SMART_STORE: {
 				this.itemInfo.items[index].naverFee = data;
 				break;
 			}
-			case 'B378': {
+			case COUPANG: {
 				this.itemInfo.items[index].coupangFee = data;
 				break;
 			}
-			case 'A112': {
+			case LOTTE_ON_GLOBAL: {
 				this.itemInfo.items[index].streetFee = data;
 				break;
 			}
-			case 'A113': {
+			case LOTTE_ON_NORMAL: {
 				this.itemInfo.items[index].streetNormalFee = data;
 				break;
 			}
-			case 'A001': {
+			case AUCTION_1: {
 				this.itemInfo.items[index].auctionFee = data;
 				break;
 			}
-			case 'A006': {
+			case G_MARKET_1: {
 				this.itemInfo.items[index].gmarketFee = data;
 				break;
 			}
-			case 'A027': {
+			case INTER_PARK: {
 				this.itemInfo.items[index].interparkFee = data;
 				break;
 			}
-			case 'B719': {
+			case WE_MAKE_PRICE: {
 				this.itemInfo.items[index].wemakepriceFee = data;
 				break;
 			}
-			case 'A524': {
+			case STREET11_GLOBAL: {
 				this.itemInfo.items[index].lotteonFee = data;
 				break;
 			}
-			case 'A525': {
+			case STREET11_NORMAL: {
 				this.itemInfo.items[index].lotteonNormalFee = data;
 				break;
 			}
-			case 'B956': {
+			case TMON: {
 				this.itemInfo.items[index].tmonFee = data;
 				break;
 			}
@@ -2899,6 +2990,7 @@ export class product {
 					const matched = this.itemInfo.items[index].activeProductStore.find((w) => w.siteCode === v.code);
 
 					v.disabled = !matched;
+					//@ts-ignore
 					v.upload = matched;
 				});
 			else
@@ -2912,36 +3004,6 @@ export class product {
 		this.modalInfo.uploadDisabled = value;
 	};
 
-	// 상품 등록해제 모달
-	// toggleEsm2UploadDisabledModal = (index: number, value: boolean, commonStore: common) => {
-	// 	if (value) {
-	// 		if (index > -1) {
-	// 			commonStore.uploadDisabledInfo.markets.map((v: any) => {
-	// 				const matched = this.itemInfo.items[index].activeProductStore.find((w: any) => w.siteCode === v.code);
-
-	// 				v.disabled = !matched;
-	// 				v.upload = matched;
-	// 			});
-	// 		} else {
-	// 			commonStore.uploadDisabledInfo.markets.map((v: any) => {
-	// 				v.disabled = false;
-	// 				v.upload = true;
-	// 			});
-	// 		}
-	// 	}
-
-	// 	this.Esm2uploadDisabledIndex = index;
-	// 	this.modalInfo.Esm2uploadDisabled = value;
-	// };
-
-	// esm2.0 상품 등록실패 모달
-	// toggleEsm2UploadFailedModal = (index: number, value: boolean) => {
-	// 	if (index > -1) {
-	// 		this.Esm2uploadFailedIndex = index;
-	// 	}
-
-	// 	this.modalInfo.Esm2uploadFailed = value;
-	// };
 	// 상품 등록실패 모달
 	toggleUploadFailedModal = (index: number, value: boolean) => {
 		if (index > -1) this.uploadFailedIndex = index;
@@ -2996,11 +3058,14 @@ export class product {
 	// 	this.itemInfo.current = index;
 	// };
 
-	// 검색결과 조회
-	getSearchResult = (commonStore: common) => {
+	/** 검색결과 조회
+	 * @param commonStore common
+	 * @param removeState 강제관리탭인 경우 -> 등록,잠금,수집 상품 모두조회
+	 * */
+	getSearchResult = (commonStore: common, removeState?: boolean) => {
 		this.setSearchWhereAndInput([
-			{ state: { equals: this.state } },
-			{ myLock: this.state === 7 && this.myLock === 1 ? {} : { equals: this.myLock } },
+			!removeState ? { state: { equals: this.state } } : {},
+			{ myLock: (this.state === 7 && this.myLock === 1) || removeState ? {} : { equals: this.myLock } },
 			{
 				categoryInfoA077: this.searchInfo.categoryInfo.code
 					? { code: { equals: this.searchInfo.categoryInfo.code } }
@@ -3067,7 +3132,7 @@ export class product {
 			},
 			{
 				productStore:
-					this.state === 6
+					this.state === 6 || removeState
 						? {}
 						: {
 								some: {
@@ -3174,11 +3239,11 @@ export class product {
 			case 'PCODE': {
 				if (!this.searchInfo.searchKeyword.includes('SFY_')) return alert('상품코드는 SFY_000 형식으로 입력해주세요.');
 
-				let list: any = [];
-				let parseList: any = [];
+				let list: string[] = [];
+				let parseList: number[] = [];
 
 				list = this.searchInfo.searchKeyword.split(',');
-				list.map((v: any) => {
+				list.map((v) => {
 					if (!v.includes('SFY_')) return alert('모든 상품코드는 SFY_000 형식으로 입력해주세요.');
 
 					parseList.push(parseInt(v.split('_')[1], 36));
@@ -3341,7 +3406,7 @@ export class product {
 		this.registeredInfo.failed.push(data);
 	};
 
-	// 상품 등록해제
+	/** 상품 등록해제 */
 	disableItems = async (commonStore: common) => {
 		let productIds: number[] = [];
 		let lockProducts: any = [];
@@ -3385,67 +3450,67 @@ export class product {
 			deleteSmartStore(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A077'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.SMART_STORE),
 			),
 			deleteCoupang(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'B378'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.COUPANG),
 			),
 			deleteStreet(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A112'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.STREET11_GLOBAL),
 			),
 			deleteStreet(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A113'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.STREET11_NORMAL),
 			),
 			deleteESMPlus(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A006'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.G_MARKET_1),
 			),
 			deleteESMPlus(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A001'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.AUCTION_1),
 			),
 			deleteESMPlus2(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A522'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.AUCTION_2),
 			),
 			deleteESMPlus2(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A523'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.G_MARKET_2),
 			),
 			deleteInterpark(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A027'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.INTER_PARK),
 			),
 			deleteWemakeprice(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'B719'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.WE_MAKE_PRICE),
 			),
 			deleteLotteon(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A524'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.LOTTE_ON_GLOBAL),
 			),
 			deleteLotteon(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A525'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.LOTTE_ON_NORMAL),
 			),
 			deleteTmon(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'B956'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SHOPCODE.TMON),
 			),
 		]);
 
@@ -3539,7 +3604,7 @@ export class product {
 	// 	commonStore.setStopped(true);
 	// };
 
-	// 상품 등록
+	/** 상품 등록 */
 	uploadItems = async (commonStore: common, edit: boolean) => {
 		let productIds: number[] = [];
 
@@ -3577,76 +3642,75 @@ export class product {
 			uploadSmartStore(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A077'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SMART_STORE),
 			),
 			uploadCoupang(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'B378'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === COUPANG),
 			),
 			uploadStreet(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A112'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === STREET11_GLOBAL),
 			),
 			uploadStreet(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A113'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === STREET11_NORMAL),
 			),
 			/** ESM2.0 */
 			uploadESMPlus2(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A522'), //옥션2.0
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === AUCTION_2), //옥션2.0
 			),
 			uploadESMPlus2(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A523'), //지마켓2.0
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === G_MARKET_2), //지마켓2.0
 			),
 			/** ESM1.0 */
 			uploadESMPlus(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A006'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === G_MARKET_1),
 			),
 			uploadESMPlus(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A001'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === AUCTION_1),
 			),
 			uploadInterpark(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A027'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === INTER_PARK),
 			),
 			uploadWemakeprice(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'B719'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === WE_MAKE_PRICE),
 			),
 			uploadLotteon(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A524'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === LOTTE_ON_GLOBAL),
 			),
 			uploadLotteon(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A525'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === LOTTE_ON_NORMAL),
 			),
 			uploadTmon(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'B956'),
+				data.job_json_array.find((v: any) => v.DShopInfo.site_code === TMON),
 			),
 		]);
 
 		if (commonStore.uploadInfo.stopped) alert('업로드가 중단되었습니다.');
 
 		this.refreshProduct(commonStore);
-
 		commonStore.initUploadMarketProgress();
 		commonStore.setUploadable(true);
 		commonStore.setStopped(true);
@@ -3731,7 +3795,7 @@ export class product {
 	// 	commonStore.setStopped(true);
 	// };
 
-	// 등록 진행상태 표시
+	/** 등록 진행상태 표시 */
 	addConsoleText = (text: string) => {
 		const today = getClock();
 		const result = `[${today.hh}:${today.mm}:${today.ss}] ${text}`;
@@ -3764,31 +3828,27 @@ export class product {
 			success: [],
 			failed: [],
 		};
-
 		this.uploadConsole = [];
 	};
 
 	// 쿠팡에서는 상품 승인완료 전에 상품 URL을 알 수 없기 때문에 승인완료 시점에서 상품 URL을 넣어주는 작업 필요
-	updateCoupangUrl = (index: number, user: any) => {
+	updateCoupangUrl = (index: number, user: User) => {
 		this.itemInfo.items[index].productStore.map(async (v: any) => {
-			if (v.siteCode === 'B378' && v.state === 2) {
+			if (v.siteCode === COUPANG && v.state === 2) {
 				if (v.storeProductId !== '0') return window.open(v.storeUrl);
 
 				const body = {
 					accesskey: user.userInfo.coupangAccessKey,
 					secretkey: user.userInfo.coupangSecretKey,
-
 					path: `/v2/providers/seller_api/apis/api/v1/marketplace/seller-products/${v.etcVendorItemId}`,
 					query: '',
 					method: 'GET',
-
 					data: {},
 				};
 
 				const response = await coupangApiGateway(body);
 
 				if (!response.data) return alert(response.message);
-
 				if (response.data.statusName !== '승인완료') {
 					if (response.data.statusName === '승인반려') {
 						let test = confirm(
@@ -3826,7 +3886,7 @@ export class product {
 
 	// 상품정보 엑셀파일 다운로드
 	itemToExcel = () => {
-		const excelData = this.itemInfo.items.map((v: any) => {
+		const excelData = this.itemInfo.items.map((v) => {
 			const image = v.imageThumbnail[0];
 
 			return {
@@ -3854,17 +3914,17 @@ export class product {
 				'롯데온(글로벌)카테고리': v.categoryInfoA524.name,
 				'롯데온(일반)카테고리': v.categoryInfoA524.name,
 				티몬카테고리: v.categoryInfoB956.name,
-				스마트스토어등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'A077') ? 'Y' : 'N',
-				쿠팡등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'B378') ? 'Y' : 'N',
-				'11번가(글로벌)등록여부': v.activeProductStore.find((v: any) => v.siteCode === 'A112') ? 'Y' : 'N',
-				'11번가(일반)등록여부': v.activeProductStore.find((v: any) => v.siteCode === 'A113') ? 'Y' : 'N',
-				지마켓등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'A006') ? 'Y' : 'N',
-				옥션등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'A001') ? 'Y' : 'N',
-				인터파크등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'A027') ? 'Y' : 'N',
-				위메프등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'B719') ? 'Y' : 'N',
-				'옷데온(글로벌)등록여부': v.activeProductStore.find((v: any) => v.siteCode === 'A524') ? 'Y' : 'N',
-				'옷데온(일반)등록여부': v.activeProductStore.find((v: any) => v.siteCode === 'A525') ? 'Y' : 'N',
-				티몬등록여부: v.activeProductStore.find((v: any) => v.siteCode === 'B956') ? 'Y' : 'N',
+				스마트스토어등록여부: v.activeProductStore.find((v) => v.siteCode === SMART_STORE) ? 'Y' : 'N',
+				쿠팡등록여부: v.activeProductStore.find((v) => v.siteCode === COUPANG) ? 'Y' : 'N',
+				'11번가(글로벌)등록여부': v.activeProductStore.find((v) => v.siteCode === STREET11_GLOBAL) ? 'Y' : 'N',
+				'11번가(일반)등록여부': v.activeProductStore.find((v) => v.siteCode === STREET11_NORMAL) ? 'Y' : 'N',
+				지마켓등록여부: v.activeProductStore.find((v) => v.siteCode === G_MARKET_1) ? 'Y' : 'N',
+				옥션등록여부: v.activeProductStore.find((v) => v.siteCode === AUCTION_1) ? 'Y' : 'N',
+				인터파크등록여부: v.activeProductStore.find((v) => v.siteCode === INTER_PARK) ? 'Y' : 'N',
+				위메프등록여부: v.activeProductStore.find((v) => v.siteCode === WE_MAKE_PRICE) ? 'Y' : 'N',
+				'옷데온(글로벌)등록여부': v.activeProductStore.find((v) => v.siteCode === LOTTE_ON_GLOBAL) ? 'Y' : 'N',
+				'옷데온(일반)등록여부': v.activeProductStore.find((v) => v.siteCode === LOTTE_ON_NORMAL) ? 'Y' : 'N',
+				티몬등록여부: v.activeProductStore.find((v) => v.siteCode === TMON) ? 'Y' : 'N',
 			};
 		});
 
@@ -3991,7 +4051,7 @@ export class product {
 
 	// 이미지번역결과 적용
 	updateImageTranslatedData = async (data: any) => {
-		const product = this.itemInfo.items.find((v: any) => v.id === data.productId)!;
+		const product = this.itemInfo.items.find((v) => v.id === data.productId)!;
 
 		if (data.thumbnails.length > 0) {
 			product.imageThumbnail = product.imageThumbnail.map((v: any, i: number) => {
@@ -4631,7 +4691,6 @@ export class product {
 					},
 					10,
 				);
-
 				const resOptions = await sendTabMessage(tabOptions.id, {
 					action: 'auto-translate',
 				});
@@ -4652,7 +4711,6 @@ export class product {
 					},
 					10,
 				);
-
 				const resDescriptions = await sendTabMessage(tabDescriptions.id, {
 					action: 'auto-translate',
 				});
@@ -4673,7 +4731,7 @@ export class product {
 	setGridView = async (commonStore: common, value: boolean) => {
 		if (this.gridView === value) return;
 
-		let auth: any = await getLocalStorage('appInfo');
+		let auth = await getLocalStorage<AppInfo>('appInfo');
 
 		auth.gridView = value;
 

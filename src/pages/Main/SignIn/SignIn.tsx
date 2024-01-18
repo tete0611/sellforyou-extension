@@ -2,25 +2,12 @@ import React from 'react';
 import MUTATIONS from '../GraphQL/Mutations';
 import gql from '../GraphQL/Requests';
 import LoadingButton from '@mui/lab/LoadingButton';
-
 import { getLocalStorage, queryWindow, setLocalStorage } from '../../Tools/ChromeAsync';
 import { Box, Button, Checkbox, Container, FormControlLabel, Link, TextField, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Frame, SignPaper } from '../Common/UI';
-
-type AppInfo = {
-	id: string;
-	password: string;
-	accessToken: string;
-	refreshToken: string;
-	loading: boolean;
-	autoFill: boolean;
-	autoLogin: boolean;
-	pageSize: number;
-	gridView: boolean;
-	darkTheme: boolean;
-	ppgKey: string;
-};
+import { AppInfo } from '../../../type/type';
+import QUERIES from '../GraphQL/Queries';
 
 // 로그인 뷰
 export const SignIn = () => {
@@ -35,7 +22,6 @@ export const SignIn = () => {
 		pageSize: 10,
 		gridView: false,
 		darkTheme: false,
-		ppgKey: '',
 	};
 
 	// 회원정보 상태관리
@@ -44,49 +30,36 @@ export const SignIn = () => {
 	// 컴포넌트 초기화
 	React.useEffect(() => {
 		// PC에 저장된 회원정보를 가져오고, 자동로그인 또는 자동입력 등의 기능 수행
-		getLocalStorage('appInfo').then((info: any) => {
-			if (!info) {
-				return;
-			}
+		getLocalStorage<AppInfo>('appInfo').then((info) => {
+			if (!info) return;
 
 			setAppInfo({
 				...info,
-				ppgKey: 'v1.7.6_fa52a4d6c8',
 				id: info.autoFill ? info.id : '',
 				password: info.autoFill ? info.password : '',
 				darkTheme: info.darkTheme,
 			});
 
-			if (info.autoFill && info.autoLogin) {
-				signIn(info);
-			}
+			if (info.autoFill && info.autoLogin) signIn(info);
 		});
 	}, []);
 
 	// 엔터 키를 누르면 로그인 동작 수행
-	const keyHandler = (e: any) => {
-		if (e.key === 'Enter') {
-			signIn(appInfo);
-		}
-	};
-
+	const keyHandler = (e) => e.key === 'Enter' && signIn(appInfo);
 	// 열려있는 셀포유 탭 새로고침 (로그인 정보가 변경되었으므로 갱신 필요)
 	const initTabs = async () => {
-		const windows: any = await queryWindow({ populate: true });
+		const windows = await queryWindow({ populate: true });
 
-		windows.map((v: any) => {
+		windows.map((v) =>
 			v.tabs
-				.filter((w: any) => w.url.includes(chrome.runtime.getURL('/')))
-				.map((w: any) => {
-					if (v.focused && w.active) {
-						return;
-					}
+				?.filter((w) => w.url?.includes(chrome.runtime.getURL('/')))
+				.map((w) => {
+					if (v.focused && w.active) return;
+					if (w.id) chrome.tabs.reload(w.id);
+				}),
+		);
 
-					chrome.tabs.reload(w.id);
-				});
-		});
-
-		window.location.href = '/dashboard.html';
+		window.location.href = '/app.html';
 	};
 
 	// 로그인 버튼을 클릭했을 때
@@ -105,40 +78,34 @@ export const SignIn = () => {
 
 		if (response.errors) {
 			alert(response.errors[0].message);
-
 			setAppInfo({ ...appInfo, loading: false });
-
 			return;
 		}
+		// 파파고 API 키 받아오기
+		const ppgKey = await gql(QUERIES.SELECT_PAPAGO_API_KEY_BY_EVERYONE, {}, false);
+		const resultKey = ppgKey.data.selectPapagoApiKeyByEveryone as string;
 
 		// 회원정보 설정 후 PC 저장
 		setAppInfo((state) => {
 			const result: AppInfo = {
 				...state,
-
 				id: info.id,
 				password: info.password,
-
 				autoFill: info.autoFill,
 				autoLogin: info.autoLogin,
-
 				accessToken: response.data.signInUserByEveryone.accessToken,
 				refreshToken: response.data.signInUserByEveryone.refreshToken,
-
 				loading: false,
 			};
 
-			setLocalStorage({ appInfo: result, ppgKey: 'v1.7.6_fa52a4d6c8' }).then(initTabs);
+			setLocalStorage({ appInfo: result, ppgKey: resultKey || '' }).then(initTabs);
 
 			return result;
 		});
 	};
 
 	// 회원가입 페이지 이동
-	const signUp = () => {
-		window.location.href = '/signup.html';
-	};
-
+	const signUp = () => (window.location.href = '/signup.html');
 	// 다크모드 지원 설정
 	const theme = React.useMemo(
 		() =>
@@ -223,7 +190,6 @@ export const SignIn = () => {
 											setAppInfo((state) => {
 												const result: AppInfo = {
 													...state,
-
 													autoFill: e.target.checked,
 												};
 
@@ -245,7 +211,6 @@ export const SignIn = () => {
 											setAppInfo((state) => {
 												const result: AppInfo = {
 													...state,
-
 													autoLogin: e.target.checked,
 												};
 

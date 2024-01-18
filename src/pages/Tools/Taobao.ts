@@ -1,4 +1,4 @@
-import { createTab, createTabCompletely, getLocalStorage, sendTabMessage, setLocalStorage } from './ChromeAsync';
+import { createTabCompletely, getLocalStorage, sendTabMessage, setLocalStorage } from './ChromeAsync';
 import { floatingToast, getClock, getClockOffset, parseDecode, sleep } from './Common';
 
 // 타오바오 주문조회 1차 수집
@@ -92,7 +92,7 @@ export async function getTaobaoData(lastUpdated: any) {
 
 // 타오바오 통합 주문조회 (1차수집 + 2차수집)
 export async function getTaobaoOrder() {
-	const newTab: any = await createTabCompletely(
+	const newTab = await createTabCompletely(
 		{
 			active: false,
 			url: 'https://buyertrade.taobao.com/trade/itemlist/list_bought_items.htm',
@@ -100,8 +100,8 @@ export async function getTaobaoOrder() {
 		5,
 	);
 
-	if (newTab.url.includes('login.taobao.com')) {
-		chrome.tabs.remove(newTab.id);
+	if (newTab.url?.includes('login.taobao.com')) {
+		chrome.tabs.remove(newTab.id!);
 
 		floatingToast('타오바오 로그인 후 다시시도 바랍니다.', 'warning');
 
@@ -111,7 +111,7 @@ export async function getTaobaoOrder() {
 	const taobaoId = await sendTabMessage(newTab.id, {
 		action: 'order-taobao-id',
 	});
-	const taobaoInfo: any = (await getLocalStorage(`taobaoInfo-${taobaoId}`)) ?? [];
+	const taobaoInfo = (await getLocalStorage<any>(`taobaoInfo-${taobaoId}`)) ?? [];
 
 	const orderData: any = await sendTabMessage(newTab.id, {
 		action: 'order-taobao',
@@ -119,14 +119,14 @@ export async function getTaobaoOrder() {
 	});
 
 	if (!orderData) {
-		chrome.tabs.remove(newTab.id);
+		chrome.tabs.remove(newTab.id!);
 
 		floatingToast('타오바오 로그인 후 다시시도 바랍니다.', 'warning');
 
 		return null;
 	}
 
-	chrome.tabs.remove(newTab.id);
+	chrome.tabs.remove(newTab.id!);
 
 	let results: any = [];
 

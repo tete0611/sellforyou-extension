@@ -1,6 +1,7 @@
 import { getLocalStorage } from '../../Tools/ChromeAsync';
 import { sleep } from '../../Tools/Common';
 import { refreshToken } from '../../Tools/Auth';
+import { AppInfo } from '../../../type/type';
 
 // 다중 요청이 들어올 때 세션 처리
 let STATUS = 'CONTINUED';
@@ -9,7 +10,7 @@ let STATUS = 'CONTINUED';
 const gql: any = async (query: any, variables: any, customHeaders: boolean) => {
 	try {
 		// 토큰 정보를 가져옴
-		let auth: any = await getLocalStorage('appInfo');
+		let auth = await getLocalStorage<AppInfo>('appInfo');
 
 		// 쿼리/뮤테이션 수행
 		const resp = await fetch(`${process.env.SELLFORYOU_API_SERVER}/graphql`, {

@@ -21,3 +21,6 @@ build*.*
 
 # secrets
 secrets.*.js
+
+# for local work
+street_11_category.ts

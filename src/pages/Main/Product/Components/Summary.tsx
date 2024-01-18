@@ -1,10 +1,12 @@
 import React from 'react';
-import ErrorIcon from '@mui/icons-material/Error';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import TranslateIcon from '@mui/icons-material/Translate';
-import LockIcon from '@mui/icons-material/Lock';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
+import {
+	Error as ErrorIcon,
+	AutoFixHigh as AutoFixHighIcon,
+	Translate as TranslateIcon,
+	Lock as LockIcon,
+	LockOpen as LockOpenIcon,
+	LooksTwoOutlined as LooksTwoOutlinedIcon,
+} from '@mui/icons-material';
 import { format } from 'date-fns';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
@@ -27,6 +29,7 @@ import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { Image, Input, MyButton, Search } from '../../Common/UI';
 import { byteLength, byteSlice } from '../../../Tools/Common';
 import { Item } from '../../../../type/type';
+import { SHOPCODE } from '../../../../type/variable';
 
 // 커스텀 테이블 컬럼 스타일
 const StyledTableCell = styled(TableCell)({
@@ -46,6 +49,21 @@ interface Props {
 export const Summary = observer((props: Props) => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
+	const {
+		AUCTION_1,
+		AUCTION_2,
+		COUPANG,
+		G_MARKET_1,
+		G_MARKET_2,
+		INTER_PARK,
+		LOTTE_ON_GLOBAL,
+		LOTTE_ON_NORMAL,
+		SMART_STORE,
+		STREET11_GLOBAL,
+		STREET11_NORMAL,
+		TMON,
+		WE_MAKE_PRICE,
+	} = SHOPCODE;
 
 	// 상품에 변화가 생기면
 	const loading = (
@@ -263,7 +281,7 @@ export const Summary = observer((props: Props) => {
 														<img
 															style={{ margin: '1px' }}
 															src={
-																props.item.activeProductStore.find((v: any) => v.siteCode === 'A077' && v.inflow)
+																props.item.activeProductStore.find((v: any) => v.siteCode === SMART_STORE && v.inflow)
 																	? '/resources/icon-smartstore.png'
 																	: '/resources/icon-smartstore-gray.png'
 															}
@@ -272,7 +290,7 @@ export const Summary = observer((props: Props) => {
 														<img
 															style={{ margin: '1px' }}
 															src={
-																props.item.activeProductStore.find((v: any) => v.siteCode === 'B378' && v.inflow)
+																props.item.activeProductStore.find((v: any) => v.siteCode === COUPANG && v.inflow)
 																	? '/resources/icon-coupang.png'
 																	: '/resources/icon-coupang-gray.png'
 															}
@@ -281,7 +299,9 @@ export const Summary = observer((props: Props) => {
 														<img
 															style={{ margin: '1px' }}
 															src={
-																props.item.activeProductStore.find((v: any) => v.siteCode === 'A112' && v.inflow)
+																props.item.activeProductStore.find(
+																	(v: any) => v.siteCode === STREET11_GLOBAL && v.inflow,
+																)
 																	? '/resources/icon-street-global.png'
 																	: '/resources/icon-street-global-gray.png'
 															}
@@ -290,7 +310,9 @@ export const Summary = observer((props: Props) => {
 														<img
 															style={{ margin: '1px' }}
 															src={
-																props.item.activeProductStore.find((v: any) => v.siteCode === 'A113' && v.inflow)
+																props.item.activeProductStore.find(
+																	(v: any) => v.siteCode === STREET11_NORMAL && v.inflow,
+																)
 																	? '/resources/icon-street-normal.png'
 																	: '/resources/icon-street-normal-gray.png'
 															}
@@ -299,7 +321,7 @@ export const Summary = observer((props: Props) => {
 														<img
 															style={{ margin: '1px' }}
 															src={
-																props.item.activeProductStore.find((v: any) => v.siteCode === 'A006' && v.inflow)
+																props.item.activeProductStore.find((v: any) => v.siteCode === G_MARKET_1 && v.inflow)
 																	? '/resources/icon-gmarket.png'
 																	: '/resources/icon-gmarket-gray.png'
 															}
@@ -308,7 +330,7 @@ export const Summary = observer((props: Props) => {
 														<img
 															style={{ margin: '1px' }}
 															src={
-																props.item.activeProductStore.find((v: any) => v.siteCode === 'A001' && v.inflow)
+																props.item.activeProductStore.find((v: any) => v.siteCode === AUCTION_1 && v.inflow)
 																	? '/resources/icon-auction.png'
 																	: '/resources/icon-auction-gray.png'
 															}
@@ -317,7 +339,7 @@ export const Summary = observer((props: Props) => {
 														<img
 															style={{ margin: '1px' }}
 															src={
-																props.item.activeProductStore.find((v: any) => v.siteCode === 'A027' && v.inflow)
+																props.item.activeProductStore.find((v: any) => v.siteCode === INTER_PARK && v.inflow)
 																	? '/resources/icon-interpark.png'
 																	: '/resources/icon-interpark-gray.png'
 															}
@@ -326,7 +348,7 @@ export const Summary = observer((props: Props) => {
 														<img
 															style={{ margin: '1px' }}
 															src={
-																props.item.activeProductStore.find((v: any) => v.siteCode === 'B719' && v.inflow)
+																props.item.activeProductStore.find((v: any) => v.siteCode === WE_MAKE_PRICE && v.inflow)
 																	? '/resources/icon-wemakeprice.png'
 																	: '/resources/icon-wemakeprice-gray.png'
 															}
@@ -335,7 +357,9 @@ export const Summary = observer((props: Props) => {
 														<img
 															style={{ margin: '1px' }}
 															src={
-																props.item.activeProductStore.find((v: any) => v.siteCode === 'A524' && v.inflow)
+																props.item.activeProductStore.find(
+																	(v: any) => v.siteCode === LOTTE_ON_GLOBAL && v.inflow,
+																)
 																	? '/resources/icon-lotteon-global.png'
 																	: '/resources/icon-lotteon-global-gray.png'
 															}
@@ -344,7 +368,9 @@ export const Summary = observer((props: Props) => {
 														<img
 															style={{ margin: '1px' }}
 															src={
-																props.item.activeProductStore.find((v: any) => v.siteCode === 'A525' && v.inflow)
+																props.item.activeProductStore.find(
+																	(v: any) => v.siteCode === LOTTE_ON_NORMAL && v.inflow,
+																)
 																	? '/resources/icon-lotteon-normal.png'
 																	: '/resources/icon-lotteon-normal-gray.png'
 															}
@@ -353,7 +379,7 @@ export const Summary = observer((props: Props) => {
 														<img
 															style={{ margin: '1px' }}
 															src={
-																props.item.activeProductStore.find((v: any) => v.siteCode === 'B956' && v.inflow)
+																props.item.activeProductStore.find((v: any) => v.siteCode === TMON && v.inflow)
 																	? '/resources/icon-tmon.png'
 																	: '/resources/icon-tmon-gray.png'
 															}
@@ -417,19 +443,19 @@ export const Summary = observer((props: Props) => {
 								<Search
 									value={props.item.categoryInfoA077}
 									options={
-										product.categoryInfo.markets.find((v) => v.code === 'A077')!.input
-											? product.categoryInfo.markets.find((v) => v.code === 'A077')!.data
+										product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.input
+											? product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.data
 											: [props.item.categoryInfoA077]
 									}
 									getOptionLabel={(option: any) => option.name ?? ''}
 									isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
 									onChange={(e: any, value: any) => product.updateCategoryAuto(value, props.index)}
 									onInputChange={(e: any, value: any, reason: string) =>
-										reason === 'input' && product.setCategoryInput('A077', value)
+										reason === 'input' && product.setCategoryInput(SMART_STORE, value)
 									}
-									onOpen={() => product.getCategoryList('A077')}
-									onClose={() => product.setCategoryInput('A077', '')}
-									loading={product.categoryInfo.markets.find((v) => v.code === 'A077')!.loading}
+									onOpen={() => product.getCategoryList(SMART_STORE)}
+									onClose={() => product.setCategoryInput(SMART_STORE, '')}
+									loading={product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.loading}
 								/>
 							</Box>
 						</Grid>
@@ -526,7 +552,7 @@ export const Summary = observer((props: Props) => {
 										}}
 										onClick={() => {
 											const connected = props.item.productStore.find(
-												(v: any) => v.siteCode === 'A077' && v.state === 2,
+												(v: any) => v.siteCode === SMART_STORE && v.state === 2,
 											);
 
 											if (!connected) return;
@@ -536,7 +562,7 @@ export const Summary = observer((props: Props) => {
 									>
 										<img
 											src={
-												props.item.productStore.find((v: any) => v.siteCode === 'A077' && v.state === 2)
+												props.item.productStore.find((v) => v.siteCode === SMART_STORE && v.state === 2)
 													? '/resources/icon-smartstore.png'
 													: '/resources/icon-smartstore-gray.png'
 											}
@@ -553,7 +579,7 @@ export const Summary = observer((props: Props) => {
 									>
 										<img
 											src={
-												props.item.productStore.find((v: any) => v.siteCode === 'B378' && v.state === 2)
+												props.item.productStore.find((v) => v.siteCode === COUPANG && v.state === 2)
 													? '/resources/icon-coupang.png'
 													: '/resources/icon-coupang-gray.png'
 											}
@@ -568,7 +594,7 @@ export const Summary = observer((props: Props) => {
 										}}
 										onClick={() => {
 											const connected = props.item.productStore.find(
-												(v: any) => v.siteCode === 'A112' && v.state === 2,
+												(v: any) => v.siteCode === STREET11_GLOBAL && v.state === 2,
 											);
 
 											if (!connected) return;
@@ -578,7 +604,7 @@ export const Summary = observer((props: Props) => {
 									>
 										<img
 											src={
-												props.item.productStore.find((v: any) => v.siteCode === 'A112' && v.state === 2)
+												props.item.productStore.find((v) => v.siteCode === STREET11_GLOBAL && v.state === 2)
 													? '/resources/icon-street-global.png'
 													: '/resources/icon-street-global-gray.png'
 											}
@@ -593,7 +619,7 @@ export const Summary = observer((props: Props) => {
 										}}
 										onClick={() => {
 											const connected = props.item.productStore.find(
-												(v: any) => v.siteCode === 'A113' && v.state === 2,
+												(v: any) => v.siteCode === STREET11_NORMAL && v.state === 2,
 											);
 
 											if (!connected) return;
@@ -603,7 +629,7 @@ export const Summary = observer((props: Props) => {
 									>
 										<img
 											src={
-												props.item.productStore.find((v: any) => v.siteCode === 'A113' && v.state === 2)
+												props.item.productStore.find((v) => v.siteCode === STREET11_NORMAL && v.state === 2)
 													? '/resources/icon-street-normal.png'
 													: '/resources/icon-street-normal-gray.png'
 											}
@@ -618,7 +644,7 @@ export const Summary = observer((props: Props) => {
 										}}
 										onClick={() => {
 											const connected = props.item.productStore.find(
-												(v: any) => v.siteCode === 'A006' && v.state === 2,
+												(v: any) => v.siteCode === G_MARKET_1 && v.state === 2,
 											);
 
 											if (!connected) return;
@@ -628,7 +654,7 @@ export const Summary = observer((props: Props) => {
 									>
 										<img
 											src={
-												props.item.productStore.find((v: any) => v.siteCode === 'A006' && v.state === 2)
+												props.item.productStore.find((v) => v.siteCode === G_MARKET_1 && v.state === 2)
 													? '/resources/icon-gmarket.png'
 													: '/resources/icon-gmarket-gray.png'
 											}
@@ -643,7 +669,7 @@ export const Summary = observer((props: Props) => {
 										}}
 										onClick={() => {
 											const connected = props.item.productStore.find(
-												(v: any) => v.siteCode === 'A001' && v.state === 2,
+												(v: any) => v.siteCode === AUCTION_1 && v.state === 2,
 											);
 
 											if (!connected) return;
@@ -653,7 +679,7 @@ export const Summary = observer((props: Props) => {
 									>
 										<img
 											src={
-												props.item.productStore.find((v: any) => v.siteCode === 'A001' && v.state === 2)
+												props.item.productStore.find((v) => v.siteCode === AUCTION_1 && v.state === 2)
 													? '/resources/icon-auction.png'
 													: '/resources/icon-auction-gray.png'
 											}
@@ -668,7 +694,7 @@ export const Summary = observer((props: Props) => {
 										}}
 										onClick={() => {
 											const connected = props.item.productStore.find(
-												(v: any) => v.siteCode === 'A027' && v.state === 2,
+												(v: any) => v.siteCode === INTER_PARK && v.state === 2,
 											);
 
 											if (!connected) return;
@@ -678,7 +704,7 @@ export const Summary = observer((props: Props) => {
 									>
 										<img
 											src={
-												props.item.productStore.find((v: any) => v.siteCode === 'A027' && v.state === 2)
+												props.item.productStore.find((v) => v.siteCode === INTER_PARK && v.state === 2)
 													? '/resources/icon-interpark.png'
 													: '/resources/icon-interpark-gray.png'
 											}
@@ -693,7 +719,7 @@ export const Summary = observer((props: Props) => {
 										}}
 										onClick={() => {
 											const connected = props.item.productStore.find(
-												(v: any) => v.siteCode === 'B719' && v.state === 2,
+												(v: any) => v.siteCode === WE_MAKE_PRICE && v.state === 2,
 											);
 
 											if (!connected) return;
@@ -703,7 +729,7 @@ export const Summary = observer((props: Props) => {
 									>
 										<img
 											src={
-												props.item.productStore.find((v: any) => v.siteCode === 'B719' && v.state === 2)
+												props.item.productStore.find((v) => v.siteCode === WE_MAKE_PRICE && v.state === 2)
 													? '/resources/icon-wemakeprice.png'
 													: '/resources/icon-wemakeprice-gray.png'
 											}
@@ -718,7 +744,7 @@ export const Summary = observer((props: Props) => {
 										}}
 										onClick={() => {
 											const connected = props.item.productStore.find(
-												(v: any) => v.siteCode === 'A524' && v.state === 2,
+												(v: any) => v.siteCode === LOTTE_ON_GLOBAL && v.state === 2,
 											);
 
 											if (!connected) return;
@@ -728,7 +754,7 @@ export const Summary = observer((props: Props) => {
 									>
 										<img
 											src={
-												props.item.productStore.find((v: any) => v.siteCode === 'A524' && v.state === 2)
+												props.item.productStore.find((v) => v.siteCode === LOTTE_ON_GLOBAL && v.state === 2)
 													? '/resources/icon-lotteon-global.png'
 													: '/resources/icon-lotteon-global-gray.png'
 											}
@@ -743,7 +769,7 @@ export const Summary = observer((props: Props) => {
 										}}
 										onClick={() => {
 											const connected = props.item.productStore.find(
-												(v: any) => v.siteCode === 'A525' && v.state === 2,
+												(v: any) => v.siteCode === LOTTE_ON_NORMAL && v.state === 2,
 											);
 
 											if (!connected) return;
@@ -753,7 +779,7 @@ export const Summary = observer((props: Props) => {
 									>
 										<img
 											src={
-												props.item.productStore.find((v: any) => v.siteCode === 'A525' && v.state === 2)
+												props.item.productStore.find((v) => v.siteCode === LOTTE_ON_NORMAL && v.state === 2)
 													? '/resources/icon-lotteon-normal.png'
 													: '/resources/icon-lotteon-normal-gray.png'
 											}
@@ -767,9 +793,7 @@ export const Summary = observer((props: Props) => {
 											margin: 1,
 										}}
 										onClick={() => {
-											const connected = props.item.productStore.find(
-												(v: any) => v.siteCode === 'B956' && v.state === 2,
-											);
+											const connected = props.item.productStore.find((v: any) => v.siteCode === TMON && v.state === 2);
 
 											if (!connected) return;
 
@@ -778,7 +802,7 @@ export const Summary = observer((props: Props) => {
 									>
 										<img
 											src={
-												props.item.productStore.find((v: any) => v.siteCode === 'B956' && v.state === 2)
+												props.item.productStore.find((v) => v.siteCode === TMON && v.state === 2)
 													? '/resources/icon-tmon.png'
 													: '/resources/icon-tmon-gray.png'
 											}
@@ -812,7 +836,7 @@ export const Summary = observer((props: Props) => {
 											}}
 											onClick={() => {
 												const connected = props.item.productStore.find(
-													(v: any) => v.siteCode === 'A523' && v.state === 2,
+													(v: any) => v.siteCode === G_MARKET_2 && v.state === 2,
 												);
 
 												if (!connected) return;
@@ -822,7 +846,7 @@ export const Summary = observer((props: Props) => {
 										>
 											<img
 												src={
-													props.item.productStore.find((v: any) => v.siteCode === 'A523' && v.state === 2)
+													props.item.productStore.find((v) => v.siteCode === G_MARKET_2 && v.state === 2)
 														? '/resources/icon-gmarket.png'
 														: '/resources/icon-gmarket-gray.png'
 												}
@@ -837,7 +861,7 @@ export const Summary = observer((props: Props) => {
 											}}
 											onClick={() => {
 												const connected = props.item.productStore.find(
-													(v: any) => v.siteCode === 'A522' && v.state === 2,
+													(v: any) => v.siteCode === AUCTION_2 && v.state === 2,
 												);
 
 												if (!connected) return;
@@ -847,7 +871,7 @@ export const Summary = observer((props: Props) => {
 										>
 											<img
 												src={
-													props.item.productStore.find((v: any) => v.siteCode === 'A522' && v.state === 2)
+													props.item.productStore.find((v) => v.siteCode === AUCTION_2 && v.state === 2)
 														? '/resources/icon-auction.png'
 														: '/resources/icon-auction-gray.png'
 												}
@@ -874,12 +898,12 @@ export const Summary = observer((props: Props) => {
 													if (test)
 														product.updateLockProduct(props.index, {
 															productId: props.item.id,
-															mylock: props.item.myLock === 1 ? 2 : 1,
+															mylock: 1,
 														});
 												} else
 													product.updateLockProduct(props.index, {
 														productId: props.item.id,
-														mylock: props.item.myLock === 1 ? 2 : 1,
+														mylock: 2,
 													});
 											}}
 										>

@@ -15,11 +15,47 @@ import {
 	uploadA077Resources,
 } from '../Tools/SmartStore';
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
-import { RuntimeMessage } from '../../type/type';
+import { CollectInfo, Nullable, RuntimeMessage, Sender, Shop, User } from '../../type/type';
 
 // const iconv = require('iconv-lite');
 
-const pageRefresh = async (shop, page) => {
+const bulkCollectUsingApi = async (shopId: number, currentPage: number) => {
+	const resp = await fetch(
+		`https://www.vvic.com/apif/shop/itemlist?id=${shopId}&currentPage=${currentPage}&sort=up_time-desc&merge=0`,
+		{
+			headers: {
+				accept: 'application/json, text/plain, */*',
+				'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+				'sec-ch-ua': '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
+				'sec-ch-ua-mobile': '?0',
+				'sec-ch-ua-platform': '"Windows"',
+				'sec-fetch-dest': 'empty',
+				'sec-fetch-mode': 'cors',
+				'sec-fetch-site': 'same-origin',
+				token: 'RajToken',
+			},
+			referrer: `https://www.vvic.com/shop/list/${shopId}/content_all`,
+			referrerPolicy: 'strict-origin-when-cross-origin',
+			body: null,
+			method: 'GET',
+			mode: 'cors',
+			credentials: 'include',
+		},
+	);
+	if (resp.status !== 200) {
+		alert('상품수집 api Error\n채널톡에 문의 바랍니다.');
+		return [];
+	}
+	const json = await resp.json();
+	const urls = json?.data?.recordList?.map((v) => ({
+		url: `https://www.vvic.com/item/${v.vid}`,
+		productName: '',
+		productTags: '',
+	}));
+	return urls as CollectInfo['inputs'];
+};
+
+const pageRefresh = async (shop: Shop | null, page: number) => {
 	let url: string | null = null;
 	//페이지 검색 필터(검색필터) 문제
 	switch (shop) {
@@ -81,19 +117,19 @@ const pageRefresh = async (shop, page) => {
 };
 
 const bulkCollect = async (useChecked: boolean, useMedal: boolean) => {
-	let inputs: any = [];
+	let inputs: CollectInfo['inputs'] = [];
 	let timeout = 0;
 
 	//타임아웃 필요
 	while (true) {
 		if (timeout === 15) break;
 
-		let list: any = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
+		let list = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
 
 		if (list.length > 0) {
 			for (let i = 0; i < list.length; i++) {
 				let toggle = false;
-
+				//@ts-ignore
 				if (useChecked && !list[i].checked) continue;
 				if (useMedal) {
 					if (list[i].getAttribute('medal') === '1') toggle = true;
@@ -119,27 +155,52 @@ const bulkCollect = async (useChecked: boolean, useMedal: boolean) => {
 	return inputs;
 };
 
-const bulkPage = async (info, shop) => {
-	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
-	let collect = collectInfo.find((v: any) => v.sender.tab.id === info.tabInfo.tab.id);
-
+const bulkPage = async (
+	info: {
+		user: User;
+		isBulk: boolean;
+		tabInfo: Sender;
+	},
+	shop: Shop | null,
+	urlUnchangedPage?: { shopId: number; method: 'api' | 'element' },
+) => {
+	// console.log('구간4');
+	// await sleep(10000);
+	let collectInfo = (await getLocalStorage<CollectInfo[]>('collectInfo')) ?? [];
+	// console.log(`콜렉트인포`);
+	// console.log({ collectInfo });
+	let collect = collectInfo.find((v) => v.sender.tab.id === info.tabInfo.tab.id);
+	// console.log(`1번 콜렉트`);
+	// console.log({ collect });
 	if (!collect) return;
 	if (collect.currentPage <= collect.pageEnd) {
-		const inputs = await bulkCollect(false, collect.useMedal);
+		const inputs =
+			urlUnchangedPage?.method === 'api'
+				? await bulkCollectUsingApi(urlUnchangedPage.shopId, collect.currentPage)
+				: await bulkCollect(false, collect.useMedal);
 
 		if (inputs.length === 0) collect.currentPage = collect.pageEnd;
 
 		collect.inputs = collect.inputs.concat(inputs);
 		collect.currentPage += 1;
-
+		// console.log(`2번 콜렉트`);
+		// console.log({ collect });
+		// await sleep(20000);
 		switch (collect.type) {
 			case 'page': {
-				if (collect.currentPage > collect.pageEnd)
+				// console.log('구간8');
+				if (collect.currentPage > collect.pageEnd) {
+					// console.log('구간8-1');
+					// await sleep(10000);
 					sendRuntimeMessage({
 						action: 'collect-bulk',
 						source: { data: collect.inputs, retry: false },
 					});
-				else pageRefresh(shop, collect.currentPage);
+				} else {
+					// console.log('구간8-2');
+					// await sleep(10000);
+					pageRefresh(shop, collect.currentPage);
+				}
 
 				break;
 			}
@@ -174,9 +235,27 @@ const bulkPage = async (info, shop) => {
 };
 
 const skip = () => sendRuntimeMessage({ action: 'collect-finish' });
-const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) => {
+/**
+ *
+ * @param info
+ * @param shop 마켓이름
+ * @param result any
+ * @param bulk 대량수집버튼인지 여부
+ * @param urlUnchangedPage 사용자정의 대량수집시 url변동이 없어 api를 이용해야 하는 경우
+ * @returns void
+ */
+const floatingButton = async (
+	info: {
+		user: User;
+		isBulk: boolean;
+		tabInfo: Sender;
+	},
+	shop: Shop | null,
+	result: any,
+	bulk: boolean,
+	urlUnchangedPage?: { shopId: number; method: 'api' | 'element' },
+) => {
 	if (!result) return;
-
 	let isCollecting = false;
 	let container = document.createElement('table');
 	container.className = 'SELLFORYOU-FLOATING';
@@ -348,16 +427,12 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 				sfyCategoryInput.disabled = !e.target.checked;
 				sfyCategoryList.style.display = 'none';
 			});
-
 			sfyMyKeywardEnabled.addEventListener('change', (e: any) => (sfyMyKeywardInput.disabled = !e.target.checked));
-
 			sfyCategoryInput.addEventListener('focus', (e: any) => (sfyCategoryList.style.display = ''));
-
 			sfyMyKeywardInput.addEventListener('change', (e: any) => {
 				sfyMyKeywardInput.value = e.target.value.trim();
 				sfyMyKeywardInput.setAttribute('data-myKeyward-id', e.target.value.trim());
 			});
-
 			sfyCategoryInput.addEventListener('change', (e: any) => {
 				const input = e.target.value;
 				const filtered = categoryJson.filter(
@@ -380,12 +455,10 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 						categoryName += ' > ';
 						categoryName += v['중분류'];
 					}
-
 					if (v['소분류']) {
 						categoryName += ' > ';
 						categoryName += v['소분류'];
 					}
-
 					if (v['세분류']) {
 						categoryName += ' > ';
 						categoryName += v['세분류'];
@@ -410,14 +483,14 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 			});
 
 			const startBulk = async () => {
-				const tabs: any = await sendRuntimeMessage({ action: 'tab-info-all' });
+				const tabs = await sendRuntimeMessage<chrome.tabs.Tab[]>({ action: 'tab-info-all' });
 
-				let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
+				let collectInfo = (await getLocalStorage<Partial<CollectInfo>[]>('collectInfo')) ?? [];
 
-				collectInfo = collectInfo.filter((v: any) => {
-					if (v.sender.tab.id === info.tabInfo.tab.id) return false;
+				collectInfo = collectInfo.filter((v) => {
+					if (v.sender?.tab.id === info.tabInfo.tab.id) return false;
 
-					const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
+					const matched = tabs?.find((w) => w.id === v.sender?.tab.id);
 
 					if (!matched) return false;
 
@@ -446,14 +519,13 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 			};
 
 			sfyStart.addEventListener('click', () => startBulk());
-
 			sfyCancel.addEventListener('click', () => paper.remove());
 		} else {
 			isCollecting = true;
 
 			buttonCollect.innerHTML = `<div class="SELLFORYOU-LOADING" />`;
 
-			const response: any = await sendRuntimeMessage({
+			const response = await sendRuntimeMessage<{ status: string; statusMessage: string }>({
 				action: 'collect',
 				source: result,
 			});
@@ -853,17 +925,19 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 						});
 				});
 
-				const startBulk = async (type) => {
-					const tabs: any = await sendRuntimeMessage({
+				const startBulk = async (type: 'page' | 'amount') => {
+					// console.log('구간2');
+					// await sleep(10000);
+					const tabs = await sendRuntimeMessage<chrome.tabs.Tab[]>({
 						action: 'tab-info-all',
 					});
 
-					let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
+					let collectInfo = ((await getLocalStorage('collectInfo')) as Partial<CollectInfo>[]) ?? [];
 
-					collectInfo = collectInfo.filter((v: any) => {
-						if (v.sender.tab.id === info.tabInfo.tab.id) return false;
+					collectInfo = collectInfo.filter((v) => {
+						if (v.sender?.tab.id === info.tabInfo.tab.id) return false;
 
-						const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
+						const matched = tabs?.find((w) => w.id === v.sender?.tab.id);
 
 						if (!matched) return false;
 
@@ -878,18 +952,12 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 								categoryId: sfyCategoryInput.getAttribute('data-category-id'),
 								myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
 								currentPage: parseInt(sfyPageStart.value),
-
 								inputs: [],
-
 								maxLimits: 0,
-
 								pageStart: parseInt(sfyPageStart.value),
 								pageEnd: parseInt(sfyPageEnd.value),
-
 								sender: info.tabInfo,
-
 								type: 'page',
-
 								useMedal: sfyGoldMedalEnabled.checked,
 								useStandardShipping: sfyStandardShippingEnabled.checked,
 							});
@@ -902,18 +970,12 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 								categoryId: sfyCategoryInput.getAttribute('data-category-id'),
 								myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
 								currentPage: 1,
-
 								inputs: [],
-
 								maxLimits: parseInt(sfyAmount.value),
-
 								pageStart: 1,
 								pageEnd: 100,
-
 								sender: info.tabInfo,
-
 								type: 'amount',
-
 								useMedal: sfyGoldMedalEnabled.checked,
 								useStandardShipping: sfyStandardShippingEnabled.checked,
 							});
@@ -921,13 +983,14 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 							break;
 						}
 					}
-
 					await setLocalStorage({ collectInfo });
 
 					pageRefresh(shop, parseInt(sfyPageStart.value));
 				};
 
-				sfyStart.addEventListener('click', () => {
+				sfyStart.addEventListener('click', async () => {
+					// console.log('구간1');
+					// await sleep(10000);
 					const radios: any = document.getElementsByName('sfyBulkType');
 
 					for (let i = 0; i < radios.length; i++) {
@@ -986,8 +1049,13 @@ const floatingButton = async (info: any, shop: any, result: any, bulk: boolean) 
 
 			container.append(logoRow);
 		}
-
-		bulkPage(info, shop);
+		// console.log('구간3');
+		// await sleep(10000);
+		bulkPage(
+			info,
+			shop,
+			urlUnchangedPage ? { shopId: urlUnchangedPage.shopId, method: urlUnchangedPage.method } : undefined,
+		);
 	}
 
 	document.documentElement.appendChild(container);
@@ -1148,7 +1216,7 @@ const resultDetails = async (data: any) => {
 	document.getElementById('sfyPage')?.addEventListener('click', () => (window.location.href = data.sender.tab.url));
 
 	document.getElementById('sfyRetry')?.addEventListener('click', () => {
-		const inputs = results.filter((v: any) => v.checked).map((v: any) => v.input);
+		const inputs = results.filter((v) => v.checked).map((v) => v.input) as CollectInfo['inputs'];
 
 		if (data.isExcel)
 			sendRuntimeMessage({
@@ -1176,10 +1244,10 @@ const resultDetails = async (data: any) => {
 		);
 	});
 
-	const tabInfo: any = await sendRuntimeMessage({ action: 'tab-info' });
+	const tabInfo = await sendRuntimeMessage<Sender>({ action: 'tab-info' });
 
-	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
-	let collect = collectInfo.find((v: any) => v.sender.tab.id === tabInfo.tab.id);
+	let collectInfo = (await getLocalStorage<CollectInfo[]>('collectInfo')) ?? [];
+	let collect = collectInfo.find((v) => v.sender.tab.id === tabInfo?.tab.id);
 
 	if (!collect) return;
 
@@ -1191,15 +1259,15 @@ const resultDetails = async (data: any) => {
 };
 
 const addExcelInfo = async (request) => {
-	const tabInfo: any = await sendRuntimeMessage({ action: 'tab-info' });
-	const tabs: any = await sendRuntimeMessage({ action: 'tab-info-all' });
+	const tabInfo = (await sendRuntimeMessage<Sender>({ action: 'tab-info' }))!;
+	const tabs = await sendRuntimeMessage<chrome.tabs.Tab[]>({ action: 'tab-info-all' });
 
-	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
+	let collectInfo = (await getLocalStorage<Partial<CollectInfo>[]>('collectInfo')) ?? [];
 
-	collectInfo = collectInfo.filter((v: any) => {
-		if (v.sender.tab.id === tabInfo.tab.id) return false;
+	collectInfo = collectInfo.filter((v) => {
+		if (v.sender?.tab.id === tabInfo?.tab.id) return false;
 
-		const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
+		const matched = tabs?.find((w) => w.id === v.sender?.tab.id);
 
 		if (!matched) return false;
 
@@ -1210,15 +1278,11 @@ const addExcelInfo = async (request) => {
 		categoryId: '',
 		myKeyward: '',
 		currentPage: 1,
-
 		inputs: [],
-
 		pageStart: 1,
 		pageEnd: request.source.data.length,
 		pageList: request.source.data,
-
 		sender: tabInfo,
-
 		type: 'excel-page',
 	});
 
@@ -1230,9 +1294,9 @@ const addExcelInfo = async (request) => {
 };
 
 const initInfo = async (display: boolean) => {
-	const user = await sendRuntimeMessage({ action: 'user' });
-	const isBulk = await sendRuntimeMessage({ action: 'is-bulk' });
-	const tabInfo = await sendRuntimeMessage({ action: 'tab-info' });
+	const user = (await sendRuntimeMessage<User>({ action: 'user' }))!;
+	const isBulk = (await sendRuntimeMessage<boolean>({ action: 'is-bulk' }))!;
+	const tabInfo = (await sendRuntimeMessage<Sender>({ action: 'tab-info' }))!;
 
 	if (display && isBulk) {
 		let paper = document.createElement('div');
@@ -1381,7 +1445,7 @@ const main = async () => {
 
 	document.documentElement.insertBefore(link, null);
 
-	chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender, sendResponse) => {
+	chrome.runtime.onMessage.addListener((request: RuntimeMessage, _, sendResponse) => {
 		switch (request.action) {
 			case 'set_info': {
 				getsetPage(request.source).then(sendResponse);
@@ -1537,6 +1601,9 @@ const main = async () => {
 			case 'order-vvic': {
 				break;
 			}
+			case 'console': {
+				console.log(request.source);
+			}
 		}
 	});
 	/** 상품수집하는 방법 : 3가지
@@ -1557,6 +1624,7 @@ const main = async () => {
 		console.log('타오바오 리스트 페이지 진입');
 		const info = await initInfo(false);
 		await new taobao().bulkTypeOne(info.user);
+		// document.addEventListener('scroll', handleScroll);
 		floatingButton(info, 'taobao1', true, true);
 
 		/**  */
@@ -1609,7 +1677,7 @@ const main = async () => {
 		const result = await new express().get(info.user);
 		floatingButton(info, 'express', result, false);
 
-		/** */
+		/** 알리 검색 페이지 */
 	} else if (
 		/aliexpress.com\/af/.test(currentUrl) ||
 		/aliexpress.com\/af\/category/.test(currentUrl) ||
@@ -1619,13 +1687,37 @@ const main = async () => {
 		/aliexpress.com\/premium/.test(currentUrl) ||
 		/aliexpress.com\/wholesale/.test(currentUrl)
 	) {
+		console.log('알리 검색 페이지 진입');
 		const info = await initInfo(false);
 		await new express().bulkTypeOne(info.user);
 		await new express().bulkTypeTwo(info.user);
 		floatingButton(info, 'express', true, true);
 
-		/** */
+		/** 알리검색 페이지는 페이지이동을 해도 refresh가 되지않기 때문에 수집코드를 한번더 진행 */
+		const pageNationEl = document?.querySelector('ul.comet-pagination');
+		const currentPage = parseInt(new URLSearchParams(window.location.search).get('page') ?? '1');
+		// a태그 , 1~5 및 ... 버튼에 이벤트부여
+		pageNationEl?.querySelectorAll('a').forEach((a, index) => {
+			a.addEventListener('click', async () => {
+				if (a.innerText !== '') await pageRefresh('express', parseInt(a.innerText));
+				else index < 2 ? await pageRefresh('express', currentPage - 5) : await pageRefresh('express', currentPage + 5);
+			});
+		});
+		// button태그 , 앞,뒤 확인하다 버튼에 이벤트부여
+		pageNationEl?.querySelectorAll('button').forEach((button, index) => {
+			button.addEventListener('click', async () => {
+				if (index === 0) await pageRefresh('express', currentPage - 1);
+				else if (index === 1) await pageRefresh('express', currentPage + 1);
+				else {
+					const jump = pageNationEl.querySelector('li.comet-pagination-options')?.querySelector('input')?.value;
+					if (jump && !isNaN(Number(jump))) await pageRefresh('express', parseInt(jump));
+				}
+			});
+		});
+
+		/** 알리 상점 페이지 */
 	} else if (/aliexpress.com\/store/.test(currentUrl)) {
+		console.log('알리 상점 페이지 진입');
 		const info = await initInfo(false);
 		await new express().bulkTypeThree(info.user);
 		floatingButton(info, 'express', true, true);
@@ -1636,12 +1728,13 @@ const main = async () => {
 		const result = await new alibaba().get(info.user);
 		floatingButton(info, 'alibaba', result, false);
 
-		/** 1688 상점 페이지 인듯? */
+		/** 1688 상점 페이지 and 검색 페이지 */
 	} else if (
 		/s.1688.com\/selloffer\/offer_search.htm/.test(currentUrl) ||
 		/1688.com\/page\/offerlist/.test(currentUrl) ||
 		/s.1688.com\/youyuan\/index.htm/.test(currentUrl)
 	) {
+		console.log(`1688 상점/검색 페이지`);
 		const info = await initInfo(false);
 		await new alibaba().bulkTypeOne(info.user);
 		await new alibaba().bulkTypeTwo(info.user);
@@ -1660,23 +1753,28 @@ const main = async () => {
 		const result = await new vvic().get(info.user);
 		floatingButton(info, 'vvic', result, false);
 
-		/** */
+		/** vvic 검색 페이지 */
 	} else if (/www.vvic.com\/.+\/search/.test(currentUrl) || /www.vvic.com\/.+\/topic/.test(currentUrl)) {
+		console.log(`vvic검색페이지진입`);
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 2);
 		floatingButton(info, 'vvic', true, true);
 
 		/** vvic 상점 페이지 */
-	} else if (/www.vvic.com\/shop/.test(currentUrl)) {
+	} else if (/www.vvic.com\/shop\/(\d+)/.test(currentUrl)) {
+		console.log('vvic shop page entered');
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 3);
-		floatingButton(info, 'vvic', true, true);
+		const shopId = parseInt(currentUrl.match(/\/shop\/(\d+)/)?.[1] ?? '0');
+		floatingButton(info, 'vvic', true, true, { shopId: shopId, method: 'api' });
 
 		/** */
 	} else if (/www.vvic.com\/.+\/list/.test(currentUrl)) {
+		console.log('vvic list page entered');
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 4);
-		floatingButton(info, 'vvic', true, true);
+		const shopId = parseInt(currentUrl.match(/\/list\/(\d+)/)?.[1] ?? '0');
+		floatingButton(info, 'vvic', true, true, { shopId: shopId, method: 'api' });
 
 		/** */
 	} else if (/www.amazon.com\/.+\/dp\//.test(currentUrl) || /www.amazon.com\/dp/.test(currentUrl)) {

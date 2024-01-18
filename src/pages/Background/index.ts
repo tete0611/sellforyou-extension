@@ -10,34 +10,40 @@ import papagoTranslation from '../Tools/Translation';
 import { coupangApiGateway } from '../Tools/Coupang';
 import { createTabCompletely, getLocalStorage, queryTabs, sendTabMessage, setLocalStorage } from '../Tools/ChromeAsync';
 import { getRandomIntInclusive } from '../Tools/Common';
-import { RuntimeMessage } from '../../type/type';
+import { BulkInfo, CollectInfo, RuntimeMessage, Sender, Source } from '../../type/type';
 
 // 티몰 상세페이지 요청 시 CORS 이슈 발생
 // 이를 해결하기 위해 서비스워커에서 처리하지 않고 메시지 채널로 콘텐츠 스크립트에서 처리하도록 구현
 // 티몰에 상품 수집하려고 페이지 들어가면 탭이 생겼다가 사라지는게 이 기능
-const tmallCORS = async (args: RuntimeMessage['form']) => {
+const tmallCORS = async (args: RuntimeMessage['form']): Promise<string | undefined | null> => {
 	const tab = await createTabCompletely({ active: false, url: args?.url }, 5);
-	const res = await sendTabMessage(tab.id, { action: 'fetch', form: args });
-
-	chrome.tabs.remove(tab.id);
+	//@ts-ignore
+	const res = await sendTabMessage<string>(tab.id, { action: 'fetch', form: args });
+	if (tab.id) chrome.tabs.remove(tab.id);
 
 	return res;
 };
 
 // 수집 정보를 탭별로 구분하여 로컬스토리지에 저장
 // 서비스워커가 죽더라도 페이지 새로고침으로 중단된 지점으로부터 되살릴 수 있음
-const addBulkInfo = async (source: any, sender: any, isExcel: boolean) => {
-	const tabs: any = await queryTabs({});
-	let bulkInfo: any = (await getLocalStorage('bulkInfo')) ?? [];
+const addBulkInfo = async (source: Source, sender: Sender, isExcel: boolean) => {
+	// console.log('구간7');
+	// await sleep(10000);
+	const tabs = await queryTabs({});
+	let bulkInfo = (await getLocalStorage<BulkInfo[]>('bulkInfo')) ?? [];
 
-	bulkInfo = bulkInfo.filter((v: any) => {
+	// 수집 테스트시 아래코드 주석해제
+	// console.log({ source });
+	// return false;
+
+	bulkInfo = bulkInfo.filter((v) => {
 		if (v.sender.tab.id === sender.tab.id) {
 			if (source.retry) sender = v.sender;
 
 			return false;
 		}
 
-		const matched = tabs.find((w: any) => w.id === v.sender.tab.id);
+		const matched = tabs.find((w) => w.id === v.sender.tab.id);
 
 		if (!matched) return false;
 
@@ -63,13 +69,13 @@ const addBulkInfo = async (source: any, sender: any, isExcel: boolean) => {
 
 // 상품 데이터 가공
 // onebound에는 상품 원본 데이터에 대한 정보, sellforyou에는 번역 데이터에 대한 정보
-const addToInventory = async (sender: any, origin: any) => {
+const addToInventory = async (sender: Sender, origin: any) => {
 	// 상품 수집 실패 시
 	if (origin.error) return await finishCollect(sender, 'failed', origin.error);
 
 	// 대량 수집 시 (대량수집 시) 설정해둔 값들을 불러 옴
-	let collectInfo: any = (await getLocalStorage('collectInfo')) ?? [];
-	let collect = collectInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
+	let collectInfo = (await getLocalStorage<CollectInfo[]>('collectInfo')) ?? [];
+	let collect = collectInfo.find((v) => v.sender.tab.id === sender.tab.id);
 	if (collect && collect.useStandardShipping) {
 		if (origin.item.shop_id === 'express' && !origin.item.props.find((v) => v.name === 'AliExpress Standard Shipping'))
 			return await finishCollect(sender, 'failed', '스탠다드 쉬핑 불가 상품입니다.'); // finish로 그냥 에러내서 끝내버림. skip 해버림.
@@ -249,12 +255,12 @@ const addToInventory = async (sender: any, origin: any) => {
 	}
 
 	// 상품 수집을 진행한 탭에서 수집 환경설정을 가져옴
-	let bulkInfo: any = (await getLocalStorage('bulkInfo')) ?? [];
-	let bulk = bulkInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
+	let bulkInfo = (await getLocalStorage<BulkInfo[]>('bulkInfo')) ?? [];
+	let bulk = bulkInfo.find((v) => v.sender.tab.id === sender.tab.id);
 
 	// 엑셀파일 수집이라면 상품명과 검색어태그는 엑셀파일에 입력한 정보로 변경
 	if (bulk && bulk.isExcel) {
-		const fixed = bulk.inputs.find((v: any) => v.url.includes(origin.item.num_iid));
+		const fixed = bulk.inputs.find((v) => v.url.includes(origin.item.num_iid));
 
 		if (fixed) {
 			origin.item.nick = fixed.productName;
@@ -291,29 +297,34 @@ const addToInventory = async (sender: any, origin: any) => {
 			secretkey = '5d4e2bce5dd8337285b634100c6a198d1b31327a';
 		}
 
-		let categoryJson = await coupangApiGateway({
-			accesskey: accesskey,
-			secretkey: secretkey,
-
-			path: `/v2/providers/openapi/apis/api/v1/categorization/predict`,
-			query: '',
-			method: 'POST',
-
-			data: {
-				productName: productName,
-			},
-		});
-
 		try {
-			if (categoryJson?.error) {
+			let categoryJson = await coupangApiGateway({
+				accesskey: accesskey,
+				secretkey: secretkey,
+				path: `/v2/providers/openapi/apis/api/v1/categorization/predict`,
+				query: '',
+				method: 'POST',
+				data: {
+					productName: productName,
+				},
+			});
+
+			if (categoryJson?.error || categoryJson.code === 'ERROR') {
 				if (categoryJson.message.includes('Not allowed IP'))
 					return await finishCollect(
 						sender,
 						'failed',
 						'쿠팡 seller에 등록된 IP와 셀포유를 사용중인 PC의 IP가 같은지 확인바랍니다.',
 					);
-				else return await finishCollect(sender, 'failed', '쿠팡 카테고리 자동설정 도중 오류가 발생하였습니다.');
+				else
+					return await finishCollect(
+						sender,
+						'failed',
+						'쿠팡 카테고리 자동설정 도중 오류가 발생하였습니다.\n관리자 문의 요망',
+					);
 			}
+
+			origin.item.cid = categoryJson.data.predictedCategoryId;
 		} catch (e) {
 			return await finishCollect(
 				sender,
@@ -321,8 +332,6 @@ const addToInventory = async (sender: any, origin: any) => {
 				'쿠팡 카테고리 자동설정 도중 오류가 발생하였습니다.\n관리자 문의 요망',
 			);
 		}
-
-		origin.item.cid = categoryJson.data.predictedCategoryId;
 	}
 	// 카테고리 사전설정값이 있는 경우 해당 카테고리번호를 할당
 	else origin.item.nid = collect.categoryId;
@@ -374,24 +383,26 @@ const addToInventory = async (sender: any, origin: any) => {
 };
 
 // 대량수집 다음 페이지 넘기기
-const bulkNext = async (sender) => {
-	let bulkInfo: any = (await getLocalStorage('bulkInfo')) ?? [];
-	let bulk = bulkInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
+const bulkNext = async (sender: Sender) => {
+	let bulkInfo = (await getLocalStorage<BulkInfo[]>('bulkInfo')) ?? [];
+	let bulk = bulkInfo.find((v) => v.sender.tab.id === sender.tab.id);
 
 	if (!bulk) return false;
+	if (!bulk.sender.tab.id) return;
 
 	if (bulk.isCancel || bulk.current === bulk.inputs.length) {
 		// 대량수집을 중단했거나 마지막 페이지까지 수집한 경우
 		bulk.isBulk = false;
 
-		const tabs: any = await queryTabs({
+		const tabs = await queryTabs({
 			url: chrome.runtime.getURL('product/collected.html'),
 		});
 
 		// 상품목록 리프레쉬
-		tabs.map((v: any) => sendTabMessage(v.id, { action: 'refresh' }));
+		tabs.map((v) => sendTabMessage(v.id, { action: 'refresh' }));
 
 		// 상품 수집 완료 알림
+
 		sendTabMessage(bulk.sender.tab.id, {
 			action: 'collect-finish',
 			source: bulk,
@@ -415,9 +426,9 @@ const bulkNext = async (sender) => {
 };
 
 // 대량수집 중단 버튼 클릭 시
-const bulkStop = async (sender) => {
-	let bulkInfo: any = (await getLocalStorage('bulkInfo')) ?? [];
-	let bulk = bulkInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
+const bulkStop = async (sender: Sender) => {
+	let bulkInfo = (await getLocalStorage<BulkInfo[]>('bulkInfo')) ?? [];
+	let bulk = bulkInfo.find((v) => v.sender.tab.id === sender.tab.id);
 
 	if (!bulk) return false;
 
@@ -429,18 +440,16 @@ const bulkStop = async (sender) => {
 };
 
 // 수집 종료 시(성공/실패)
-const finishCollect = async (sender: any, status: string, statusMessage: string) => {
-	let bulkInfo: any = (await getLocalStorage('bulkInfo')) ?? [];
-	let bulk = bulkInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
+const finishCollect = async (sender: Sender, status: string, statusMessage: string) => {
+	let bulkInfo = (await getLocalStorage<BulkInfo[]>('bulkInfo')) ?? [];
+	let bulk = bulkInfo.find((v) => v.sender.tab.id === sender.tab.id);
 
 	if (bulk) {
 		bulk.isComplete = true;
 		bulk.results.push({
 			checked: true,
-
 			status,
 			statusMessage,
-
 			input: bulk.inputs[bulk.results.length],
 		});
 
@@ -466,9 +475,9 @@ const getUserInfo = async () => {
 };
 
 // 대량 수집 중인지
-const isBulk = async (sender) => {
-	let bulkInfo: any = (await getLocalStorage('bulkInfo')) ?? [];
-	let bulk = bulkInfo.find((v: any) => v.sender.tab.id === sender.tab.id);
+const isBulk = async (sender: Sender) => {
+	let bulkInfo = (await getLocalStorage<BulkInfo[]>('bulkInfo')) ?? [];
+	let bulk = bulkInfo.find((v) => v.sender.tab.id === sender.tab.id);
 
 	if (!bulk) return false;
 
@@ -480,46 +489,49 @@ const isBulk = async (sender) => {
 // 확장프로그램에서 async/await 지원 안하므로 구문 사용 금지 (Promise로 구현)
 // 사용법 예시 addToInventory 함수를 외부에 async로 선언 후 promise 형태로 await (x) .then()형태로 사용해야함
 // 안에서 async/ await 지원 안함
-chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender: any, sendResponse) => {
+chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender, sendResponse) => {
 	switch (request.action) {
 		// 상품 수집 액션
 		case 'collect': {
-			addToInventory(sender, request.source).then(sendResponse);
+			console.log('콜렉트수신');
+			addToInventory(sender as Sender, request.source).then(sendResponse);
+			console.log('콜렉트끝');
 
 			return true;
 		}
 
 		// 대량 수집 액션
 		case 'collect-bulk': {
-			addBulkInfo(request.source, sender, false).then(sendResponse);
-
+			// console.log('구간5')
+			addBulkInfo(request.source!, sender as Sender, false).then(sendResponse);
+			// console.log('구간6')
 			return true;
 		}
 
 		// 엑셀 수집 액션
 		case 'collect-product-excel': {
-			addBulkInfo(request.source, sender, true).then(sendResponse);
+			addBulkInfo(request.source!, sender as Sender, true).then(sendResponse);
 
 			return true;
 		}
 
 		// 상품 수집 완료
 		case 'collect-finish': {
-			bulkNext(sender).then(sendResponse);
+			bulkNext(sender as Sender).then(sendResponse);
 
 			return true;
 		}
 
 		// 상품 수집 중지
 		case 'collect-stop': {
-			bulkStop(sender).then(sendResponse);
+			bulkStop(sender as Sender).then(sendResponse);
 
 			return true;
 		}
 
 		// 대량 수집 여부 확인
 		case 'is-bulk': {
-			isBulk(sender).then(sendResponse);
+			isBulk(sender as Sender).then(sendResponse);
 
 			return true;
 		}

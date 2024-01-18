@@ -1,5 +1,5 @@
 import React from 'react';
-import CloseIcon from '@mui/icons-material/Close';
+import { Close as CloseIcon } from '@mui/icons-material';
 
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
@@ -1930,7 +1930,7 @@ export const UploadModal = observer(() => {
 				>
 					{editable ? (
 						<Button
-							disabled={!uploadable}
+							disabled={!uploadable || markets.every((v) => !v.upload)}
 							disableElevation
 							variant='contained'
 							color='info'
@@ -1940,7 +1940,6 @@ export const UploadModal = observer(() => {
 							}}
 							onClick={async () => {
 								await setUploadable(false);
-
 								await uploadItems(common, true);
 							}}
 						>
@@ -1948,7 +1947,7 @@ export const UploadModal = observer(() => {
 						</Button>
 					) : (
 						<Button
-							disabled={!uploadable}
+							disabled={!uploadable || markets.every((v) => !v.upload)}
 							disableElevation
 							variant='contained'
 							color='info'
@@ -1958,7 +1957,6 @@ export const UploadModal = observer(() => {
 							}}
 							onClick={async () => {
 								await setUploadable(false);
-
 								await uploadItems(common, false);
 							}}
 						>

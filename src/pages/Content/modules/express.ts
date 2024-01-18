@@ -2,9 +2,29 @@ import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
 import { sleep, getImageSize } from '../../Tools/Common';
+import { User } from '../../../type/type';
+
+/** 하단까지 스크롤을 부드럽게 해주는 함수 , 기본값:0.5초 */
+const scrollToBottomSmooth = async (duration: number = 500) => {
+	const scrollElement = document.documentElement || document.body;
+	const start = scrollElement.scrollTop;
+	const target = scrollElement.scrollHeight - window.innerHeight;
+	const startTime = performance.now();
+
+	const animateScroll = async (time: number) => {
+		const elapsed = time - startTime;
+		const progress = Math.min(elapsed / duration, 1);
+
+		scrollElement.scrollTop = start + (target - start) * progress;
+
+		if (progress < 1) await window.requestAnimationFrame(animateScroll);
+	};
+
+	await window.requestAnimationFrame(animateScroll);
+};
 
 // 알리익스프레스 상품정보 크롤링
-async function scrape(items: any, user: any) {
+const scrape = async (items: any, user: User) => {
 	let result: any = form;
 
 	result.user = user;
@@ -12,11 +32,10 @@ async function scrape(items: any, user: any) {
 	// 페이지별 크롤링 방식 다름
 	if (items.pageType === 1) {
 		// 상품속성
-		if (items.specsModule) {
+		if (items.specsModule)
 			items.specsModule.props.map((v: any) => {
 				result['item']['attr'].push(`${v.attrName}:${v.attrValue}`);
 			});
-		}
 
 		// 배송비 정보
 		if (items.shippingModule) {
@@ -39,11 +58,8 @@ async function scrape(items: any, user: any) {
 					}
 				}
 
-				if (shipping_list[i].bizData.company === 'AliExpress Standard Shipping') {
-					shipping_data.default = true;
-				} else {
-					shipping_data.default = false;
-				}
+				if (shipping_list[i].bizData.company === 'AliExpress Standard Shipping') shipping_data.default = true;
+				else shipping_data.default = false;
 
 				result['item']['props'].push(shipping_data);
 			}
@@ -71,7 +87,6 @@ async function scrape(items: any, user: any) {
 		let desc_resp = await fetch(items.descriptionModule.descriptionUrl);
 		let desc_text = await desc_resp.text();
 		let desc_html: any = new DOMParser().parseFromString(desc_text, 'text/html');
-
 		let desc_scripts = desc_html.querySelectorAll('script');
 
 		for (let i in desc_scripts) {
@@ -88,14 +103,13 @@ async function scrape(items: any, user: any) {
 		for (let i in desc) {
 			try {
 				if (desc[i].src) {
-					if (desc[i].src.includes('.gif')) {
-						desc[i].parentNode.removeChild(desc[i]);
-					} else {
+					if (desc[i].src.includes('.gif')) desc[i].parentNode.removeChild(desc[i]);
+					else {
 						const image: any = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
-						if (image < 1000) {
-							console.log('흰색 이미지', desc[i]);
+						if (image < 1000)
+							// console.log('흰색 이미지', desc[i]);
 							desc[i].parentNode.removeChild(desc[i]);
-						} else {
+						else {
 							desc[i].src = desc[i].src;
 							desc_imgs.push(desc[i].src);
 						}
@@ -127,9 +141,7 @@ async function scrape(items: any, user: any) {
 				.map((v: any) => v.trim())
 				.filter((v: any) => v);
 
-			texts.map((v: any) => {
-				result['item']['desc_text'].push(v);
-			});
+			texts.map((v: any) => result['item']['desc_text'].push(v));
 		}
 
 		// 상품 기본정보 설정
@@ -178,12 +190,10 @@ async function scrape(items: any, user: any) {
 		try {
 			for (let i in items.skuModule.productSKUPropertyList) {
 				let skus = items.skuModule.productSKUPropertyList[i];
-
 				for (let j in skus.skuPropertyValues) {
 					if (skus.skuPropertyName === '배송지' || skus.skuPropertyName === 'Ships From') {
-						if (skus.skuPropertyValues[j].skuPropertySendGoodsCountryCode === 'CN') {
+						if (skus.skuPropertyValues[j].skuPropertySendGoodsCountryCode === 'CN')
 							delivery_code = skus.skuPropertyId + ':' + skus.skuPropertyValues[j].propertyValueIdLong;
-						}
 
 						continue;
 					}
@@ -193,12 +203,11 @@ async function scrape(items: any, user: any) {
 						let name = skus.skuPropertyName + ':' + skus.skuPropertyValues[j].propertyValueDisplayName;
 						let image = skus.skuPropertyValues[j].skuPropertyImagePath;
 
-						if (image) {
+						if (image)
 							result['item']['prop_imgs']['prop_img'].push({
 								properties: num,
 								url: /^https?:/.test(image) ? image : 'http:' + image,
 							});
-						}
 
 						result['item']['props_list'][num] = name;
 					} catch (e) {
@@ -215,17 +224,12 @@ async function scrape(items: any, user: any) {
 		try {
 			for (let i in items.skuModule.skuPriceList) {
 				let skus = items.skuModule.skuPriceList[i];
-
 				let properties = skus.skuAttr.split(';');
-
 				let properties_id = '';
 				let properties_name = '';
-
 				let matched = false;
 
-				if (delivery_code === '') {
-					matched = true;
-				}
+				if (delivery_code === '') matched = true;
 
 				for (let j = 0; j < properties.length; j++) {
 					let properties_fixed = properties[j].replace(/#.+/, '');
@@ -235,12 +239,10 @@ async function scrape(items: any, user: any) {
 
 						continue;
 					}
-
 					if (j < properties.length) {
 						properties_id += properties_fixed;
 						properties_name += properties_fixed + ':' + result['item']['props_list'][properties_fixed];
 					}
-
 					if (j < properties.length - 1) {
 						properties_id += ';';
 						properties_name += ';';
@@ -289,28 +291,20 @@ async function scrape(items: any, user: any) {
 
 			let cur_price = parseFloat(result['item']['skus']['sku'][i]['price']);
 
-			if (min_price > cur_price) {
-				min_price = cur_price;
-			}
+			if (min_price > cur_price) min_price = cur_price;
 		}
 
-		if (parseFloat(result['item']['price']) !== min_price) {
-			result['item']['price'] = min_price.toString();
-		}
-
+		if (parseFloat(result['item']['price']) !== min_price) result['item']['price'] = min_price.toString();
 		if (Object.keys(result.item.props_list).length > 0 && result.item.skus.sku.length === 0) {
 			console.log('에러: 해당 상품은 일시적으로 품절되었습니다.');
 
 			return { error: '해당 상품은 일시적으로 품절되었습니다.' };
 		}
 	} else if (items.pageType === 3) {
-		//todo 시작
-		if (items.specsModule) {
+		if (items.specsModule)
 			items.specsModule.props.map((v: any) => {
 				result['item']['attr'].push(`${v.attrName}:${v.attrValue}`);
 			});
-		} //ok
-
 		if (items.shippingModule) {
 			//해당 부분 데이터가 정상적으로 없는 상품 발견함. 이부분 dom에서 없을때 불러와야할듯 .
 			let shipping_list = items.shippingModule.generalFreightInfo.originalLayoutResultList;
@@ -331,15 +325,12 @@ async function scrape(items: any, user: any) {
 					}
 				}
 
-				if (shipping_list[i].bizData.company === 'AliExpress Standard Shipping') {
-					shipping_data.default = true;
-				} else {
-					shipping_data.default = false;
-				}
+				if (shipping_list[i].bizData.company === 'AliExpress Standard Shipping') shipping_data.default = true;
+				else shipping_data.default = false;
 
 				result['item']['props'].push(shipping_data);
 			}
-		} //ok
+		}
 
 		let thumnails = [];
 
@@ -356,12 +347,11 @@ async function scrape(items: any, user: any) {
 			} catch (e) {
 				console.log('알림: 동영상이 없는 상품입니다. (', e, ')');
 			}
-		} //ok
+		}
 
 		let desc_resp = await fetch(items.descriptionModule.descriptionUrl);
 		let desc_text = await desc_resp.text();
 		let desc_html: any = new DOMParser().parseFromString(desc_text, 'text/html');
-
 		let desc_scripts = desc_html.querySelectorAll('script');
 
 		for (let i in desc_scripts) {
@@ -378,14 +368,13 @@ async function scrape(items: any, user: any) {
 		for (let i in desc) {
 			try {
 				if (desc[i].src) {
-					if (desc[i].src.includes('.gif')) {
-						desc[i].parentNode.removeChild(desc[i]);
-					} else {
+					if (desc[i].src.includes('.gif')) desc[i].parentNode.removeChild(desc[i]);
+					else {
 						const image: any = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
-						if (image < 1000) {
-							console.log('흰색 이미지', desc[i]);
+						if (image < 1000)
+							// console.log('흰색 이미지', desc[i]);
 							desc[i].parentNode.removeChild(desc[i]);
-						} else {
+						else {
 							desc[i].src = desc[i].src;
 							desc_imgs.push(desc[i].src);
 						}
@@ -409,16 +398,14 @@ async function scrape(items: any, user: any) {
 		let desc_output = desc_html.querySelector('body').innerHTML;
 		let iterator = document.createNodeIterator(desc_html.querySelector('body'), NodeFilter.SHOW_TEXT);
 		let textnode;
-		//ok
+
 		while ((textnode = iterator.nextNode())) {
 			const texts = textnode.textContent
 				.split('\n')
 				.map((v: any) => v.trim())
 				.filter((v: any) => v);
 
-			texts.map((v: any) => {
-				result['item']['desc_text'].push(v);
-			});
+			texts.map((v: any) => result['item']['desc_text'].push(v));
 		}
 
 		result['item']['shopName'] = 'express'; //todo
@@ -460,16 +447,14 @@ async function scrape(items: any, user: any) {
 		}
 
 		let delivery_code = '';
-		//ok
+
 		try {
 			for (let i in items.skuModule.productSKUPropertyList) {
 				let skus = items.skuModule.productSKUPropertyList[i];
-
 				for (let j in skus.skuPropertyValues) {
 					if (skus.skuPropertyName === '배송지' || skus.skuPropertyName === 'Ships From') {
-						if (skus.skuPropertyValues[j].skuPropertySendGoodsCountryCode === 'CN') {
+						if (skus.skuPropertyValues[j].skuPropertySendGoodsCountryCode === 'CN')
 							delivery_code = skus.skuPropertyId + ':' + skus.skuPropertyValues[j].propertyValueIdLong;
-						}
 
 						continue;
 					}
@@ -479,12 +464,11 @@ async function scrape(items: any, user: any) {
 						let name = skus.skuPropertyName + ':' + skus.skuPropertyValues[j].propertyValueDisplayName;
 						let image = skus.skuPropertyValues[j].skuPropertyImagePath;
 
-						if (image) {
+						if (image)
 							result['item']['prop_imgs']['prop_img'].push({
 								properties: num,
 								url: /^https?:/.test(image) ? image : 'http:' + image,
 							});
-						}
 
 						result['item']['props_list'][num] = name;
 					} catch (e) {
@@ -497,35 +481,28 @@ async function scrape(items: any, user: any) {
 		} catch (e) {
 			console.log(e);
 		}
-		//ok
+
 		try {
 			for (let i in items.priceModule.skuPriceList) {
 				let skus = items.priceModule.skuPriceList[i];
 				let properties = skus.skuAttr.split(';');
-
 				let properties_id = '';
 				let properties_name = '';
-
 				let matched = false;
 
-				if (delivery_code === '') {
-					matched = true;
-				}
+				if (delivery_code === '') matched = true;
 
 				for (let j = 0; j < properties.length; j++) {
 					let properties_fixed = properties[j].replace(/#.+/, '');
-
 					if (properties_fixed === delivery_code) {
 						matched = true;
 
 						continue;
 					}
-
 					if (j < properties.length) {
 						properties_id += properties_fixed;
 						properties_name += properties_fixed + ':' + result['item']['props_list'][properties_fixed];
 					}
-
 					if (j < properties.length - 1) {
 						properties_id += ';';
 						properties_name += ';';
@@ -563,7 +540,7 @@ async function scrape(items: any, user: any) {
 			console.log('에러: 옵션 세부정보를 가져오지 못했습니다. (', e, ')');
 
 			return { error: '옵션 세부정보를 가져오지 못했습니다.' };
-		} //ok
+		}
 
 		let min_price = parseFloat(result['item']['price']);
 
@@ -576,29 +553,19 @@ async function scrape(items: any, user: any) {
 
 			let cur_price = parseFloat(result['item']['skus']['sku'][i]['price']);
 
-			if (min_price > cur_price) {
-				min_price = cur_price;
-			}
+			if (min_price > cur_price) min_price = cur_price;
 		}
 
-		if (parseFloat(result['item']['price']) !== min_price) {
-			result['item']['price'] = min_price.toString();
-		}
+		if (parseFloat(result['item']['price']) !== min_price) result['item']['price'] = min_price.toString();
 
 		if (Object.keys(result.item.props_list).length > 0 && result.item.skus.sku.length === 0) {
 			console.log('에러: 해당 상품은 일시적으로 품절되었습니다.');
 
 			return { error: '해당 상품은 일시적으로 품절되었습니다.' };
 		}
-		//todo 끝
 	} else if (items.pageType === 2) {
-		//pagetype이 1이 아닐때
-		if (items.specsModule) {
-			items.specsModule.specs.map((v: any) => {
-				result['item']['attr'].push(`${v.attrName}:${v.attrValue}`);
-			});
-		}
-
+		if (items.specsModule)
+			items.specsModule.specs.map((v: any) => result['item']['attr'].push(`${v.attrName}:${v.attrValue}`));
 		if (items.shippingModule) {
 			let shipping_list = items.shippingModule.generalFreightInfo.originalLayoutResultList;
 
@@ -619,11 +586,8 @@ async function scrape(items: any, user: any) {
 					}
 				}
 
-				if (shipping_list[i].bizData.company === 'AliExpress Standard Shipping') {
-					shipping_data.default = true;
-				} else {
-					shipping_data.default = false;
-				}
+				if (shipping_list[i].bizData.company === 'AliExpress Standard Shipping') shipping_data.default = true;
+				else shipping_data.default = false;
 
 				result['item']['props'].push(shipping_data);
 			}
@@ -649,7 +613,6 @@ async function scrape(items: any, user: any) {
 		let desc_resp = await fetch(items.descriptionModule.detailDesc);
 		let desc_text = await desc_resp.text();
 		let desc_html: any = new DOMParser().parseFromString(desc_text, 'text/html');
-
 		let desc_scripts = desc_html.querySelectorAll('script');
 
 		for (let i in desc_scripts) {
@@ -666,14 +629,13 @@ async function scrape(items: any, user: any) {
 		for (let i in desc) {
 			try {
 				if (desc[i].src) {
-					if (desc[i].src.includes('.gif')) {
-						desc[i].parentNode.removeChild(desc[i]);
-					} else {
+					if (desc[i].src.includes('.gif')) desc[i].parentNode.removeChild(desc[i]);
+					else {
 						const image: any = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
-						if (image < 1000) {
-							console.log('흰색 이미지', desc[i]);
+						if (image < 1000)
+							// console.log('흰색 이미지', desc[i]);
 							desc[i].parentNode.removeChild(desc[i]);
-						} else {
+						else {
 							desc[i].src = desc[i].src;
 							desc_imgs.push(desc[i].src);
 						}
@@ -704,9 +666,7 @@ async function scrape(items: any, user: any) {
 				.map((v: any) => v.trim())
 				.filter((v: any) => v);
 
-			texts.map((v: any) => {
-				result['item']['desc_text'].push(v);
-			});
+			texts.map((v: any) => result['item']['desc_text'].push(v));
 		}
 
 		result['item']['shopName'] = 'express';
@@ -755,9 +715,8 @@ async function scrape(items: any, user: any) {
 
 				for (let j in skus.skuPropertyValues) {
 					if (skus.skuPropertyName === '배송지' || skus.skuPropertyName === 'Ships From') {
-						if (skus.skuPropertyValues[j].skuPropertySendGoodsCountryCode === 'CN') {
+						if (skus.skuPropertyValues[j].skuPropertySendGoodsCountryCode === 'CN')
 							delivery_code = skus.skuPropertyId + ':' + skus.skuPropertyValues[j].propertyValueIdLong;
-						}
 
 						continue;
 					}
@@ -767,12 +726,11 @@ async function scrape(items: any, user: any) {
 						let name = skus.skuPropertyName + ':' + skus.skuPropertyValues[j].propertyValueDisplayName;
 						let image = skus.skuPropertyValues[j].skuPropertyImagePath;
 
-						if (image) {
+						if (image)
 							result['item']['prop_imgs']['prop_img'].push({
 								properties: num,
 								url: /^https?:/.test(image) ? image : 'http:' + image,
 							});
-						}
 
 						result['item']['props_list'][num] = name;
 					} catch (e) {
@@ -789,17 +747,12 @@ async function scrape(items: any, user: any) {
 		try {
 			for (let i in items.skuModule.skuList) {
 				let skus = items.skuModule.skuList[i];
-
 				let properties = skus.skuAttr.split(';');
-
 				let properties_id = '';
 				let properties_name = '';
-
 				let matched = false;
 
-				if (delivery_code === '') {
-					matched = true;
-				}
+				if (delivery_code === '') matched = true;
 
 				for (let j = 0; j < properties.length; j++) {
 					let properties_fixed = properties[j].replace(/#.+/, '');
@@ -809,12 +762,10 @@ async function scrape(items: any, user: any) {
 
 						continue;
 					}
-
 					if (j < properties.length) {
 						properties_id += properties_fixed;
 						properties_name += properties_fixed + ':' + result['item']['props_list'][properties_fixed];
 					}
-
 					if (j < properties.length - 1) {
 						properties_id += ';';
 						properties_name += ';';
@@ -865,15 +816,10 @@ async function scrape(items: any, user: any) {
 
 			let cur_price = parseFloat(result['item']['skus']['sku'][i]['price']);
 
-			if (min_price > cur_price) {
-				min_price = cur_price;
-			}
+			if (min_price > cur_price) min_price = cur_price;
 		}
 
-		if (parseFloat(result['item']['price']) !== min_price) {
-			result['item']['price'] = min_price.toString();
-		}
-
+		if (parseFloat(result['item']['price']) !== min_price) result['item']['price'] = min_price.toString();
 		if (Object.keys(result.item.props_list).length > 0 && result.item.skus.sku.length === 0) {
 			console.log('에러: 해당 상품은 일시적으로 품절되었습니다.');
 
@@ -882,18 +828,16 @@ async function scrape(items: any, user: any) {
 	}
 
 	return result;
-}
+};
 export class express {
 	constructor() {
 		checkLogin('express').then((auth) => {
-			if (!auth) {
-				return null;
-			}
+			if (!auth) return null;
 		});
 	}
 
 	// 수집하기 버튼 클릭 시
-	async get(user: any) {
+	async get(user: User) {
 		sessionStorage.removeItem('sfy-express-item');
 
 		injectScript('express');
@@ -901,59 +845,15 @@ export class express {
 		let timeout = 0;
 
 		while (true) {
-			if (timeout === user.userInfo.collectTimeout) {
+			if (timeout === user.userInfo.collectTimeout)
 				return {
 					error: '알리익스프레스 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
 				};
-			}
 
 			let data = sessionStorage.getItem('sfy-express-item');
 			if (data) {
 				let originalData = JSON.parse(data);
-
 				console.log('sessonData', originalData);
-
-				// const body = {
-				//   "productId":"1005004306620622",
-				//   "country":"KR",
-				//   "provinceCode":"919800100000000000",
-				//   "cityCode":"919800100005000000",
-				//   "lang":"ko_KR",
-				//   "locale":"ko_KR",
-				//   "_lang":"ko_KR",
-				//   "minPrice":5386,
-				//   "maxPrice":6098,
-				//   "tradeCurrency":"KRW",
-				//   "_currency":"KRW",
-				//   "quantity":1,
-				//   "clientType":"pc",
-				//   "userScene":"PC_DETAIL_SHIPPING_PANEL",
-				//   "ext":"[{\"p1\":\"3.98\",\"p2\":\"4.50\",\"p3\":\"USD\",\"p4\":\"990000\",\"p5\":\"0\",\"itemScene\":\"default\",\"p6\":\"null\"}]"
-				// }
-
-				// const test = await fetch("https://acs.aliexpress.com/h5/mtop.global.expression.dynamic.component.queryoptionforitem/1.0/?jsv=2.5.1&appKey=12574478&t=1672040295842&sign=740e0c49c4c9000eeed0c82485ccb675&api=mtop.global.expression.dynamic.component.queryOptionForItem&v=1.0&type=originaljson&dataType=jsonp", {
-				//   "headers": {
-				//     "accept": "application/json",
-				//     "accept-language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-				//     "content-type": "application/x-www-form-urlencoded",
-				//     "sec-ch-ua": "\"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"108\", \"Google Chrome\";v=\"108\"",
-				//     "sec-ch-ua-mobile": "?0",
-				//     "sec-ch-ua-platform": "\"Windows\"",
-				//     "sec-fetch-dest": "empty",
-				//     "sec-fetch-mode": "cors",
-				//     "sec-fetch-site": "same-site"
-				//   },
-				//   "referrer": "https://ko.aliexpress.com/",
-				//   "referrerPolicy": "strict-origin-when-cross-origin",
-				//   "body": JSON.stringify(body),
-				//   "method": "POST",
-				//   "mode": "cors",
-				//   "credentials": "include"
-				// });
-
-				// const testJson = await test.json();
-
-				// console.log(testJson);
 
 				return await scrape(originalData, user);
 			}
@@ -964,9 +864,9 @@ export class express {
 		}
 	}
 
-	// 대량수집 페이지별 체크표시
+	/** 대량수집 페이지별 체크표시 */
 	async bulkTypeOne(user) {
-		document.addEventListener('DOMNodeInserted', function (e: any) {
+		document.addEventListener('DOMNodeInserted', (e: any) => {
 			try {
 				if (e.target.getAttribute('href').includes('item')) {
 					let input = document.createElement('input');
@@ -977,11 +877,8 @@ export class express {
 					input.checked = picker?.value === 'false' ? false : true;
 					input.type = 'checkbox';
 
-					if (user.userInfo.collectCheckPosition === 'L') {
-						input.setAttribute('style', 'left: 0px !important');
-					} else {
-						input.setAttribute('style', 'right: 0px !important');
-					}
+					if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+					else input.setAttribute('style', 'right: 0px !important');
 
 					e.target.style.position = 'relative';
 					e.target.appendChild(input);
@@ -991,43 +888,68 @@ export class express {
 			}
 		});
 	}
-
+	/** aliexpress.com\/w\/wholesale 페이지 체크박스용 */
 	async bulkTypeTwo(user) {
 		let timeout = 0;
 
+		/** 알리 검색페이지 상품 리스트 url */
+		// const resp = await fetch('https://ko.aliexpress.com/fn/search-pc/index', {
+		// 	headers: {
+		// 		accept: '*/*',
+		// 		'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+		// 		'bx-v': '2.5.3',
+		// 		'content-type': 'application/json;charset=UTF-8',
+		// 		'sec-ch-ua': '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
+		// 		'sec-ch-ua-mobile': '?0',
+		// 		'sec-ch-ua-platform': '"Windows"',
+		// 		'sec-fetch-dest': 'empty',
+		// 		'sec-fetch-mode': 'cors',
+		// 		'sec-fetch-site': 'same-origin',
+		// 	},
+		// 	referrer:
+		// 		'https://ko.aliexpress.com/w/wholesale-%EC%A0%84%EA%B5%AC.html?page=2&g=y&SearchText=%EC%A0%84%EA%B5%AC',
+		// 	referrerPolicy: 'strict-origin-when-cross-origin',
+		// 	body: '{"pageVersion":"76cea70e82a7e928f556677984719aa1","target":"root","data":{"page":2,"g":"y","SearchText":"전구","origin":"y"},"eventName":"onChange","dependency":[]}',
+		// 	method: 'POST',
+		// 	mode: 'cors',
+		// 	credentials: 'include',
+		// });
+		// console.log({ resp });
+		// const json = await resp.json();
+		// console.log({ json });
+		// const productIds = json?.data?.result?.mods?.itemList?.content.map((v) => v.productId);
+		// console.log({ productIds });
+		/** */
+
 		while (true) {
-			if (timeout === 10) {
-				return 0;
-			}
+			if (timeout === 10) return 0;
+
+			scrollToBottomSmooth();
 
 			let count = 0;
+			const root = document.getElementById('root');
+			const products: any = root?.querySelectorAll('a[class*="multi--container"]');
 
-			const root: any = document.getElementById('root');
-
-			if (root) {
-				const products: any = root.querySelectorAll('a');
-
+			if (root && products && products.length >= 60)
 				for (let i in products) {
 					try {
-						if (!products[i].getAttribute('href').includes('item') || !products[i].querySelector('img')) {
+						const productLink = products[i].getAttribute('href');
+						if (!productLink?.includes('item') || !products[i].querySelector('img'))
+							// || !productLink?.includes(productIds[i])
 							continue;
-						}
 
 						let input: any = document.createElement('input');
 						let picker: any = document.getElementById('sfyPicker');
 
-						input.id = /^https?:/.test(products[i].getAttribute('href'))
+						input.id = /^https?:/.test(products[i].getAttribute('href')!)
 							? products[i].getAttribute('href')
 							: 'https:' + products[i].getAttribute('href');
 						input.className = 'SELLFORYOU-CHECKBOX';
 						input.checked = picker?.value === 'false' ? false : true;
 						input.type = 'checkbox';
 
-						if (user.userInfo.collectCheckPosition === 'L') {
-							input.setAttribute('style', 'left: 0px !important');
-						} else {
-							input.setAttribute('style', 'right: 0px !important');
-						}
+						if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+						else input.setAttribute('style', 'right: 0px !important');
 
 						products[i].style.position = 'relative';
 						products[i].appendChild(input);
@@ -1037,11 +959,8 @@ export class express {
 						continue;
 					}
 				}
-			}
 
-			if (count > 0) {
-				return count;
-			}
+			if (count > 0) return count;
 
 			await sleep(1000 * 1);
 
@@ -1050,58 +969,62 @@ export class express {
 	}
 
 	async bulkTypeThree(user) {
-		let timeout = 0;
+		const insertSFYBOX = (dom: ChildNode | null) => {
+			let localCount = 0;
 
-		while (true) {
-			if (timeout === 10) {
-				return 0;
-			}
+			if (dom) {
+				const items_div = dom.childNodes as NodeListOf<Element>;
+				for (let i of items_div) {
+					try {
+						const a = i.querySelector('a');
+						if (!a) continue;
 
-			let count = 0;
-			let products: any = document.querySelectorAll(
-				'#node-gallery > div.module.m-o.m-o-large-all-detail > div > div a',
-			);
+						let input: any = document.createElement('input');
+						let picker: any = document.getElementById('sfyPicker');
 
-			for (let i in products) {
-				try {
-					let image = products[i].querySelector('img');
+						input.id = /^https?:/.test(a.getAttribute('href')!)
+							? a.getAttribute('href')
+							: 'https:' + a.getAttribute('href');
+						input.className = 'SELLFORYOU-CHECKBOX';
+						input.checked = picker?.value === 'false' ? false : true;
+						input.type = 'checkbox';
 
-					if (!image) {
+						if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+						else input.setAttribute('style', 'right: 0px !important');
+
+						a.style.position = 'relative';
+						i.insertBefore(input, a);
+						localCount++;
+					} catch (e) {
 						continue;
 					}
-
-					let input: any = document.createElement('input');
-					let picker: any = document.getElementById('sfyPicker');
-
-					input.id = /^https?:/.test(products[i].getAttribute('href'))
-						? products[i].getAttribute('href')
-						: 'https:' + products[i].getAttribute('href');
-					input.className = 'SELLFORYOU-CHECKBOX';
-					input.checked = picker?.value === 'false' ? false : true;
-					input.type = 'checkbox';
-
-					if (user.userInfo.collectCheckPosition === 'L') {
-						input.setAttribute('style', 'left: 0px !important');
-					} else {
-						input.setAttribute('style', 'right: 0px !important');
-					}
-
-					products[i].style.position = 'relative';
-					products[i].appendChild(input);
-
-					count++;
-				} catch (e) {
-					continue;
 				}
 			}
 
-			if (count > 0) {
-				return count;
+			return localCount;
+		};
+		let timeout = 0;
+		let count = 0;
+
+		while (true) {
+			let grid_container = document.querySelector('[style*="grid"]');
+			let observeBox = document.getElementById('right');
+			let observer: MutationObserver | null = null;
+
+			if (grid_container && observeBox) {
+				observer = new MutationObserver((e) => {
+					count = insertSFYBOX(e[1]?.target.childNodes?.[2]);
+				});
+				observer.observe(observeBox, { childList: true, subtree: true });
+				count = insertSFYBOX(grid_container);
+				break;
 			}
 
+			if (timeout === 10) return 0;
 			await sleep(1000 * 1);
 
 			timeout++;
 		}
+		return count;
 	}
 }

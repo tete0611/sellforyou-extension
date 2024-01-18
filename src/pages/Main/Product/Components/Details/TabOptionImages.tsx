@@ -1,25 +1,21 @@
 import React from 'react';
-import AddIcon from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
-import ErrorIcon from '@mui/icons-material/Error';
-
+import { Add as AddIcon, Clear as ClearIcon, Error as ErrorIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { readFileDataURL } from '../../../../Tools/Common';
 import { AppContext } from '../../../../../containers/AppContext';
 import { Box, CircularProgress, IconButton, ImageList, ImageListItem, Typography, Button, Paper } from '@mui/material';
 import { Image, Title } from '../../../Common/UI';
-import { makeStyles } from '@material-ui/core/styles';
 
 // MUI Box 사용자 지정 스타일
-const useStyles = makeStyles((theme) => ({
-	defaultBox: {
-		background: '#d1e8ff',
-	},
+// const useStyles = makeStyles((theme) => ({
+// 	defaultBox: {
+// 		background: '#d1e8ff',
+// 	},
 
-	errorBox: {
-		background: '#ffd1d1',
-	},
-}));
+// 	errorBox: {
+// 		background: '#ffd1d1',
+// 	},
+// }));
 
 // 옵션이미지 탭 하위 컴포넌트
 export const TabOptionImages = observer((props: any) => {

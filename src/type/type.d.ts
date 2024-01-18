@@ -1,5 +1,19 @@
 import { ITextOptions, TextOptions } from 'fabric/fabric-impl';
 
+/** 오픈마켓종류 정의 */
+export type Shop =
+	| 'alibaba'
+	| 'amazon'
+	| 'amazon1'
+	| 'amazon2'
+	| 'express'
+	| 'taobao1'
+	| 'taobao2'
+	| 'tmall1'
+	| 'tmall2'
+	| 'vvic';
+
+/** 상품 */
 export type Product = {
 	id: number;
 	productCode: string;
@@ -50,6 +64,31 @@ export type Product = {
 // 	};
 // 	type: string;
 // };
+
+export type AppInfo = {
+	id: string;
+	password: string;
+	accessToken: string;
+	refreshToken: string;
+	loading: boolean;
+	autoFill: boolean;
+	autoLogin: boolean;
+	pageSize: number;
+	gridView: boolean;
+	darkTheme: boolean;
+};
+
+export type BulkInfo = {
+	current: number;
+	currentPage: number;
+	inputs: (CollectInfo['inputs'][number] & { keywardMemo?: string })[];
+	isBulk: boolean;
+	isCancel: boolean;
+	isComplete: boolean;
+	isExcel: boolean;
+	results: any[];
+	sender: Sender;
+};
 
 export type UploadInfo = {
 	stopped: boolean;
@@ -116,6 +155,7 @@ export type ManyPriceInfo = {
 	refundShippingFee: number;
 };
 
+/** common -> User타입 */
 export type User = {
 	userInfo: UserInfo;
 	createdToken?: any;
@@ -133,7 +173,7 @@ export type User = {
 /** ChromeAsync 런타임메시지 파라미터 타입 */
 export type RuntimeMessage = {
 	action: string;
-	source?: { data: any; retry?: boolean };
+	source?: Source;
 	form?: { url: string; requestInit?: RequestInit }; // fetch요청시 사용
 };
 
@@ -143,29 +183,29 @@ type Item = {
 	state: number;
 	createdAt: Date;
 	stockUpdatedAt: Date;
-	categoryInfoA077: any;
-	categoryInfoB378: any;
-	categoryInfoA112: any;
-	categoryInfoA113: any;
-	categoryInfoA006: any;
-	categoryInfoA001: any;
-	categoryInfoA027: any;
-	categoryInfoB719: any;
-	categoryInfoA524: any;
-	categoryInfoA525: any;
-	categoryInfoB956: any;
+	categoryInfoA077: { code: string | null; name: string; activeSillDataA077?: any; sillInfoA077?: any };
+	categoryInfoB378: { code: string | null; name: string; activeSillDataB378?: any; sillInfoB378?: any };
+	categoryInfoA112: { code: string | null; name: string; activeSillDataA112?: any; sillInfoA112?: any };
+	categoryInfoA113: { code: string | null; name: string; activeSillDataA113?: any; sillInfoA113?: any };
+	categoryInfoA006: { code: string | null; name: string; activeSillDataA006?: any; sillInfoA006?: any };
+	categoryInfoA001: { code: string | null; name: string; activeSillDataA001?: any; sillInfoA001?: any };
+	categoryInfoA027: { code: string | null; name: string; activeSillDataA027?: any; sillInfoA027?: any };
+	categoryInfoB719: { code: string | null; name: string; activeSillDataB719?: any; sillInfoB719?: any };
+	categoryInfoA524: { code: string | null; name: string; activeSillDataA524?: any; sillInfoA524?: any };
+	categoryInfoA525: { code: string | null; name: string; activeSillDataA525?: any; sillInfoA525?: any };
+	categoryInfoB956: { code: string | null; name: string; activeSillDataB956?: any; sillInfoB956?: any };
 	edited: any;
 	checked: boolean;
 	name: string;
 	delete: boolean;
-	searchTags: any;
-	immSearchTags: any;
+	searchTags: string;
+	immSearchTags: string;
 	immSearchTagsTemp: any;
 	imageThumbnail: string[];
 	price: number;
 	cnyRate: number;
 	marginRate: number;
-	marginUnitType: any;
+	marginUnitType: string;
 	productOption: any;
 	activeTaobaoProduct: any;
 	productOptionName: {
@@ -180,7 +220,7 @@ type Item = {
 	refundShippingFee: number;
 	localShippingCode: string;
 	descriptionImages: any;
-	description: any;
+	description: string;
 	naverFee: number;
 	coupangFee: number;
 	streetFee: number;
@@ -194,11 +234,11 @@ type Item = {
 	tmonFee: number;
 	collapse: any;
 	optionCollapse: any;
-	activeProductStore: any;
-	myLock: any;
+	activeProductStore: { siteCode: string; state: number; storeUrl: string; inflow: any }[];
+	myLock: number;
 	productCode: string;
 	tabs: any;
-	productStore: any;
+	productStore: { siteCode: string; state: number; storeUrl: string }[];
 	isImageTranslated: boolean;
 	error: boolean;
 	optionPriceError: boolean;
@@ -208,9 +248,9 @@ type Item = {
 	descriptionImageError: boolean;
 	searchTagError: any;
 	imageCheckList: any;
-	myKeyward: any;
+	myKeyward: string;
 	attribute: any;
-	manuFacturer: any;
+	manuFacturer: string;
 	brandName: string;
 	modelName: string;
 	translate: boolean;
@@ -226,20 +266,20 @@ type Item = {
 	sillCodeA524: string;
 	sillCodeA525: string;
 	sillCodeB956: string;
-
-	sillDataA077: any;
-	sillDataB378: any;
-	sillDataA112: any;
-	sillDataA113: any;
-	sillDataA001: any;
-	sillDataA006: any;
-	sillDataA027: any;
-	sillDataB719: any;
-	sillDataA524: any;
-	sillDataA525: any;
-	sillDataB956: any;
+	sillDataA077: string;
+	sillDataB378: string;
+	sillDataA112: string;
+	sillDataA113: string;
+	sillDataA001: string;
+	sillDataA006: string;
+	sillDataA027: string;
+	sillDataB719: string;
+	sillDataA524: string;
+	sillDataA525: string;
+	sillDataB956: string;
 };
 
+/** common -> User -> UserInfo 타입 */
 type UserInfo = {
 	phone: string;
 	streetApiKey: string | undefined;
@@ -258,6 +298,7 @@ type UserInfo = {
 	coupangAccessKey: string;
 	coupangSecretKey: string;
 	coupangUseType: 'Y' | 'N';
+	coupangImageOpt: 'Y' | 'N';
 	streetUseKeyType: string;
 	streetUseType: 'Y' | 'N';
 	streetNormalUseKeyType: string;
@@ -346,4 +387,76 @@ type UserInfo = {
 	streetNormalApiMemo2: string;
 	streetNormalApiMemo3: string;
 	streetNormalApiMemo4: string;
+	asInfo: any;
 };
+
+/** 대량수집시 크롬스토리지에 저장하는 수집정보타입 */
+export type CollectInfo = {
+	categoryId: string;
+	currentPage: number;
+	inputs: {
+		productName: string;
+		productTags: string;
+		url: string;
+	}[];
+	maxLimits: number;
+	myKeyward: string;
+	pageEnd: number;
+	pageStart: number;
+	sender: Sender;
+	type: string;
+	useMedal: boolean;
+	useStandardShipping: boolean;
+	pageList: any;
+};
+
+export type Sender = {
+	documentId: string;
+	documentLifecycle: string;
+	frameId: number;
+	id: string;
+	origin: string;
+	tab: chrome.tabs.Tab;
+	url: string;
+};
+
+export type Source = {
+	data: CollectInfo['inputs'];
+	retry: boolean;
+};
+
+export type CategoryInfo = {
+	code: string;
+	depth1: string;
+	depth2?: string;
+	depth3?: string;
+	depth4?: string;
+	depth5?: string;
+	depth6?: string;
+	name: string;
+	sillCode: string;
+};
+
+export type RestrictWordInfo = {
+	banChecked: boolean[];
+	banList: { id: number; findWord: string; replaceWord: null }[];
+	banExcelInput: any;
+	banWordInput: string;
+
+	findWordInput: string;
+
+	replaceChecked: boolean[];
+	replaceList: { id: number; findWord: string; replaceWord: string }[];
+	replaceExcelInput: any;
+	replaceWordInput: string;
+
+	loading: boolean;
+};
+
+/** 사이드바 타입 */
+export type SideBarList = {
+	items: SideBarItem[];
+}[];
+
+/** 사이드바 자식 타입 */
+export type SideBarItem = { name: string; engName: string; icon: ReactNode; customFunction?: () => void };

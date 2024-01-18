@@ -1,14 +1,13 @@
 import React from 'react';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
-import ReorderIcon from '@mui/icons-material/Reorder';
-// import * as XLSX from 'xlsx';
-// import path from 'path-browserify';
+import {
+	FilterAlt as FilterAltIcon,
+	ViewModule as ViewModuleIcon,
+	Reorder as ReorderIcon,
+	AutoFixHigh as AutoFixHighIcon,
+} from '@mui/icons-material';
 import { byteSlice } from '../../../Tools/Common';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
-// import LooksTwoOutlinedIcon from '@mui/icons-material/LooksTwoOutlined';
 
 import {
 	styled,
@@ -34,7 +33,6 @@ import { List, AutoSizer } from 'react-virtualized';
 import { Input, MyButton } from '../../Common/UI';
 import { Summary } from './Summary';
 import { Details } from './Details/Details';
-
 import '../../Common/Styles.css';
 import { ImageSummary } from './ImageSummary';
 
@@ -315,7 +313,7 @@ export const ProductTables = observer(() => {
 											</MyButton>
 											<span style={{ marginLeft: '5px' }}>|</span>
 
-											{product.state === 7 ? (
+											{product.state === 7 && (
 												<MyButton
 													color='info'
 													sx={{
@@ -329,7 +327,7 @@ export const ProductTables = observer(() => {
 												>
 													일괄수정
 												</MyButton>
-											) : null}
+											)}
 											<MyButton
 												color='info'
 												sx={{
@@ -343,7 +341,7 @@ export const ProductTables = observer(() => {
 											>
 												일괄등록
 											</MyButton>
-											{product.state === 7 || product.myLock === 2 ? (
+											{(product.state === 7 || product.myLock === 2) && (
 												<MyButton
 													color='error'
 													sx={{
@@ -354,55 +352,8 @@ export const ProductTables = observer(() => {
 												>
 													일괄해제
 												</MyButton>
-											) : null}
-											{product.state === 7 || product.myLock === 2 ? (
-												<span style={{ marginLeft: '5px' }}>|</span>
-											) : null}
-											{/* {product.state === 7 ? (
-												<MyButton
-													color='info'
-													sx={{
-														ml: 0.5,
-														minWidth: 60,
-													}}
-													onClick={() => {
-														common.setEditedUpload(true);
-
-														product.toggleEsm2UploadModal(-1, true);
-													}}
-												>
-													일괄수정(2.0)
-												</MyButton>
-											) : null}
-											<MyButton
-												color='info'
-												sx={{
-													ml: 0.5,
-													minWidth: 60,
-												}}
-												onClick={() => {
-													common.setEditedUpload(false);
-
-													product.toggleEsm2UploadModal(-1, true);
-												}}
-											>
-												일괄등록(2.0)
-											</MyButton> */}
-											{/* {product.state === 7 || product.myLock === 2 ? (
-												<MyButton
-													color='error'
-													sx={{
-														ml: 0.5,
-														minWidth: 60,
-													}}
-													onClick={() => {
-														product.toggleEsm2UploadDisabledModal(-1, true, common);
-													}}
-												>
-													일괄해제(2.0)
-												</MyButton>
-											) : null} */}
-											{product.state !== 7 && product.myLock !== 2 ? (
+											)}
+											{product.state === 6 && (
 												<MyButton
 													color='error'
 													sx={{
@@ -413,7 +364,7 @@ export const ProductTables = observer(() => {
 												>
 													일괄삭제
 												</MyButton>
-											) : null}
+											)}
 										</Box>
 									</Grid>
 								</Grid>

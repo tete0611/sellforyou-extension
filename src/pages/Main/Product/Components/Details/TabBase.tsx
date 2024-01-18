@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../../containers/AppContext';
 import {
@@ -17,18 +16,20 @@ import {
 } from '@mui/material';
 import { Input, Search, Title } from '../../../Common/UI';
 import { floatingToast } from '../../../../Tools/Common';
-import { makeStyles } from '@material-ui/core/styles';
+// import { makeStyles } from '@material-ui/core/styles';
+import { SHOPCODE } from '../../../../../type/variable';
+import { Item } from '../../../../../type/type';
 
 // MUI Box 사용자 지정 스타일
-const useStyles = makeStyles((theme) => ({
-	defaultBox: {
-		background: '#d1e8ff',
-	},
+// const useStyles = makeStyles((theme) => ({
+// 	defaultBox: {
+// 		background: '#d1e8ff',
+// 	},
 
-	errorBox: {
-		background: '#ffd1d1',
-	},
-}));
+// 	errorBox: {
+// 		background: '#ffd1d1',
+// 	},
+// }));
 
 // const copyResult = (data: string) => {
 //   const textarea: any = document.createElement("textarea");
@@ -49,10 +50,28 @@ const useStyles = makeStyles((theme) => ({
 //   floatingToast("검색어태그(스마트스토어)가 복사되었습니다.", "information");
 // };
 
+interface Props {
+	item: Item;
+	index: number;
+}
+
 // 기본정보 탭 하위 컴포넌트
-export const TabBase = observer((props: any) => {
+export const TabBase = observer((props: Props) => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
+	const {
+		AUCTION_1,
+		COUPANG,
+		G_MARKET_1,
+		INTER_PARK,
+		LOTTE_ON_GLOBAL,
+		LOTTE_ON_NORMAL,
+		SMART_STORE,
+		STREET11_GLOBAL,
+		STREET11_NORMAL,
+		TMON,
+		WE_MAKE_PRICE,
+	} = SHOPCODE;
 
 	// 상품 수정 및 변경사항 발생 시
 	const loading = (
@@ -139,9 +158,7 @@ export const TabBase = observer((props: any) => {
 															pt: 0,
 															pb: 0,
 														}}
-														onClick={(e: any) => {
-															product.addProductImmSearchTag(e.target.innerText, props.index);
-														}}
+														onClick={(e: any) => product.addProductImmSearchTag(e.target.innerText, props.index)}
 													>
 														<ListItemText primary={<Typography fontSize={13}>{v.tagNm}</Typography>} />
 													</ListItemButton>
@@ -171,9 +188,7 @@ export const TabBase = observer((props: any) => {
 															pt: 0,
 															pb: 0,
 														}}
-														onClick={(e: any) => {
-															product.addProductImmSearchTag(e.target.innerText, props.index);
-														}}
+														onClick={(e: any) => product.addProductImmSearchTag(e.target.innerText, props.index)}
 													>
 														<ListItemText primary={<Typography fontSize={13}>{v.tagNm}</Typography>} />
 													</ListItemButton>
@@ -203,9 +218,7 @@ export const TabBase = observer((props: any) => {
 															pt: 0,
 															pb: 0,
 														}}
-														onClick={(e: any) => {
-															product.addProductImmSearchTag(e.target.innerText, props.index);
-														}}
+														onClick={(e: any) => product.addProductImmSearchTag(e.target.innerText, props.index)}
 													>
 														<ListItemText primary={<Typography fontSize={13}>{v.tagNm}</Typography>} />
 													</ListItemButton>
@@ -235,9 +248,7 @@ export const TabBase = observer((props: any) => {
 															pt: 0,
 															pb: 0,
 														}}
-														onClick={(e: any) => {
-															product.addProductImmSearchTag(e.target.innerText, props.index);
-														}}
+														onClick={(e: any) => product.addProductImmSearchTag(e.target.innerText, props.index)}
 													>
 														<ListItemText primary={<Typography fontSize={13}>{v.tagNm}</Typography>} />
 													</ListItemButton>
@@ -267,12 +278,8 @@ export const TabBase = observer((props: any) => {
 												multiline
 												rows={3}
 												value={props.item.immSearchTags}
-												onChange={(e: any) => {
-													product.setProductImmSearchTag(e.target.value, props.index);
-												}}
-												onBlur={(e: any) => {
-													product.verifyProductImmSearchTag(e.target.value, props.index);
-												}}
+												onChange={(e: any) => product.setProductImmSearchTag(e.target.value, props.index)}
+												onBlur={(e: any) => product.verifyProductImmSearchTag(e.target.value, props.index)}
 											/>
 										</Box>
 									</Paper>
@@ -296,9 +303,7 @@ export const TabBase = observer((props: any) => {
 												maxWidth: 150,
 												mr: 0.5,
 											}}
-											onDelete={(e) => {
-												product.removeProductImmSearchTag(v, props.index);
-											}}
+											onDelete={(e) => product.removeProductImmSearchTag(v, props.index)}
 											label={v}
 										/>
 									))
@@ -331,12 +336,8 @@ export const TabBase = observer((props: any) => {
 									color={props.item.edited.baseInfo ? 'warning' : 'info'}
 									multiline
 									rows={6}
-									onChange={(e: any) => {
-										product.setProductSearchTag(e.target.value, props.index);
-									}}
-									onBlur={(e: any) => {
-										product.updateProductSearchTag(e.target.value, props.index);
-									}}
+									onChange={(e: any) => product.setProductSearchTag(e.target.value, props.index)}
+									onBlur={(e: any) => product.updateProductSearchTag(e.target.value, props.index)}
 									value={props.item.searchTags}
 								/>
 							</Box>
@@ -396,9 +397,7 @@ export const TabBase = observer((props: any) => {
 											fontSize: 13,
 											height: 26,
 										}}
-										onClick={() => {
-											product.updateManyCategory(common, [props.item.id]);
-										}}
+										onClick={() => product.updateManyCategory(common, [props.item.id])}
 									>
 										카테고리 붙여넣기
 									</Button>
@@ -433,30 +432,20 @@ export const TabBase = observer((props: any) => {
 
 										<Search
 											value={props.item.categoryInfoA077}
-											onChange={(e: any, value: any) => {
-												product.updateCategory('A077', value, props.index);
-											}}
-											onInputChange={(e: any, value: any, reason: any) => {
-												if (reason !== 'input') {
-													return;
-												}
-
-												product.setCategoryInput('A077', value);
-											}}
-											onOpen={() => {
-												product.getCategoryList('A077');
-											}}
-											onClose={() => {
-												product.setCategoryInput('A077', '');
-											}}
+											onChange={(e: any, value: any) => product.updateCategory(SMART_STORE, value, props.index)}
+											onInputChange={(e: any, value: any, reason: any) =>
+												reason === 'input' && product.setCategoryInput(SMART_STORE, value)
+											}
+											onOpen={() => product.getCategoryList(SMART_STORE)}
+											onClose={() => product.setCategoryInput(SMART_STORE, '')}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.data
+												product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.input
+													? product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.data
 													: [props.item.categoryInfoA077]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
 											isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A077')!.loading}
+											loading={product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -482,30 +471,20 @@ export const TabBase = observer((props: any) => {
 
 										<Search
 											value={props.item.categoryInfoB378}
-											onChange={(e: any, value: any) => {
-												product.updateCategory('B378', value, props.index);
-											}}
-											onInputChange={(e: any, value: any, reason: any) => {
-												if (reason !== 'input') {
-													return;
-												}
-
-												product.setCategoryInput('B378', value);
-											}}
+											onChange={(e: any, value: any) => product.updateCategory(COUPANG, value, props.index)}
+											onInputChange={(e: any, value: any, reason: any) =>
+												reason === 'input' && product.setCategoryInput(COUPANG, value)
+											}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'B378')!.input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'B378')!.data
+												product.categoryInfo.markets.find((v) => v.code === COUPANG)!.input
+													? product.categoryInfo.markets.find((v) => v.code === COUPANG)!.data
 													: [props.item.categoryInfoB378]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
 											isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-											onOpen={() => {
-												product.getCategoryList('B378');
-											}}
-											onClose={() => {
-												product.setCategoryInput('B378', '');
-											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'B378')!.loading}
+											onOpen={() => product.getCategoryList(COUPANG)}
+											onClose={() => product.setCategoryInput(COUPANG, '')}
+											loading={product.categoryInfo.markets.find((v) => v.code === COUPANG)!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -531,30 +510,20 @@ export const TabBase = observer((props: any) => {
 
 										<Search
 											value={props.item.categoryInfoA112}
-											onChange={(e: any, value: any) => {
-												product.updateCategory('A112', value, props.index);
-											}}
-											onInputChange={(e: any, value: any, reason: any) => {
-												if (reason !== 'input') {
-													return;
-												}
-
-												product.setCategoryInput('A112', value);
-											}}
+											onChange={(e: any, value: any) => product.updateCategory(STREET11_GLOBAL, value, props.index)}
+											onInputChange={(e: any, value: any, reason: any) =>
+												reason === 'input' && product.setCategoryInput(STREET11_GLOBAL, value)
+											}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A112')!.input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A112')!.data
+												product.categoryInfo.markets.find((v) => v.code === STREET11_GLOBAL)!.input
+													? product.categoryInfo.markets.find((v) => v.code === STREET11_GLOBAL)!.data
 													: [props.item.categoryInfoA112]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
 											isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-											onOpen={() => {
-												product.getCategoryList('A112');
-											}}
-											onClose={() => {
-												product.setCategoryInput('A112', '');
-											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A112')!.loading}
+											onOpen={() => product.getCategoryList(STREET11_GLOBAL)}
+											onClose={() => product.setCategoryInput(STREET11_GLOBAL, '')}
+											loading={product.categoryInfo.markets.find((v) => v.code === STREET11_GLOBAL)!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -580,30 +549,20 @@ export const TabBase = observer((props: any) => {
 
 										<Search
 											value={props.item.categoryInfoA113}
-											onChange={(e: any, value: any) => {
-												product.updateCategory('A113', value, props.index);
-											}}
-											onInputChange={(e: any, value: any, reason: any) => {
-												if (reason !== 'input') {
-													return;
-												}
-
-												product.setCategoryInput('A113', value);
-											}}
+											onChange={(e: any, value: any) => product.updateCategory(STREET11_NORMAL, value, props.index)}
+											onInputChange={(e: any, value: any, reason: any) =>
+												reason === 'input' && product.setCategoryInput(STREET11_NORMAL, value)
+											}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A113')!.input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A113')!.data
+												product.categoryInfo.markets.find((v) => v.code === STREET11_NORMAL)!.input
+													? product.categoryInfo.markets.find((v) => v.code === STREET11_NORMAL)!.data
 													: [props.item.categoryInfoA113]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
 											isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-											onOpen={() => {
-												product.getCategoryList('A113');
-											}}
-											onClose={() => {
-												product.setCategoryInput('A113', '');
-											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A113')!.loading}
+											onOpen={() => product.getCategoryList(STREET11_NORMAL)}
+											onClose={() => product.setCategoryInput(STREET11_NORMAL, '')}
+											loading={product.categoryInfo.markets.find((v) => v.code === STREET11_NORMAL)!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -629,30 +588,20 @@ export const TabBase = observer((props: any) => {
 
 										<Search
 											value={props.item.categoryInfoA006}
-											onChange={(e: any, value: any) => {
-												product.updateCategory('A006', value, props.index);
-											}}
-											onInputChange={(e: any, value: any, reason: any) => {
-												if (reason !== 'input') {
-													return;
-												}
-
-												product.setCategoryInput('A006', value);
-											}}
+											onChange={(e: any, value: any) => product.updateCategory(G_MARKET_1, value, props.index)}
+											onInputChange={(e: any, value: any, reason: any) =>
+												reason === 'input' && product.setCategoryInput(G_MARKET_1, value)
+											}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A006')!.input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A006')!.data
+												product.categoryInfo.markets.find((v) => v.code === G_MARKET_1)!.input
+													? product.categoryInfo.markets.find((v) => v.code === G_MARKET_1)!.data
 													: [props.item.categoryInfoA006]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
 											isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-											onOpen={() => {
-												product.getCategoryList('A006');
-											}}
-											onClose={() => {
-												product.setCategoryInput('A006', '');
-											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A006')!.loading}
+											onOpen={() => product.getCategoryList(G_MARKET_1)}
+											onClose={() => product.setCategoryInput(G_MARKET_1, '')}
+											loading={product.categoryInfo.markets.find((v) => v.code === G_MARKET_1)!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -678,30 +627,20 @@ export const TabBase = observer((props: any) => {
 
 										<Search
 											value={props.item.categoryInfoA001}
-											onChange={(e: any, value: any) => {
-												product.updateCategory('A001', value, props.index);
-											}}
-											onInputChange={(e: any, value: any, reason: any) => {
-												if (reason !== 'input') {
-													return;
-												}
-
-												product.setCategoryInput('A001', value);
-											}}
+											onChange={(e: any, value: any) => product.updateCategory(AUCTION_1, value, props.index)}
+											onInputChange={(e: any, value: any, reason: any) =>
+												reason === 'input' && product.setCategoryInput(AUCTION_1, value)
+											}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A001')!.input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A001')!.data
+												product.categoryInfo.markets.find((v) => v.code === AUCTION_1)!.input
+													? product.categoryInfo.markets.find((v) => v.code === AUCTION_1)!.data
 													: [props.item.categoryInfoA001]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
 											isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-											onOpen={() => {
-												product.getCategoryList('A001');
-											}}
-											onClose={() => {
-												product.setCategoryInput('A001', '');
-											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A001')!.loading}
+											onOpen={() => product.getCategoryList(AUCTION_1)}
+											onClose={() => product.setCategoryInput(AUCTION_1, '')}
+											loading={product.categoryInfo.markets.find((v) => v.code === AUCTION_1)!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -727,30 +666,20 @@ export const TabBase = observer((props: any) => {
 
 										<Search
 											value={props.item.categoryInfoA027}
-											onChange={(e: any, value: any) => {
-												product.updateCategory('A027', value, props.index);
-											}}
-											onInputChange={(e: any, value: any, reason: any) => {
-												if (reason !== 'input') {
-													return;
-												}
-
-												product.setCategoryInput('A027', value);
-											}}
+											onChange={(e: any, value: any) => product.updateCategory(INTER_PARK, value, props.index)}
+											onInputChange={(e: any, value: any, reason: any) =>
+												reason === 'input' && product.setCategoryInput(INTER_PARK, value)
+											}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A027')!.input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A027')!.data
+												product.categoryInfo.markets.find((v) => v.code === INTER_PARK)!.input
+													? product.categoryInfo.markets.find((v) => v.code === INTER_PARK)!.data
 													: [props.item.categoryInfoA027]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
 											isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-											onOpen={() => {
-												product.getCategoryList('A027');
-											}}
-											onClose={() => {
-												product.setCategoryInput('A027', '');
-											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A027')!.loading}
+											onOpen={() => product.getCategoryList(INTER_PARK)}
+											onClose={() => product.setCategoryInput(INTER_PARK, '')}
+											loading={product.categoryInfo.markets.find((v) => v.code === INTER_PARK)!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -776,30 +705,20 @@ export const TabBase = observer((props: any) => {
 
 										<Search
 											value={props.item.categoryInfoB719}
-											onChange={(e: any, value: any) => {
-												product.updateCategory('B719', value, props.index);
-											}}
-											onInputChange={(e: any, value: any, reason: any) => {
-												if (reason !== 'input') {
-													return;
-												}
-
-												product.setCategoryInput('B719', value);
-											}}
+											onChange={(e: any, value: any) => product.updateCategory(WE_MAKE_PRICE, value, props.index)}
+											onInputChange={(e: any, value: any, reason: any) =>
+												reason === 'input' && product.setCategoryInput(WE_MAKE_PRICE, value)
+											}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'B719')!.input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'B719')!.data
+												product.categoryInfo.markets.find((v) => v.code === WE_MAKE_PRICE)!.input
+													? product.categoryInfo.markets.find((v) => v.code === WE_MAKE_PRICE)!.data
 													: [props.item.categoryInfoB719]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
 											isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-											onOpen={() => {
-												product.getCategoryList('B719');
-											}}
-											onClose={() => {
-												product.setCategoryInput('B719', '');
-											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'B719')!.loading}
+											onOpen={() => product.getCategoryList(WE_MAKE_PRICE)}
+											onClose={() => product.setCategoryInput(WE_MAKE_PRICE, '')}
+											loading={product.categoryInfo.markets.find((v) => v.code === WE_MAKE_PRICE)!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -825,30 +744,20 @@ export const TabBase = observer((props: any) => {
 
 										<Search
 											value={props.item.categoryInfoA524}
-											onChange={(e: any, value: any) => {
-												product.updateCategory('A524', value, props.index);
-											}}
-											onInputChange={(e: any, value: any, reason: any) => {
-												if (reason !== 'input') {
-													return;
-												}
-
-												product.setCategoryInput('A524', value);
-											}}
+											onChange={(e: any, value: any) => product.updateCategory(LOTTE_ON_GLOBAL, value, props.index)}
+											onInputChange={(e: any, value: any, reason: any) =>
+												reason === 'input' && product.setCategoryInput(LOTTE_ON_GLOBAL, value)
+											}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A524')!.input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A524')!.data
+												product.categoryInfo.markets.find((v) => v.code === LOTTE_ON_GLOBAL)!.input
+													? product.categoryInfo.markets.find((v) => v.code === LOTTE_ON_GLOBAL)!.data
 													: [props.item.categoryInfoA524]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
 											isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-											onOpen={() => {
-												product.getCategoryList('A524');
-											}}
-											onClose={() => {
-												product.setCategoryInput('A524', '');
-											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A524')!.loading}
+											onOpen={() => product.getCategoryList(LOTTE_ON_GLOBAL)}
+											onClose={() => product.setCategoryInput(LOTTE_ON_GLOBAL, '')}
+											loading={product.categoryInfo.markets.find((v) => v.code === LOTTE_ON_GLOBAL)!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -874,30 +783,20 @@ export const TabBase = observer((props: any) => {
 
 										<Search
 											value={props.item.categoryInfoA525}
-											onChange={(e: any, value: any) => {
-												product.updateCategory('A525', value, props.index);
-											}}
-											onInputChange={(e: any, value: any, reason: any) => {
-												if (reason !== 'input') {
-													return;
-												}
-
-												product.setCategoryInput('A525', value);
-											}}
+											onChange={(e: any, value: any) => product.updateCategory(LOTTE_ON_NORMAL, value, props.index)}
+											onInputChange={(e: any, value: any, reason: any) =>
+												reason === 'input' && product.setCategoryInput(LOTTE_ON_NORMAL, value)
+											}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'A525')!.input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'A525')!.data
+												product.categoryInfo.markets.find((v) => v.code === LOTTE_ON_NORMAL)!.input
+													? product.categoryInfo.markets.find((v) => v.code === LOTTE_ON_NORMAL)!.data
 													: [props.item.categoryInfoA525]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
 											isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-											onOpen={() => {
-												product.getCategoryList('A525');
-											}}
-											onClose={() => {
-												product.setCategoryInput('A525', '');
-											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'A525')!.loading}
+											onOpen={() => product.getCategoryList(LOTTE_ON_NORMAL)}
+											onClose={() => product.setCategoryInput(LOTTE_ON_NORMAL, '')}
+											loading={product.categoryInfo.markets.find((v) => v.code === LOTTE_ON_NORMAL)!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -923,30 +822,20 @@ export const TabBase = observer((props: any) => {
 
 										<Search
 											value={props.item.categoryInfoB956}
-											onChange={(e: any, value: any) => {
-												product.updateCategory('B956', value, props.index);
-											}}
-											onInputChange={(e: any, value: any, reason: any) => {
-												if (reason !== 'input') {
-													return;
-												}
-
-												product.setCategoryInput('B956', value);
-											}}
+											onChange={(e: any, value: any) => product.updateCategory(TMON, value, props.index)}
+											onInputChange={(e: any, value: any, reason: any) =>
+												reason === 'input' && product.setCategoryInput(TMON, value)
+											}
 											options={
-												product.categoryInfo.markets.find((v: any) => v.code === 'B956')!.input
-													? product.categoryInfo.markets.find((v: any) => v.code === 'B956')!.data
+												product.categoryInfo.markets.find((v) => v.code === TMON)!.input
+													? product.categoryInfo.markets.find((v) => v.code === TMON)!.data
 													: [props.item.categoryInfoB956]
 											}
 											getOptionLabel={(option: any) => option.name ?? ''}
 											isOptionEqualToValue={(option: any, value: any) => option.name === value.name}
-											onOpen={() => {
-												product.getCategoryList('B956');
-											}}
-											onClose={() => {
-												product.setCategoryInput('B956', '');
-											}}
-											loading={product.categoryInfo.markets.find((v: any) => v.code === 'B956')!.loading}
+											onOpen={() => product.getCategoryList(TMON)}
+											onClose={() => product.setCategoryInput(TMON, '')}
+											loading={product.categoryInfo.markets.find((v) => v.code === TMON)!.loading}
 										/>
 									</Paper>
 								</Grid>
@@ -999,18 +888,16 @@ export const TabBase = observer((props: any) => {
 												textAlign: 'right',
 											}}
 											value={props.item.naverFee}
-											onChange={(e: any) => {
-												product.setProductFee('A077', parseFloat(e.target.value), props.index);
-											}}
-											onBlur={(e: any) => {
+											onChange={(e: any) => product.setProductFee(SMART_STORE, parseFloat(e.target.value), props.index)}
+											onBlur={(e: any) =>
 												product.updateProductFee(
 													{
 														productId: props.item.id,
 														naverFee: parseFloat(e.target.value),
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>{' '}
 										%
 									</Paper>
@@ -1048,18 +935,16 @@ export const TabBase = observer((props: any) => {
 												textAlign: 'right',
 											}}
 											value={props.item.coupangFee}
-											onChange={(e: any) => {
-												product.setProductFee('B378', parseFloat(e.target.value), props.index);
-											}}
-											onBlur={(e: any) => {
+											onChange={(e: any) => product.setProductFee(COUPANG, parseFloat(e.target.value), props.index)}
+											onBlur={(e: any) =>
 												product.updateProductFee(
 													{
 														productId: props.item.id,
 														coupangFee: parseFloat(e.target.value),
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>{' '}
 										%
 									</Paper>
@@ -1097,18 +982,18 @@ export const TabBase = observer((props: any) => {
 												textAlign: 'right',
 											}}
 											value={props.item.streetFee}
-											onChange={(e: any) => {
-												product.setProductFee('A112', parseFloat(e.target.value), props.index);
-											}}
-											onBlur={(e: any) => {
+											onChange={(e: any) =>
+												product.setProductFee(STREET11_GLOBAL, parseFloat(e.target.value), props.index)
+											}
+											onBlur={(e: any) =>
 												product.updateProductFee(
 													{
 														productId: props.item.id,
 														streetFee: parseFloat(e.target.value),
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>{' '}
 										%
 									</Paper>
@@ -1146,18 +1031,18 @@ export const TabBase = observer((props: any) => {
 												textAlign: 'right',
 											}}
 											value={props.item.streetNormalFee}
-											onChange={(e: any) => {
-												product.setProductFee('A113', parseFloat(e.target.value), props.index);
-											}}
-											onBlur={(e: any) => {
+											onChange={(e: any) =>
+												product.setProductFee(STREET11_NORMAL, parseFloat(e.target.value), props.index)
+											}
+											onBlur={(e: any) =>
 												product.updateProductFee(
 													{
 														productId: props.item.id,
 														streetNormalFee: parseFloat(e.target.value),
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>{' '}
 										%
 									</Paper>
@@ -1195,18 +1080,16 @@ export const TabBase = observer((props: any) => {
 												textAlign: 'right',
 											}}
 											value={props.item.gmarketFee}
-											onChange={(e: any) => {
-												product.setProductFee('A006', parseFloat(e.target.value), props.index);
-											}}
-											onBlur={(e: any) => {
+											onChange={(e: any) => product.setProductFee(G_MARKET_1, parseFloat(e.target.value), props.index)}
+											onBlur={(e: any) =>
 												product.updateProductFee(
 													{
 														productId: props.item.id,
 														gmarketFee: parseFloat(e.target.value),
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>{' '}
 										%
 									</Paper>
@@ -1244,18 +1127,16 @@ export const TabBase = observer((props: any) => {
 												textAlign: 'right',
 											}}
 											value={props.item.auctionFee}
-											onChange={(e: any) => {
-												product.setProductFee('A001', parseFloat(e.target.value), props.index);
-											}}
-											onBlur={(e: any) => {
+											onChange={(e: any) => product.setProductFee(AUCTION_1, parseFloat(e.target.value), props.index)}
+											onBlur={(e: any) =>
 												product.updateProductFee(
 													{
 														productId: props.item.id,
 														auctionFee: parseFloat(e.target.value),
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>{' '}
 										%
 									</Paper>
@@ -1293,18 +1174,16 @@ export const TabBase = observer((props: any) => {
 												textAlign: 'right',
 											}}
 											value={props.item.interparkFee}
-											onChange={(e: any) => {
-												product.setProductFee('A027', parseFloat(e.target.value), props.index);
-											}}
-											onBlur={(e: any) => {
+											onChange={(e: any) => product.setProductFee(INTER_PARK, parseFloat(e.target.value), props.index)}
+											onBlur={(e: any) =>
 												product.updateProductFee(
 													{
 														productId: props.item.id,
 														interparkFee: parseFloat(e.target.value),
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>{' '}
 										%
 									</Paper>
@@ -1342,18 +1221,18 @@ export const TabBase = observer((props: any) => {
 												textAlign: 'right',
 											}}
 											value={props.item.wemakepriceFee}
-											onChange={(e: any) => {
-												product.setProductFee('B719', parseFloat(e.target.value), props.index);
-											}}
-											onBlur={(e: any) => {
+											onChange={(e: any) =>
+												product.setProductFee(WE_MAKE_PRICE, parseFloat(e.target.value), props.index)
+											}
+											onBlur={(e: any) =>
 												product.updateProductFee(
 													{
 														productId: props.item.id,
 														wemakepriceFee: parseFloat(e.target.value),
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>{' '}
 										%
 									</Paper>
@@ -1391,18 +1270,18 @@ export const TabBase = observer((props: any) => {
 												textAlign: 'right',
 											}}
 											value={props.item.lotteonFee}
-											onChange={(e: any) => {
-												product.setProductFee('A524', parseFloat(e.target.value), props.index);
-											}}
-											onBlur={(e: any) => {
+											onChange={(e: any) =>
+												product.setProductFee(LOTTE_ON_GLOBAL, parseFloat(e.target.value), props.index)
+											}
+											onBlur={(e: any) =>
 												product.updateProductFee(
 													{
 														productId: props.item.id,
 														lotteonFee: parseFloat(e.target.value),
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>{' '}
 										%
 									</Paper>
@@ -1440,18 +1319,18 @@ export const TabBase = observer((props: any) => {
 												textAlign: 'right',
 											}}
 											value={props.item.lotteonNormalFee}
-											onChange={(e: any) => {
-												product.setProductFee('A525', parseFloat(e.target.value), props.index);
-											}}
-											onBlur={(e: any) => {
+											onChange={(e: any) =>
+												product.setProductFee(LOTTE_ON_NORMAL, parseFloat(e.target.value), props.index)
+											}
+											onBlur={(e: any) =>
 												product.updateProductFee(
 													{
 														productId: props.item.id,
 														lotteonNormalFee: parseFloat(e.target.value),
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>{' '}
 										%
 									</Paper>
@@ -1487,18 +1366,16 @@ export const TabBase = observer((props: any) => {
 												textAlign: 'right',
 											}}
 											value={props.item.tmonFee}
-											onChange={(e: any) => {
-												product.setProductFee('B956', parseFloat(e.target.value), props.index);
-											}}
-											onBlur={(e: any) => {
+											onChange={(e: any) => product.setProductFee(TMON, parseFloat(e.target.value), props.index)}
+											onBlur={(e: any) =>
 												product.updateProductFee(
 													{
 														productId: props.item.id,
 														tmonFee: parseFloat(e.target.value),
 													},
 													props.index,
-												);
-											}}
+												)
+											}
 										/>{' '}
 										%
 									</Paper>

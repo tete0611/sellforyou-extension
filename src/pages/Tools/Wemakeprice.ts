@@ -105,7 +105,7 @@ export async function uploadWemakeprice(productStore: product, commonStore: comm
 	} = productStore;
 	const { user, uploadInfo } = commonStore;
 
-	let newTab: any = {};
+	let newTab = {} as chrome.tabs.Tab;
 	let shopName = data.DShopInfo.site_name;
 
 	console.log(`(${shopName}) 등록정보:`, data);
@@ -677,7 +677,7 @@ export async function uploadWemakeprice(productStore: product, commonStore: comm
 	} catch (e: any) {
 		addConsoleText(`(${shopName}) 업로드 중단`);
 		notificationByEveryTime(`(${shopName}) 업로드 도중 오류가 발생하였습니다. (${e.toString()}`);
-		chrome.tabs.remove(newTab.id);
+		chrome.tabs.remove(newTab.id!);
 
 		return false;
 	}
@@ -695,7 +695,7 @@ export async function deleteWemakeprice(productStore: product, commonStore: comm
 	const { addConsoleText } = productStore;
 	const { user, setDisabledProgressValue } = commonStore;
 
-	let newTab: any = {};
+	let newTab = {} as chrome.tabs.Tab;
 	let shopName = data.DShopInfo.site_name;
 
 	console.log(`(${shopName}) 등록정보:`, data);
@@ -802,7 +802,7 @@ export async function deleteWemakeprice(productStore: product, commonStore: comm
 		addConsoleText(`(${shopName}) 상품 등록해제 중단`);
 		notificationByEveryTime(`(${shopName}) 상품 등록해제 도중 오류가 발생하였습니다. (${e.toString()})`);
 
-		chrome.tabs.remove(newTab.id);
+		chrome.tabs.remove(newTab.id!);
 		return false;
 	}
 	chrome.tabs.remove(newTab.id);

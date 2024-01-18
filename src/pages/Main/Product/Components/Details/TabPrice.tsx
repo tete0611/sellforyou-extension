@@ -1,7 +1,5 @@
 import React from 'react';
-import ErrorIcon from '@mui/icons-material/Error';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-
+import { Error as ErrorIcon, HelpOutline as HelpOutlineIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../../containers/AppContext';
 import { List, AutoSizer } from 'react-virtualized';

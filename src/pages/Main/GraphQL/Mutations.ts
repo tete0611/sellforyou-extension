@@ -1,3 +1,5 @@
+import { gql } from '@apollo/client';
+
 const MUTATIONS = {
 	/** 로그인 */
 	SIGN_IN_USER_BY_EVERYONE: `
@@ -700,6 +702,7 @@ const MUTATIONS = {
         myKeyward : $myKeyward
     )
   }`,
+	/** 개인분류 초기화 */
 	RESET_KEYWARD_LIST: `
   mutation($userId: Int!){
     resetKeywardList(
@@ -918,6 +921,58 @@ const MUTATIONS = {
             )
         }
     `,
+	/** 네이버 카테고리 매칭변경 뮤테이션 */
+	UPDATE_CATEGORYINFOA077_MATCHING_BY_ADMIN: `
+        mutation (
+            $data: UpdateCategoryInfoA077MatchingByAdminInput!
+        ) {
+            updateCategoryInfoA077MatchingByAdmin(
+                data: $data
+            )
+        }
+    `,
+	/** 카테고리 생성 뮤테이션 */
+	CREATE_CATEGORYINFO_BY_ADMIN: `
+        mutation (
+            $data: [CategoryCreateInput!]!
+            $shopCode: String!
+        ) {
+            createCategoryInfoByAdmin(
+                data: $data
+                shopCode: $shopCode
+            )
+        }
+    `,
+	/** 기존상품 매칭 카테고리 변경 뮤테이션 */
+	CHANGE_PRODUCT_CATEGORYCODE: `
+        mutation (
+            $data: [ChangeProductCategoryCodeInput!]!
+            $shopCode: String!
+        ) {
+            changeProductCategoryCode(
+                data: $data
+                shopCode: $shopCode
+            )
+        }
+    `,
+	/** 카테고리 삭제 뮤테이션 */
+	DELETE_CATEGORYINFO_BY_ADMIN: `
+        mutation (
+            $shopCode: String!
+            $data: [String!]!
+        ) {
+            deleteCategoryInfoByAdmin(
+                data: $data
+                shopCode: $shopCode
+            )
+        }
+    `,
+	/** 카테고리 삭제 뮤테이션 */
+	DeleteCategoryInfoByAdmin: gql`
+		mutation ($data: [String!]!, $shopCode: String!) {
+			deleteCategoryInfoByAdmin(data: $data, shopCode: $shopCode)
+		}
+	`,
 };
 
 export default MUTATIONS;
