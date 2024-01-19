@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { List, AutoSizer } from 'react-virtualized';
 import { MyButton } from '../../Common/UI';
-import { OrderSummary } from './OrderSummary';
+import { OrderSummary } from './';
 
 import '../../Common/Styles.css';
 
@@ -383,5 +383,3 @@ export const OrderTables = observer(() => {
 		</>
 	);
 });
-
-export default OrderTables;

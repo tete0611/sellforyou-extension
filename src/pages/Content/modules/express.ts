@@ -866,61 +866,61 @@ export class express {
 
 	/** 대량수집 페이지별 체크표시 */
 	async bulkTypeOne(user) {
-		document.addEventListener('DOMNodeInserted', (e: any) => {
-			try {
-				if (e.target.getAttribute('href').includes('item')) {
-					let input = document.createElement('input');
-					let picker: any = document.getElementById('sfyPicker');
+		/** 페이지네이션 버튼을 클릭하면 동작함 (refresh시 동작안함) */
+		while (true) {
+			const cardList = document.querySelector('#card-list');
+			if (cardList) {
+				const observer = new MutationObserver((e) => {
+					for (const mutation of e) {
+						const target = mutation.target as Element;
 
-					input.id = e.target.getAttribute('href');
-					input.className = 'SELLFORYOU-CHECKBOX';
-					input.checked = picker?.value === 'false' ? false : true;
-					input.type = 'checkbox';
+						try {
+							if (
+								mutation.type === 'attributes' &&
+								mutation.attributeName === 'href' &&
+								target.className.includes('search-card-item')
+							) {
+								const href = target.getAttribute('href');
+								if (!href) continue;
+								const existInput = target.parentNode?.querySelector('input');
+								let picker: any = document.getElementById('sfyPicker');
 
-					if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
-					else input.setAttribute('style', 'right: 0px !important');
+								/** 이미 체크박스가 존재하면 */
+								if (existInput) {
+									existInput.id = href;
+									existInput.checked = picker?.value === 'false' ? false : true;
+									/** 그렇지 않으면 */
+								} else {
+									let input = document.createElement('input');
+									input.id = href;
+									input.className = 'SELLFORYOU-CHECKBOX';
+									input.checked = picker?.value === 'false' ? false : true;
+									input.type = 'checkbox';
+									if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+									else input.setAttribute('style', 'right: 0px !important');
+									//@ts-ignore
+									target.style.position = 'relative';
+									target.parentNode?.insertBefore(input, target);
+								}
+							}
+						} catch (e) {
+							return 0;
+						}
+					}
+				});
+				observer.observe(cardList, { childList: true, subtree: true, attributes: true, attributeFilter: ['href'] });
 
-					e.target.style.position = 'relative';
-					e.target.appendChild(input);
-				}
-			} catch (e) {
-				return 0;
+				break;
 			}
-		});
+
+			await sleep(500);
+		}
 	}
 	/** aliexpress.com\/w\/wholesale 페이지 체크박스용 */
 	async bulkTypeTwo(user) {
 		let timeout = 0;
 
-		/** 알리 검색페이지 상품 리스트 url */
-		// const resp = await fetch('https://ko.aliexpress.com/fn/search-pc/index', {
-		// 	headers: {
-		// 		accept: '*/*',
-		// 		'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-		// 		'bx-v': '2.5.3',
-		// 		'content-type': 'application/json;charset=UTF-8',
-		// 		'sec-ch-ua': '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
-		// 		'sec-ch-ua-mobile': '?0',
-		// 		'sec-ch-ua-platform': '"Windows"',
-		// 		'sec-fetch-dest': 'empty',
-		// 		'sec-fetch-mode': 'cors',
-		// 		'sec-fetch-site': 'same-origin',
-		// 	},
-		// 	referrer:
-		// 		'https://ko.aliexpress.com/w/wholesale-%EC%A0%84%EA%B5%AC.html?page=2&g=y&SearchText=%EC%A0%84%EA%B5%AC',
-		// 	referrerPolicy: 'strict-origin-when-cross-origin',
-		// 	body: '{"pageVersion":"76cea70e82a7e928f556677984719aa1","target":"root","data":{"page":2,"g":"y","SearchText":"전구","origin":"y"},"eventName":"onChange","dependency":[]}',
-		// 	method: 'POST',
-		// 	mode: 'cors',
-		// 	credentials: 'include',
-		// });
-		// console.log({ resp });
-		// const json = await resp.json();
-		// console.log({ json });
-		// const productIds = json?.data?.result?.mods?.itemList?.content.map((v) => v.productId);
-		// console.log({ productIds });
-		/** */
-
+		/** refresh 또는 url이동으로 동작함 */
 		while (true) {
 			if (timeout === 10) return 0;
 
@@ -934,9 +934,7 @@ export class express {
 				for (let i in products) {
 					try {
 						const productLink = products[i].getAttribute('href');
-						if (!productLink?.includes('item') || !products[i].querySelector('img'))
-							// || !productLink?.includes(productIds[i])
-							continue;
+						if (!productLink?.includes('item') || !products[i].querySelector('img')) continue;
 
 						let input: any = document.createElement('input');
 						let picker: any = document.getElementById('sfyPicker');

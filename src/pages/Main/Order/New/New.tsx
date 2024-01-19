@@ -1,5 +1,5 @@
 import React from 'react';
-import OrderTables from '../Components/OrderTables';
+import { OrderTables } from '../Components';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
 import { Box, Chip, Container, Paper } from '@mui/material';

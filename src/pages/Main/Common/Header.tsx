@@ -1105,6 +1105,13 @@ export const Header = observer((props: Props) => {
 											<ListItemButton
 												onClick={() => {
 													if (!v2?.customFunction) {
+														if (v2.name === '상품강제삭제')
+															if (
+																!confirm(
+																	'마켓에 업로드된 상태와 관계없이 셀포유에서 상품정보를 모두 삭제 또는 해제하는 기능입니다.\n삭제 전 마켓에 업로드 유무를 꼭 확인해주세요.\n진입하시겠습니까?',
+																)
+															)
+																return;
 														searchParams.set('page', v2.engName);
 														setSearchParams(searchParams, { replace: true });
 														addToStack({

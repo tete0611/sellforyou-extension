@@ -19,11 +19,11 @@ const Connects = lazy(() => import('./Connects/Connects'));
 const BanWords = lazy(() => import('./BanWords/BanWords'));
 
 const App = () => {
-	const { common, restrict } = useContext(AppContext);
+	const { common } = useContext(AppContext);
 	const [searchParams] = useSearchParams();
 	const currentComponent = searchParams.get('page');
 	const [darkTheme, setDarkTheme] = useState(common.darkTheme);
-	console.log(common.darkTheme);
+
 	// 다크모드 지원 설정
 	const theme = useMemo(
 		() =>

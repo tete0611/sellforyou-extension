@@ -7,7 +7,7 @@ import { Box, Container, IconButton, MenuItem, Pagination, Paper, Tooltip, Typog
 import { ImagePopOver } from '../../PopOver';
 import { ComboBox, Input, Title } from '../../Common/UI';
 import { createTheme } from '@mui/material/styles';
-import ErroredProductTables from '../Components/ErroredProductTables';
+import { ErroredProductTables } from '../Components';
 
 // 강제관리 탭 목록 테이블 뷰
 const Errored = observer(() => {

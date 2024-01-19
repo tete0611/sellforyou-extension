@@ -5,7 +5,7 @@ import { alibaba } from './modules/alibaba';
 import { vvic } from './modules/vvic';
 import { amazon } from './modules/amazon';
 import { getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../Tools/ChromeAsync';
-import { getCookie, sleep, updateQueryStringParameter } from '../Tools/Common';
+import { getCookie, normalizeUrl, sleep, updateQueryStringParameter } from '../Tools/Common';
 import { getTaobaoData } from '../Tools/Taobao';
 import {
 	deleteA077Products,
@@ -17,8 +17,33 @@ import {
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
 import { CollectInfo, Nullable, RuntimeMessage, Sender, Shop, User } from '../../type/type';
 
-// const iconv = require('iconv-lite');
+/** SELLFORYOU-CHECKBOX 삽입 함수 */
+export const onInsertDom = ({
+	element, // 삽입하고자 하는 element
+	picker, // 상품일괄 선택/해제 박스
+	user, // User 객체
+}: {
+	element: Nullable<HTMLAnchorElement>;
+	picker: HTMLButtonElement | null;
+	user: User;
+}) => {
+	if (!element) return;
+	if (element.querySelector('.SELLFORYOU-CHECKBOX')) return;
+	if (!element.href || element.href === '') return;
 
+	const input = Object.assign(document.createElement('input'), {
+		className: 'SELLFORYOU-CHECKBOX',
+		checked: picker?.value !== 'false',
+		type: 'checkbox',
+		id: normalizeUrl(element.href),
+		style: user.userInfo.collectCheckPosition === 'L' ? 'left: 0px !important' : 'right: 0px !important',
+	});
+
+	element.style.position = 'relative';
+	element.appendChild(input);
+};
+
+/** vvic 상점페이지 api로 대량수집하기 함수 */
 const bulkCollectUsingApi = async (shopId: number, currentPage: number) => {
 	const resp = await fetch(
 		`https://www.vvic.com/apif/shop/itemlist?id=${shopId}&currentPage=${currentPage}&sort=up_time-desc&merge=0`,
@@ -1693,28 +1718,6 @@ const main = async () => {
 		await new express().bulkTypeTwo(info.user);
 		floatingButton(info, 'express', true, true);
 
-		/** 알리검색 페이지는 페이지이동을 해도 refresh가 되지않기 때문에 수집코드를 한번더 진행 */
-		const pageNationEl = document?.querySelector('ul.comet-pagination');
-		const currentPage = parseInt(new URLSearchParams(window.location.search).get('page') ?? '1');
-		// a태그 , 1~5 및 ... 버튼에 이벤트부여
-		pageNationEl?.querySelectorAll('a').forEach((a, index) => {
-			a.addEventListener('click', async () => {
-				if (a.innerText !== '') await pageRefresh('express', parseInt(a.innerText));
-				else index < 2 ? await pageRefresh('express', currentPage - 5) : await pageRefresh('express', currentPage + 5);
-			});
-		});
-		// button태그 , 앞,뒤 확인하다 버튼에 이벤트부여
-		pageNationEl?.querySelectorAll('button').forEach((button, index) => {
-			button.addEventListener('click', async () => {
-				if (index === 0) await pageRefresh('express', currentPage - 1);
-				else if (index === 1) await pageRefresh('express', currentPage + 1);
-				else {
-					const jump = pageNationEl.querySelector('li.comet-pagination-options')?.querySelector('input')?.value;
-					if (jump && !isNaN(Number(jump))) await pageRefresh('express', parseInt(jump));
-				}
-			});
-		});
-
 		/** 알리 상점 페이지 */
 	} else if (/aliexpress.com\/store/.test(currentUrl)) {
 		console.log('알리 상점 페이지 진입');
@@ -1724,6 +1727,7 @@ const main = async () => {
 
 		/** 1688 단일상품 페이지 */
 	} else if (/detail.1688.com/.test(currentUrl)) {
+		console.log('1688 단일상품 페이지');
 		const info = await initInfo(true);
 		const result = await new alibaba().get(info.user);
 		floatingButton(info, 'alibaba', result, false);

@@ -2,29 +2,9 @@ import React from 'react';
 
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../../containers/AppContext';
-import {
-	Badge,
-	Box,
-	Collapse,
-	TableCell,
-	TableRow,
-	Tab,
-	Tabs,
-	Typography,
-	Button,
-	Paper,
-	CircularProgress,
-} from '@mui/material';
+import { Badge, Box, Collapse, TableCell, TableRow, Tab, Tabs, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { TabBase } from './TabBase';
-// import { TabESM2 } from './TabESM2';
-import { TabOption } from './TabOption';
-import { TabPrice } from './TabPrice';
-import { TabThumbnails } from './TabThumbnails';
-import { TabOptionImages } from './TabOptionImages';
-import { TabDescriptions } from './TabDescriptions';
-import { TabAttribute } from './TabAttribute';
-import { Title } from '../../../Common/UI';
+import { TabAttribute, TabBase, TabDescriptions, TabOption, TabOptionImages, TabPrice, TabThumbnails } from './';
 import { Item } from '../../../../../type/type';
 
 interface Props {
@@ -39,7 +19,7 @@ interface TabPanelProps {
 }
 
 // 탭 뷰 설정 (기본정보, 상품속성, 옵션, 가격, 썸네일이미지, 옵션이미지, 상세페이지로 구분)
-function TabPanel(props: TabPanelProps) {
+export const TabPanel = (props: TabPanelProps) => {
 	const { children, value, index, ...other } = props;
 
 	return (
@@ -63,7 +43,7 @@ function TabPanel(props: TabPanelProps) {
 			)}
 		</div>
 	);
-}
+};
 
 // 탭 엘리먼트 속성 설정
 function tabProps(index: number) {
@@ -261,13 +241,6 @@ export const Details = observer((props: Props) => {
 							<TabPanel value={props.item.tabs} index={6} dir={theme.direction}>
 								<TabDescriptions item={props.item} index={props.index} />
 							</TabPanel>
-							{/* 주석필요 */}
-							{/* 
-              {props.item.state === 7 ? (
-                <TabPanel value={props.item.tabs} index={7} dir={theme.direction}>
-                  <TabESM2 item={props.item} index={props.index} />
-                </TabPanel>
-              ) : null} */}
 						</Box>
 					</Collapse>
 				</TableCell>

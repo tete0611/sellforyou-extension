@@ -320,7 +320,7 @@ const addToInventory = async (sender: Sender, origin: any) => {
 					return await finishCollect(
 						sender,
 						'failed',
-						'쿠팡 카테고리 자동설정 도중 오류가 발생하였습니다.\n관리자 문의 요망',
+						'쿠팡 카테고리 자동설정 도중 오류가 발생하였습니다.\n1. 셀포유->오픈마켓연동의 "쿠팡"란에 입력된 정보.\n2. 쿠팡 윙에 발급된 "OPEN API 키"\n가 정상적인지 확인해주세요.\n이상이 없다면 관리자 문의 요망.',
 					);
 			}
 

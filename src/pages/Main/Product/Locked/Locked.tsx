@@ -1,7 +1,7 @@
 import React from 'react';
 import { Sync as SyncIcon, Search as SearchIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
-import { ProductTables } from '../Components/ProductTables';
+import { ProductTables } from '../Components';
 import {
 	UploadModal,
 	UploadFailedModal,

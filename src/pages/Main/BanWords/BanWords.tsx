@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo, useEffect } from 'react';
+import React, { useContext, useState, useMemo, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import {
@@ -46,8 +46,33 @@ const BanWords = observer(() => {
 		toggleReplaceCheckedAll,
 		toggleReplaceChecked,
 	} = restrict;
-	const [banWordToggle, setBanWordToggle] = useState(true); // 금지어버튼 토글
-	const [replaceWordToggle, setReplaceWordToggle] = useState(true); // 치환어버튼 토글
+	const [banWordToggle, setBanWordToggle] = useState(true); // 금지어 등록버튼 disable 용도
+	const [replaceWordToggle, setReplaceWordToggle] = useState(true); // 치환어 등록버튼 disable 용도
+	const banwordRef = useRef<HTMLInputElement>();
+	const findwordRef = useRef<HTMLInputElement>();
+	const replacewordRef = useRef<HTMLInputElement>();
+
+	/** 금지어/치환어 등록후 작동함수 */
+	const onCreateSuccess = ({ type }: { type: 'banWord' | 'restrictWord' }) => {
+		if (type === 'banWord') {
+			setRestrictWordInfo({
+				...restrictWordInfo,
+				banWordInput: '',
+			});
+			banwordRef.current!.value = '';
+			setBanWordToggle(true);
+		} else {
+			setRestrictWordInfo({
+				...restrictWordInfo,
+				findWordInput: '',
+				replaceWordInput: '',
+			});
+			findwordRef.current!.value = '';
+			replacewordRef.current!.value = '';
+			setReplaceWordToggle(true);
+		}
+		getRestrictWords();
+	};
 
 	// 금지어/치환어 불러오기
 	useEffect(() => {
@@ -101,7 +126,7 @@ const BanWords = observer(() => {
 											}}
 											onClick={async () => {
 												const result = await deleteWordTable({ type: 'banWord' });
-												if (result) window.location.reload();
+												if (result) getRestrictWords();
 											}}
 										>
 											삭제
@@ -177,6 +202,7 @@ const BanWords = observer(() => {
 												}}
 											>
 												<TextField
+													inputRef={banwordRef}
 													placeholder='금지어를 입력하세요'
 													id='banWords_banWordInput'
 													variant='outlined'
@@ -203,13 +229,7 @@ const BanWords = observer(() => {
 																findWord: e.target.value,
 																replaceWord: null,
 															});
-															if (result) {
-																setRestrictWordInfo({
-																	...restrictWordInfo,
-																	banWordInput: '',
-																});
-																getRestrictWords();
-															}
+															if (result) onCreateSuccess({ type: 'banWord' });
 														}
 													}}
 													onBlur={(e) =>
@@ -243,7 +263,7 @@ const BanWords = observer(() => {
 															findWord: restrictWordInfo.banWordInput,
 															replaceWord: null,
 														});
-														if (result) window.location.reload();
+														if (result) onCreateSuccess({ type: 'banWord' });
 													}}
 												>
 													등록
@@ -278,10 +298,12 @@ const BanWords = observer(() => {
 
 															await readFileDataURL(fileList[0]);
 
-															uploadExcel({
+															await uploadExcel({
 																data: fileList[0],
 																isReplace: false,
 															});
+
+															getRestrictWords();
 														}}
 													/>
 												</Button>
@@ -336,7 +358,7 @@ const BanWords = observer(() => {
 											onClick={async () => {
 												const result = await deleteWordTable({ type: 'replaceWord' });
 
-												if (result) window.location.reload();
+												if (result) getRestrictWords();
 											}}
 										>
 											삭제
@@ -424,6 +446,7 @@ const BanWords = observer(() => {
 												}}
 											>
 												<TextField
+													inputRef={findwordRef}
 													placeholder='검색어를 입력하세요'
 													id='banWords_findWordInput'
 													variant='outlined'
@@ -449,7 +472,7 @@ const BanWords = observer(() => {
 																findWord: e.target.value,
 																replaceWord: restrictWordInfo.replaceWordInput,
 															});
-															if (result) window.location.reload();
+															if (result) onCreateSuccess({ type: 'restrictWord' });
 														}
 													}}
 													onBlur={(e) =>
@@ -471,6 +494,7 @@ const BanWords = observer(() => {
 												}}
 											>
 												<TextField
+													inputRef={replacewordRef}
 													onKeyDown={async (e) => {
 														if (e.key === 'Enter' && !replaceWordToggle) {
 															const result = await addWordTable({
@@ -478,7 +502,7 @@ const BanWords = observer(() => {
 																//@ts-ignore
 																replaceWord: e.target.value ?? '',
 															});
-															if (result) window.location.reload();
+															if (result) onCreateSuccess({ type: 'restrictWord' });
 														}
 													}}
 													placeholder='치환어를 입력하세요'
@@ -524,7 +548,7 @@ const BanWords = observer(() => {
 															findWord: restrictWordInfo.findWordInput,
 															replaceWord: restrictWordInfo.replaceWordInput,
 														});
-														if (result) window.location.reload();
+														if (result) onCreateSuccess({ type: 'restrictWord' });
 													}}
 												>
 													등록
@@ -559,10 +583,12 @@ const BanWords = observer(() => {
 
 															await readFileDataURL(fileList[0]);
 
-															uploadExcel({
+															await uploadExcel({
 																data: fileList[0],
 																isReplace: true,
 															});
+
+															getRestrictWords();
 														}}
 													/>
 												</Button>
