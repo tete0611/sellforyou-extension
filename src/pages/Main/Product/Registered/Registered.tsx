@@ -101,7 +101,7 @@ const Registered = observer(() => {
 							}}
 						>
 							<Typography color='text.primary'>
-								등록상품목록 ({product.count}){' '}
+								{`등록상품목록 (${product.itemInfo.loading ? ' ... ' : product.count}) `}
 								{checkLength > 0 && (
 									<span style={{ color: '#01579b', fontWeight: 600 }}>{`중 ${checkLength}개 선택`}</span>
 								)}

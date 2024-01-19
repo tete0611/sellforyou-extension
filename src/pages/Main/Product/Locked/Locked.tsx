@@ -31,7 +31,6 @@ import {
 	ReplaceOptionNamePopOver,
 } from '../../PopOver';
 import { ComboBox, Input, MyButton, Title } from '../../Common/UI';
-import { createTheme } from '@mui/material/styles';
 
 // 상품등록관리 목록 테이블 뷰
 const Locked = observer(() => {
@@ -103,7 +102,7 @@ const Locked = observer(() => {
 							}}
 						>
 							<Typography color='text.primary'>
-								잠금상품목록 ({product.count}){' '}
+								{`잠금상품목록 (${product.itemInfo.loading ? ' ... ' : product.count}) `}
 								{checkLength > 0 && (
 									<span style={{ color: '#01579b', fontWeight: 600 }}>{`중 ${checkLength}개 선택`}</span>
 								)}

@@ -1,4 +1,4 @@
-import React, { Fragment, ReactNode } from 'react';
+import React, { Fragment } from 'react';
 import {
 	Lock as LockIcon,
 	Warning as WarningIcon,
@@ -143,7 +143,7 @@ const notionPageList = [
 ];
 
 interface Props {
-	setDarkTheme?: React.Dispatch<React.SetStateAction<boolean>>;
+	setDarkTheme: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /** 헤더 */
@@ -177,6 +177,7 @@ export const Header = observer((props: Props) => {
 	const { purchaseInfo2, userInfo, productCount, email, credit, id } = user;
 	const [searchParams, setSearchParams] = useSearchParams();
 	const currentComponent = searchParams.get('page');
+	const { setDarkTheme } = props;
 
 	React.useEffect(() => {
 		// 브라우저 창 크기가 바뀔때마다 갱신해서 반응형으로 동작하도록 구현
@@ -346,7 +347,7 @@ export const Header = observer((props: Props) => {
 								color='inherit'
 								onClick={(e) => {
 									toggleTheme();
-									if (props.setDarkTheme) props?.setDarkTheme((p) => !p);
+									setDarkTheme((p) => !p);
 								}}
 							>
 								{darkTheme ? <DarkModeIcon /> : <LightModeIcon />}
