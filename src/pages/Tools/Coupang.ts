@@ -5,6 +5,7 @@ import gql from '../Main/GraphQL/Requests';
 import QUERIES from '../Main/GraphQL/Queries';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import {
+	floatingToast,
 	getClock,
 	getClockOffset,
 	getStoreTraceCodeV2,
@@ -18,6 +19,7 @@ import {
 import { getLocalStorage } from './ChromeAsync';
 import { product } from '../../containers/stores/product';
 import { common } from '../../containers/stores/common';
+import { UploadInfo } from '../../type/type';
 
 interface CoupangProps {
 	method: string;
@@ -30,7 +32,12 @@ interface CoupangProps {
 
 /** 쿠팡 API Endpoint 인터페이스 */
 export const coupangApiGateway = async (body: CoupangProps) => {
+	const koreaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Seoul' });
+	const today = new Date().toISOString();
+	const datetime2 = koreaTime.substr(2, 17).replace(/:/gi, '').replace(/-/gi, '') + 'Z';
 	const datetime = new Date().toISOString().substr(2, 17).replace(/:/gi, '').replace(/-/gi, '') + 'Z';
+	console.log({ koreaTime });
+	console.log({ today });
 	const method = body.method;
 	const path = body.path;
 	const queried = body.query;
@@ -55,8 +62,7 @@ export const coupangApiGateway = async (body: CoupangProps) => {
 		body: method === 'GET' || method === 'HEAD' ? null : JSON.stringify(body.data),
 	});
 
-	if (coupang_resp.status === 403 && body.method === 'DELETE')
-		throw new Error('쿠팡 API 403에러발생.\n관리자에게 문의해주세요.');
+	// if (coupang_resp.status === 403) throw new Error('쿠팡 API 403에러발생.\n관리자에게 문의해주세요.');
 	const json = await coupang_resp.json();
 	return json;
 };
@@ -890,7 +896,7 @@ export const deleteCoupang = async (productStore: product, commonStore: common, 
 };
 
 /** 쿠팡 신규주문 조회 */
-export const newOrderCoupang = async (commonStore: common, shopInfo: any) => {
+export const newOrderCoupang = async (commonStore: common, shopInfo: UploadInfo['markets'][0]) => {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) return [];
@@ -919,6 +925,18 @@ export const newOrderCoupang = async (commonStore: common, shopInfo: any) => {
 		};
 
 		let orderJson = await coupangApiGateway(orderData);
+
+		if (orderJson.status === 403) {
+			if (orderJson.message.includes('Not allowed IP'))
+				floatingToast(
+					`쿠팡 허용되지않은 IP 에러\n쿠팡 Seller에 등록된 IP와 사용중인 PC의 IP가 같은지 확인바랍니다.`,
+					'failed',
+				);
+			if (orderJson.message.includes('Specified signature is expired'))
+				floatingToast('쿠팡 API 에러\n사용중인 PC가 표준시간대로 설정되어있는지 확인바랍니다.', 'failed');
+		}
+
+		console.log({ orderJson });
 
 		console.log(shopName, orderJson.data);
 

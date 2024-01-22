@@ -111,10 +111,7 @@ export class order {
 				commonStore,
 				commonStore.uploadInfo.markets.find((v) => v.code === SHOPCODE.SMART_STORE),
 			),
-			newOrderCoupang(
-				commonStore,
-				commonStore.uploadInfo.markets.find((v) => v.code === SHOPCODE.COUPANG),
-			),
+			newOrderCoupang(commonStore, commonStore.uploadInfo.markets.find((v) => v.code === SHOPCODE.COUPANG)!),
 			newOrderStreet(
 				commonStore,
 				commonStore.uploadInfo.markets.find((v) => v.code === SHOPCODE.STREET11_GLOBAL),
