@@ -32,12 +32,7 @@ interface CoupangProps {
 
 /** 쿠팡 API Endpoint 인터페이스 */
 export const coupangApiGateway = async (body: CoupangProps) => {
-	const koreaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Seoul' });
-	const today = new Date().toISOString();
-	const datetime2 = koreaTime.substr(2, 17).replace(/:/gi, '').replace(/-/gi, '') + 'Z';
 	const datetime = new Date().toISOString().substr(2, 17).replace(/:/gi, '').replace(/-/gi, '') + 'Z';
-	console.log({ koreaTime });
-	console.log({ today });
 	const method = body.method;
 	const path = body.path;
 	const queried = body.query;

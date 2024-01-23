@@ -87,11 +87,11 @@ export const ProductTables = observer(() => {
 				>
 					<Table>
 						<TableRow>
-							{array.map((v, i) =>
-								product.itemInfo.items[v] ? (
+							{array.map((v, i) => {
+								return product.itemInfo.items[v] ? (
 									<ImageSummary tableRef={tableRef} item={product.itemInfo.items[v]} index={v} key={i} />
-								) : null,
-							)}
+								) : null;
+							})}
 
 							{lastRow ? <TableCell></TableCell> : null}
 						</TableRow>
@@ -512,7 +512,7 @@ export const ProductTables = observer(() => {
 															width={width}
 															height={height}
 															rowCount={Math.ceil(product.itemInfo.items.length / 10)}
-															rowRenderer={rowImageRenderer}
+															rowRenderer={(props) => rowImageRenderer(props)}
 															rowHeight={150}
 															ref={tableRef}
 														/>

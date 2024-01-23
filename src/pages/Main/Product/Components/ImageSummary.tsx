@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
 import { styled, Box, Chip, TableCell, Checkbox } from '@mui/material';
 import { Image } from '../../Common/UI';
+import { Item } from '../../../../type/type';
 
 // 커스텀 테이블 컬럼 스타일
 const StyledTableCell = styled(TableCell)({
@@ -13,8 +14,14 @@ const StyledTableCell = styled(TableCell)({
 	fontSize: 14,
 });
 
+interface Props {
+	item: Item;
+	index: number;
+	tableRef: any;
+}
+
 // 그리드뷰 하위 테이블 행 뷰
-export const ImageSummary = observer((props: any) => {
+export const ImageSummary = observer((props: Props) => {
 	// MobX 스토리지 로드
 	const { product } = React.useContext(AppContext);
 
