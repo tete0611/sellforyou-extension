@@ -24,7 +24,7 @@ import {
 	TableCell,
 	Typography,
 } from '@mui/material';
-import { request } from '../../Tools/Common';
+import { request } from '../../../../common/function';
 import { useTheme } from '@mui/material/styles';
 import { ComboBox, Image } from '../Common/UI';
 

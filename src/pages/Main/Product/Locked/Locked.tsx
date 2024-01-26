@@ -43,8 +43,12 @@ const Locked = observer(() => {
 		// 태그사전 데이터 가져오기
 		product.getTagDict();
 
+		// 검색조건 초기화
+		product.initSearchInfo();
+
 		// 검색조건 설정하기
-		product.setState(7);
+		product.setState([7]);
+
 		// 잠금조건 설정하기
 		product.setLock(2);
 		product.setSearchWhereAndInput([{ myLock: { equals: product.myLock } }]);
@@ -75,22 +79,7 @@ const Locked = observer(() => {
 		});
 	}, []);
 
-	// 다크모드 지원 설정
-	// const theme = React.useMemo(
-	// 	() =>
-	// 		createTheme({
-	// 			palette: {
-	// 				mode: common.darkTheme ? 'dark' : 'light',
-	// 			},
-	// 		}),
-	// 	[common.darkTheme],
-	// );
-
 	return (
-		// <ThemeProvider theme={theme}>
-		// {/* <Frame dark={common.darkTheme}> */}
-		// {/* <Header /> */}
-
 		<>
 			<Container maxWidth={'xl'}>
 				<Paper variant='outlined'>
@@ -120,9 +109,7 @@ const Locked = observer(() => {
 								sx={{
 									minWidth: 100,
 								}}
-								onClick={() => {
-									product.itemToExcel();
-								}}
+								onClick={() => confirm('현재 페이지의 상품정보를 다운로드 하시겠습니까?') && product.itemToExcel()}
 							>
 								상품정보저장
 							</MyButton>
@@ -135,11 +122,7 @@ const Locked = observer(() => {
 									if (e.target.value === 0) {
 										const input = prompt('페이지 당 조회할 상품 수를 입력해주세요. (최대 50개까지 입력 가능)');
 
-										if (!input) {
-											alert('조회할 상품 수 입력이 잘못되었습니다.');
-
-											return;
-										}
+										if (!input) return alert('조회할 상품 수 입력이 잘못되었습니다.');
 
 										pageSize = parseInt(input);
 
@@ -288,8 +271,6 @@ const Locked = observer(() => {
 			<UploadFailedModal />
 			<UploadDisabledModal />
 		</>
-		// </Frame>
-		// </ThemeProvider>
 	);
 });
 export default Locked;

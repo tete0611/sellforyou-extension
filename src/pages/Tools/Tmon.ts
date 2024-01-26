@@ -15,7 +15,7 @@ import {
 	sendCallback,
 	transformContent,
 	urlEncodedObject,
-} from './Common';
+} from '../../../common/function';
 
 // 티몬 상세페이지 지원형식 변환 함수
 const convertB956Resources = async (content: any, type: any) => {

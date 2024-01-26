@@ -10,7 +10,7 @@ import {
 	getClock,
 	getImageMeta,
 	readFileDataURL,
-} from '../../pages/Tools/Common';
+} from '../../../common/function';
 import { deleteSmartStore, uploadSmartStore } from '../../pages/Tools/SmartStore';
 import { coupangApiGateway, deleteCoupang, uploadCoupang } from '../../pages/Tools/Coupang';
 import { deleteStreet, uploadStreet } from '../../pages/Tools/Street';
@@ -22,9 +22,10 @@ import { deleteLotteon, uploadLotteon } from '../../pages/Tools/Lotteon';
 import { deleteTmon, uploadTmon } from '../../pages/Tools/Tmon';
 import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from '../../pages/Tools/ChromeAsync';
 import { common } from './common';
-import { AppInfo, Item, ItemInfo, ManyPriceInfo, ModalInfo, User } from '../../type/type';
+import { AppInfo, Item, ItemInfo, ManyPriceInfo, ModalInfo, SearchType, User } from '../../type/type';
 import { UpdateProductMyKeywardInPut } from '../../type/mutation';
 import { SHOPCODE } from '../../type/variable';
+import { ProductWhereInput } from '../../type/schema';
 
 const {
 	AUCTION_1,
@@ -50,19 +51,13 @@ export class product {
 	page: number = 1;
 	pages: number = 0;
 	pageSize: number = 10;
-	state: number = 6;
+	state: number[] = [6];
 	myLock: number = 1;
 	tagDict: any = [];
 	uploadConsole: any = [];
 	uploadDisabledIndex: number = -1;
 	uploadFailedIndex: number = -1;
 	uploadIndex: number = -1;
-
-	//todoesm2.0
-	// Esm2uploadConsole: any = [];
-	// Esm2uploadDisabledIndex: number = -1;
-	// Esm2uploadFailedIndex: number = -1;
-	// Esm2uploadIndex: number = -1;
 
 	itemInfo: ItemInfo = {
 		checkedAll: false,
@@ -192,56 +187,11 @@ export class product {
 		uploadFailed: false,
 		locked: false,
 		myKeywarded: false,
-		// Esm2upload: false,
-		// Esm2uploadTabIndex: 0,
-		// Esm2uploadDisabled: false,
-		// Esm2uploadFailed: false,
-		// preview: false,
 	};
 
-	searchInfo: any = {
-		categoryInfo: {
-			code: null,
-			name: null,
-		},
+	searchKeyword = '';
 
-		collectedStart: null,
-		collectedEnd: null,
-
-		registeredStart: null,
-		registeredEnd: null,
-
-		cnyPriceStart: null,
-		cnyPriceEnd: null,
-
-		cnyRateStart: null,
-		cnyRateEnd: null,
-
-		localFeeStart: null,
-		localFeeEnd: null,
-
-		marginRateStart: null,
-		marginRateEnd: null,
-
-		priceStart: null,
-		priceEnd: null,
-
-		feeStart: null,
-		feeEnd: null,
-
-		shopName: 'ALL',
-		marketName: 'ALL',
-
-		hasVideo: 'ALL',
-		hasRegistered: 'ALL',
-
-		searchKeyword: '',
-		searchType: 'PCODE',
-
-		useFilter: false,
-
-		whereInput: {},
-	};
+	searchInfo: ProductWhereInput = {};
 
 	categoryInfo = {
 		markets: [
@@ -438,7 +388,7 @@ export class product {
 		this.loadAppInfo();
 	}
 
-	// PC 기본값 설정
+	/** PC 기본값 설정 */
 	loadAppInfo = async () => {
 		let auth = await getLocalStorage<AppInfo>('appInfo');
 
@@ -457,41 +407,39 @@ export class product {
 		});
 	};
 
-	// 이미지 팝업
+	/** 이미지 팝업 */
 	setImagePopOver = (data: any) => (this.popOverInfo.image = data);
 
-	// 옵션명 키워드추가 팝업
+	/** 옵션명 키워드추가 팝업 */
 	setAddOptionNamePopOver = (data: any) => (this.popOverInfo.addOptionName = data);
 
-	// 옵션명 키워드변경 팝업
+	/** 옵션명 키워드변경 팝업 */
 	setReplaceOptionNamePopOver = (data: any) => (this.popOverInfo.replaceOptionName = data);
 
-	// 옵션가 일괄인상 팝업
+	/** 옵션가 일괄인상 팝업 */
 	setAddOptionPricePopOver = (data: any) => (this.popOverInfo.addOptionPrice = data);
 
-	// 옵션가 일괄인하 팝업
+	/** 옵션가 일괄인하 팝업 */
 	setSubtractOptionPricePopOver = (data: any) => (this.popOverInfo.subtractOptionPrice = data);
 
-	// 옵션가 일괄설정 팝업
+	/** 옵션가 일괄설정 팝업 */
 	setOptionPricePopOver = (data: any) => (this.popOverInfo.setOptionPrice = data);
 
-	// 재고수량 일괄설정 팝업
+	/** 재고수량 일괄설정 팝업 */
 	setOptionStockPopOver = (data: any) => (this.popOverInfo.setOptionStock = data);
 
-	// 고시정보 설정
+	/** 고시정보 설정 */
 	setProductSillDataPopOver = (data: any) => (this.popOverInfo.setProductSillData = data);
 
-	// 상품 일괄설정 모달
+	/** 상품 일괄설정 모달 */
 	setUpdateManyProductPopOver = (data: any) => (this.popOverInfo.updateManyProduct = data);
 
-	// 카테고리 정보 가져오기
+	/** 카테고리 정보 가져오기 */
 	getCategoryList = async (marketCode: SHOPCODE) => {
 		const {
 			AUCTION_1,
-			AUCTION_2,
 			COUPANG,
 			G_MARKET_1,
-			G_MARKET_2,
 			INTER_PARK,
 			LOTTE_ON_GLOBAL,
 			LOTTE_ON_NORMAL,
@@ -588,11 +536,11 @@ export class product {
 		});
 	};
 
-	// 카테고리 입력정보
+	/** 카테고리 입력정보 */
 	setCategoryInput = (marketCode: SHOPCODE, value: string) =>
 		(this.categoryInfo.markets.find((v) => v.code === marketCode)!.input = value);
 
-	// 카테고리 일괄설정
+	/** 카테고리 일괄설정 */
 	setManyCategory = (marketCode: SHOPCODE, value: any) => {
 		const {
 			AUCTION_1,
@@ -644,7 +592,7 @@ export class product {
 		}
 	};
 
-	// 카테고리 설정
+	/** 카테고리 설정 */
 	setCategory = (index: number) =>
 		(this.itemInfo.items[index] = {
 			...this.itemInfo.items[index],
@@ -717,7 +665,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 카테고리 자동매칭 업데이트
+	/** 카테고리 자동매칭 업데이트 */
 	updateCategoryAuto = async (value: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.summary = 0);
 
@@ -866,7 +814,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 카테고리 자동매칭 일괄설정
+	/** 카테고리 자동매칭 일괄설정 */
 	updateManyCategoryAuto = async (value: any) => {
 		const response = await gql(QUERIES.SEARCH_CATEGORY_INFO_A077_BY_CODE, { code: value.code }, false);
 
@@ -896,16 +844,16 @@ export class product {
 		);
 	};
 
-	// 상품 상태 (수집, 등록)
-	setState = (value: number) => (this.state = value);
+	/** 상품 상태 (수집, 등록) */
+	setState = (value: number[]) => (this.state = value);
 
-	// 잠금 상태 (잠금 ,해제)
+	/** 잠금 상태 (잠금 ,해제) */
 	setLock = (value: number) => (this.myLock = value);
 
-	// 임시 상태
+	/** 임시 상태 */
 	setPageTemp = (value: number) => (this.pageTemp = value);
 
-	// 한 페이지에 표시하는 상품 수
+	/** 한 페이지에 표시하는 상품 수 */
 	setPageSize = async (value: number) => {
 		let auth = await getLocalStorage<AppInfo>('appInfo');
 
@@ -916,7 +864,7 @@ export class product {
 		runInAction(() => (this.pageSize = value));
 	};
 
-	// 태그사전 정보
+	/** 태그사전 정보 */
 	getTagDict = async () => {
 		const tagResp = await fetch('/resources/dictionary.json');
 		const tagJson = await tagResp.json();
@@ -924,14 +872,24 @@ export class product {
 		runInAction(() => (this.tagDict = tagJson));
 	};
 
-	// 상품 정보
+	/**  */
+
+	/** 상품 정보 */
 	getProduct = async (commonStore: common, p: number) => {
 		console.time('상품 정보 로드시간');
 		this.itemInfo.loading = true;
 		// Backup
 		const oldItems = this.itemInfo.items;
 
-		const response1 = await gql(QUERIES.SELECT_MY_PRODUCT_COUNT_BY_USER, { where: this.searchInfo.whereInput }, false);
+		// 카테고리 where절 타입에 맞게 변환해주는 작업
+		const where: ProductWhereInput = {
+			...this.searchInfo,
+			categoryInfoA077: this.searchInfo.categoryInfoA077?.code
+				? { code: { equals: this.searchInfo.categoryInfoA077.code } }
+				: ({} as any),
+		};
+
+		const response1 = await gql(QUERIES.SELECT_MY_PRODUCT_COUNT_BY_USER, { where: where }, false);
 
 		if (response1.errors) return alert(response1.errors[0].message);
 
@@ -955,7 +913,7 @@ export class product {
 			const response2 = await gql(
 				QUERIES.SELECT_MY_SIMPLE_PRODUCT_BY_USER,
 				{
-					where: this.searchInfo.whereInput,
+					where: where,
 					orderBy: { createdAt: 'desc' },
 					skip: skipOffset,
 					take: s,
@@ -997,7 +955,7 @@ export class product {
 			const response2 = await gql(
 				QUERIES.SELECT_MY_PRODUCT_BY_USER,
 				{
-					where: this.searchInfo.whereInput,
+					where: where,
 					orderBy: { createdAt: 'desc' },
 					skip: skipOffset,
 					take: s,
@@ -1362,13 +1320,13 @@ export class product {
 
 		this.getProduct(commonStore, this.page);
 	};
-	// 상품명 설정
+	/** 상품명 설정 */
 	setProductName = (data: any, index: number) => {
 		this.itemInfo.items[index].name = data;
 		this.itemInfo.items[index].edited.summary = 1;
 	};
 
-	// 상품명 업데이트
+	/** 상품명 업데이트 */
 	updateProductName = async (index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.summary = 0);
 
@@ -1398,13 +1356,13 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 검색어 태그 설정(쿠팡)
+	/** 검색어 태그 설정(쿠팡) */
 	setProductSearchTag = (data: any, index: number) => {
 		this.itemInfo.items[index].searchTags = data;
 		this.itemInfo.items[index].edited.baseInfo = 1;
 	};
 
-	// 검색어 태그 업데이트(쿠팡)
+	/** 검색어 태그 업데이트(쿠팡) */
 	updateProductSearchTag = async (data: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.baseInfo = 0);
 
@@ -1430,7 +1388,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 검색어 태그 추가(스마트스토어)
+	/** 검색어 태그 추가(스마트스토어) */
 	addProductImmSearchTag = async (data: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.baseInfo = 0);
 
@@ -1478,13 +1436,13 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 검색어 태그 설정(스마트스토어)
+	/** 검색어 태그 설정(스마트스토어) */
 	setProductImmSearchTag = (data: any, index: number) => {
 		this.itemInfo.items[index].immSearchTags = data;
 		this.itemInfo.items[index].edited.baseInfo = 1;
 	};
 
-	// 검색어 태그 사용불가 단어 조회(스마트스토어)
+	/** 검색어 태그 사용불가 단어 조회(스마트스토어) */
 	verifyProductImmSearchTag = async (data: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.baseInfo = 0);
 
@@ -1570,7 +1528,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 검색어 태그 삭제(스마트스토어)
+	/** 검색어 태그 삭제(스마트스토어) */
 	removeProductImmSearchTag = async (data: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.baseInfo = 0);
 
@@ -1605,7 +1563,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 썸네일이미지 추가
+	/** 썸네일이미지 추가 */
 	addProductThumbnailImage = async (blob: any, base64: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.thumbnailImages = 0);
 
@@ -1666,7 +1624,7 @@ export class product {
 		});
 	};
 
-	// 썸네일이미지 스왑/업데이트
+	/** 썸네일이미지 스왑/업데이트 */
 	updateProductThumbnailImage = async (src: number, dst: number, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.thumbnailImages = 0);
 
@@ -1705,13 +1663,13 @@ export class product {
 		});
 	};
 
-	// 상품 판매가 설정
+	/** 상품 판매가 설정 */
 	setProductPrice = (price: number, index: number) => {
 		this.itemInfo.items[index].price = price;
 		this.itemInfo.items[index].edited.price = 1;
 	};
 
-	// 상품 판매가 업데이트
+	/** 상품 판매가 업데이트 */
 	updateProductPrice = async (index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.price = 0);
 
@@ -1741,7 +1699,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 옵션가격 설정
+	/** 옵션가격 설정 */
 	setProductOption = (commonStore: common, data: any, index: number, optionIndex: number, handlePrice: boolean) => {
 		let price: any = null;
 
@@ -1765,7 +1723,7 @@ export class product {
 		this.itemInfo.items[index].edited.option = 1;
 	};
 
-	// 옵션가격 일괄설정
+	/** 옵션가격 일괄설정 */
 	updateManyProductOption = async (index: number, optionIds: any) => {
 		const exit = () => (this.itemInfo.items[index].edited.option = 0);
 
@@ -1832,7 +1790,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 옵션명 변경
+	/** 옵션명 변경 */
 	replaceProductOption = async (commonStore: common, index: number) => {
 		const taobaoData = JSON.parse(this.itemInfo.items[index].activeTaobaoProduct.originalData);
 
@@ -1962,7 +1920,7 @@ export class product {
 		});
 	};
 
-	// 옵션가격 활성화 ON/OFF
+	/** 옵션가격 활성화 ON/OFF */
 	toggleProductOption = (value: boolean, index: number) => {
 		const optionIds = this.itemInfo.items[index].productOption.map((v: any) => {
 			v.isActive = value;
@@ -1975,7 +1933,7 @@ export class product {
 		this.updateManyProductOption(index, optionIds);
 	};
 
-	// 옵션가격 계산
+	/** 옵션가격 계산 */
 	calcProductOptionPrice = async (offset: number, type: string, index: number, valueIndex: any, activeOnly: any) => {
 		let options: any = null;
 
@@ -2095,14 +2053,14 @@ export class product {
 		floatingToast('옵션세부정보가 저장되었습니다.', 'success');
 	};
 
-	// 옵션가 설정
+	/** 옵션가 설정 */
 	setProductOptionPrice = (data: Partial<ManyPriceInfo>, index: number) => {
 		Object.assign(this.itemInfo.items[index], data);
 
 		this.itemInfo.items[index].edited.price = 1;
 	};
 
-	// 옵션가 업데이트
+	/** 옵션가 업데이트 */
 	updateProductOptionPrice = async (commonStore: common, data: Partial<ManyPriceInfo>, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.price = 0);
 
@@ -2222,7 +2180,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 옵션이미지 업데이트
+	/** 옵션이미지 업데이트 */
 	updateProductOptionImage = async (data: any, index: number, nameIndex: number, valueIndex: number, base64: any) => {
 		const exit = () => (this.itemInfo.items[index].edited.optionImages = 0);
 
@@ -2289,7 +2247,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 옵션값 설정
+	/** 옵션값 설정 */
 	setProductOptionValue = (data: any, index: number, nameIndex: number, valueIndex: any) => {
 		if (valueIndex === null) this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue = data;
 		else this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue[valueIndex] = data;
@@ -2297,7 +2255,7 @@ export class product {
 		this.itemInfo.items[index].edited.option = 1;
 	};
 
-	// 옵션값 업데이트
+	/** 옵션값 업데이트 */
 	updateProductOptionValue = async (commonStore: common, index: number, nameIndex: number, valueIds: any) => {
 		const exit = () => (this.itemInfo.items[index].edited.option = 0);
 
@@ -2357,7 +2315,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 옵션값 일괄설정
+	/** 옵션값 일괄설정 */
 	setProductOptionValueAll = (data: any, index: number, nameIndex: number) => {
 		this.itemInfo.items[index].productOptionName[nameIndex].productOptionValue.map(
 			(v: any) => (v.isActive = data.isActive),
@@ -2366,7 +2324,7 @@ export class product {
 		this.itemInfo.items[index].edited.option = 1;
 	};
 
-	// 옵션값 일괄 업데이트
+	/** 옵션값 일괄 업데이트 */
 	updateProductOptionValueAll = async (commonStore: common, data: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.option = 0);
 
@@ -2398,13 +2356,13 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 옵션명 설정
+	/** 옵션명 설정 */
 	setProductOptionName = (data: any, index: number, nameIndex: number) => {
 		this.itemInfo.items[index].productOptionName[nameIndex] = data;
 		this.itemInfo.items[index].edited.option = 1;
 	};
 
-	// 옵션명 업데이트
+	/** 옵션명 업데이트 */
 	updateProductOptionName = async (commonStore: common, data: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.option = 0);
 
@@ -2437,7 +2395,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 상세페이지 이미지 필터링
+	/** 상세페이지 이미지 필터링 */
 	filterDescription = (itemIndex: number, imageIndex: number) => {
 		const imageList = this.itemInfo.items[itemIndex].descriptionImages.filter((v: any, i: number) => {
 			if (i !== imageIndex) return true;
@@ -2460,13 +2418,13 @@ export class product {
 		this.updateDescription(itemIndex);
 	};
 
-	// 상세페이지 설정
+	/** 상세페이지 설정 */
 	setDescription = (html: any, index: number) => {
 		this.itemInfo.items[index].description = html;
 		this.itemInfo.items[index].edited.descriptions = 1;
 	};
 
-	// 상세페이지 이미지 스왑/업데이트
+	/** 상세페이지 이미지 스왑/업데이트 */
 	switchDescription = (src: number, dst: number, index: number) => {
 		if (src === dst) return;
 
@@ -2487,7 +2445,7 @@ export class product {
 		this.updateDescription(index);
 	};
 
-	// 상세페이지 업데이트
+	/** 상세페이지 업데이트 */
 	updateDescription = async (index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.descriptions = 0);
 
@@ -2517,7 +2475,7 @@ export class product {
 		exit();
 	};
 
-	// 상세페이지 이미지 업데이트
+	/** 상세페이지 이미지 업데이트 */
 	updateDescriptionImages = async (index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.descriptions = 0);
 
@@ -2636,7 +2594,7 @@ export class product {
 		this.itemInfo.items[index].edited.baseInfo = 1;
 	};
 
-	// 오픈마켓수수료 업데이트
+	/** 오픈마켓수수료 업데이트 */
 	updateProductFee = async (data: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.baseInfo = 0);
 
@@ -2659,25 +2617,25 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 판매가 일괄설정
+	/** 판매가 일괄설정 */
 	setManyPriceInfo = (data: ManyPriceInfo) => (this.manyPriceInfo = data);
 
-	// 오픈마켓수수료 일괄설정
+	/** 오픈마켓수수료 일괄설정 */
 	setManyFeeInfo = (data: any) => (this.manyFeeInfo = data);
 
-	// 카테고리 일괄설정
+	/** 카테고리 일괄설정 */
 	setManyCategoryInfo = (data: any) => (this.manyCategoryInfo = data);
 
-	// 상품명 일괄설정
+	/** 상품명 일괄설정 */
 	setManyNameInfo = (data: any) => (this.manyNameInfo = data);
 
-	// 검색어태그 일괄설정
+	/** 검색어태그 일괄설정 */
 	setManyTagInfo = (data: any) => (this.manyTagInfo = data);
 
-	// 상세페이지 일괄설정
+	/** 상세페이지 일괄설정 */
 	setManyDescriptionInfo = (data: any) => (this.manyDescriptionInfo = data);
 
-	// 판매가 일괄 업데이트
+	/** 판매가 일괄 업데이트 */
 	updateManyPrice = async (commonStore: common) => {
 		let productIds: any = [];
 
@@ -2704,7 +2662,7 @@ export class product {
 		this.refreshProduct(commonStore);
 	};
 
-	// 오픈마켓수수료 일괄 업데이트
+	/** 오픈마켓수수료 일괄 업데이트 */
 	updateManyFee = async (commonStore: common, ids: any) => {
 		let productIds: any = [];
 
@@ -2742,7 +2700,7 @@ export class product {
 		this.refreshProduct(commonStore);
 	};
 
-	// 카테고리 일괄 업데이트
+	/** 카테고리 일괄 업데이트 */
 	updateManyCategory = async (commonStore: common, ids: any) => {
 		let productIds: any = [];
 
@@ -2822,7 +2780,7 @@ export class product {
 		this.refreshProduct(commonStore);
 	};
 
-	// 상품명 일괄 업데이트
+	/** 상품명 일괄 업데이트 */
 	updateManyName = async (commonStore: common, data: any) => {
 		let productIds: any = [];
 
@@ -2840,7 +2798,7 @@ export class product {
 		this.refreshProduct(commonStore);
 	};
 
-	// 검색어태그 일괄 업데이트
+	/** 검색어태그 일괄 업데이트 */
 	updateManyTag = async (commonStore: common) => {
 		let productIds: any = [];
 
@@ -2907,7 +2865,7 @@ export class product {
 		this.refreshProduct(commonStore);
 	};
 
-	// 상세페이지 일괄 업데이트
+	/** 상세페이지 일괄 업데이트 */
 	updateManyDescription = async (commonStore: common) => {
 		const inputs = this.itemInfo.items
 			.filter((v) => v.checked)
@@ -2934,7 +2892,7 @@ export class product {
 		this.toggleDescriptionModal(false, 0);
 	};
 
-	// 상품명 일괄 업데이트
+	/** 상품명 일괄 업데이트 */
 	updateMultipleProductName = async (commonStore: common, data: any) => {
 		data = data.filter((v: any, i: number) => {
 			if (!v) return false;
@@ -2954,35 +2912,29 @@ export class product {
 		this.refreshProduct(commonStore);
 	};
 
-	// 상품 단일선택
+	/** 상품 단일선택 */
 	toggleItemChecked = (index: number, value: boolean) => (this.itemInfo.items[index].checked = value);
 
-	// 상품 일괄선택
+	/** 상품 일괄선택 */
 	toggleItemCheckedAll = (value: boolean) => {
 		this.itemInfo.checkedAll = value;
 		this.itemInfo.items.map((v) => (v.checked = value));
 	};
 
-	// 상품 펼쳐보기 (상세보기)
+	/** 상품 펼쳐보기 (상세보기) */
 	toggleItemCollapse = (index: number) => (this.itemInfo.items[index].collapse = !this.itemInfo.items[index].collapse);
 
-	// 상품 옵션명 원문보기
+	/** 상품 옵션명 원문보기 */
 	toggleItemOptionCollapse = (index: number) =>
 		(this.itemInfo.items[index].optionCollapse = !this.itemInfo.items[index].optionCollapse);
 
-	// 2.0 상품등록 모달
-	// toggleEsm2UploadModal = (index: number, value: boolean) => {
-	// 	this.Esm2uploadIndex = index;
-	// 	this.modalInfo.Esm2upload = value;
-	// };
-
-	// 상품등록 모달
+	/** 상품등록 모달 */
 	toggleUploadModal = (index: number, value: boolean) => {
 		this.uploadIndex = index;
 		this.modalInfo.upload = value;
 	};
 
-	// 상품 등록해제 모달
+	/** 상품 등록해제 모달 */
 	toggleUploadDisabledModal = (index: number, value: boolean, commonStore: common) => {
 		if (value) {
 			if (index > -1)
@@ -3004,389 +2956,445 @@ export class product {
 		this.modalInfo.uploadDisabled = value;
 	};
 
-	// 상품 등록실패 모달
+	/** 상품 등록실패 모달 */
 	toggleUploadFailedModal = (index: number, value: boolean) => {
 		if (index > -1) this.uploadFailedIndex = index;
 
 		this.modalInfo.uploadFailed = value;
 	};
 
-	// 상품 상세설명 모달
+	/** 상품 상세설명 모달 */
 	toggleDescriptionModal = (value: boolean, index: number) => {
 		this.itemInfo.current = index;
 		this.modalInfo.description = value;
 	};
 
-	// 판매가 일괄설정 모달
+	/** 판매가 일괄설정 모달 */
 	toggleManyPriceModal = (value: boolean) => (this.modalInfo.price = value);
 
-	// 오픈마켓 수수료 일괄설정 모달
+	/** 오픈마켓 수수료 일괄설정 모달 */
 	toggleManyFeeModal = (value: boolean) => (this.modalInfo.fee = value);
 
-	// 카테고리 일괄설정 모달
+	/** 카테고리 일괄설정 모달 */
 	toggleManyCategoryModal = (value: boolean) => (this.modalInfo.category = value);
 
-	// 상품명 일괄설정 모달
+	/** 상품명 일괄설정 모달 */
 	toggleManyNameModal = (value: boolean) => (this.modalInfo.name = value);
 
-	// 잠금 일괄설정 모달
+	/** 잠금 일괄설정 모달 */
 	toggleManyLockModal = (value: boolean) => (this.modalInfo.locked = value);
 
-	// 검색어 태그 일괄설정 모달
+	/** 검색어 태그 일괄설정 모달 */
 	toggleManyTagModal = (value: boolean) => (this.modalInfo.tag = value);
 
-	// 검색어 필터 모달
+	/** 검색어 필터 모달 */
 	toggleSearchFilterModal = (value: boolean) => (this.modalInfo.userFilter = value);
 
-	// 엑셀파일 상품수집 모달
+	/** 엑셀파일 상품수집 모달 */
 	toggleCollectExcelModal = (value: boolean) => (this.modalInfo.collectExcel = value);
 
-	// 검색어 필터 모달
-	toggleSearchFilter = () => (this.searchInfo.userFilter = !this.searchInfo.userFilter);
+	/** 검색어 필터 모달 */
+	// toggleSearchFilter = () => (this.searchInfo.useFilter = !this.searchInfo.useFilter);
 
-	// 검색정보 설정
-	setSearchInfo = (data: any) => (this.searchInfo = data);
+	/** 검색정보 설정 */
+	setSearchInfo = (data: ProductWhereInput) => (this.searchInfo = data);
 
-	// 검색조건 설정 (AND)
-	setSearchWhereAndInput = (where: any) => (this.searchInfo.whereInput.AND = where);
+	/** 검색 키워드 설정 */
+	setSearchKeyword = ({ type, keyword }: { type: SearchType; keyword: string }) => {
+		if (keyword === '') return (this.searchInfo.OR = undefined);
 
-	// 검색조건 설정 (OR)
-	setSearchWhereOrInput = (where: any) => (this.searchInfo.whereInput.OR = where);
-
-	// 상페 미리보기 모달
-	// togglePreviewModal = (value: boolean, index: number) => {
-	// 	this.itemInfo.current = index;
-	// };
-
-	/** 검색결과 조회
-	 * @param commonStore common
-	 * @param removeState 강제관리탭인 경우 -> 등록,잠금,수집 상품 모두조회
-	 * */
-	getSearchResult = (commonStore: common, removeState?: boolean) => {
-		this.setSearchWhereAndInput([
-			!removeState ? { state: { equals: this.state } } : {},
-			{ myLock: (this.state === 7 && this.myLock === 1) || removeState ? {} : { equals: this.myLock } },
-			{
-				categoryInfoA077: this.searchInfo.categoryInfo.code
-					? { code: { equals: this.searchInfo.categoryInfo.code } }
-					: {},
-			},
-			{
-				createdAt: this.searchInfo.collectedStart ? { gte: this.searchInfo.collectedStart } : {},
-			},
-			{
-				createdAt: this.searchInfo.collectedEnd ? { lte: this.searchInfo.collectedEnd } : {},
-			},
-			{
-				stockUpdatedAt: this.searchInfo.registeredStart ? { gte: this.searchInfo.registeredStart } : {},
-			},
-			{
-				stockUpdatedAt: this.searchInfo.registeredEnd ? { lte: this.searchInfo.registeredEnd } : {},
-			},
-			{
-				taobaoProduct: this.searchInfo.cnyPriceStart ? { price: { gte: this.searchInfo.cnyPriceStart } } : {},
-			},
-			{
-				taobaoProduct: this.searchInfo.cnyPriceEnd ? { price: { lte: this.searchInfo.cnyPriceEnd } } : {},
-			},
-			{
-				cnyRate: this.searchInfo.cnyRateStart ? { gte: this.searchInfo.cnyRateStart } : {},
-			},
-			{
-				cnyRate: this.searchInfo.cnyRateEnd ? { lte: this.searchInfo.cnyRateEnd } : {},
-			},
-			{
-				localShippingFee: this.searchInfo.localFeeStart ? { gte: this.searchInfo.localFeeStart } : {},
-			},
-			{
-				localShippingFee: this.searchInfo.localFeeEnd ? { lte: this.searchInfo.localFeeEnd } : {},
-			},
-			{
-				marginRate: this.searchInfo.marginRateStart ? { gte: this.searchInfo.marginRateStart } : {},
-			},
-			{
-				marginRate: this.searchInfo.marginRateEnd ? { lte: this.searchInfo.marginRateEnd } : {},
-			},
-			{
-				price: this.searchInfo.priceStart ? { gte: this.searchInfo.priceStart } : {},
-			},
-			{
-				price: this.searchInfo.priceEnd ? { lte: this.searchInfo.priceEnd } : {},
-			},
-			{
-				shippingFee: this.searchInfo.feeStart ? { gte: this.searchInfo.feeStart } : {},
-			},
-			{
-				shippingFee: this.searchInfo.feeEnd ? { lte: this.searchInfo.feeEnd } : {},
-			},
-			{
-				taobaoProduct: this.searchInfo.shopName === 'ALL' ? {} : { shopName: { equals: this.searchInfo.shopName } },
-			},
-			{
-				taobaoProduct:
-					this.searchInfo.hasVideo === 'ALL'
-						? {}
-						: this.searchInfo.hasVideo === 'Y'
-						? { videoUrl: { not: { equals: null } } }
-						: { videoUrl: { equals: null } },
-			},
-			{
-				productStore:
-					this.state === 6 || removeState
-						? {}
-						: {
-								some: {
-									AND: [
-										{
-											siteCode: this.searchInfo.marketName === 'ALL' ? {} : { equals: this.searchInfo.marketName },
-										},
-										{
-											state:
-												this.searchInfo.hasRegistered === 'ALL'
-													? {}
-													: this.searchInfo.hasRegistered === 'Y'
-													? { equals: 2 }
-													: { not: { equals: 2 } },
-										},
-									],
-								},
-						  },
-			},
-		]);
-
-		switch (this.searchInfo.searchType) {
-			case 'ALL': {
-				this.setSearchWhereOrInput([
-					{ productCode: { contains: this.searchInfo.searchKeyword } },
-					{
-						taobaoProduct: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{ name: { contains: this.searchInfo.searchKeyword } },
-					{
-						categoryInfoA077: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoB378: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA112: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA113: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA006: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA001: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA027: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoB719: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA524: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA525: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoB956: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						taobaoProduct: {
-							taobaoNumIid: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						productStore: {
-							some: {
-								storeProductId: { contains: this.searchInfo.searchKeyword },
-							},
-						},
-					},
-				]);
-
-				break;
-			}
-
+		switch (type) {
 			case 'PCODE': {
-				if (!this.searchInfo.searchKeyword.includes('SFY_')) return alert('상품코드는 SFY_000 형식으로 입력해주세요.');
+				if (!keyword.includes('SFY_')) return alert('상품코드는 SFY_000 형식으로 입력해주세요.');
 
 				let list: string[] = [];
 				let parseList: number[] = [];
 
-				list = this.searchInfo.searchKeyword.split(',');
+				list = keyword.split(',');
 				list.map((v) => {
 					if (!v.includes('SFY_')) return alert('모든 상품코드는 SFY_000 형식으로 입력해주세요.');
-
 					parseList.push(parseInt(v.split('_')[1], 36));
 				});
-
-				this.setSearchWhereOrInput([{ id: { in: parseList } }]);
-
+				this.searchInfo.OR = [{ id: { in: parseList } }];
 				break;
 			}
 
 			case 'ONAME': {
-				this.setSearchWhereOrInput([
-					{
-						taobaoProduct: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-				]);
+				this.searchInfo.OR = [{ taobaoProduct: { name: { contains: keyword } } }];
 				break;
 			}
+
 			case 'NAME': {
-				this.setSearchWhereOrInput([{ name: { contains: this.searchInfo.searchKeyword } }]);
+				this.searchInfo.OR = [{ name: { contains: keyword } }];
 				break;
 			}
 
 			case 'CNAME': {
-				this.setSearchWhereOrInput([
-					{
-						categoryInfoA077: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoB378: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA112: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA113: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA006: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA001: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA027: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoB719: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA524: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoA525: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-					{
-						categoryInfoB956: {
-							name: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-				]);
+				this.searchInfo.OR = [
+					{ categoryInfoA077: { name: { contains: keyword } } },
+					{ categoryInfoB378: { name: { contains: keyword } } },
+					{ categoryInfoA112: { name: { contains: keyword } } },
+					{ categoryInfoA113: { name: { contains: keyword } } },
+					{ categoryInfoA006: { name: { contains: keyword } } },
+					{ categoryInfoA001: { name: { contains: keyword } } },
+					{ categoryInfoA027: { name: { contains: keyword } } },
+					{ categoryInfoB719: { name: { contains: keyword } } },
+					{ categoryInfoA524: { name: { contains: keyword } } },
+					{ categoryInfoA525: { name: { contains: keyword } } },
+					{ categoryInfoB956: { name: { contains: keyword } } },
+				];
 				break;
 			}
 
 			case 'OID': {
-				this.setSearchWhereOrInput([
-					{
-						taobaoProduct: {
-							taobaoNumIid: { contains: this.searchInfo.searchKeyword },
-						},
-					},
-				]);
+				this.searchInfo.OR = [{ taobaoProduct: { taobaoNumIid: { contains: keyword } } }];
 				break;
 			}
 
 			case 'MID': {
-				this.setSearchWhereOrInput([
-					{
-						productStore: {
-							some: {
-								storeProductId: { contains: this.searchInfo.searchKeyword },
-							},
-						},
-					},
-					{
-						productStore: {
-							some: {
-								etcVendorItemId: { contains: this.searchInfo.searchKeyword },
-							},
-						},
-					},
-				]);
+				this.searchInfo.OR = [
+					{ productStore: { some: { storeProductId: { contains: keyword } } } },
+					{ productStore: { some: { etcVendorItemId: { contains: keyword } } } },
+				];
 				break;
 			}
 
-			case 'KEYWARD': {
-				this.setSearchWhereOrInput([{ myKeyward: { equals: this.searchInfo.searchKeyword } }]);
+			case 'MYKEYWORD': {
+				this.searchInfo.OR = [{ myKeyward: { contains: keyword } }];
 				break;
 			}
 		}
-
-		this.page = 1;
-
-		this.getProduct(commonStore, this.page);
 	};
 
-	// 상품 세부정보에서 탭 이동
-	switchTabs = (index: number, value: number) => (this.itemInfo.items[index].tabs = value);
+	/** 상품 필터 초기화 */
+	initSearchInfo = () => (this.searchInfo = {});
 
-	// 상품 등록 시 탭 이동
-	switchUploadTabs = (value: number) => (this.modalInfo.uploadTabIndex = value);
+	/** 검색조건 설정 (AND) */
+	setSearchWhereAndInput = (where: ProductWhereInput[]) => (this.searchInfo.AND = where);
 
-	// Esm2.0 상품 등록 시 탭 이동
-	// switchEsm2UploadTabs = (value: number) => {
-	// 	this.modalInfo.Esm2uploadTabIndex = value;
+	/** 검색조건 설정 (OR) */
+	setSearchWhereOrInput = (where: ProductWhereInput[]) => (this.searchInfo.OR = where);
+
+	/** 검색결과 조회 */
+	// getSearchResult = (commonStore: common) => {
+	// 	this.setSearchWhereAndInput([
+	// 		{ state: { in: this.state } },
+	// 		{ myLock: compareArray(this.state, [7]) && this.myLock === 1 ? {} : { equals: this.myLock } },
+	// 		{
+	// 			categoryInfoA077: this.searchInfo.categoryInfo.code
+	// 				? { code: { equals: this.searchInfo.categoryInfo.code } }
+	// 				: {},
+	// 		},
+	// 		{
+	// 			createdAt: this.searchInfo.collectedStart ? { gte: this.searchInfo.collectedStart } : {},
+	// 		},
+	// 		{
+	// 			createdAt: this.searchInfo.collectedEnd ? { lte: this.searchInfo.collectedEnd } : {},
+	// 		},
+	// 		{
+	// 			stockUpdatedAt: this.searchInfo.registeredStart ? { gte: this.searchInfo.registeredStart } : {},
+	// 		},gte
+	// 		{
+	// 			stockUpdatedAt: this.searchInfo.registeredEnd ? { lte: this.searchInfo.registeredEnd } : {},
+	// 		},
+	// 		{
+	// 			taobaoProduct: this.searchInfo.cnyPriceStart ? { price: { gte: this.searchInfo.cnyPriceStart } } : {},
+	// 		},
+	// 		{
+	// 			taobaoProduct: this.searchInfo.cnyPriceEnd ? { price: { lte: this.searchInfo.cnyPriceEnd } } : {},
+	// 		},
+	// 		{
+	// 			cnyRate: this.searchInfo.cnyRateStart ? { gte: this.searchInfo.cnyRateStart } : {},
+	// 		},
+	// 		{
+	// 			cnyRate: this.searchInfo.cnyRateEnd ? { lte: this.searchInfo.cnyRateEnd } : {},
+	// 		},
+	// 		{
+	// 			localShippingFee: this.searchInfo.localFeeStart ? { gte: this.searchInfo.localFeeStart } : {},
+	// 		},
+	// 		{
+	// 			localShippingFee: this.searchInfo.localFeeEnd ? { lte: this.searchInfo.localFeeEnd } : {},
+	// 		},
+	// 		{
+	// 			marginRate: this.searchInfo.marginRateStart ? { gte: this.searchInfo.marginRateStart } : {},
+	// 		},
+	// 		{
+	// 			marginRate: this.searchInfo.marginRateEnd ? { lte: this.searchInfo.marginRateEnd } : {},
+	// 		},
+	// 		{
+	// 			price: this.searchInfo.priceStart ? { gte: this.searchInfo.priceStart } : {},
+	// 		},
+	// 		{
+	// 			price: this.searchInfo.priceEnd ? { lte: this.searchInfo.priceEnd } : {},
+	// 		},
+	// 		{
+	// 			shippingFee: this.searchInfo.feeStart ? { gte: this.searchInfo.feeStart } : {},
+	// 		},
+	// 		{
+	// 			shippingFee: this.searchInfo.feeEnd ? { lte: this.searchInfo.feeEnd } : {},
+	// 		},
+	// 		{
+	// 			taobaoProduct: this.searchInfo.shopName === 'ALL' ? {} : { shopName: { equals: this.searchInfo.shopName } },
+	// 		},
+	// 		{
+	// 			taobaoProduct:
+	// 				this.searchInfo.hasVideo === 'ALL'
+	// 					? {}
+	// 					: this.searchInfo.hasVideo === 'Y'
+	// 					? { videoUrl: { not: { equals: null } } }
+	// 					: { videoUrl: { equals: null } },
+	// 		},
+	// 		{
+	// 			productStore: compareArray(this.state, [6])
+	// 				? {}
+	// 				: {
+	// 						some: {
+	// 							AND: [
+	// 								{
+	// 									siteCode: this.searchInfo.marketName === 'ALL' ? {} : { equals: this.searchInfo.marketName },
+	// 								},
+	// 								{
+	// 									state:
+	// 										this.searchInfo.hasRegistered === 'ALL'
+	// 											? {}
+	// 											: this.searchInfo.hasRegistered === 'Y'
+	// 											? { equals: 2 }
+	// 											: { not: { equals: 2 } },
+	// 								},
+	// 							],
+	// 						},
+	// 				  },
+	// 		},
+	// 	]);
+
+	// 	switch (this.searchInfo.searchType) {
+	// 		case 'ALL': {
+	// 			this.setSearchWhereOrInput([
+	// 				{ productCode: { contains: this.searchInfo.searchKeyword } },
+	// 				{
+	// 					taobaoProduct: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{ name: { contains: this.searchInfo.searchKeyword } },
+	// 				{
+	// 					categoryInfoA077: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoB378: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA112: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA113: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA006: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA001: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA027: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoB719: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA524: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA525: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoB956: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					taobaoProduct: {
+	// 						taobaoNumIid: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					productStore: {
+	// 						some: {
+	// 							storeProductId: { contains: this.searchInfo.searchKeyword },
+	// 						},
+	// 					},
+	// 				},
+	// 			]);
+
+	// 			break;
+	// 		}
+
+	// 		case 'PCODE': {
+	// 			if (!this.searchInfo.searchKeyword.includes('SFY_')) return alert('상품코드는 SFY_000 형식으로 입력해주세요.');
+
+	// 			let list: string[] = [];
+	// 			let parseList: number[] = [];
+
+	// 			list = this.searchInfo.searchKeyword.split(',');
+	// 			list.map((v) => {
+	// 				if (!v.includes('SFY_')) return alert('모든 상품코드는 SFY_000 형식으로 입력해주세요.');
+
+	// 				parseList.push(parseInt(v.split('_')[1], 36));
+	// 			});
+
+	// 			this.setSearchWhereOrInput([{ id: { in: parseList } }]);
+
+	// 			break;
+	// 		}
+
+	// 		case 'ONAME': {
+	// 			this.setSearchWhereOrInput([
+	// 				{
+	// 					taobaoProduct: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 			]);
+	// 			break;
+	// 		}
+	// 		case 'NAME': {
+	// 			this.setSearchWhereOrInput([{ name: { contains: this.searchInfo.searchKeyword } }]);
+	// 			break;
+	// 		}
+
+	// 		case 'CNAME': {
+	// 			this.setSearchWhereOrInput([
+	// 				{
+	// 					categoryInfoA077: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoB378: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA112: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA113: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA006: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA001: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA027: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoB719: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA524: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoA525: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 				{
+	// 					categoryInfoB956: {
+	// 						name: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 			]);
+	// 			break;
+	// 		}
+
+	// 		case 'OID': {
+	// 			this.setSearchWhereOrInput([
+	// 				{
+	// 					taobaoProduct: {
+	// 						taobaoNumIid: { contains: this.searchInfo.searchKeyword },
+	// 					},
+	// 				},
+	// 			]);
+	// 			break;
+	// 		}
+
+	// 		case 'MID': {
+	// 			this.setSearchWhereOrInput([
+	// 				{
+	// 					productStore: {
+	// 						some: {
+	// 							storeProductId: { contains: this.searchInfo.searchKeyword },
+	// 						},
+	// 					},
+	// 				},
+	// 				{
+	// 					productStore: {
+	// 						some: {
+	// 							etcVendorItemId: { contains: this.searchInfo.searchKeyword },
+	// 						},
+	// 					},
+	// 				},
+	// 			]);
+	// 			break;
+	// 		}
+
+	// 		case 'KEYWARD': {
+	// 			this.setSearchWhereOrInput([{ myKeyward: { equals: this.searchInfo.searchKeyword } }]);
+	// 			break;
+	// 		}
+	// 	}
+
+	// 	this.page = 1;
+
+	// 	this.getProduct(commonStore, this.page);
 	// };
 
-	// 상품 등록 - 등록중
+	/** 상품 세부정보에서 탭 이동 */
+	switchTabs = (index: number, value: number) => (this.itemInfo.items[index].tabs = value);
+
+	/** 상품 등록 시 탭 이동 */
+	switchUploadTabs = (value: number) => (this.modalInfo.uploadTabIndex = value);
+
+	/** 상품 등록 - 등록중 */
 	addRegisteredQueue = (data: any) => this.registeredInfo.wait.push(data);
 
-	// 상품 등록 - 등록완료
+	/** 상품 등록 - 등록완료 */
 	addRegisteredSuccess = (data: any) => {
 		this.registeredInfo.wait = this.registeredInfo.wait.filter((v: any) => {
 			if (v.site_name === data.site_name && v.code === data.code) return false;
@@ -3396,7 +3404,7 @@ export class product {
 		this.registeredInfo.success.push(data);
 	};
 
-	// 상품 등록 - 등록실패
+	/** 상품 등록 - 등록실패 */
 	addRegisteredFailed = (data: any) => {
 		this.registeredInfo.wait = this.registeredInfo.wait.filter((v: any) => {
 			if (v.site_name === data.site_name && v.code === data.code) return false;
@@ -3551,7 +3559,7 @@ export class product {
 		if (response.errors) return alert(response.errors[0].message);
 
 		const data = JSON.parse(response.data.getRegisterProductsDataByUser);
-		console.log({ data });
+
 		if (edit) {
 			commonStore.setEditedUpload(true);
 			this.addConsoleText('상품 수정을 시작합니다.');
@@ -3642,85 +3650,6 @@ export class product {
 		commonStore.setStopped(true);
 	};
 
-	// 상품 등록 esm2.0
-	// Esm2uploadItems = async (commonStore: common, edit: boolean) => {
-	// 	let productIds: any = [];
-
-	// 	if (this.Esm2uploadIndex > -1) {
-	// 		productIds.push(this.itemInfo.items[this.Esm2uploadIndex].id);
-	// 	} else {
-	// 		this.itemInfo.items.map((v: any) => {
-	// 			if (v.checked) {
-	// 				productIds.push(v.id);
-	// 			}
-	// 		});
-	// 	}
-
-	// 	if (productIds.length < 1) {
-	// 		alert('상품이 선택되지 않았습니다.');
-
-	// 		return;
-	// 	}
-
-	// 	const markets = commonStore.uploadInfo.markets.filter((v: any) => v.upload).map((v: any) => v.code);
-
-	// 	if (markets.length < 1) {
-	// 		alert('오픈마켓이 선택되지 않았습니다.');
-
-	// 		return;
-	// 	}
-
-	// 	const response = await gql(QUERIES.GET_REGISTER_PRODUCTS_DATA_BY_USER, {
-	// 		productIds,
-	// 		siteCode: markets,
-	// 	});
-
-	// 	if (response.errors) {
-	// 		alert(response.errors[0].message);
-
-	// 		return;
-	// 	}
-
-	// 	const data = JSON.parse(response.data.getRegisterProductsDataByUser);
-
-	// 	if (edit) {
-	// 		commonStore.setEditedUpload(true);
-
-	// 		this.Esm2AddConsoleText('상품 수정을 시작합니다.');
-	// 	} else {
-	// 		commonStore.setEditedUpload(false);
-
-	// 		this.Esm2AddConsoleText('상품 등록을 시작합니다.');
-	// 	}
-
-	// 	this.Esm2clearUploadResults();
-
-	// 	commonStore.setStopped(false);
-
-	// 	await Promise.all([
-	// 		uploadESMPlus2(
-	// 			this,
-	// 			commonStore,
-	// 			data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A522'), //옥션2.0
-	// 		),
-	// 		uploadESMPlus2(
-	// 			this,
-	// 			commonStore,
-	// 			data.job_json_array.find((v: any) => v.DShopInfo.site_code === 'A523'), //지마켓2.0
-	// 		),
-	// 	]);
-
-	// 	if (commonStore.uploadInfo.stopped) {
-	// 		alert('업로드가 중단되었습니다.');
-	// 	}
-
-	// 	this.refreshProduct(commonStore);
-
-	// 	commonStore.initUploadMarketProgress();
-	// 	commonStore.setUploadable(true);
-	// 	commonStore.setStopped(true);
-	// };
-
 	/** 등록 진행상태 표시 */
 	addConsoleText = (text: string) => {
 		const today = getClock();
@@ -3729,25 +3658,7 @@ export class product {
 		this.uploadConsole.push(result);
 	};
 
-	// 등록 진행상태 표시 ok
-	// Esm2AddConsoleText = (text: string) => {
-	// 	const today = getClock();
-	// 	const result = `[${today.hh}:${today.mm}:${today.ss}] ${text}`;
-
-	// 	this.Esm2uploadConsole.push(result);
-	// };
-
-	// 등록 결과 초기화 ok
-	// Esm2clearUploadResults = () => {
-	// 	this.registeredInfo = {
-	// 		wait: [],
-	// 		success: [],
-	// 		failed: [],
-	// 	};
-
-	// 	this.Esm2uploadConsole = [];
-	// };
-	// 등록 결과 초기화
+	/** 등록 결과 초기화 */
 	clearUploadResults = () => {
 		this.registeredInfo = {
 			wait: [],
@@ -3757,7 +3668,7 @@ export class product {
 		this.uploadConsole = [];
 	};
 
-	// 쿠팡에서는 상품 승인완료 전에 상품 URL을 알 수 없기 때문에 승인완료 시점에서 상품 URL을 넣어주는 작업 필요
+	/** 쿠팡에서는 상품 승인완료 전에 상품 URL을 알 수 없기 때문에 승인완료 시점에서 상품 URL을 넣어주는 작업 필요 */
 	updateCoupangUrl = (index: number, user: User) => {
 		this.itemInfo.items[index].productStore.map(async (v: any) => {
 			if (v.siteCode === COUPANG && v.state === 2) {
@@ -3810,7 +3721,7 @@ export class product {
 		});
 	};
 
-	// 상품정보 엑셀파일 다운로드
+	/** 상품정보 엑셀파일 다운로드 */
 	itemToExcel = () => {
 		const excelData = this.itemInfo.items.map((v) => {
 			const image = v.imageThumbnail[0];
@@ -3857,10 +3768,12 @@ export class product {
 		downloadExcel(excelData, `상품리스트`, `상품리스트`, false, 'xlsx');
 	};
 
-	// 상품목록 새로고침
-	refreshProduct = (commonStore: common) => this.getProduct(commonStore, this.page);
+	/** 상품목록 새로고침 */
+	refreshProduct = (commonStore: common) => {
+		this.getProduct(commonStore, this.page);
+	};
 
-	// 썸네일이미지 복구 - imageIndex가 있을경우 단일 복구로 동작
+	/** 썸네일이미지 복구 - imageIndex가 있을경우 단일 복구로 동작 */
 	initProductThumbnailImage = async (id: number, index: number, imageIndex?: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.thumbnailImages = 0);
 
@@ -3886,7 +3799,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 옵션이미지 복구
+	/** 옵션이미지 복구 */
 	initProductOptionImage = async (id: number, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.optionImages = 0);
 
@@ -3923,7 +3836,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 상세페이지 이미지 복구
+	/** 상세페이지 이미지 복구 */
 	initProductDescription = async (id: number, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.descriptions = 0);
 
@@ -3975,7 +3888,7 @@ export class product {
 		});
 	};
 
-	// 이미지번역결과 적용
+	/** 이미지번역결과 적용 */
 	updateImageTranslatedData = async (data: any) => {
 		const product = this.itemInfo.items.find((v) => v.id === data.productId)!;
 
@@ -4030,16 +3943,16 @@ export class product {
 		runInAction(() => (product.isImageTranslated = true));
 	};
 
-	// 옵션명 키워드추가 모달
+	/** 옵션명 키워드추가 모달 */
 	toggleAddOptionNameModal = (value: boolean) => (this.modalInfo.addOptionName = value);
 
-	// 옵션명 키워드변경 모달
+	/** 옵션명 키워드변경 모달 */
 	toggleReplaceOptionNameModal = (value: boolean) => (this.modalInfo.replaceOptionName = value);
 
-	// 사용자 정의 페이지 당 상품 수 설정
+	/** 사용자 정의 페이지 당 상품 수 설정 */
 	toggleETCPageSize = (value: boolean) => (this.etcPageSize = value);
 
-	// 에러체크
+	/** 에러체크 */
 	checkErrorExist = async (index: number) => {
 		let errorFound = false;
 		this.itemInfo.items[index].error = true;
@@ -4220,13 +4133,13 @@ export class product {
 		});
 	};
 
-	// 상품키워드 설정
+	/** 상품키워드 설정 */
 	setProductKeyward = (data: any, index: number) => {
 		this.itemInfo.items[index].myKeyward = data.myKeyward;
 		this.itemInfo.items[index].edited.attribute = 1;
 	};
 
-	// 상품속성 설정
+	/** 상품속성 설정 */
 	setProductAttribute = (data: any, index: number) => {
 		if (data.manufacturer) this.itemInfo.items[index].manuFacturer = data.manufacturer;
 		if (data.brandName) this.itemInfo.items[index].brandName = data.brandName;
@@ -4235,7 +4148,7 @@ export class product {
 		this.itemInfo.items[index].edited.attribute = 1;
 	};
 
-	//상품 잠금 기능 업데이트
+	/** 상품 잠금 기능 업데이트 */
 	updateLockProduct = async (index: number, data: any) => {
 		this.itemInfo.items[index].myLock = data.mylock; //프론트
 
@@ -4247,7 +4160,7 @@ export class product {
 		else floatingToast('상품 잠금 되었습니다.', 'success');
 	};
 
-	// 키워드 업데이트
+	/** 키워드 업데이트 */
 	updateProductMyKeyward = async (data: UpdateProductMyKeywardInPut, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.attribute = 0);
 		if (!this.itemInfo.items[index].edited.attribute) return;
@@ -4267,7 +4180,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 상품속성 업데이트
+	/** 상품속성 업데이트 */
 	updateProductAttribute = async (data: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.attribute = 0);
 
@@ -4288,17 +4201,17 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 상품속성 일괄설정 모달
+	/** 상품속성 일괄설정 모달 */
 	toggleManyAttributeModal = (value: boolean) => (this.modalInfo.attribute = value);
 
 	toggleManyMyKeywardModal = (value: boolean) => (this.modalInfo.myKeywarded = value);
 
-	// 상품속성 일괄설정
+	/** 상품속성 일괄설정 */
 	setManyAttributeInfo = (data: any) => (this.manyAttributeInfo = data);
 
 	setManyKeyward = (data: any) => (this.ManymyKeyward = data);
 
-	// 개인분류 일괄 업데이트
+	/** 개인분류 일괄 업데이트 */
 	updateManyMyKeyward = async (commonStore: common) => {
 		let productIds: any = [];
 
@@ -4319,7 +4232,7 @@ export class product {
 		this.toggleManyAttributeModal(false);
 		this.refreshProduct(commonStore);
 	};
-	// 상품속성 일괄 업데이트
+	/** 상품속성 일괄 업데이트 */
 	updateManyAttribute = async (commonStore: common) => {
 		let productIds: any = [];
 
@@ -4341,7 +4254,7 @@ export class product {
 		this.refreshProduct(commonStore);
 	};
 
-	// 고시정보 업데이트
+	/** 고시정보 업데이트 */
 	updateProdutSillCodes = async (marketCode: string, data: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.attribute = 0);
 
@@ -4393,7 +4306,7 @@ export class product {
 		runInAction(() => exit());
 	};
 
-	// 고시정보 세부내용 업데이트
+	/** 고시정보 세부내용 업데이트 */
 	updateProdutSillDatas = async (marketCode: string, data: any, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.attribute = 0);
 
@@ -4423,7 +4336,7 @@ export class product {
 		});
 	};
 
-	// 고시정보 자동매칭
+	/** 고시정보 자동매칭 */
 	updateProdutSillsAuto = async (value: any, index: number) => {
 		let sillCode: any = {};
 		let sillData: any = {};
@@ -4572,7 +4485,7 @@ export class product {
 		floatingToast('상품고시정보를 일괄설정하었습니다.', 'success');
 	};
 
-	// 이미지 자동번역
+	/** 이미지 자동번역 */
 	autoImageTranslate = async (index: number, seq: number) => {
 		let productIds: any = [];
 
@@ -4653,7 +4566,7 @@ export class product {
 		}
 	};
 
-	// 그리드뷰
+	/** 그리드뷰 */
 	setGridView = async (commonStore: common, value: boolean) => {
 		if (this.gridView === value) return;
 

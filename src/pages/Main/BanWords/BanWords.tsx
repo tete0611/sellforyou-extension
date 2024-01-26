@@ -17,7 +17,7 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material';
-import { readFileDataURL } from '../../Tools/Common';
+import { readFileDataURL } from '../../../../common/function';
 import { Title } from '../Common/UI';
 import { createTheme } from '@mui/material/styles';
 import { REG_EXP } from '../../../../common/regex';

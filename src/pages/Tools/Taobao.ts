@@ -1,5 +1,5 @@
 import { createTabCompletely, getLocalStorage, sendTabMessage, setLocalStorage } from './ChromeAsync';
-import { floatingToast, getClock, getClockOffset, parseDecode, sleep } from './Common';
+import { floatingToast, getClock, getClockOffset, parseDecode, sleep } from '../../../common/function';
 
 // 타오바오 주문조회 1차 수집
 async function taobaoAPIOrderList(seq: number, dateStart: any, dateEnd: any) {

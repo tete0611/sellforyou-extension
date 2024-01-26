@@ -27,7 +27,7 @@ import {
 } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@mui/icons-material';
 import { Image, Input, MyButton, Search } from '../../Common/UI';
-import { byteLength, byteSlice } from '../../../Tools/Common';
+import { byteLength, byteSlice } from '../../../../../common/function';
 import { Item } from '../../../../type/type';
 import { SHOPCODE } from '../../../../type/variable';
 

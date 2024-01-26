@@ -13,7 +13,7 @@ import {
 	request,
 	sendCallback,
 	transformContent,
-} from './Common';
+} from '../../../common/function';
 // 위메프 상품삭제 메시지 탭
 export async function deleteWemakeprice2(data: any) {
 	const deleteResp: any = await request('https://wpartner.wemakeprice.com/product/setProdStatus.json', {

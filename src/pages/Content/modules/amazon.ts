@@ -1,5 +1,5 @@
 import { injectScript } from './common/utils';
-import { request, sleep } from '../../Tools/Common';
+import { request, sleep } from '../../../../common/function';
 import { form } from './common/data';
 import { checkLogin } from './common/auth';
 import { User } from '../../../type/type';

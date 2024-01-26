@@ -15,7 +15,7 @@ import {
 	sleep,
 	toISO,
 	transformContent,
-} from './Common';
+} from '../../../common/function';
 import { getLocalStorage } from './ChromeAsync';
 import { product } from '../../containers/stores/product';
 import { common } from '../../containers/stores/common';

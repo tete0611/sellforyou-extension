@@ -2,7 +2,7 @@
 
 import { runInAction, makeAutoObservable } from 'mobx';
 import { getLocalStorage, setLocalStorage } from '../../pages/Tools/ChromeAsync';
-import { checkIndividualCustomUniqueCode, downloadExcel, floatingToast } from '../../pages/Tools/Common';
+import { checkIndividualCustomUniqueCode, downloadExcel, floatingToast } from '../../../common/function';
 import { deliveryOrderCoupang } from '../../pages/Tools/Coupang';
 import { getBaruenjgForm } from '../../pages/Tools/DC/Baruenjg';
 import { getBigboyForm } from '../../pages/Tools/DC/Bigboy';

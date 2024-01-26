@@ -1,7 +1,7 @@
 import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
-import { sleep, getImageSize } from '../../Tools/Common';
+import { sleep, getImageSize } from '../../../../common/function';
 import { User } from '../../../type/type';
 
 // VVIC 상품정보 크롤링

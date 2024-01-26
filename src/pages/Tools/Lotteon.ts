@@ -13,7 +13,7 @@ import {
 	notificationByEveryTime,
 	sendCallback,
 	transformContent,
-} from './Common';
+} from '../../../common/function';
 
 // 롯데온 상품등록해제
 export async function deleteLotteon(productStore: product, commonStore: common, data: any) {

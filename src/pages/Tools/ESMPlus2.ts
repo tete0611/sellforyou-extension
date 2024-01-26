@@ -4,7 +4,13 @@ import { product } from '../../containers/stores/product';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import QUERIES from '../Main/GraphQL/Queries';
 import gql from '../Main/GraphQL/Requests';
-import { byteSlice, getStoreTraceCodeV1, notificationByEveryTime, sendCallback, transformContent } from './Common';
+import {
+	byteSlice,
+	getStoreTraceCodeV1,
+	notificationByEveryTime,
+	sendCallback,
+	transformContent,
+} from '../../../common/function';
 
 // 지마켓/옥션 2.0 상품등록
 export const uploadESMPlus2 = async (productStore: product, commonStore: common, data: any) => {

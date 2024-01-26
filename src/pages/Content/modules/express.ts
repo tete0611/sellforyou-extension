@@ -1,7 +1,7 @@
 import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
-import { sleep, getImageSize } from '../../Tools/Common';
+import { sleep, getImageSize } from '../../../../common/function';
 import { User } from '../../../type/type';
 
 /** 하단까지 스크롤을 부드럽게 해주는 함수 , 기본값:0.5초 */

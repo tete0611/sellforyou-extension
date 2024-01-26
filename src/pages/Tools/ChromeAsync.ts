@@ -1,5 +1,5 @@
 import { RuntimeMessage } from '../../type/type';
-import { sleep } from './Common';
+import { sleep } from '../../../common/function';
 
 // 크롬 스토리지는 일반 브라우저 스토리지랑 공유되지 않음 (서로 접근불가)
 // sessionStorage / localStorage 는 일반 브라우저에서 사용

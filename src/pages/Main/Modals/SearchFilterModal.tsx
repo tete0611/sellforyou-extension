@@ -1,16 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Box, Grid, MenuItem, Modal, Paper, Select, Typography } from '@mui/material';
 import { Input, Search } from '../Common/UI';
 import { SHOPCODE } from '../../../type/variable';
+import { ProductStoreWhereInput, TaobaoProductWhereInput } from '../../../type/schema';
 
 // 검색필터 모달 뷰
 export const SearchFilterModal = observer(() => {
 	// MobX 스토리지 로드
 	const { product } = React.useContext(AppContext);
-	const { SMART_STORE } = SHOPCODE;
+	const { searchInfo, setSearchInfo, categoryInfo } = product;
+	const {
+		SMART_STORE,
+		AUCTION_2,
+		COUPANG,
+		G_MARKET_2,
+		INTER_PARK,
+		LOTTE_ON_GLOBAL,
+		LOTTE_ON_NORMAL,
+		STREET11_GLOBAL,
+		STREET11_NORMAL,
+		TMON,
+		WE_MAKE_PRICE,
+	} = SHOPCODE;
+
+	// 인풋 컴포넌트 들만 useState로 관리
+	const [priceStart, setPriceStart] = useState(''); // 도매가 시작
+	const [priceEnd, setPriceEnd] = useState(''); // 도매가 끝
+	const [cnyRateStart, setCnyRateStart] = useState(''); // 환율 시작
+	const [cnyRateEnd, setCnyRateEnd] = useState(''); // 환율 끝
+	const [localFeeStart, setLocalFeeStart] = useState(''); // 배대지배송비 시작
+	const [localFeeEnd, setLocalFeeEnd] = useState(''); // 배대지배송비 끝
+	const [marginRateStart, setMarginRateStart] = useState(''); // 마진율 시작
+	const [marginRateEnd, setMarginRateEnd] = useState(''); // 마진율 끝
+	const [basicPriceStart, setBasicPriceStart] = useState(''); // 기본판매가 시작
+	const [basicPriceEnd, setBasicPriceEnd] = useState(''); // 기본판매가 끝
+	const [shippingFeeStart, setShippingFeeStart] = useState(''); // 유료배송비 시작
+	const [shippingFeeEnd, setShippingFeeEnd] = useState(''); // 유료배송비 끝
 
 	return (
 		<Modal open={product.modalInfo.userFilter ?? false} onClose={() => product.toggleSearchFilterModal(false)}>
@@ -81,15 +109,18 @@ export const SearchFilterModal = observer(() => {
 													width={120}
 													type='date'
 													value={
-														product.searchInfo.collectedStart
-															? format(new Date(product.searchInfo.collectedStart), 'yyyy-MM-dd')
+														searchInfo.createdAt?.gte
+															? format(new Date(searchInfo.createdAt.gte), 'yyyy-MM-dd')
 															: undefined
 													}
 													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+														setSearchInfo({
+															...searchInfo,
 
-															collectedStart: new Date(`${e.target.value} 00:00:00`).toISOString(),
+															createdAt: {
+																...searchInfo.createdAt,
+																gte: new Date(`${e.target.value} 00:00:00`).toISOString(),
+															},
 														});
 													}}
 												/>
@@ -100,15 +131,17 @@ export const SearchFilterModal = observer(() => {
 													width={120}
 													type='date'
 													value={
-														product.searchInfo.collectedEnd
-															? format(new Date(product.searchInfo.collectedEnd), 'yyyy-MM-dd')
+														searchInfo.createdAt?.lte
+															? format(new Date(searchInfo.createdAt.lte), 'yyyy-MM-dd')
 															: undefined
 													}
 													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
-
-															collectedEnd: new Date(`${e.target.value} 23:59:59`).toISOString(),
+														setSearchInfo({
+															...searchInfo,
+															createdAt: {
+																...searchInfo.createdAt,
+																lte: new Date(`${e.target.value} 23:59:59`).toISOString(),
+															},
 														});
 													}}
 												/>
@@ -163,15 +196,18 @@ export const SearchFilterModal = observer(() => {
 													width={120}
 													type='date'
 													value={
-														product.searchInfo.registeredStart
-															? format(new Date(product.searchInfo.registeredStart), 'yyyy-MM-dd')
+														searchInfo.stockUpdatedAt?.gte
+															? format(new Date(searchInfo.stockUpdatedAt?.gte), 'yyyy-MM-dd')
 															: undefined
 													}
 													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+														setSearchInfo({
+															...searchInfo,
 
-															registeredStart: new Date(`${e.target.value} 00:00:00`).toISOString(),
+															stockUpdatedAt: {
+																...searchInfo.stockUpdatedAt,
+																gte: new Date(`${e.target.value} 00:00:00`).toISOString(),
+															},
 														});
 													}}
 												/>
@@ -182,15 +218,17 @@ export const SearchFilterModal = observer(() => {
 													width={120}
 													type='date'
 													value={
-														product.searchInfo.registeredEnd
-															? format(new Date(product.searchInfo.registeredEnd), 'yyyy-MM-dd')
+														searchInfo.stockUpdatedAt?.lte
+															? format(new Date(searchInfo.stockUpdatedAt.lte), 'yyyy-MM-dd')
 															: undefined
 													}
 													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
-
-															registeredEnd: new Date(`${e.target.value} 23:59:59`).toISOString(),
+														setSearchInfo({
+															...searchInfo,
+															stockUpdatedAt: {
+																...searchInfo.stockUpdatedAt,
+																lte: new Date(`${e.target.value} 23:59:59`).toISOString(),
+															},
 														});
 													}}
 												/>
@@ -247,12 +285,20 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													value={product.searchInfo.cnyPriceStart ? product.searchInfo.cnyPriceStart : ''}
-													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+													defaultValue={searchInfo.taobaoProduct?.price?.gte ?? ''}
+													onChange={(e) => setPriceStart(e.target.value)}
+													onBlur={() => {
+														const value = parseFloat(priceStart);
 
-															cnyPriceStart: parseInt(e.target.value),
+														setSearchInfo({
+															...searchInfo,
+															taobaoProduct: {
+																...searchInfo.taobaoProduct,
+																price: {
+																	...searchInfo.taobaoProduct?.price,
+																	gte: isNaN(value) ? undefined : value,
+																},
+															},
 														});
 													}}
 												/>
@@ -265,12 +311,19 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													value={product.searchInfo.cnyPriceEnd ? product.searchInfo.cnyPriceEnd : ''}
-													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+													defaultValue={searchInfo.taobaoProduct?.price?.lte ?? ''}
+													onChange={(e) => setPriceEnd(e.target.value)}
+													onBlur={() => {
+														const value = parseFloat(priceEnd);
 
-															cnyPriceEnd: parseInt(e.target.value),
+														setSearchInfo({
+															...searchInfo,
+															taobaoProduct: {
+																price: {
+																	...searchInfo.taobaoProduct?.price,
+																	lte: isNaN(value) ? undefined : value,
+																},
+															},
 														});
 													}}
 												/>
@@ -322,17 +375,22 @@ export const SearchFilterModal = observer(() => {
 												}}
 											>
 												<Input
-													id='product_tables_priceStart'
+													id='product_tables_cnyRateStart'
 													style={{ width: 120 }}
 													options={{
 														textAlign: 'right',
 													}}
-													value={product.searchInfo.cnyRateStart ? product.searchInfo.cnyRateStart : ''}
-													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+													defaultValue={searchInfo.cnyRate?.gte ?? ''}
+													onChange={(e) => setCnyRateStart(e.target.value)}
+													onBlur={() => {
+														const value = parseFloat(cnyRateStart);
 
-															cnyRateStart: parseInt(e.target.value),
+														setSearchInfo({
+															...searchInfo,
+															cnyRate: {
+																...searchInfo.cnyRate,
+																gte: isNaN(value) ? undefined : value,
+															},
 														});
 													}}
 												/>
@@ -340,17 +398,22 @@ export const SearchFilterModal = observer(() => {
 												<Box>~</Box>
 
 												<Input
-													id='product_tables_priceEnd'
+													id='product_tables_cnyRateEnd'
 													style={{ width: 120 }}
 													options={{
 														textAlign: 'right',
 													}}
-													value={product.searchInfo.cnyRateEnd ? product.searchInfo.cnyRateEnd : ''}
-													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+													defaultValue={searchInfo.cnyRate?.lte ?? ''}
+													onChange={(e) => setCnyRateEnd(e.target.value)}
+													onBlur={() => {
+														const value = parseFloat(cnyRateEnd);
 
-															cnyRateEnd: parseInt(e.target.value),
+														setSearchInfo({
+															...searchInfo,
+															cnyRate: {
+																...searchInfo.cnyRate,
+																lte: isNaN(value) ? undefined : value,
+															},
 														});
 													}}
 												/>
@@ -407,12 +470,19 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													value={product.searchInfo.localFeeStart ? product.searchInfo.localFeeStart : ''}
-													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+													defaultValue={searchInfo.localShippingFee?.gte ?? ''}
+													onChange={(e) => {
+														setLocalFeeStart(e.target.value);
+													}}
+													onBlur={() => {
+														const value = parseInt(localFeeStart);
 
-															localFeeStart: parseInt(e.target.value),
+														setSearchInfo({
+															...searchInfo,
+															localShippingFee: {
+																...searchInfo.localShippingFee,
+																gte: isNaN(value) ? undefined : value,
+															},
 														});
 													}}
 												/>
@@ -425,12 +495,17 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													value={product.searchInfo.localFeeEnd ? product.searchInfo.localFeeEnd : ''}
-													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+													defaultValue={searchInfo.localShippingFee?.lte ?? ''}
+													onChange={(e) => setLocalFeeEnd(e.target.value)}
+													onBlur={() => {
+														const value = parseInt(localFeeEnd);
 
-															localFeeEnd: parseInt(e.target.value),
+														setSearchInfo({
+															...searchInfo,
+															localShippingFee: {
+																...searchInfo.localShippingFee,
+																lte: isNaN(value) ? undefined : value,
+															},
 														});
 													}}
 												/>
@@ -482,17 +557,22 @@ export const SearchFilterModal = observer(() => {
 												}}
 											>
 												<Input
-													id='product_tables_priceStart'
+													id='product_tables_marginRateStart'
 													style={{ width: 120 }}
 													options={{
 														textAlign: 'right',
 													}}
-													value={product.searchInfo.marginRateStart ? product.searchInfo.marginRateStart : ''}
-													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+													defaultValue={searchInfo.marginRate?.gte ?? ''}
+													onChange={(e) => setMarginRateStart(e.target.value)}
+													onBlur={() => {
+														const value = parseFloat(marginRateStart);
 
-															marginRateStart: parseInt(e.target.value),
+														setSearchInfo({
+															...searchInfo,
+															marginRate: {
+																...searchInfo.marginRate,
+																gte: isNaN(value) ? undefined : value,
+															},
 														});
 													}}
 												/>
@@ -500,17 +580,22 @@ export const SearchFilterModal = observer(() => {
 												<Box>~</Box>
 
 												<Input
-													id='product_tables_priceEnd'
+													id='product_tables_marginRateEnd'
 													style={{ width: 120 }}
 													options={{
 														textAlign: 'right',
 													}}
-													value={product.searchInfo.marginRateEnd ? product.searchInfo.marginRateEnd : ''}
-													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+													defaultValue={searchInfo.marginRate?.lte ?? ''}
+													onChange={(e) => setMarginRateEnd(e.target.value)}
+													onBlur={() => {
+														const value = parseFloat(marginRateEnd);
 
-															marginRateEnd: parseInt(e.target.value),
+														setSearchInfo({
+															...searchInfo,
+															marginRate: {
+																...searchInfo.marginRate,
+																lte: isNaN(value) ? undefined : value,
+															},
 														});
 													}}
 												/>
@@ -562,17 +647,22 @@ export const SearchFilterModal = observer(() => {
 												}}
 											>
 												<Input
-													id='product_tables_priceStart'
+													id='product_tables_basicPriceStart'
 													style={{ width: 120 }}
 													options={{
 														textAlign: 'right',
 													}}
-													value={product.searchInfo.priceStart ? product.searchInfo.priceStart : ''}
-													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+													defaultValue={searchInfo.price?.gte ?? ''}
+													onChange={(e) => setBasicPriceStart(e.target.value)}
+													onBlur={() => {
+														const value = parseInt(basicPriceStart);
 
-															priceStart: parseInt(e.target.value),
+														setSearchInfo({
+															...searchInfo,
+															price: {
+																...searchInfo.price,
+																gte: isNaN(value) ? undefined : value,
+															},
 														});
 													}}
 												/>
@@ -580,17 +670,22 @@ export const SearchFilterModal = observer(() => {
 												<Box>~</Box>
 
 												<Input
-													id='product_tables_priceEnd'
+													id='product_tables_basicPriceEnd'
 													style={{ width: 120 }}
 													options={{
 														textAlign: 'right',
 													}}
-													value={product.searchInfo.priceEnd ? product.searchInfo.priceEnd : ''}
-													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+													defaultValue={searchInfo.price?.lte ?? ''}
+													onChange={(e) => setBasicPriceEnd(e.target.value)}
+													onBlur={() => {
+														const value = parseInt(basicPriceEnd);
 
-															priceEnd: parseInt(e.target.value),
+														setSearchInfo({
+															...searchInfo,
+															price: {
+																...searchInfo.price,
+																lte: isNaN(value) ? undefined : value,
+															},
 														});
 													}}
 												/>
@@ -642,17 +737,22 @@ export const SearchFilterModal = observer(() => {
 												}}
 											>
 												<Input
-													id='product_tables_feeStart'
+													id='product_tables_shippingFeeStart'
 													style={{ width: 120 }}
 													options={{
 														textAlign: 'right',
 													}}
-													value={product.searchInfo.feeStart ? product.searchInfo.feeStart : ''}
-													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+													defaultValue={searchInfo.shippingFee?.gte ?? ''}
+													onChange={(e) => setShippingFeeStart(e.target.value)}
+													onBlur={() => {
+														const value = parseInt(shippingFeeStart);
 
-															feeStart: parseInt(e.target.value),
+														setSearchInfo({
+															...searchInfo,
+															shippingFee: {
+																...searchInfo.shippingFee,
+																gte: isNaN(value) ? undefined : value,
+															},
 														});
 													}}
 												/>
@@ -660,17 +760,22 @@ export const SearchFilterModal = observer(() => {
 												<Box>~</Box>
 
 												<Input
-													id='product_tables_feeEnd'
+													id='product_tables_shippingFeeEnd'
 													style={{ width: 120 }}
 													options={{
 														textAlign: 'right',
 													}}
-													value={product.searchInfo.feeEnd ? product.searchInfo.feeEnd : ''}
-													onChange={(e: any) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+													defaultValue={searchInfo.shippingFee?.lte ?? ''}
+													onChange={(e) => setShippingFeeEnd(e.target.value)}
+													onBlur={() => {
+														const value = parseInt(shippingFeeEnd);
 
-															feeEnd: parseInt(e.target.value),
+														setSearchInfo({
+															...searchInfo,
+															shippingFee: {
+																...searchInfo.shippingFee,
+																lte: isNaN(value) ? undefined : value,
+															},
 														});
 													}}
 												/>
@@ -722,7 +827,7 @@ export const SearchFilterModal = observer(() => {
 												}}
 											>
 												<Select
-													value={product.searchInfo.shopName}
+													value={searchInfo.taobaoProduct?.shopName?.equals ?? 'ALL'}
 													sx={{
 														textAlign: 'center',
 														fontSize: 13,
@@ -730,30 +835,33 @@ export const SearchFilterModal = observer(() => {
 														width: 120,
 													}}
 													onChange={(e) => {
-														product.setSearchInfo({
-															...product.searchInfo,
-
-															shopName: e.target.value,
+														setSearchInfo({
+															...searchInfo,
+															taobaoProduct: {
+																...searchInfo.taobaoProduct,
+																shopName: e.target.value === 'ALL' ? {} : { equals: e.target.value },
+															},
 														});
 													}}
 												>
 													<MenuItem value='ALL'>모두보기</MenuItem>
-
 													<MenuItem value='taobao'>타오바오</MenuItem>
-
 													<MenuItem value='tmall'>티몰</MenuItem>
-
 													<MenuItem value='express'>알리익스프레스</MenuItem>
-
 													<MenuItem value='alibaba'>1688</MenuItem>
-
 													<MenuItem value='vvic'>VVIC</MenuItem>
 												</Select>
 
 												<Box>▶</Box>
 
 												<Select
-													value={product.searchInfo.hasVideo}
+													value={
+														searchInfo.taobaoProduct?.videoUrl?.not
+															? 'Y'
+															: searchInfo.taobaoProduct?.videoUrl?.equals === null
+															? 'N'
+															: 'ALL'
+													}
 													sx={{
 														textAlign: 'center',
 														fontSize: 13,
@@ -761,17 +869,23 @@ export const SearchFilterModal = observer(() => {
 														width: 120,
 													}}
 													onChange={(e) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+														const { value } = e.target;
+														let videoUrl: TaobaoProductWhereInput['videoUrl'];
+														if (value === 'ALL') videoUrl = {};
+														else if (value === 'Y') videoUrl = { not: { equals: null } };
+														else if (value === 'N') videoUrl = { equals: null };
 
-															hasVideo: e.target.value,
+														setSearchInfo({
+															...searchInfo,
+															taobaoProduct: {
+																...searchInfo.taobaoProduct,
+																videoUrl: videoUrl,
+															},
 														});
 													}}
 												>
 													<MenuItem value='ALL'>모두보기</MenuItem>
-
 													<MenuItem value='Y'>동영상있음</MenuItem>
-
 													<MenuItem value='N'>동영상없음</MenuItem>
 												</Select>
 											</Box>
@@ -822,7 +936,7 @@ export const SearchFilterModal = observer(() => {
 												}}
 											>
 												<Select
-													value={product.searchInfo.marketName}
+													value={searchInfo.productStore?.some?.siteCode?.equals ?? 'ALL'}
 													sx={{
 														textAlign: 'center',
 														fontSize: 13,
@@ -830,42 +944,43 @@ export const SearchFilterModal = observer(() => {
 														width: 120,
 													}}
 													onChange={(e) => {
-														product.setSearchInfo({
-															...product.searchInfo,
+														setSearchInfo({
+															...searchInfo,
 
-															marketName: e.target.value,
+															productStore: {
+																...searchInfo.productStore,
+																some: {
+																	...searchInfo.productStore?.some,
+																	siteCode: e.target.value === 'ALL' ? {} : { equals: e.target.value },
+																},
+															},
 														});
 													}}
 												>
 													<MenuItem value='ALL'>모두보기</MenuItem>
-
-													<MenuItem value='A077'>스마트스토어</MenuItem>
-
-													<MenuItem value='B378'>쿠팡</MenuItem>
-
-													<MenuItem value='A112'>11번가 (글로벌)</MenuItem>
-
-													<MenuItem value='A113'>11번가 (일반)</MenuItem>
-
-													<MenuItem value='A006'>지마켓</MenuItem>
-
-													<MenuItem value='A001'>옥션</MenuItem>
-
-													<MenuItem value='A027'>인터파크</MenuItem>
-
-													<MenuItem value='B719'>위메프</MenuItem>
-
-													<MenuItem value='A524'>롯데온 (글로벌)</MenuItem>
-
-													<MenuItem value='A525'>롯데온 (일반)</MenuItem>
-
-													<MenuItem value='B956'>티몬</MenuItem>
+													<MenuItem value={SMART_STORE}>스마트스토어</MenuItem>
+													<MenuItem value={COUPANG}>쿠팡</MenuItem>
+													<MenuItem value={STREET11_GLOBAL}>11번가 (글로벌)</MenuItem>
+													<MenuItem value={STREET11_NORMAL}>11번가 (일반)</MenuItem>
+													<MenuItem value={G_MARKET_2}>지마켓</MenuItem>
+													<MenuItem value={AUCTION_2}>옥션</MenuItem>
+													<MenuItem value={INTER_PARK}>인터파크</MenuItem>
+													<MenuItem value={WE_MAKE_PRICE}>위메프</MenuItem>
+													<MenuItem value={LOTTE_ON_GLOBAL}>롯데온 (글로벌)</MenuItem>
+													<MenuItem value={LOTTE_ON_NORMAL}>롯데온 (일반)</MenuItem>
+													<MenuItem value={TMON}>티몬</MenuItem>
 												</Select>
 
 												<Box>▶</Box>
 
 												<Select
-													value={product.searchInfo.hasRegistered}
+													value={
+														searchInfo.productStore?.some?.state
+															? searchInfo.productStore.some.state.equals
+																? 'Y'
+																: 'N'
+															: 'ALL'
+													}
 													sx={{
 														textAlign: 'center',
 														fontSize: 13,
@@ -873,18 +988,26 @@ export const SearchFilterModal = observer(() => {
 														width: 120,
 													}}
 													onChange={(e) => {
-														product.setSearchInfo({
-															...product.searchInfo,
-
-															hasRegistered: e.target.value,
+														const { value } = e.target;
+														let state: ProductStoreWhereInput['state'];
+														if (value === 'ALL') state = undefined;
+														else if (value === 'Y') state = { equals: 2 };
+														else if (value === 'N') state = { not: { equals: 2 } };
+														setSearchInfo({
+															...searchInfo,
+															productStore: {
+																...searchInfo.productStore,
+																some: {
+																	...searchInfo.productStore?.some,
+																	state: state,
+																},
+															},
 														});
 													}}
 												>
-													<MenuItem value='ALL'>모두보기</MenuItem>
-
-													<MenuItem value='Y'>등록완료</MenuItem>
-
-													<MenuItem value='N'>등록실패</MenuItem>
+													<MenuItem value={'ALL'}>모두보기</MenuItem>
+													<MenuItem value={'Y'}>등록완료</MenuItem>
+													<MenuItem value={'N'}>등록실패</MenuItem>
 												</Select>
 											</Box>
 										</Grid>
@@ -934,18 +1057,18 @@ export const SearchFilterModal = observer(() => {
 												}}
 											>
 												<Search
-													value={product.searchInfo.categoryInfo}
-													onChange={(e: any, value: any) =>
-														product.setSearchInfo({
-															...product.searchInfo,
-															categoryInfo: value,
-														})
-													}
-													onInputChange={(e, value, reason) =>
-														reason === 'input' && product.setCategoryInput(SMART_STORE, value)
-													}
+													value={searchInfo.categoryInfoA077}
+													onChange={(_, value) => {
+														setSearchInfo({
+															...searchInfo,
+															categoryInfoA077: value,
+														});
+													}}
+													onInputChange={(_, value, reason) => {
+														if (reason === 'input') product.setCategoryInput(SMART_STORE, value);
+													}}
 													options={
-														product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.input
+														categoryInfo.markets.find((v) => v.code === SMART_STORE)!.input
 															? product.categoryInfo.markets.find((v) => v.code === SMART_STORE)!.data
 															: [product.manyCategoryInfo.categoryInfoA077]
 													}

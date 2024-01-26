@@ -3,7 +3,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Button, Box, Grid, Modal, Paper, Typography } from '@mui/material';
-import { readFileBinary } from '../../Tools/Common';
+import { readFileBinary } from '../../../../common/function';
 import { createTabCompletely, sendTabMessage } from '../../Tools/ChromeAsync';
 
 const XLSX = require('xlsx');

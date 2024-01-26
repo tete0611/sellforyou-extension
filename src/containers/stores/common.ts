@@ -7,7 +7,7 @@ import { runInAction, makeAutoObservable } from 'mobx';
 import { getLocalStorage, setLocalStorage } from '../../pages/Tools/ChromeAsync';
 import { coupangApiGateway } from '../../pages/Tools/Coupang';
 import { streetApiGateway } from '../../pages/Tools/Street';
-import { floatingToast, request } from '../../pages/Tools/Common';
+import { floatingToast, request } from '../../../common/function';
 import { refreshToken } from '../../pages/Tools/Auth';
 import { AppInfo, Nullable, SideBarItem, UploadDisabledInfo, UploadInfo, User, UserInfo } from '../../type/type';
 import { SHOPCODE } from '../../type/variable';

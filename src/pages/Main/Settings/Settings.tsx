@@ -9,7 +9,7 @@ import {
 } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
-import { downloadExcel, onApolloError, readFileBinary, readFileDataURL } from '../../Tools/Common';
+import { downloadExcel, onApolloError, readFileBinary, readFileDataURL } from '../../../../common/function';
 import {
 	Box,
 	Button,

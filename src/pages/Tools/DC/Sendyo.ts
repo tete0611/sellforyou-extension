@@ -1,6 +1,6 @@
 // 보내요 엑셀 대량등록 데이터 생성
 
-import { getAirportName } from '../Common';
+import { getAirportName } from '../../../../common/function';
 
 export async function getSendyoForm(data) {
 	let results = await Promise.all(

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	FilterAlt as FilterAltIcon,
 	ViewModule as ViewModuleIcon,
 	Reorder as ReorderIcon,
 	AutoFixHigh as AutoFixHighIcon,
 } from '@mui/icons-material';
-import { byteSlice } from '../../../Tools/Common';
+import { byteSlice, compareArray } from '../../../../../common/function';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
 
@@ -35,6 +35,7 @@ import { Summary } from './';
 import { Details } from './Details';
 import '../../Common/Styles.css';
 import { ImageSummary } from './';
+import { SearchType } from '../../../../type/type';
 
 // 커스텀 테이블 컬럼 스타일
 const StyledTableCell = styled(TableCell)({
@@ -47,6 +48,10 @@ const StyledTableCell = styled(TableCell)({
 export const ProductTables = observer(() => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
+	const isCollected = compareArray(product.state, [6]);
+	const isRegistered = compareArray(product.state, [7]);
+	const [searchType, setSearchType] = useState<SearchType>('PCODE');
+	const [keyword, setKeyword] = useState('');
 	// 테이블 엘리먼트 참조변수 생성
 	const tableRef = React.useRef();
 	// 가상화 렌더링 요소 (리스트뷰)
@@ -148,13 +153,8 @@ export const ProductTables = observer(() => {
 													minWidth: 100,
 													mx: 0.5,
 												}}
-												defaultValue={product.searchInfo.searchType}
-												onChange={(e: any) =>
-													product.setSearchInfo({
-														...product.searchInfo,
-														searchType: e.target.value,
-													})
-												}
+												value={searchType}
+												onChange={(e) => setSearchType(e.target.value as SearchType)}
 											>
 												{/* <MenuItem value="ALL">
                         통합검색
@@ -165,18 +165,20 @@ export const ProductTables = observer(() => {
 												<MenuItem value='CNAME'>카테고리명</MenuItem>
 												<MenuItem value='OID'>구매처상품번호</MenuItem>
 												<MenuItem value='MID'>판매채널상품번호</MenuItem>
-												{common?.user?.purchaseInfo2?.level >= 3 ? <MenuItem value='KEYWARD'>개인분류</MenuItem> : null}
+												{common?.user?.purchaseInfo2?.level >= 3 ? (
+													<MenuItem value='MYKEYWORD'>개인분류</MenuItem>
+												) : null}
 											</Select>
 
 											<Input
 												id='product_tables_keyword'
-												onChange={(e: any) =>
-													product.setSearchInfo({
-														...product.searchInfo,
-														searchKeyword: e.target.value,
-													})
-												}
-												onKeyPress={(e: any) => e.key === 'Enter' && product.getSearchResult(common)}
+												onChange={(e) => setKeyword(e.target.value)}
+												onKeyPress={(e) => {
+													if (e.key === 'Enter') {
+														product.setSearchKeyword({ type: searchType, keyword: keyword });
+														product.getProduct(common, 1);
+													}
+												}}
 											/>
 											<MyButton
 												disableElevation
@@ -186,7 +188,10 @@ export const ProductTables = observer(() => {
 													minWidth: 60,
 													ml: 0.5,
 												}}
-												onClick={() => product.getSearchResult(common)}
+												onClick={() => {
+													product.setSearchKeyword({ type: searchType, keyword: keyword });
+													product.getProduct(common, 1);
+												}}
 											>
 												검색
 											</MyButton>
@@ -313,7 +318,7 @@ export const ProductTables = observer(() => {
 											</MyButton>
 											<span style={{ marginLeft: '5px' }}>|</span>
 
-											{product.state === 7 && (
+											{isRegistered && (
 												<MyButton
 													color='info'
 													sx={{
@@ -341,7 +346,7 @@ export const ProductTables = observer(() => {
 											>
 												일괄등록
 											</MyButton>
-											{(product.state === 7 || product.myLock === 2) && (
+											{(isRegistered || product.myLock === 2) && (
 												<MyButton
 													color='error'
 													sx={{
@@ -353,7 +358,7 @@ export const ProductTables = observer(() => {
 													일괄해제
 												</MyButton>
 											)}
-											{product.state === 6 && (
+											{isCollected && (
 												<MyButton
 													color='error'
 													sx={{
@@ -393,7 +398,7 @@ export const ProductTables = observer(() => {
 											fontSize: 11,
 										}}
 									>
-										상품코드/{product.state === 6 ? '수집일' : '등록일'}
+										상품코드/{isCollected ? '수집일' : '등록일'}
 									</Box>
 								</StyledTableCell>
 
@@ -439,7 +444,7 @@ export const ProductTables = observer(() => {
 													fontSize: 11,
 												}}
 											>
-												도매가/판매가{product.state === 6 ? '' : '/등록마켓'}
+												도매가/판매가{isCollected ? '' : '/등록마켓'}
 											</Box>
 										</Grid>
 
@@ -528,10 +533,10 @@ export const ProductTables = observer(() => {
 															rowRenderer={rowRenderer}
 															rowHeight={({ index }) =>
 																product.itemInfo.items[index].collapse
-																	? product.state === 7
+																	? isRegistered
 																		? 577 + 30
 																		: 577
-																	: product.state === 7
+																	: isRegistered
 																	? 83 + 30
 																	: 83
 															}

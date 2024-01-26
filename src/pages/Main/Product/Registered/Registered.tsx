@@ -45,9 +45,12 @@ const Registered = observer(() => {
 		// 태그사전 데이터 가져오기
 		product.getTagDict();
 
+		// 검색조건 초기화
+		product.initSearchInfo();
+
 		// 검색조건 설정하기
-		product.setState(7);
-		product.setSearchWhereAndInput([{ state: { equals: product.state } }]);
+		product.setState([7]);
+		product.setSearchWhereAndInput([{ state: { in: product.state } }]);
 
 		// 상품목록 가져오기
 		product.refreshProduct(common);
@@ -119,9 +122,7 @@ const Registered = observer(() => {
 								sx={{
 									minWidth: 100,
 								}}
-								onClick={() => {
-									product.itemToExcel();
-								}}
+								onClick={() => confirm('현재 페이지의 상품정보를 다운로드 하시겠습니까?') && product.itemToExcel()}
 							>
 								상품정보저장
 							</MyButton>

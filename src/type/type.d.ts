@@ -1,4 +1,9 @@
 import { ITextOptions, TextOptions } from 'fabric/fabric-impl';
+import { SHOPCODE } from './variable';
+import { ProductWhereInput } from './schema';
+
+/** T와 U에서 겹치는 속성은 Pass, 그렇지 않으면 타입추가되어 반환 */
+type Overwrite<T, U> = { [P in Exclude<keyof T, keyof U>]: T[P] } & U;
 
 /** 오픈마켓종류 정의 */
 export type Shop =
@@ -460,3 +465,38 @@ export type SideBarList = {
 
 /** 사이드바 자식 타입 */
 export type SideBarItem = { name: string; engName: string; icon: ReactNode; customFunction?: () => void };
+
+/** 상품 검색 방법 */
+export type SearchType = 'PCODE' | 'ONAME' | 'NAME' | 'CNAME' | 'OID' | 'MID' | 'MYKEYWORD';
+
+/** 상품 검색 정보 타입 */
+// export type SearchInfo = {
+// 	categoryInfo: {
+// 		code: null | string;
+// 		name: null | string;
+// 	};
+// 	collectedStart: null | Date;
+// 	collectedEnd: null | Date;
+// 	registeredStart: null | Date;
+// 	registeredEnd: null | Date;
+// 	cnyPriceStart: null | number;
+// 	cnyPriceEnd: null | number;
+// 	cnyRateStart: null | number;
+// 	cnyRateEnd: null | number;
+// 	localFeeStart: null | number;
+// 	localFeeEnd: null | number;
+// 	marginRateStart: null | number;
+// 	marginRateEnd: null | number;
+// 	priceStart: null | number;
+// 	priceEnd: null | number;
+// 	feeStart: null | number;
+// 	feeEnd: null | number;
+// 	shopName: Shop | 'ALL';
+// 	marketName: 'ALL' | SHOPCODE;
+// 	hasVideo: 'ALL' | 'Y' | 'N';
+// 	hasRegistered: 'ALL' | 'Y' | 'N';
+// 	searchKeyword: '';
+// searchType: 'PCODE' | 'ONAME' | 'NAME' | 'CNAME' | 'OID' | 'MID' | 'KEYWARD' | 'ALL';
+// 	// useFilter: boolean,
+// 	whereInput: ProductWhereInput;
+// };

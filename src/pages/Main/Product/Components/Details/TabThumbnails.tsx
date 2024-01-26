@@ -5,7 +5,7 @@ import { ListManager } from 'react-beautiful-dnd-grid';
 import { AppContext } from '../../../../../containers/AppContext';
 import { Box, Chip, CircularProgress, IconButton, Button, Paper, Typography } from '@mui/material';
 import { Image, Title } from '../../../Common/UI';
-import { readFileDataURL } from '../../../../Tools/Common';
+import { readFileDataURL } from '../../../../../../common/function';
 
 // MUI Box 사용자 지정 스타일
 // const useStyles = makeStyles((theme) => ({

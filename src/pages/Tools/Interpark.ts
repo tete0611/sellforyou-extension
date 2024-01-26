@@ -9,7 +9,7 @@ import {
 	notificationByEveryTime,
 	sendCallback,
 	transformContent,
-} from './Common';
+} from '../../../common/function';
 import { Buffer } from 'buffer';
 import { product } from '../../containers/stores/product';
 import { common } from '../../containers/stores/common';

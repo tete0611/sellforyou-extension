@@ -20,7 +20,7 @@ import {
 import { Title } from '../Common/UI';
 import { createTheme } from '@mui/material/styles';
 import { SHOPCODE } from '../../../type/variable';
-import { trimSpaces } from '../../Tools/Common';
+import { trimSpaces } from '../../../../common/function';
 
 // 오픈마켓 연동 뷰
 const Connects = observer(() => {

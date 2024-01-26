@@ -4,7 +4,7 @@ import gql from '../../pages/Main/GraphQL/Requests';
 import QUERIES from '../../pages/Main/GraphQL/Queries';
 
 import { runInAction, makeAutoObservable } from 'mobx';
-import { getClock, getClockOffset } from '../../pages/Tools/Common';
+import { getClock, getClockOffset } from '../../../common/function';
 import { SHOPCODE } from '../../type/variable';
 
 export class inflow {

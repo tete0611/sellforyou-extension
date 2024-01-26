@@ -3,10 +3,9 @@
 import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
-import { sleep, getImageSize, getCookie } from '../../Tools/Common';
+import { sleep, getImageSize, getCookie, onInsertDom } from '../../../../common/function';
 import CryptoJS from 'crypto-js';
 import { User } from '../../../type/type';
-import { onInsertDom } from '..';
 
 // 상품정보 크롤링
 async function scrape(items: any, user: any) {

@@ -6,7 +6,7 @@ import gql from '../../pages/Main/GraphQL/Requests';
 import papagoTranslation from '../../pages/Tools/Translation';
 
 import { runInAction, makeAutoObservable } from 'mobx';
-import { downloadExcel, sleep } from '../../pages/Tools/Common';
+import { downloadExcel, sleep } from '../../../common/function';
 
 const GBK = require('gbk-encode');
 

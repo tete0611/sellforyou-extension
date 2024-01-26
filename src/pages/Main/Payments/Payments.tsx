@@ -6,7 +6,7 @@ import MUTATIONS from '../../../pages/Main/GraphQL/Mutations';
 import { Info as InfoIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
-import { readFileDataURL } from '../../Tools/Common';
+import { readFileDataURL } from '../../../../common/function';
 import { makeStyles } from '@material-ui/core/styles';
 import {
 	Avatar,

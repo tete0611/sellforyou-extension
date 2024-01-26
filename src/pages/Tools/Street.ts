@@ -10,7 +10,7 @@ import {
 	notificationByEveryTime,
 	sendCallback,
 	transformContent,
-} from './Common';
+} from '../../../common/function';
 import { Buffer } from 'buffer';
 import { getLocalStorage } from './ChromeAsync';
 import { product } from '../../containers/stores/product';

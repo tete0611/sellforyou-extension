@@ -1,5 +1,5 @@
 import { getLocalStorage } from '../../Tools/ChromeAsync';
-import { sleep } from '../../Tools/Common';
+import { sleep } from '../../../../common/function';
 import { refreshToken } from '../../Tools/Auth';
 import { AppInfo } from '../../../type/type';
 

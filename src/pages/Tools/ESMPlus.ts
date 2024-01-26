@@ -16,7 +16,7 @@ import {
 	sendCallback,
 	transformContent,
 	urlEncodedObject,
-} from './Common';
+} from '../../../common/function';
 
 // 지마켓/옥션 1.0 상품등록
 export async function uploadESMPlus(productStore: product, commonStore: common, data: any) {

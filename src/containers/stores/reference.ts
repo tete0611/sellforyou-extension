@@ -3,7 +3,7 @@
 import CryptoJS from 'crypto-js';
 
 import { runInAction, makeAutoObservable } from 'mobx';
-import { downloadExcel } from '../../pages/Tools/Common';
+import { downloadExcel } from '../../../common/function';
 
 export class reference {
 	searchInfo: any = {

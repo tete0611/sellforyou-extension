@@ -10,7 +10,7 @@ import {
 	sendCallback,
 	sleep,
 	transformContent,
-} from './Common';
+} from '../../../common/function';
 import { createTabCompletely, sendTabMessage } from './ChromeAsync';
 import { product } from '../../containers/stores/product';
 import { common } from '../../containers/stores/common';
