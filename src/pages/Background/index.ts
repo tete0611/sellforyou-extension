@@ -9,7 +9,7 @@ import papagoTranslation from '../Tools/Translation';
 
 import { coupangApiGateway } from '../Tools/Coupang';
 import { createTabCompletely, getLocalStorage, queryTabs, sendTabMessage, setLocalStorage } from '../Tools/ChromeAsync';
-import { getRandomIntInclusive } from '../Tools/Common';
+import { getRandomIntInclusive } from '../../../common/function';
 import { BulkInfo, CollectInfo, RuntimeMessage, Sender, Source } from '../../type/type';
 
 // 티몰 상세페이지 요청 시 CORS 이슈 발생
@@ -27,8 +27,6 @@ const tmallCORS = async (args: RuntimeMessage['form']): Promise<string | undefin
 // 수집 정보를 탭별로 구분하여 로컬스토리지에 저장
 // 서비스워커가 죽더라도 페이지 새로고침으로 중단된 지점으로부터 되살릴 수 있음
 const addBulkInfo = async (source: Source, sender: Sender, isExcel: boolean) => {
-	// console.log('구간7');
-	// await sleep(10000);
 	const tabs = await queryTabs({});
 	let bulkInfo = (await getLocalStorage<BulkInfo[]>('bulkInfo')) ?? [];
 
@@ -502,9 +500,7 @@ chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender, sendRespo
 
 		// 대량 수집 액션
 		case 'collect-bulk': {
-			// console.log('구간5')
 			addBulkInfo(request.source!, sender as Sender, false).then(sendResponse);
-			// console.log('구간6')
 			return true;
 		}
 

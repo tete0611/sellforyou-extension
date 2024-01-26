@@ -5,7 +5,7 @@ import { alibaba } from './modules/alibaba';
 import { vvic } from './modules/vvic';
 import { amazon } from './modules/amazon';
 import { getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../Tools/ChromeAsync';
-import { getCookie, normalizeUrl, sleep, updateQueryStringParameter } from '../Tools/Common';
+import { getCookie, sleep, updateQueryStringParameter } from '../../../common/function';
 import { getTaobaoData } from '../Tools/Taobao';
 import {
 	deleteA077Products,
@@ -15,69 +15,53 @@ import {
 	uploadA077Resources,
 } from '../Tools/SmartStore';
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
-import { CollectInfo, Nullable, RuntimeMessage, Sender, Shop, User } from '../../type/type';
+import { CollectInfo, RuntimeMessage, Sender, Shop, User } from '../../type/type';
 
-/** SELLFORYOU-CHECKBOX 삽입 함수 */
-export const onInsertDom = ({
-	element, // 삽입하고자 하는 element
-	picker, // 상품일괄 선택/해제 박스
-	user, // User 객체
-}: {
-	element: Nullable<HTMLAnchorElement>;
-	picker: HTMLButtonElement | null;
-	user: User;
-}) => {
-	if (!element) return;
-	if (element.querySelector('.SELLFORYOU-CHECKBOX')) return;
-	if (!element.href || element.href === '') return;
+/** api로 대량수집하기 함수 */
+const bulkCollectUsingApi = async (shop: string | null, shopId: number, currentPage: number) => {
+	let urls: CollectInfo['inputs'] = [];
 
-	const input = Object.assign(document.createElement('input'), {
-		className: 'SELLFORYOU-CHECKBOX',
-		checked: picker?.value !== 'false',
-		type: 'checkbox',
-		id: normalizeUrl(element.href),
-		style: user.userInfo.collectCheckPosition === 'L' ? 'left: 0px !important' : 'right: 0px !important',
-	});
+	switch (shop) {
+		case 'vvic': {
+			const resp = await fetch(
+				`https://www.vvic.com/apif/shop/itemlist?id=${shopId}&currentPage=${currentPage}&sort=up_time-desc&merge=0`,
+				{
+					headers: {
+						accept: 'application/json, text/plain, */*',
+						'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+						'sec-ch-ua': '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
+						'sec-ch-ua-mobile': '?0',
+						'sec-ch-ua-platform': '"Windows"',
+						'sec-fetch-dest': 'empty',
+						'sec-fetch-mode': 'cors',
+						'sec-fetch-site': 'same-origin',
+						token: 'RajToken',
+					},
+					referrer: `https://www.vvic.com/shop/list/${shopId}/content_all`,
+					referrerPolicy: 'strict-origin-when-cross-origin',
+					body: null,
+					method: 'GET',
+					mode: 'cors',
+					credentials: 'include',
+				},
+			);
+			if (resp.status !== 200) {
+				alert('상품수집 api Error\n채널톡에 문의 바랍니다.');
+				return [];
+			}
+			const json = await resp.json();
+			urls = json?.data?.recordList?.map((v) => ({
+				url: `https://www.vvic.com/item/${v.vid}`,
+				productName: '',
+				productTags: '',
+			}));
 
-	element.style.position = 'relative';
-	element.appendChild(input);
-};
-
-/** vvic 상점페이지 api로 대량수집하기 함수 */
-const bulkCollectUsingApi = async (shopId: number, currentPage: number) => {
-	const resp = await fetch(
-		`https://www.vvic.com/apif/shop/itemlist?id=${shopId}&currentPage=${currentPage}&sort=up_time-desc&merge=0`,
-		{
-			headers: {
-				accept: 'application/json, text/plain, */*',
-				'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-				'sec-ch-ua': '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
-				'sec-ch-ua-mobile': '?0',
-				'sec-ch-ua-platform': '"Windows"',
-				'sec-fetch-dest': 'empty',
-				'sec-fetch-mode': 'cors',
-				'sec-fetch-site': 'same-origin',
-				token: 'RajToken',
-			},
-			referrer: `https://www.vvic.com/shop/list/${shopId}/content_all`,
-			referrerPolicy: 'strict-origin-when-cross-origin',
-			body: null,
-			method: 'GET',
-			mode: 'cors',
-			credentials: 'include',
-		},
-	);
-	if (resp.status !== 200) {
-		alert('상품수집 api Error\n채널톡에 문의 바랍니다.');
-		return [];
+			break;
+		}
+		case 'taobao1': {
+		}
 	}
-	const json = await resp.json();
-	const urls = json?.data?.recordList?.map((v) => ({
-		url: `https://www.vvic.com/item/${v.vid}`,
-		productName: '',
-		productTags: '',
-	}));
-	return urls as CollectInfo['inputs'];
+	return urls;
 };
 
 const pageRefresh = async (shop: Shop | null, page: number) => {
@@ -85,53 +69,37 @@ const pageRefresh = async (shop: Shop | null, page: number) => {
 	//페이지 검색 필터(검색필터) 문제
 	switch (shop) {
 		case 'taobao1': {
-			url = updateQueryStringParameter(window.location.href, 's', `${44 * (page - 1)}`);
-
+			url = updateQueryStringParameter(window.location.href, '', `${44 * (page - 1)}`);
 			break;
 		}
-
 		case 'taobao2': {
 			url = updateQueryStringParameter(window.location.href, 'pageNo', `${page}`);
-
 			break;
 		}
-
 		case 'tmall1': {
 			url = updateQueryStringParameter(window.location.href, 's', `${60 * (page - 1)}`);
-
 			break;
 		}
-
 		case 'tmall2': {
 			url = updateQueryStringParameter(window.location.href, 'pageNo', `${page}`);
-
 			break;
 		}
-
 		case 'express': {
 			url = updateQueryStringParameter(window.location.href, 'page', `${page}`);
-
 			break;
 		}
-
 		case 'alibaba': {
 			url = updateQueryStringParameter(window.location.href, 'beginPage', `${page}`);
-
 			break;
 		}
-
 		case 'vvic': {
 			url = updateQueryStringParameter(window.location.href, 'currentPage', `${page}`);
-
 			break;
 		}
-
 		case 'amazon1': {
 			url = updateQueryStringParameter(window.location.href, 'page', `${page}`);
-
 			break;
 		}
-
 		default:
 			break;
 	}
@@ -189,41 +157,29 @@ const bulkPage = async (
 	shop: Shop | null,
 	urlUnchangedPage?: { shopId: number; method: 'api' | 'element' },
 ) => {
-	// console.log('구간4');
-	// await sleep(10000);
 	let collectInfo = (await getLocalStorage<CollectInfo[]>('collectInfo')) ?? [];
-	// console.log(`콜렉트인포`);
-	// console.log({ collectInfo });
 	let collect = collectInfo.find((v) => v.sender.tab.id === info.tabInfo.tab.id);
-	// console.log(`1번 콜렉트`);
-	// console.log({ collect });
+
 	if (!collect) return;
 	if (collect.currentPage <= collect.pageEnd) {
 		const inputs =
 			urlUnchangedPage?.method === 'api'
-				? await bulkCollectUsingApi(urlUnchangedPage.shopId, collect.currentPage)
+				? await bulkCollectUsingApi(shop, urlUnchangedPage.shopId, collect.currentPage)
 				: await bulkCollect(false, collect.useMedal);
 
 		if (inputs.length === 0) collect.currentPage = collect.pageEnd;
 
 		collect.inputs = collect.inputs.concat(inputs);
 		collect.currentPage += 1;
-		// console.log(`2번 콜렉트`);
-		// console.log({ collect });
-		// await sleep(20000);
+
 		switch (collect.type) {
 			case 'page': {
-				// console.log('구간8');
 				if (collect.currentPage > collect.pageEnd) {
-					// console.log('구간8-1');
-					// await sleep(10000);
 					sendRuntimeMessage({
 						action: 'collect-bulk',
 						source: { data: collect.inputs, retry: false },
 					});
 				} else {
-					// console.log('구간8-2');
-					// await sleep(10000);
 					pageRefresh(shop, collect.currentPage);
 				}
 
@@ -951,8 +907,6 @@ const floatingButton = async (
 				});
 
 				const startBulk = async (type: 'page' | 'amount') => {
-					// console.log('구간2');
-					// await sleep(10000);
 					const tabs = await sendRuntimeMessage<chrome.tabs.Tab[]>({
 						action: 'tab-info-all',
 					});
@@ -1014,8 +968,6 @@ const floatingButton = async (
 				};
 
 				sfyStart.addEventListener('click', async () => {
-					// console.log('구간1');
-					// await sleep(10000);
 					const radios: any = document.getElementsByName('sfyBulkType');
 
 					for (let i = 0; i < radios.length; i++) {
@@ -1074,8 +1026,7 @@ const floatingButton = async (
 
 			container.append(logoRow);
 		}
-		// console.log('구간3');
-		// await sleep(10000);
+
 		bulkPage(
 			info,
 			shop,
