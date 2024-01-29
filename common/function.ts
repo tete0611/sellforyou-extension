@@ -758,7 +758,6 @@ export const onInsertDom = ({
 	user: User;
 }) => {
 	if (!element) return;
-	if (element.querySelector('.SELLFORYOU-CHECKBOX')) return;
 	if (!element.href || element.href === '') return;
 
 	const input = Object.assign(document.createElement('input'), {
@@ -768,9 +767,14 @@ export const onInsertDom = ({
 		id: normalizeUrl(element.href),
 		style: user.userInfo.collectCheckPosition === 'L' ? 'left: 0px !important' : 'right: 0px !important',
 	});
+	const sfyBox = element.querySelector('.SELLFORYOU-CHECKBOX');
 
-	element.style.position = 'relative';
-	element.appendChild(input);
+	// 이미 있으면 id 값만 업데이트
+	if (sfyBox) sfyBox.id = input.id;
+	else {
+		element.style.position = 'relative';
+		element.appendChild(input);
+	}
 };
 
 /** 배열이 정확히 같은지 비교 */

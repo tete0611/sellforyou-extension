@@ -1600,7 +1600,6 @@ const main = async () => {
 		console.log('타오바오 리스트 페이지 진입');
 		const info = await initInfo(false);
 		await new taobao().bulkTypeOne(info.user);
-		// document.addEventListener('scroll', handleScroll);
 		floatingButton(info, 'taobao1', true, true);
 
 		/**  */
