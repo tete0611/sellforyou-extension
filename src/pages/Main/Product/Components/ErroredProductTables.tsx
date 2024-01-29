@@ -42,8 +42,19 @@ export const ErroredProductTables = observer(() => {
 	const { common, product } = React.useContext(AppContext);
 	const [searchType, setSearchType] = useState<SearchType>('PCODE');
 	const [keyword, setKeyword] = useState('');
+
 	// 테이블 엘리먼트 참조변수 생성
 	const tableRef = React.useRef();
+
+	// 검색클릭
+	const onSearch = () => {
+		const success = product.setSearchKeyword({ type: searchType, keyword: keyword });
+		if (success) {
+			product.onStageWhere();
+			product.getProduct(common, 1);
+		}
+	};
+
 	// 가상화 렌더링 요소 (리스트뷰)
 	const rowRenderer = (props) => {
 		const item = product.itemInfo.items[props.index];
@@ -167,10 +178,7 @@ export const ErroredProductTables = observer(() => {
 												id='product_tables_keyword'
 												onChange={(e) => setKeyword(e.target.value)}
 												onKeyPress={(e) => {
-													if (e.key === 'Enter') {
-														product.setSearchKeyword({ type: searchType, keyword: keyword });
-														product.getProduct(common, 1);
-													}
+													if (e.key === 'Enter') onSearch();
 												}}
 											/>
 											<MyButton
@@ -181,10 +189,7 @@ export const ErroredProductTables = observer(() => {
 													minWidth: 60,
 													ml: 0.5,
 												}}
-												onClick={() => {
-													product.setSearchKeyword({ type: searchType, keyword: keyword });
-													product.getProduct(common, 1);
-												}}
+												onClick={onSearch}
 											>
 												검색
 											</MyButton>

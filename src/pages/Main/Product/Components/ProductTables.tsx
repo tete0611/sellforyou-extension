@@ -5,7 +5,7 @@ import {
 	Reorder as ReorderIcon,
 	AutoFixHigh as AutoFixHighIcon,
 } from '@mui/icons-material';
-import { byteSlice, compareArray } from '../../../../../common/function';
+import { byteSlice } from '../../../../../common/function';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
 
@@ -48,12 +48,23 @@ const StyledTableCell = styled(TableCell)({
 export const ProductTables = observer(() => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
-	const isCollected = compareArray(product.state, [6]);
-	const isRegistered = compareArray(product.state, [7]);
+	const isCollected = product.state === 6;
+	const isRegistered = product.state === 7;
 	const [searchType, setSearchType] = useState<SearchType>('PCODE');
 	const [keyword, setKeyword] = useState('');
+
 	// 테이블 엘리먼트 참조변수 생성
 	const tableRef = React.useRef();
+
+	// 검색클릭
+	const onSearch = () => {
+		const success = product.setSearchKeyword({ type: searchType, keyword: keyword });
+		if (success) {
+			product.onStageWhere();
+			product.getProduct(common, 1);
+		}
+	};
+
 	// 가상화 렌더링 요소 (리스트뷰)
 	const rowRenderer = (props) => {
 		const item = product.itemInfo.items[props.index];
@@ -174,10 +185,7 @@ export const ProductTables = observer(() => {
 												id='product_tables_keyword'
 												onChange={(e) => setKeyword(e.target.value)}
 												onKeyPress={(e) => {
-													if (e.key === 'Enter') {
-														product.setSearchKeyword({ type: searchType, keyword: keyword });
-														product.getProduct(common, 1);
-													}
+													if (e.key === 'Enter') onSearch();
 												}}
 											/>
 											<MyButton
@@ -188,10 +196,7 @@ export const ProductTables = observer(() => {
 													minWidth: 60,
 													ml: 0.5,
 												}}
-												onClick={() => {
-													product.setSearchKeyword({ type: searchType, keyword: keyword });
-													product.getProduct(common, 1);
-												}}
+												onClick={onSearch}
 											>
 												검색
 											</MyButton>
@@ -537,7 +542,7 @@ export const ProductTables = observer(() => {
 																		? 577 + 30
 																		: 577
 																	: isRegistered
-																	? 83 + 30
+																	? 106
 																	: 83
 															}
 															ref={tableRef}

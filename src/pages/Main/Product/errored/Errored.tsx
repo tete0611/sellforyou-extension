@@ -20,11 +20,7 @@ const Errored = observer(() => {
 		product.getTagDict();
 
 		// 검색조건 초기화
-		product.initSearchInfo();
-
-		// 검색조건 설정 (수집, 등록 모두가져옴)
-		product.setState([6, 7]);
-		product.setSearchWhereAndInput([{ state: { in: product.state } }]);
+		product.initProductWhereInput({ state: { in: [7, 6] } });
 
 		// 상품 정보 가져오기
 		product.refreshProduct(common);
@@ -118,6 +114,7 @@ const Errored = observer(() => {
 							</Tooltip>
 							&nbsp;
 							<Input
+								inputProps={{ max: product.pages }}
 								id='product_page'
 								type='number'
 								width={50}

@@ -139,7 +139,7 @@ export const UpdateManyProductPopOver = observer(() => {
 					개인분류
 				</MyButton>
 				&nbsp;
-				{compareArray(product.state, [7]) || product.myLock === 2 ? (
+				{product.state === 7 || product.myLock === 2 ? (
 					<MyButton
 						disableElevation
 						variant='contained'

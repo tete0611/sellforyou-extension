@@ -44,14 +44,7 @@ const Locked = observer(() => {
 		product.getTagDict();
 
 		// 검색조건 초기화
-		product.initSearchInfo();
-
-		// 검색조건 설정하기
-		product.setState([7]);
-
-		// 잠금조건 설정하기
-		product.setLock(2);
-		product.setSearchWhereAndInput([{ myLock: { equals: product.myLock } }]);
+		product.initProductWhereInput({ state: { equals: 7 }, myLock: { equals: 2 } });
 
 		// 상품목록 가져오기
 		product.refreshProduct(common);
@@ -186,6 +179,7 @@ const Locked = observer(() => {
 								</IconButton>
 							</Tooltip>
 							<Input
+								inputProps={{ max: product.pages }}
 								id='product_page'
 								type='number'
 								width={50}

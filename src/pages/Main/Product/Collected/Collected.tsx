@@ -43,11 +43,7 @@ const Collected = observer(() => {
 		product.getTagDict();
 
 		//검색조건 초기화
-		product.initSearchInfo();
-
-		// 검색조건 설정
-		product.setState([6]);
-		product.setSearchWhereAndInput([{ state: { in: product.state } }]);
+		product.initProductWhereInput({ state: { equals: 6 } });
 
 		// 상품 정보 가져오기
 		product.refreshProduct(common);
@@ -166,12 +162,13 @@ const Collected = observer(() => {
 							</Tooltip>
 							&nbsp;
 							<Input
+								inputProps={{ max: product.pages }}
 								id='product_page'
 								type='number'
 								width={50}
 								value={product.pageTemp}
 								onChange={(e) => product.setPageTemp(parseInt(e.target.value.replace(/[^0-9]/g, '')))}
-								onBlur={(e: FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
+								onBlur={(e) => {
 									const page = parseInt(e.target.value);
 									if (!page) return;
 

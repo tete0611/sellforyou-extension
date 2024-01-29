@@ -24,10 +24,7 @@ export class analysis {
 	}
 
 	// 검색정보
-	setSearchInfo = (value: number) => {
-		this.searchInfo = value;
-	};
-
+	setSearchInfo = (value: number) => (this.searchInfo = value);
 	// 네이버 기반 키워드 분석
 	searchKeywordByNaver = async () => {
 		this.setSearchInfo({

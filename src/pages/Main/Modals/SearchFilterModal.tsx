@@ -11,7 +11,7 @@ import { ProductStoreWhereInput, TaobaoProductWhereInput } from '../../../type/s
 export const SearchFilterModal = observer(() => {
 	// MobX 스토리지 로드
 	const { product } = React.useContext(AppContext);
-	const { searchInfo, setSearchInfo, categoryInfo } = product;
+	const { changedWhere, setChangeWhere, categoryInfo } = product;
 	const {
 		SMART_STORE,
 		AUCTION_2,
@@ -109,16 +109,16 @@ export const SearchFilterModal = observer(() => {
 													width={120}
 													type='date'
 													value={
-														searchInfo.createdAt?.gte
-															? format(new Date(searchInfo.createdAt.gte), 'yyyy-MM-dd')
+														changedWhere.createdAt?.gte
+															? format(new Date(changedWhere.createdAt.gte), 'yyyy-MM-dd')
 															: undefined
 													}
 													onChange={(e: any) => {
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 
 															createdAt: {
-																...searchInfo.createdAt,
+																...changedWhere.createdAt,
 																gte: new Date(`${e.target.value} 00:00:00`).toISOString(),
 															},
 														});
@@ -131,15 +131,15 @@ export const SearchFilterModal = observer(() => {
 													width={120}
 													type='date'
 													value={
-														searchInfo.createdAt?.lte
-															? format(new Date(searchInfo.createdAt.lte), 'yyyy-MM-dd')
+														changedWhere.createdAt?.lte
+															? format(new Date(changedWhere.createdAt.lte), 'yyyy-MM-dd')
 															: undefined
 													}
 													onChange={(e: any) => {
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															createdAt: {
-																...searchInfo.createdAt,
+																...changedWhere.createdAt,
 																lte: new Date(`${e.target.value} 23:59:59`).toISOString(),
 															},
 														});
@@ -196,16 +196,16 @@ export const SearchFilterModal = observer(() => {
 													width={120}
 													type='date'
 													value={
-														searchInfo.stockUpdatedAt?.gte
-															? format(new Date(searchInfo.stockUpdatedAt?.gte), 'yyyy-MM-dd')
+														changedWhere.stockUpdatedAt?.gte
+															? format(new Date(changedWhere.stockUpdatedAt?.gte), 'yyyy-MM-dd')
 															: undefined
 													}
 													onChange={(e: any) => {
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 
 															stockUpdatedAt: {
-																...searchInfo.stockUpdatedAt,
+																...changedWhere.stockUpdatedAt,
 																gte: new Date(`${e.target.value} 00:00:00`).toISOString(),
 															},
 														});
@@ -218,15 +218,15 @@ export const SearchFilterModal = observer(() => {
 													width={120}
 													type='date'
 													value={
-														searchInfo.stockUpdatedAt?.lte
-															? format(new Date(searchInfo.stockUpdatedAt.lte), 'yyyy-MM-dd')
+														changedWhere.stockUpdatedAt?.lte
+															? format(new Date(changedWhere.stockUpdatedAt.lte), 'yyyy-MM-dd')
 															: undefined
 													}
 													onChange={(e: any) => {
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															stockUpdatedAt: {
-																...searchInfo.stockUpdatedAt,
+																...changedWhere.stockUpdatedAt,
 																lte: new Date(`${e.target.value} 23:59:59`).toISOString(),
 															},
 														});
@@ -285,17 +285,17 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													defaultValue={searchInfo.taobaoProduct?.price?.gte ?? ''}
+													defaultValue={changedWhere.taobaoProduct?.price?.gte ?? ''}
 													onChange={(e) => setPriceStart(e.target.value)}
 													onBlur={() => {
 														const value = parseFloat(priceStart);
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															taobaoProduct: {
-																...searchInfo.taobaoProduct,
+																...changedWhere.taobaoProduct,
 																price: {
-																	...searchInfo.taobaoProduct?.price,
+																	...changedWhere.taobaoProduct?.price,
 																	gte: isNaN(value) ? undefined : value,
 																},
 															},
@@ -311,16 +311,16 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													defaultValue={searchInfo.taobaoProduct?.price?.lte ?? ''}
+													defaultValue={changedWhere.taobaoProduct?.price?.lte ?? ''}
 													onChange={(e) => setPriceEnd(e.target.value)}
 													onBlur={() => {
 														const value = parseFloat(priceEnd);
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															taobaoProduct: {
 																price: {
-																	...searchInfo.taobaoProduct?.price,
+																	...changedWhere.taobaoProduct?.price,
 																	lte: isNaN(value) ? undefined : value,
 																},
 															},
@@ -380,15 +380,15 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													defaultValue={searchInfo.cnyRate?.gte ?? ''}
+													defaultValue={changedWhere.cnyRate?.gte ?? ''}
 													onChange={(e) => setCnyRateStart(e.target.value)}
 													onBlur={() => {
 														const value = parseFloat(cnyRateStart);
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															cnyRate: {
-																...searchInfo.cnyRate,
+																...changedWhere.cnyRate,
 																gte: isNaN(value) ? undefined : value,
 															},
 														});
@@ -403,15 +403,15 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													defaultValue={searchInfo.cnyRate?.lte ?? ''}
+													defaultValue={changedWhere.cnyRate?.lte ?? ''}
 													onChange={(e) => setCnyRateEnd(e.target.value)}
 													onBlur={() => {
 														const value = parseFloat(cnyRateEnd);
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															cnyRate: {
-																...searchInfo.cnyRate,
+																...changedWhere.cnyRate,
 																lte: isNaN(value) ? undefined : value,
 															},
 														});
@@ -470,17 +470,17 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													defaultValue={searchInfo.localShippingFee?.gte ?? ''}
+													defaultValue={changedWhere.localShippingFee?.gte ?? ''}
 													onChange={(e) => {
 														setLocalFeeStart(e.target.value);
 													}}
 													onBlur={() => {
 														const value = parseInt(localFeeStart);
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															localShippingFee: {
-																...searchInfo.localShippingFee,
+																...changedWhere.localShippingFee,
 																gte: isNaN(value) ? undefined : value,
 															},
 														});
@@ -495,15 +495,15 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													defaultValue={searchInfo.localShippingFee?.lte ?? ''}
+													defaultValue={changedWhere.localShippingFee?.lte ?? ''}
 													onChange={(e) => setLocalFeeEnd(e.target.value)}
 													onBlur={() => {
 														const value = parseInt(localFeeEnd);
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															localShippingFee: {
-																...searchInfo.localShippingFee,
+																...changedWhere.localShippingFee,
 																lte: isNaN(value) ? undefined : value,
 															},
 														});
@@ -562,15 +562,15 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													defaultValue={searchInfo.marginRate?.gte ?? ''}
+													defaultValue={changedWhere.marginRate?.gte ?? ''}
 													onChange={(e) => setMarginRateStart(e.target.value)}
 													onBlur={() => {
 														const value = parseFloat(marginRateStart);
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															marginRate: {
-																...searchInfo.marginRate,
+																...changedWhere.marginRate,
 																gte: isNaN(value) ? undefined : value,
 															},
 														});
@@ -585,15 +585,15 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													defaultValue={searchInfo.marginRate?.lte ?? ''}
+													defaultValue={changedWhere.marginRate?.lte ?? ''}
 													onChange={(e) => setMarginRateEnd(e.target.value)}
 													onBlur={() => {
 														const value = parseFloat(marginRateEnd);
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															marginRate: {
-																...searchInfo.marginRate,
+																...changedWhere.marginRate,
 																lte: isNaN(value) ? undefined : value,
 															},
 														});
@@ -652,15 +652,15 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													defaultValue={searchInfo.price?.gte ?? ''}
+													defaultValue={changedWhere.price?.gte ?? ''}
 													onChange={(e) => setBasicPriceStart(e.target.value)}
 													onBlur={() => {
 														const value = parseInt(basicPriceStart);
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															price: {
-																...searchInfo.price,
+																...changedWhere.price,
 																gte: isNaN(value) ? undefined : value,
 															},
 														});
@@ -675,15 +675,15 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													defaultValue={searchInfo.price?.lte ?? ''}
+													defaultValue={changedWhere.price?.lte ?? ''}
 													onChange={(e) => setBasicPriceEnd(e.target.value)}
 													onBlur={() => {
 														const value = parseInt(basicPriceEnd);
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															price: {
-																...searchInfo.price,
+																...changedWhere.price,
 																lte: isNaN(value) ? undefined : value,
 															},
 														});
@@ -742,15 +742,15 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													defaultValue={searchInfo.shippingFee?.gte ?? ''}
+													defaultValue={changedWhere.shippingFee?.gte ?? ''}
 													onChange={(e) => setShippingFeeStart(e.target.value)}
 													onBlur={() => {
 														const value = parseInt(shippingFeeStart);
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															shippingFee: {
-																...searchInfo.shippingFee,
+																...changedWhere.shippingFee,
 																gte: isNaN(value) ? undefined : value,
 															},
 														});
@@ -765,15 +765,15 @@ export const SearchFilterModal = observer(() => {
 													options={{
 														textAlign: 'right',
 													}}
-													defaultValue={searchInfo.shippingFee?.lte ?? ''}
+													defaultValue={changedWhere.shippingFee?.lte ?? ''}
 													onChange={(e) => setShippingFeeEnd(e.target.value)}
 													onBlur={() => {
 														const value = parseInt(shippingFeeEnd);
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															shippingFee: {
-																...searchInfo.shippingFee,
+																...changedWhere.shippingFee,
 																lte: isNaN(value) ? undefined : value,
 															},
 														});
@@ -827,7 +827,7 @@ export const SearchFilterModal = observer(() => {
 												}}
 											>
 												<Select
-													value={searchInfo.taobaoProduct?.shopName?.equals ?? 'ALL'}
+													value={changedWhere.taobaoProduct?.shopName?.equals ?? 'ALL'}
 													sx={{
 														textAlign: 'center',
 														fontSize: 13,
@@ -835,10 +835,10 @@ export const SearchFilterModal = observer(() => {
 														width: 120,
 													}}
 													onChange={(e) => {
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															taobaoProduct: {
-																...searchInfo.taobaoProduct,
+																...changedWhere.taobaoProduct,
 																shopName: e.target.value === 'ALL' ? {} : { equals: e.target.value },
 															},
 														});
@@ -856,9 +856,9 @@ export const SearchFilterModal = observer(() => {
 
 												<Select
 													value={
-														searchInfo.taobaoProduct?.videoUrl?.not
+														changedWhere.taobaoProduct?.videoUrl?.not
 															? 'Y'
-															: searchInfo.taobaoProduct?.videoUrl?.equals === null
+															: changedWhere.taobaoProduct?.videoUrl?.equals === null
 															? 'N'
 															: 'ALL'
 													}
@@ -875,10 +875,10 @@ export const SearchFilterModal = observer(() => {
 														else if (value === 'Y') videoUrl = { not: { equals: null } };
 														else if (value === 'N') videoUrl = { equals: null };
 
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															taobaoProduct: {
-																...searchInfo.taobaoProduct,
+																...changedWhere.taobaoProduct,
 																videoUrl: videoUrl,
 															},
 														});
@@ -936,7 +936,7 @@ export const SearchFilterModal = observer(() => {
 												}}
 											>
 												<Select
-													value={searchInfo.productStore?.some?.siteCode?.equals ?? 'ALL'}
+													value={changedWhere.productStore?.some?.siteCode?.equals ?? 'ALL'}
 													sx={{
 														textAlign: 'center',
 														fontSize: 13,
@@ -944,13 +944,13 @@ export const SearchFilterModal = observer(() => {
 														width: 120,
 													}}
 													onChange={(e) => {
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 
 															productStore: {
-																...searchInfo.productStore,
+																...changedWhere.productStore,
 																some: {
-																	...searchInfo.productStore?.some,
+																	...changedWhere.productStore?.some,
 																	siteCode: e.target.value === 'ALL' ? {} : { equals: e.target.value },
 																},
 															},
@@ -975,8 +975,8 @@ export const SearchFilterModal = observer(() => {
 
 												<Select
 													value={
-														searchInfo.productStore?.some?.state
-															? searchInfo.productStore.some.state.equals
+														changedWhere.productStore?.some?.state
+															? changedWhere.productStore.some.state.equals
 																? 'Y'
 																: 'N'
 															: 'ALL'
@@ -993,12 +993,12 @@ export const SearchFilterModal = observer(() => {
 														if (value === 'ALL') state = undefined;
 														else if (value === 'Y') state = { equals: 2 };
 														else if (value === 'N') state = { not: { equals: 2 } };
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															productStore: {
-																...searchInfo.productStore,
+																...changedWhere.productStore,
 																some: {
-																	...searchInfo.productStore?.some,
+																	...changedWhere.productStore?.some,
 																	state: state,
 																},
 															},
@@ -1057,10 +1057,10 @@ export const SearchFilterModal = observer(() => {
 												}}
 											>
 												<Search
-													value={searchInfo.categoryInfoA077}
+													value={changedWhere.categoryInfoA077}
 													onChange={(_, value) => {
-														setSearchInfo({
-															...searchInfo,
+														setChangeWhere({
+															...changedWhere,
 															categoryInfoA077: value,
 														});
 													}}

@@ -2,7 +2,7 @@ import gql from '../../pages/Main/GraphQL/Requests';
 import QUERIES from '../../pages/Main/GraphQL/Queries';
 import MUTATIONS from '../../pages/Main/GraphQL/Mutations';
 
-import { runInAction, makeAutoObservable } from 'mobx';
+import { runInAction, makeAutoObservable, autorun } from 'mobx';
 import {
 	cartesian,
 	downloadExcel,
@@ -51,7 +51,7 @@ export class product {
 	page: number = 1;
 	pages: number = 0;
 	pageSize: number = 10;
-	state: number[] = [6];
+	state: number = 6;
 	myLock: number = 1;
 	tagDict: any = [];
 	uploadConsole: any = [];
@@ -191,7 +191,8 @@ export class product {
 
 	searchKeyword = '';
 
-	searchInfo: ProductWhereInput = {};
+	changedWhere: ProductWhereInput = {}; // 변화되어있는 상품조회 where절
+	stagedWhere: ProductWhereInput = {}; // 실질적으로 적용할 상품조회 where절
 
 	categoryInfo = {
 		markets: [
@@ -386,6 +387,10 @@ export class product {
 		makeAutoObservable(this);
 
 		this.loadAppInfo();
+
+		autorun(() => {
+			this.state = this.stagedWhere.state?.equals ?? 6;
+		});
 	}
 
 	/** PC 기본값 설정 */
@@ -844,12 +849,6 @@ export class product {
 		);
 	};
 
-	/** 상품 상태 (수집, 등록) */
-	setState = (value: number[]) => (this.state = value);
-
-	/** 잠금 상태 (잠금 ,해제) */
-	setLock = (value: number) => (this.myLock = value);
-
 	/** 임시 상태 */
 	setPageTemp = (value: number) => (this.pageTemp = value);
 
@@ -878,18 +877,9 @@ export class product {
 	getProduct = async (commonStore: common, p: number) => {
 		console.time('상품 정보 로드시간');
 		this.itemInfo.loading = true;
-		// Backup
 		const oldItems = this.itemInfo.items;
 
-		// 카테고리 where절 타입에 맞게 변환해주는 작업
-		const where: ProductWhereInput = {
-			...this.searchInfo,
-			categoryInfoA077: this.searchInfo.categoryInfoA077?.code
-				? { code: { equals: this.searchInfo.categoryInfoA077.code } }
-				: ({} as any),
-		};
-
-		const response1 = await gql(QUERIES.SELECT_MY_PRODUCT_COUNT_BY_USER, { where: where }, false);
+		const response1 = await gql(QUERIES.SELECT_MY_PRODUCT_COUNT_BY_USER, { where: this.stagedWhere }, false);
 
 		if (response1.errors) return alert(response1.errors[0].message);
 
@@ -913,7 +903,7 @@ export class product {
 			const response2 = await gql(
 				QUERIES.SELECT_MY_SIMPLE_PRODUCT_BY_USER,
 				{
-					where: where,
+					where: this.stagedWhere,
 					orderBy: { createdAt: 'desc' },
 					skip: skipOffset,
 					take: s,
@@ -955,7 +945,7 @@ export class product {
 			const response2 = await gql(
 				QUERIES.SELECT_MY_PRODUCT_BY_USER,
 				{
-					where: where,
+					where: this.stagedWhere,
 					orderBy: { createdAt: 'desc' },
 					skip: skipOffset,
 					take: s,
@@ -2997,40 +2987,67 @@ export class product {
 	// toggleSearchFilter = () => (this.searchInfo.useFilter = !this.searchInfo.useFilter);
 
 	/** 검색정보 설정 */
-	setSearchInfo = (data: ProductWhereInput) => (this.searchInfo = data);
+	setChangeWhere = (data: ProductWhereInput) => (this.changedWhere = data);
+	/** 검색정보 반영 */
+	onStageWhere = () => {
+		const where: ProductWhereInput = {
+			...this.changedWhere,
+			categoryInfoA077: this.changedWhere.categoryInfoA077?.code
+				? {
+						code: { equals: this.changedWhere.categoryInfoA077.code },
+				  }
+				: (undefined as any),
+		};
+
+		this.stagedWhere = where;
+	};
 
 	/** 검색 키워드 설정 */
-	setSearchKeyword = ({ type, keyword }: { type: SearchType; keyword: string }) => {
-		if (keyword === '') return (this.searchInfo.OR = undefined);
+	setSearchKeyword = ({ type, keyword }: { type: SearchType; keyword: string }): boolean => {
+		let flag = true;
+
+		if (keyword === '') {
+			this.changedWhere.OR = undefined;
+			return true;
+		}
 
 		switch (type) {
 			case 'PCODE': {
-				if (!keyword.includes('SFY_')) return alert('상품코드는 SFY_000 형식으로 입력해주세요.');
+				if (!keyword.includes('SFY_')) {
+					alert('상품코드는 SFY_000 형식으로 입력해주세요.');
+					return false;
+				}
 
 				let list: string[] = [];
 				let parseList: number[] = [];
 
 				list = keyword.split(',');
-				list.map((v) => {
-					if (!v.includes('SFY_')) return alert('모든 상품코드는 SFY_000 형식으로 입력해주세요.');
-					parseList.push(parseInt(v.split('_')[1], 36));
-				});
-				this.searchInfo.OR = [{ id: { in: parseList } }];
+				Promise.all(
+					list.map((v) => {
+						if (!v.includes('SFY_')) {
+							alert('모든 상품코드는 SFY_000 형식으로 입력해주세요.');
+							flag = false;
+						}
+						parseList.push(parseInt(v.split('_')[1], 36));
+					}),
+				);
+
+				if (flag) this.changedWhere.OR = [{ id: { in: parseList } }];
 				break;
 			}
 
 			case 'ONAME': {
-				this.searchInfo.OR = [{ taobaoProduct: { name: { contains: keyword } } }];
+				this.changedWhere.OR = [{ taobaoProduct: { name: { contains: keyword } } }];
 				break;
 			}
 
 			case 'NAME': {
-				this.searchInfo.OR = [{ name: { contains: keyword } }];
+				this.changedWhere.OR = [{ name: { contains: keyword } }];
 				break;
 			}
 
 			case 'CNAME': {
-				this.searchInfo.OR = [
+				this.changedWhere.OR = [
 					{ categoryInfoA077: { name: { contains: keyword } } },
 					{ categoryInfoB378: { name: { contains: keyword } } },
 					{ categoryInfoA112: { name: { contains: keyword } } },
@@ -3047,12 +3064,12 @@ export class product {
 			}
 
 			case 'OID': {
-				this.searchInfo.OR = [{ taobaoProduct: { taobaoNumIid: { contains: keyword } } }];
+				this.changedWhere.OR = [{ taobaoProduct: { taobaoNumIid: { contains: keyword } } }];
 				break;
 			}
 
 			case 'MID': {
-				this.searchInfo.OR = [
+				this.changedWhere.OR = [
 					{ productStore: { some: { storeProductId: { contains: keyword } } } },
 					{ productStore: { some: { etcVendorItemId: { contains: keyword } } } },
 				];
@@ -3060,20 +3077,30 @@ export class product {
 			}
 
 			case 'MYKEYWORD': {
-				this.searchInfo.OR = [{ myKeyward: { contains: keyword } }];
+				this.changedWhere.OR = [{ myKeyward: { contains: keyword } }];
 				break;
 			}
 		}
+
+		return flag;
 	};
 
-	/** 상품 필터 초기화 */
-	initSearchInfo = () => (this.searchInfo = {});
-
-	/** 검색조건 설정 (AND) */
-	setSearchWhereAndInput = (where: ProductWhereInput[]) => (this.searchInfo.AND = where);
-
-	/** 검색조건 설정 (OR) */
-	setSearchWhereOrInput = (where: ProductWhereInput[]) => (this.searchInfo.OR = where);
+	/** 상품 필터 초기화 (전달받은 값을 제외하고) */
+	initProductWhereInput = (data: Partial<ProductWhereInput>) => {
+		if (data) {
+			this.changedWhere = {
+				...data,
+			};
+			this.stagedWhere = {
+				...data,
+			};
+		} else {
+			this.changedWhere = {};
+			this.stagedWhere = {};
+		}
+		this.page = 1;
+		this.pageTemp = 1;
+	};
 
 	/** 검색결과 조회 */
 	// getSearchResult = (commonStore: common) => {
