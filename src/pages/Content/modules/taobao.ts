@@ -151,9 +151,9 @@ const scrape = async (items: any, user: User) => {
 		result['item']['pic_url'] = filteredThumbnails[0];
 		result['item']['desc'] = desc_output;
 		result['item']['desc_img'] = desc_imgs;
-		result['item']['tmall'] = true;
+		// result['item']['tmall'] = true;
 		result['item']['post_fee'] = shipping_fee;
-		result['item']['shop_id'] = 'tmall';
+		result['item']['shop_id'] = 'taobao';
 
 		try {
 			result['item']['video'] = dataJson.data.componentsVO.headImageVO.videos[0].url;
