@@ -12,8 +12,8 @@ const iconv = require('iconv-lite');
 
 /** 타오바오 상품정보 크롤링 */
 const scrape = async (items: any, user: User) => {
-	let result: any = form;
-	result.user = user;
+	let result = form;
+	result.user = user as any;
 
 	/** 페이지별 크롤링 방식 다름 */
 	// 페이지 타입 : 2

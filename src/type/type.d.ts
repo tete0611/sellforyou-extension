@@ -91,7 +91,12 @@ export type BulkInfo = {
 	isCancel: boolean;
 	isComplete: boolean;
 	isExcel: boolean;
-	results: any[];
+	results: {
+		checked: boolean;
+		input: CollectInfo['inputs'][number];
+		status: string;
+		statusMessage: string;
+	}[];
 	sender: Sender;
 };
 
@@ -469,34 +474,76 @@ export type SideBarItem = { name: string; engName: string; icon: ReactNode; cust
 /** 상품 검색 방법 */
 export type SearchType = 'PCODE' | 'ONAME' | 'NAME' | 'CNAME' | 'OID' | 'MID' | 'MYKEYWORD';
 
-/** 상품 검색 정보 타입 */
-// export type SearchInfo = {
-// 	categoryInfo: {
-// 		code: null | string;
-// 		name: null | string;
-// 	};
-// 	collectedStart: null | Date;
-// 	collectedEnd: null | Date;
-// 	registeredStart: null | Date;
-// 	registeredEnd: null | Date;
-// 	cnyPriceStart: null | number;
-// 	cnyPriceEnd: null | number;
-// 	cnyRateStart: null | number;
-// 	cnyRateEnd: null | number;
-// 	localFeeStart: null | number;
-// 	localFeeEnd: null | number;
-// 	marginRateStart: null | number;
-// 	marginRateEnd: null | number;
-// 	priceStart: null | number;
-// 	priceEnd: null | number;
-// 	feeStart: null | number;
-// 	feeEnd: null | number;
-// 	shopName: Shop | 'ALL';
-// 	marketName: 'ALL' | SHOPCODE;
-// 	hasVideo: 'ALL' | 'Y' | 'N';
-// 	hasRegistered: 'ALL' | 'Y' | 'N';
-// 	searchKeyword: '';
-// searchType: 'PCODE' | 'ONAME' | 'NAME' | 'CNAME' | 'OID' | 'MID' | 'KEYWARD' | 'ALL';
-// 	// useFilter: boolean,
-// 	whereInput: ProductWhereInput;
-// };
+/** taobao_product 테이블의 original_data 필드타입
+ * @description 스키마에 string으로 정의되어 있어서 커스텀 필요
+ * */
+export type OriginalData = {
+	user: User;
+	item: {
+		num_iid: string;
+		id: string;
+		productId: string;
+		categoryId: string;
+		venderId: string;
+		title: string;
+		options: any[];
+		attr: any[];
+		requireDetailData: any[];
+		detailImage: string[];
+		desc_short: string;
+		price: string;
+		total_price: string;
+		suggestive_price: string;
+		original_price: string;
+		nick: string;
+		num: number;
+		detail_url: string;
+		pic_url: string;
+		brand: string;
+		manufacturer: string;
+		modelName: string;
+		brandId: string;
+		rootCatId: string;
+		cid: string;
+		nid: string;
+		desc: string;
+		item_imgs: { url: string }[];
+		item_weight: string;
+		post_fee: number;
+		freight: string;
+		express_fee: any;
+		ems_fee: any;
+		shipping_to: string;
+		video: string;
+		sample_id: string;
+		props_name: string;
+		prop_imgs: any;
+		props_imgs: any;
+		property_alias: string;
+		props: any[];
+		total_sold: string;
+		skus: any;
+		seller_id: string;
+		sales: number;
+		shop_id: string;
+		props_list: any;
+		seller_info: any;
+		tmall?: any;
+		error: string;
+		fav_count: any;
+		fans_count: string;
+		location: string;
+		data_from: string;
+		has_discount: string;
+		is_promotion: string;
+		promo_type: any;
+		props_img: any;
+		rate_grade: string;
+		desc_img: string[];
+		desc_text: string[];
+		shop_item: any[];
+		relate_items: any[];
+		shopName: string;
+		url: string;
+	};
+};

@@ -1,5 +1,7 @@
+import { OriginalData } from '../../../../type/type';
+
 // 상품 수집 공통 폼
-export const form = {
+export const form: OriginalData = {
 	item: {
 		num_iid: '',
 		id: '',
@@ -71,5 +73,5 @@ export const form = {
 		shopName: '',
 		url: '',
 	},
-	user: null,
+	user: null as any,
 };

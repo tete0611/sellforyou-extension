@@ -23,9 +23,8 @@ import { deleteTmon, uploadTmon } from '../../pages/Tools/Tmon';
 import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from '../../pages/Tools/ChromeAsync';
 import { common } from './common';
 import { AppInfo, Item, ItemInfo, ManyPriceInfo, ModalInfo, SearchType, User } from '../../type/type';
-import { UpdateProductMyKeywardInPut } from '../../type/mutation';
 import { SHOPCODE } from '../../type/variable';
-import { ProductWhereInput } from '../../type/schema';
+import { MutationUpdateKeywardListArgs, ProductWhereInput } from '../../type/schema';
 
 const {
 	AUCTION_1,
@@ -4188,7 +4187,7 @@ export class product {
 	};
 
 	/** 키워드 업데이트 */
-	updateProductMyKeyward = async (data: UpdateProductMyKeywardInPut, index: number) => {
+	updateProductMyKeyward = async (data: MutationUpdateKeywardListArgs, index: number) => {
 		const exit = () => (this.itemInfo.items[index].edited.attribute = 0);
 		if (!this.itemInfo.items[index].edited.attribute) return;
 
