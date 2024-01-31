@@ -1,9 +1,4 @@
-import { taobao } from './modules/taobao';
-import { tmall } from './modules/tmall';
-import { express } from './modules/express';
-import { alibaba } from './modules/alibaba';
-import { vvic } from './modules/vvic';
-import { amazon } from './modules/amazon';
+import { alibaba, amazon, express, taobao, tmall, vvic } from './modules';
 import { getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../Tools/ChromeAsync';
 import { getCookie, sleep, updateQueryStringParameter } from '../../../common/function';
 import { getTaobaoData } from '../Tools/Taobao';
@@ -15,7 +10,10 @@ import {
 	uploadA077Resources,
 } from '../Tools/SmartStore';
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
-import { CollectInfo, RuntimeMessage, Sender, Shop, User } from '../../type/type';
+import { BulkInfo, CollectInfo, RuntimeMessage, Sender, Shop, Source, User } from '../../type/type';
+import React from 'react';
+import { renderToString } from 'react-dom/server';
+import { BulkHasFailedForm, BulkSuccessForm } from './components';
 
 /** api로 대량수집하기 함수 */
 const bulkCollectUsingApi = async (shop: string | null, shopId: number, currentPage: number) => {
@@ -232,7 +230,7 @@ const floatingButton = async (
 		tabInfo: Sender;
 	},
 	shop: Shop | null,
-	result: any,
+	result: Source & { error: string },
 	bulk: boolean,
 	urlUnchangedPage?: { shopId: number; method: 'api' | 'element' },
 ) => {
@@ -247,8 +245,10 @@ const floatingButton = async (
 
 	buttonCollect.addEventListener('click', async () => {
 		if (!info.isBulk && result.error) {
-			if (confirm(`${result.error}\n[확인]을 누르시면 수집상품목록으로 이동합니다.`))
-				window.open(chrome.runtime.getURL('product/collected.html'));
+			if (confirm(`${result.error}\n[확인]을 누르시면 수집상품목록으로 이동합니다.`)) {
+				const url = `${chrome.runtime.getURL('app.html')}`;
+				window.open(url);
+			}
 
 			return;
 		}
@@ -386,7 +386,7 @@ const floatingButton = async (
 			const sfyStandardShippingEnabled: any = document.getElementById('sfyStandardShippingEnabled');
 			const sfyCategoryEnabled: any = document.getElementById('sfyCategoryEnabled');
 			const sfyMyKeywardEnabled: any = document.getElementById('sfyMyKeywardEnabled');
-			const sfyCategoryInput: any = document.getElementById('sfyCategoryInput');
+			const sfyCategoryInput = document.getElementById('sfyCategoryInput') as HTMLInputElement;
 			const sfyMyKeywardInput: any = document.getElementById('sfyMyKeywardInput');
 			const sfyCategoryList = document.getElementById('sfyCategoryList');
 			const sfyStart = document.getElementById('sfyStart');
@@ -482,7 +482,7 @@ const floatingButton = async (
 				if (!sfyMyKeywardEnabled.checked) sfyMyKeywardInput.setAttribute('data-myKeyward-id', '');
 
 				collectInfo.push({
-					categoryId: sfyCategoryInput.getAttribute('data-category-id'),
+					categoryId: sfyCategoryInput.getAttribute('data-category-id')!,
 					myKeyward: sfyMyKeywardInput.getAttribute('data-myKeyward-id'),
 					sender: info.tabInfo,
 					useMedal: sfyGoldMedalEnabled.checked,
@@ -583,7 +583,7 @@ const floatingButton = async (
 		buttonCheckAll.className = 'SELLFORYOU-COLLECT';
 		buttonCheckAll.innerHTML = buttonCheckAllDefault;
 		buttonCheckAll.addEventListener('click', () => {
-			let list: any = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
+			let list = document.getElementsByClassName('SELLFORYOU-CHECKBOX') as HTMLCollectionOf<HTMLInputElement>;
 
 			if (buttonCheckAll.value === 'true') {
 				buttonCheckAll.value = false;
@@ -1015,7 +1015,10 @@ const floatingButton = async (
 			buttonLogo.className = 'SELLFORYOU-COLLECT';
 			buttonLogo.style.height = '40px';
 			buttonLogo.innerHTML = buttonLogoDefault;
-			buttonLogo.addEventListener('click', () => window.open(chrome.runtime.getURL('product/collected.html')));
+			buttonLogo.addEventListener('click', () => {
+				const url = `${chrome.runtime.getURL('app.html')}${encodeURIComponent('collected')}`;
+				window.open(url);
+			});
 
 			const logoCol = document.createElement('td');
 			const logoRow = document.createElement('tr');
@@ -1039,8 +1042,8 @@ const floatingButton = async (
 	if (info.isBulk && !bulk) buttonCollect.click();
 };
 
-const resultDetails = async (data: any) => {
-	let paper: any = document.getElementById('sfyPaper');
+const resultDetails = async (data: BulkInfo) => {
+	let paper = document.getElementById('sfyPaper') as HTMLDivElement | null;
 
 	if (!paper) {
 		paper = document.createElement('div');
@@ -1049,152 +1052,28 @@ const resultDetails = async (data: any) => {
 		document.documentElement.appendChild(paper);
 	}
 
-	let results = data.results.filter((v: any) => v.status === 'failed');
+	let failedResults = data?.results.filter((v) => v.status === 'failed')!;
 
-	if (results.length > 0) {
-		let form = `
-            <div style="background: white; border: 1px solid black; color: black; font-size: 16px; padding: 10px; width: 1000px; text-align: left;">
-                <div style="display: flex; align-items: center; font-size: 20px; margin-bottom: 40px;">
-                    <img src=${chrome.runtime.getURL(
-											'resources/icon-failed.png',
-										)} width="28px" height="28px" style="margin-bottom: 5px;" />
-                    
-                    &nbsp;
+	if (failedResults.length > 0) paper.innerHTML = renderToString(<BulkHasFailedForm results={failedResults} />);
+	else paper.innerHTML = renderToString(<BulkSuccessForm data={data} />);
 
-                    수집실패(${results.length})
-                </div>
-
-                <table style="width: 100%; margin-bottom: 20px;">
-                    <tr>
-                        <td style="text-align: center; width: 10%;">
-                            <input id="sfyResultAll" type="checkbox" checked style="width: 20px; height: 20px;" />
-                        </td>
-
-                        <td style="text-align: center; width: 45%;">
-                            상품URL
-                        </td>
-
-                        <td style="text-align: center; width: 45%;">
-                            실패사유
-                        </td>
-                    </tr>
-                </table>
-
-                <div style="height: 100px; overflow-y: auto;">
-                    <table id="sfyResultDetail" style="width: 100%;">
-        `;
-
-		results.map(
-			(v: any, index: number) =>
-				(form += `
-                <tr>
-                    <td style="text-align: center; width: 10%;">
-                        <input id=${index} class="SFY-RESULT-CHECK" type="checkbox" checked style="width: 20px; height: 20px;" />
-                    </td>
-
-                    <td style="text-align: center; width: 45%;">
-                        <a target="_blank" href=${v.input.url} style="color: gray;">
-                            <div style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 400px; margin: auto;">
-                                ${v.input.url}
-                            </div>
-                        </a>
-                    </td>
-
-                    <td style="text-align: center; width: 45%;">
-                        <div style="color: red; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 400px; margin: auto;">
-                            ${v.statusMessage}
-                        </div>
-                    </td>
-                </tr>
-            `),
-		);
-
-		form += `
-                    </table>
-                </div>
-
-                <table style="width: 100%; margin-top: 20px;">
-                    <tr>
-                        <td style="text-align: center; width: 25%;">
-                            <button id="sfyPage" style="width: 200px; height: 40px;">
-                                처음페이지로
-                            </button>
-                        </td>
-
-                        <td style="text-align: center; width: 25%;">
-                            <button id="sfyRetry" style="width: 200px; height: 40px;">
-                                선택상품 재수집
-                            </button>
-                        </td>
-
-                        <td style="text-align: center; width: 25%;">
-                            <button id="sfyConnect" style="width: 200px; height: 40px;">
-                                수집상품목록 이동
-                            </button>
-                        </td>
-
-                        <td style="text-align: center; width: 25%;">
-                            <button id="sfyCopy" style="width: 200px; height: 40px;">
-                                클립보드 복사
-                            </button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        `;
-
-		paper.innerHTML = form;
-	} else {
-		let form = `
-            <div style="background: white; border: 1px solid black; color: black; font-size: 16px; padding: 10px; width: 500px; text-align: left;">
-                <div style="display: flex; align-items: center; font-size: 20px; margin-bottom: 40px;">
-                    <img src=${chrome.runtime.getURL(
-											'resources/icon-success.png',
-										)} width="28px" height="28px" style="margin-bottom: 5px;" />
-                    
-                    &nbsp;
-                    
-                    수집완료(${data.results.length})
-                </div>
-
-                <table style="width: 100%;">
-                    <tr>
-                        <td style="text-align: center; width: 50%;">
-                            <button id="sfyPage" style="width: 200px; height: 40px;">
-                                처음페이지로
-                            </button>
-                        </td>
-
-                        <td style="text-align: center; width: 50%;">
-                            <button id="sfyConnect" style="width: 200px; height: 40px;">
-                                수집상품목록 이동
-                            </button>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        `;
-
-		paper.innerHTML = form;
-	}
-
-	const checks: any = document.getElementsByClassName('SFY-RESULT-CHECK');
+	const checks = document.getElementsByClassName('SFY-RESULT-CHECK') as unknown as HTMLInputElement[];
 
 	for (let i = 0; i < checks.length; i++)
-		checks[i].addEventListener('change', (e: any) => (results[e.target.id].checked = e.target.checked));
+		checks[i].addEventListener('change', (e: any) => (failedResults[e.target.id].checked = e.target.checked));
 
 	document.getElementById('sfyResultAll')?.addEventListener('change', (e: any) => {
-		results.map((v: any) => (v.checked = e.target.checked));
+		failedResults.map((v) => (v.checked = e.target.checked));
 
 		for (let i = 0; i < checks.length; i++) checks[i].checked = e.target.checked;
 	});
 
-	document.getElementById('sfyPage')?.addEventListener('click', () => (window.location.href = data.sender.tab.url));
+	document.getElementById('sfyPage')?.addEventListener('click', () => (window.location.href = data?.sender.tab.url!));
 
 	document.getElementById('sfyRetry')?.addEventListener('click', () => {
-		const inputs = results.filter((v) => v.checked).map((v) => v.input) as CollectInfo['inputs'];
+		const inputs = failedResults.filter((v) => v.checked).map((v) => v.input) as CollectInfo['inputs'];
 
-		if (data.isExcel)
+		if (data?.isExcel)
 			sendRuntimeMessage({
 				action: 'collect-product-excel',
 				source: { data: inputs, retry: true },
@@ -1206,9 +1085,10 @@ const resultDetails = async (data: any) => {
 			});
 	});
 
-	document
-		.getElementById('sfyConnect')
-		?.addEventListener('click', () => window.open(chrome.runtime.getURL('product/collected.html')));
+	document.getElementById('sfyConnect')?.addEventListener('click', () => {
+		const url = `${chrome.runtime.getURL('app.html')}${encodeURIComponent('collected')}`;
+		window.open(url);
+	});
 
 	document.getElementById('sfyCopy')?.addEventListener('click', () => {
 		const text = document.getElementById('sfyResultDetail')?.innerText ?? '';
@@ -1321,7 +1201,7 @@ const initInfo = async (display: boolean) => {
 
 		document.documentElement.appendChild(paper);
 
-		window.addEventListener('keydown', (e: any) => {
+		window.addEventListener('keydown', (e) => {
 			if (e.key === 'Escape') {
 				paper.innerHTML = `
                         <div style="margin-bottom: 40px;">
@@ -1545,7 +1425,7 @@ const main = async () => {
 			}
 
 			case 'collect-finish': {
-				resultDetails(request.source).then(sendResponse);
+				resultDetails(request.source as any).then(sendResponse);
 
 				return true;
 			}
@@ -1593,21 +1473,21 @@ const main = async () => {
 		console.log('타오바오 단일상품 페이지 진입');
 		const info = await initInfo(true);
 		const result = await new taobao().get(info.user);
-		floatingButton(info, null, result, false);
+		floatingButton(info, null, result as any, false);
 
 		/** 타오바오 리스트 페이지 */
 	} else if (/\bs.taobao.com\/search/.test(currentUrl)) {
 		console.log('타오바오 리스트 페이지 진입');
 		const info = await initInfo(false);
 		await new taobao().bulkTypeOne(info.user);
-		floatingButton(info, 'taobao1', true, true);
+		floatingButton(info, 'taobao1', true as any, true);
 
 		/**  */
 	} else if (/world.taobao.com\/wow/.test(currentUrl)) {
 		console.log('월드 타오바오 페이지 진입');
 		const info = await initInfo(false);
 		await new taobao().bulkTypeThree(info.user);
-		floatingButton(info, 'taobao1', true, true);
+		floatingButton(info, 'taobao1', true as any, true);
 
 		/** 타오바오 상점 페이지 */
 	} else if (
@@ -1618,7 +1498,7 @@ const main = async () => {
 		console.log('타오바오 상점 페이지 진입');
 		const info = await initInfo(false);
 		await new taobao().bulkTypeTwo(info.user);
-		floatingButton(info, 'taobao2', true, true);
+		floatingButton(info, 'taobao2', true as any, true);
 
 		/**  */
 	} else if (/guang.taobao.com/.test(currentUrl)) {
@@ -1640,10 +1520,10 @@ const main = async () => {
 		const info = await initInfo(false);
 		if (/list.tmall.com/.test(currentUrl)) {
 			await new tmall().bulkTypeOne(info.user);
-			floatingButton(info, 'tmall1', true, true);
+			floatingButton(info, 'tmall1', true as any, true);
 		} else {
 			await new tmall().bulkTypeTwo(info.user);
-			floatingButton(info, 'tmall2', true, true);
+			floatingButton(info, 'tmall2', true as any, true);
 		}
 
 		/** */
@@ -1666,14 +1546,14 @@ const main = async () => {
 		const info = await initInfo(false);
 		await new express().bulkTypeOne(info.user);
 		await new express().bulkTypeTwo(info.user);
-		floatingButton(info, 'express', true, true);
+		floatingButton(info, 'express', true as any, true);
 
 		/** 알리 상점 페이지 */
 	} else if (/aliexpress.com\/store/.test(currentUrl)) {
 		console.log('알리 상점 페이지 진입');
 		const info = await initInfo(false);
 		await new express().bulkTypeThree(info.user);
-		floatingButton(info, 'express', true, true);
+		floatingButton(info, 'express', true as any, true);
 
 		/** 1688 단일상품 페이지 */
 	} else if (/detail.1688.com/.test(currentUrl)) {
@@ -1692,14 +1572,14 @@ const main = async () => {
 		const info = await initInfo(false);
 		await new alibaba().bulkTypeOne(info.user);
 		await new alibaba().bulkTypeTwo(info.user);
-		floatingButton(info, 'alibaba', true, true);
+		floatingButton(info, 'alibaba', true as any, true);
 
 		/** 1688 리스트 페이지 */
 	} else if (/show.1688.com\/pinlei\/industry\/pllist.html/.test(currentUrl)) {
 		console.log('1688 리스트페이지 진입');
 		const info = await initInfo(false);
 		await new alibaba().bulkTypeOne(info.user);
-		floatingButton(info, 'alibaba', true, true);
+		floatingButton(info, 'alibaba', true as any, true);
 
 		/** vvic 단일상품 페이지 */
 	} else if (/www.vvic.com\/item/.test(currentUrl)) {
@@ -1709,26 +1589,26 @@ const main = async () => {
 
 		/** vvic 검색 페이지 */
 	} else if (/www.vvic.com\/.+\/search/.test(currentUrl) || /www.vvic.com\/.+\/topic/.test(currentUrl)) {
-		console.log(`vvic검색페이지진입`);
+		console.log(`vvic 검색 페이지 진입`);
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 2);
-		floatingButton(info, 'vvic', true, true);
+		floatingButton(info, 'vvic', true as any, true);
 
 		/** vvic 상점 페이지 */
 	} else if (/www.vvic.com\/shop\/(\d+)/.test(currentUrl)) {
-		console.log('vvic shop page entered');
+		console.log('vvic 상점 페이지 진입');
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 3);
 		const shopId = parseInt(currentUrl.match(/\/shop\/(\d+)/)?.[1] ?? '0');
-		floatingButton(info, 'vvic', true, true, { shopId: shopId, method: 'api' });
+		floatingButton(info, 'vvic', true as any, true, { shopId: shopId, method: 'api' });
 
 		/** */
 	} else if (/www.vvic.com\/.+\/list/.test(currentUrl)) {
-		console.log('vvic list page entered');
+		console.log('vvic 리스트 페이지 진입');
 		const info = await initInfo(false);
-		await new vvic().bulkTypeOne(info.user, 4);
-		const shopId = parseInt(currentUrl.match(/\/list\/(\d+)/)?.[1] ?? '0');
-		floatingButton(info, 'vvic', true, true, { shopId: shopId, method: 'api' });
+		await new vvic().bulkTypeFour(info.user);
+		// const shopId = parseInt(currentUrl.match(/\/list\/(\d+)/)?.[1] ?? '0');
+		floatingButton(info, 'vvic', true as any, true /*, { shopId: shopId, method: 'api' } */);
 
 		/** */
 	} else if (/www.amazon.com\/.+\/dp\//.test(currentUrl) || /www.amazon.com\/dp/.test(currentUrl)) {
@@ -1756,13 +1636,13 @@ const main = async () => {
 	) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeOne(info.user, 'amazon.com');
-		floatingButton(info, 'amazon1', true, true);
+		floatingButton(info, 'amazon1', true as any, true);
 
 		/** */
 	} else if (/www.amazon.com\/stores/.test(currentUrl)) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.com');
-		floatingButton(info, 'amazon2', true, true);
+		floatingButton(info, 'amazon2', true as any, true);
 
 		/** */
 	} else if (
@@ -1772,13 +1652,13 @@ const main = async () => {
 	) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeOne(info.user, 'amazon.co.jp');
-		floatingButton(info, 'amazon1', true, true);
+		floatingButton(info, 'amazon1', true as any, true);
 
 		/** */
 	} else if (/www.amazon.co.jp\/stores/.test(currentUrl)) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.co.jp');
-		floatingButton(info, 'amazon2', true, true);
+		floatingButton(info, 'amazon2', true as any, true);
 
 		/** */
 	} else if (
@@ -1788,13 +1668,13 @@ const main = async () => {
 	) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeOne(info.user, 'amazon.de');
-		floatingButton(info, 'amazon1', true, true);
+		floatingButton(info, 'amazon1', true as any, true);
 
 		/** */
 	} else if (/www.amazon.de\/stores/.test(currentUrl)) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.de');
-		floatingButton(info, 'amazon2', true, true);
+		floatingButton(info, 'amazon2', true as any, true);
 
 		/** 테무 리스트 페이지 */
 	} else if (/.temu.com\/kr-en\/.*opt_level/.test(currentUrl)) {
