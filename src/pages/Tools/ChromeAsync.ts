@@ -51,21 +51,29 @@ export const sendRuntimeMessage = <T>(obj: RuntimeMessage): Promise<T | null> =>
 	console.log('runtime', obj);
 
 	return new Promise((resolve, reject) => {
-		chrome.runtime.sendMessage(obj, (response) => {
-			let lastError = chrome.runtime.lastError;
+		try {
+			chrome.runtime.sendMessage(obj, (response) => {
+				let lastError = chrome.runtime.lastError;
 
-			if (lastError) {
-				console.log('runtime rejected', obj, lastError.message);
+				if (lastError) {
+					console.error('runtime rejected', obj, lastError.message);
 
-				resolve(null);
+					resolve(null);
 
-				return;
-			}
+					return;
+				}
 
-			console.log('runtime resolved', obj, response);
+				console.log('runtime resolved', obj, response);
 
-			resolve(response);
-		});
+				resolve(response);
+			});
+		} catch (error) {
+			const err = error as Error;
+			if (err.message.includes('Extension context invalidated'))
+				alert('확장프로그램 정보가 수신되지 않았습니다\n새로고침 후 진행해주세요.');
+			console.error('runtime rejected', obj, error);
+			resolve(null);
+		}
 	});
 };
 
