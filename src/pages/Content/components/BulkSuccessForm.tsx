@@ -21,8 +21,8 @@ export const BulkSuccessForm = ({ data }: Props) => {
 			<div style={{ display: 'flex', alignItems: 'center', fontSize: 20, marginBottom: 40 }}>
 				<img
 					src={chrome.runtime.getURL('resources/icon-success.png')}
-					width='28px'
-					height='28px'
+					width={28}
+					height={28}
 					style={{ marginBottom: 5 }}
 				/>
 				&nbsp; {`수집완료(${data.results.length})`}

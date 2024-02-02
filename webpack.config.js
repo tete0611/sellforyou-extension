@@ -52,7 +52,7 @@ var options = {
 		// connects: path.join(__dirname, 'src', 'pages', 'Main', 'Connects', 'index.jsx'),
 		popup: path.join(__dirname, 'src', 'pages', 'Popup', 'index.jsx'),
 		background: path.join(__dirname, 'src', 'pages', 'Background', 'index.ts'),
-		contentScript: path.join(__dirname, 'src', 'pages', 'Content', 'index.ts'),
+		contentScript: path.join(__dirname, 'src', 'pages', 'Content', 'index.tsx'),
 		trangers: path.join(__dirname, 'src', 'pages', 'Trangers', 'trangers.ts'),
 		payments: path.join(__dirname, 'src', 'pages', 'Main', 'Payments', 'index.jsx'),
 		// inflow: path.join(__dirname, 'src', 'pages', 'Main', 'Inflow', 'index.jsx'),
@@ -305,7 +305,7 @@ var options = {
 		// }),
 
 		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Collected', 'index.html'),
+		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'index.html'),
 		// 	filename: 'product/collected.html',
 		// 	chunks: ['collected'],
 		// 	cache: false,
