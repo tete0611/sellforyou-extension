@@ -78,7 +78,7 @@ export const ManyDeliveryInfoModal = observer(() => {
 									<Search
 										disabled={
 											!delivery.deliveryList.find(
-												(v) => v.name === common.user.userInfo.orderToDeliveryName && v.hscode,
+												(v) => v.name === common.user.userInfo!.orderToDeliveryName && v.hscode,
 											)
 										}
 										value={delivery.manyDeliveryInfo.category}
@@ -102,8 +102,9 @@ export const ManyDeliveryInfoModal = observer(() => {
 										}}
 										options={
 											delivery.manyDeliveryInfo.input
-												? delivery.deliveryData.find((v: any) => v.company === common.user.userInfo.orderToDeliveryName)
-														.category
+												? delivery.deliveryData.find(
+														(v: any) => v.company === common.user.userInfo!.orderToDeliveryName,
+												  ).category
 												: [delivery.manyDeliveryInfo.category]
 										}
 										getOptionLabel={(option: any) => option.name ?? ''}

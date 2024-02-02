@@ -869,7 +869,7 @@ export const DeliveryDetailModal = observer(() => {
 												fontSize={12}
 												color='#1565c0'
 												onClick={() => {
-													navigator.clipboard.writeText(common.user.userInfo.orderToDeliveryName).then(
+													navigator.clipboard.writeText(common.user.userInfo!.orderToDeliveryName).then(
 														function () {
 															alert('클립보드에 복사되었습니다.');
 														},
@@ -879,7 +879,7 @@ export const DeliveryDetailModal = observer(() => {
 													);
 												}}
 											>
-												{common.user.userInfo.orderToDeliveryName}
+												{common.user.userInfo!.orderToDeliveryName}
 											</Typography>
 										</Grid>
 
@@ -907,7 +907,7 @@ export const DeliveryDetailModal = observer(() => {
 												noWrap
 												fontSize={12}
 												onClick={() => {
-													navigator.clipboard.writeText(common.user.userInfo.orderToDeliveryMembership).then(
+													navigator.clipboard.writeText(common.user.userInfo!.orderToDeliveryMembership).then(
 														function () {
 															alert('클립보드에 복사되었습니다.');
 														},
@@ -917,7 +917,7 @@ export const DeliveryDetailModal = observer(() => {
 													);
 												}}
 											>
-												{common.user.userInfo.orderToDeliveryMembership}
+												{common.user.userInfo!.orderToDeliveryMembership}
 											</Typography>
 										</Grid>
 
@@ -945,7 +945,7 @@ export const DeliveryDetailModal = observer(() => {
 												noWrap
 												fontSize={12}
 												onClick={() => {
-													navigator.clipboard.writeText(common.user.userInfo.orderToDeliveryMethod).then(
+													navigator.clipboard.writeText(common.user.userInfo!.orderToDeliveryMethod).then(
 														function () {
 															alert('클립보드에 복사되었습니다.');
 														},
@@ -955,7 +955,7 @@ export const DeliveryDetailModal = observer(() => {
 													);
 												}}
 											>
-												{common.user.userInfo.orderToDeliveryMethod}
+												{common.user.userInfo!.orderToDeliveryMethod}
 											</Typography>
 										</Grid>
 

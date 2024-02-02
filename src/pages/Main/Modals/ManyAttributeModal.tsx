@@ -16,12 +16,12 @@ export const ManyAttributeModal = observer(() => {
 
 		// 기본설정에 저장된 값을 토대로 초기값 설정
 		product.setManyPriceInfo({
-			cnyRate: common.user.userInfo.cnyRate,
-			marginRate: common.user.userInfo.marginRate,
-			marginUnitType: common.user.userInfo.marginUnitType,
-			localShippingFee: common.user.userInfo.defaultShippingFee,
-			shippingFee: common.user.userInfo.extraShippingFee,
-			refundShippingFee: common.user.userInfo.refundShippingFee,
+			cnyRate: common.user.userInfo!.cnyRate,
+			marginRate: common.user.userInfo!.marginRate,
+			marginUnitType: common.user.userInfo!.marginUnitType!,
+			localShippingFee: common.user.userInfo!.defaultShippingFee,
+			shippingFee: common.user.userInfo!.extraShippingFee,
+			refundShippingFee: common.user.userInfo!.refundShippingFee,
 		});
 	}, [common.loaded]);
 

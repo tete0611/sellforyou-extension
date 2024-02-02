@@ -68,7 +68,7 @@ export async function uploadStreet(productStore: product, commonStore: common, d
 
 		switch (data.DShopInfo.site_code) {
 			case 'A112': {
-				switch (commonStore.user.userInfo.streetUseKeyType) {
+				switch (commonStore.user.userInfo?.streetUseKeyType) {
 					case '1': {
 						apiKey = commonStore.user.userInfo.streetApiKey;
 
@@ -95,19 +95,19 @@ export async function uploadStreet(productStore: product, commonStore: common, d
 				}
 
 				streetOutbound = commonStore.deliveryPolicy.streetGlobalOutboundList.find(
-					(v: any) => `${v.addrSeq[0]}` === `${commonStore.user.userInfo.streetDefaultOutbound}`,
+					(v: any) => `${v.addrSeq[0]}` === `${commonStore.user.userInfo?.streetDefaultOutbound}`,
 				);
 				streetInbound = commonStore.deliveryPolicy.streetGlobalInboundList.find(
-					(v: any) => `${v.addrSeq[0]}` === `${commonStore.user.userInfo.streetDefaultInbound}`,
+					(v: any) => `${v.addrSeq[0]}` === `${commonStore.user.userInfo?.streetDefaultInbound}`,
 				);
 
 				break;
 			}
 
 			case 'A113': {
-				switch (commonStore.user.userInfo.streetNormalUseKeyType) {
+				switch (commonStore.user.userInfo?.streetNormalUseKeyType) {
 					case '1': {
-						apiKey = commonStore.user.userInfo.streetNormalApiKey;
+						apiKey = commonStore.user.userInfo?.streetNormalApiKey;
 
 						break;
 					}
@@ -132,10 +132,10 @@ export async function uploadStreet(productStore: product, commonStore: common, d
 				}
 
 				streetOutbound = commonStore.deliveryPolicy.streetNormalOutboundList.find(
-					(v: any) => `${v.addrSeq[0]}` === `${commonStore.user.userInfo.streetNormalOutbound}`,
+					(v: any) => `${v.addrSeq[0]}` === `${commonStore.user.userInfo?.streetNormalOutbound}`,
 				);
 				streetInbound = commonStore.deliveryPolicy.streetNormalInboundList.find(
-					(v: any) => `${v.addrSeq[0]}` === `${commonStore.user.userInfo.streetNormalInbound}`,
+					(v: any) => `${v.addrSeq[0]}` === `${commonStore.user.userInfo?.streetNormalInbound}`,
 				);
 
 				break;
@@ -225,7 +225,7 @@ export async function uploadStreet(productStore: product, commonStore: common, d
 
 				for (let i in market_optn) {
 					if (market_optn[i].code === market_code) {
-						if (commonStore.user.userInfo.autoPrice === 'Y') {
+						if (commonStore.user.userInfo?.autoPrice === 'Y') {
 							let iprice = market_item.sprice;
 							let oprice = market_item.sprice + market_optn[i].price;
 
@@ -317,7 +317,7 @@ export async function uploadStreet(productStore: product, commonStore: common, d
 							: ``
 					}
 
-					${commonStore.user.userInfo.descriptionShowTitle === 'Y' ? market_item.name3 : ``}
+					${commonStore.user.userInfo?.descriptionShowTitle === 'Y' ? market_item.name3 : ``}
 				</div>
 								
 				<br />
@@ -450,18 +450,18 @@ export async function uploadStreet(productStore: product, commonStore: common, d
 							dlvCst1: market_item.deliv_fee, // 배송비: 02, 03
 							bndlDlvCnYn: 'N', // 묶음배송 여부: 불가
 							dlvCstPayTypCd: '03', // 결제방법: 선결제
-							jejuDlvCst: commonStore.user.userInfo.additionalShippingFeeJeju, // 제주 추가 배송비
-							islandDlvCst: commonStore.user.userInfo.additionalShippingFeeJeju, // 도서산간 추가 배송비
+							jejuDlvCst: commonStore.user.userInfo?.additionalShippingFeeJeju, // 제주 추가 배송비
+							islandDlvCst: commonStore.user.userInfo?.additionalShippingFeeJeju, // 도서산간 추가 배송비
 							addrSeqOut: streetOutbound.addrSeq[0], // 출고지 주소 코드
 							outsideYnOut: data.DShopInfo.site_code === 'A112' ? 'Y' : 'N', // 출고지 주소 해외 여부
 							addrSeqOutMemNo: streetOutbound.memNo[0], // 통합 ID 회원번호(출고지용)
 							addrSeqIn: streetInbound.addrSeq[0], // 반품/교환지 주소 코드
 							outsideYnIn: 'N', // 반품/교환지 주소 해외 여부
 							addrSeqInMemNo: streetInbound.memNo[0], // 통합 ID 회원번호(반품지용)
-							rtngdDlvCst: commonStore.user.userInfo.refundShippingFee, // 반품 배송비
-							exchDlvCst: commonStore.user.userInfo.exchangeShippingFee, // 교환 배송비
-							asDetail: commonStore.user.userInfo.asInformation, // A/S 안내
-							rtngExchDetail: commonStore.user.userInfo.asInformation, // 반품/교환 안내
+							rtngdDlvCst: commonStore.user.userInfo?.refundShippingFee, // 반품 배송비
+							exchDlvCst: commonStore.user.userInfo?.exchangeShippingFee, // 교환 배송비
+							asDetail: commonStore.user.userInfo?.asInformation, // A/S 안내
+							rtngExchDetail: commonStore.user.userInfo?.asInformation, // 반품/교환 안내
 							ProductNotification: sillResult,
 							prcCmpExpYn: 'Y', // 가격비교 사이트 등록 여부: 등록함
 						},
@@ -663,7 +663,7 @@ export async function deleteStreet(productStore: product, commonStore: common, d
 
 		switch (data.DShopInfo.site_code) {
 			case 'A112': {
-				switch (commonStore.user.userInfo.streetUseKeyType) {
+				switch (commonStore.user.userInfo?.streetUseKeyType) {
 					case '1': {
 						apiKey = commonStore.user.userInfo.streetApiKey;
 
@@ -693,7 +693,7 @@ export async function deleteStreet(productStore: product, commonStore: common, d
 			}
 
 			case 'A113': {
-				switch (commonStore.user.userInfo.streetNormalUseKeyType) {
+				switch (commonStore.user.userInfo?.streetNormalUseKeyType) {
 					case '1': {
 						apiKey = commonStore.user.userInfo.streetNormalApiKey;
 

@@ -2,7 +2,7 @@ import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
 import { sleep, getImageSize, onInsertDom } from '../../../../common/function';
-import { User } from '../../../type/type';
+import { User } from '../../../type/schema';
 
 // VVIC 상품정보 크롤링
 const scrape = async (items: any, user: User) => {
@@ -187,11 +187,11 @@ const scrape = async (items: any, user: User) => {
 					properties: properties_id, // "20509:142;1627207:9999906"
 					properties_name: properties_name, // "20509:142:尺码:大码L;1627207:9999906:颜色:咖色"
 					quantity:
-						user.userInfo.collectStock === 0
+						user.userInfo?.collectStock === 0
 							? quantity > 99999
 								? '99999'
 								: quantity.toString()
-							: user.userInfo.collectStock.toString(), // 150
+							: user.userInfo?.collectStock.toString(), // 150
 					sku_id: items.skuMap[i].skuId.toString(), // "401302558"
 				});
 		}
@@ -248,7 +248,7 @@ const bulkTypeTwo = async (user: User) => {
 					input.checked = picker?.value === 'false' ? false : true;
 					input.type = 'checkbox';
 
-					if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+					if (user.userInfo?.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
 					else input.setAttribute('style', 'right: 0px !important');
 
 					products[i].style.position = 'relative';
@@ -291,7 +291,7 @@ const bulkTypeThree = async (user: User) => {
 					input.checked = picker?.value === 'false' ? false : true;
 					input.type = 'checkbox';
 
-					if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+					if (user.userInfo?.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
 					else input.setAttribute('style', 'right: 0px !important');
 
 					products[i].style.position = 'relative';
@@ -327,7 +327,7 @@ export class vvic {
 		let timeout = 0;
 
 		while (true) {
-			if (timeout === user.userInfo.collectTimeout)
+			if (timeout === user.userInfo?.collectTimeout)
 				return {
 					error: 'VVIC 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
 				};

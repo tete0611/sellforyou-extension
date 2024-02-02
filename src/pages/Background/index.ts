@@ -31,7 +31,12 @@ const addBulkInfo = async (source: Source, sender: Sender, isExcel: boolean) => 
 	let bulkInfo = (await getLocalStorage<BulkInfo[]>('bulkInfo')) ?? [];
 
 	// 수집 테스트시 아래코드 주석해제
+	// console.group('수집테스트');
 	// console.log({ source });
+	// console.log(`url 중복제거 후`);
+	// const setSource = new Set(source.data.map((v) => v.url));
+	// console.log({ setSource });
+	// console.groupEnd();
 	// return false;
 
 	bulkInfo = bulkInfo.filter((v) => {
@@ -393,7 +398,7 @@ const bulkNext = async (sender: Sender) => {
 		bulk.isBulk = false;
 
 		const tabs = await queryTabs({
-			url: chrome.runtime.getURL('product/collected.html'),
+			url: chrome.runtime.getURL('app.html'),
 		});
 
 		// 상품목록 리프레쉬
@@ -491,9 +496,7 @@ chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender, sendRespo
 	switch (request.action) {
 		// 상품 수집 액션
 		case 'collect': {
-			console.log('콜렉트수신');
 			addToInventory(sender as Sender, request.source).then(sendResponse);
-			console.log('콜렉트끝');
 
 			return true;
 		}

@@ -166,19 +166,19 @@ export type ManyPriceInfo = {
 };
 
 /** common -> User타입 */
-export type User = {
-	userInfo: UserInfo;
-	createdToken?: any;
-	purchaseInfo2?: any;
-	productCount: number;
-	email: string;
-	credit?: any;
-	id: number;
-	refCode: string | null;
-	connectedUsers?: any;
-	refAvailable: boolean;
-	keywardMemo?: any;
-};
+// export type User = {
+// 	userInfo: UserInfo;
+// 	createdToken?: any;
+// 	purchaseInfo2?: any;
+// 	productCount: number;
+// 	email: string;
+// 	credit?: any;
+// 	id: number;
+// 	refCode: string | null;
+// 	connectedUsers?: any;
+// 	refAvailable: boolean;
+// 	keywardMemo?: any;
+// };
 
 /** ChromeAsync 런타임메시지 파라미터 타입 */
 export type RuntimeMessage = {

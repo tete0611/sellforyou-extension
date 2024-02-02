@@ -3,7 +3,8 @@ import { ApolloError } from '@apollo/client';
 import { common } from '../src/containers/stores/common';
 import MUTATIONS from '../src/pages/Main/GraphQL/Mutations';
 import gql from '../src/pages/Main/GraphQL/Requests';
-import { Nullable, User } from '../src/type/type';
+import { CollectInfo, Nullable, Shop } from '../src/type/type';
+import { User } from '../src/type/schema';
 
 const XLSX = require('xlsx');
 const xml2js = require('xml2js');
@@ -367,7 +368,7 @@ export const getImageSize = async (url: string): Promise<number | string> => {
 export const getStoreUrl = (commonStore: common, marketCode: string, productId: number) => {
 	switch (marketCode) {
 		case 'A077': {
-			return `${commonStore.user.userInfo.naverStoreUrl}/products/${productId}`;
+			return `${commonStore.user.userInfo?.naverStoreUrl}/products/${productId}`;
 		}
 		case 'B378': {
 			return `https://www.coupang.com/vp/products/${productId}`;
@@ -765,7 +766,7 @@ export const onInsertDom = ({
 		checked: picker?.value !== 'false',
 		type: 'checkbox',
 		id: normalizeUrl(element.href),
-		style: user.userInfo.collectCheckPosition === 'L' ? 'left: 0px !important' : 'right: 0px !important',
+		style: user.userInfo?.collectCheckPosition === 'L' ? 'left: 0px !important' : 'right: 0px !important',
 	});
 	const sfyBox = element.querySelector('.SELLFORYOU-CHECKBOX');
 
@@ -779,3 +780,96 @@ export const onInsertDom = ({
 
 /** 배열이 정확히 같은지 비교 */
 export const compareArray = (arr1: any[], arr2: any[]) => JSON.stringify(arr1) === JSON.stringify(arr2);
+
+/** api로 대량수집하기 함수 */
+export const bulkCollectUsingApi = async (shop: string | null, shopId: number, currentPage: number) => {
+	let urls: CollectInfo['inputs'] = [];
+
+	switch (shop) {
+		case 'vvic': {
+			const resp = await fetch(
+				`https://www.vvic.com/apif/shop/itemlist?id=${shopId}&currentPage=${currentPage}&sort=up_time-desc&merge=0`,
+				{
+					headers: {
+						accept: 'application/json, text/plain, */*',
+						'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+						'sec-ch-ua': '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
+						'sec-ch-ua-mobile': '?0',
+						'sec-ch-ua-platform': '"Windows"',
+						'sec-fetch-dest': 'empty',
+						'sec-fetch-mode': 'cors',
+						'sec-fetch-site': 'same-origin',
+						token: 'RajToken',
+					},
+					referrer: `https://www.vvic.com/shop/list/${shopId}/content_all`,
+					referrerPolicy: 'strict-origin-when-cross-origin',
+					body: null,
+					method: 'GET',
+					mode: 'cors',
+					credentials: 'include',
+				},
+			);
+			if (resp.status !== 200) {
+				alert('상품수집 api Error\n채널톡에 문의 바랍니다.');
+				return [];
+			}
+			const json = await resp.json();
+			urls = json?.data?.recordList?.map((v) => ({
+				url: `https://www.vvic.com/item/${v.vid}`,
+				productName: '',
+				productTags: '',
+			}));
+
+			break;
+		}
+		case 'taobao1': {
+		}
+	}
+	return urls;
+};
+
+/** 페이지 새로고침 */
+export const pageRefresh = async (shop: Shop | null, page: number) => {
+	let url: string | null = null;
+
+	switch (shop) {
+		case 'taobao1': {
+			url = updateQueryStringParameter(window.location.href, '', `${44 * (page - 1)}`);
+			break;
+		}
+		case 'taobao2': {
+			url = updateQueryStringParameter(window.location.href, 'pageNo', `${page}`);
+			break;
+		}
+		case 'tmall1': {
+			url = updateQueryStringParameter(window.location.href, 's', `${60 * (page - 1)}`);
+			break;
+		}
+		case 'tmall2': {
+			url = updateQueryStringParameter(window.location.href, 'pageNo', `${page}`);
+			break;
+		}
+		case 'express': {
+			url = updateQueryStringParameter(window.location.href, 'page', `${page}`);
+			break;
+		}
+		case 'alibaba': {
+			url = updateQueryStringParameter(window.location.href, 'beginPage', `${page}`);
+			break;
+		}
+		case 'vvic': {
+			url = updateQueryStringParameter(window.location.href, 'currentPage', `${page}`);
+			break;
+		}
+		case 'amazon1': {
+			url = updateQueryStringParameter(window.location.href, 'page', `${page}`);
+			break;
+		}
+		default:
+			break;
+	}
+
+	if (!url) return;
+
+	window.location.href = url.replaceAll('#', '');
+};

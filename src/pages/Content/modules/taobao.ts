@@ -5,8 +5,8 @@ import { form } from './common/data';
 import { injectScript } from './common/utils';
 import { sleep, getImageSize, getCookie, onInsertDom } from '../../../../common/function';
 import { Buffer } from 'buffer';
-import { User } from '../../../type/type';
 import { sendRuntimeMessage } from '../../Tools/ChromeAsync';
+import { User } from '../../../type/schema';
 
 const iconv = require('iconv-lite');
 
@@ -224,11 +224,11 @@ const scrape = async (items: any, user: User) => {
 								properties: dataJson.data.skuBase.skus[i].propPath,
 								properties_name: properties_name,
 								quantity:
-									user.userInfo.collectStock === 0
+									user.userInfo?.collectStock === 0
 										? quantity > 99999
 											? '99999'
 											: quantity.toString()
-										: user.userInfo.collectStock.toString(),
+										: user.userInfo?.collectStock.toString(),
 								sku_id: skuId,
 							});
 						}
@@ -532,11 +532,11 @@ const scrape = async (items: any, user: User) => {
 								properties: properties_id,
 								properties_name: properties_name,
 								quantity:
-									user.userInfo.collectStock === 0
+									user.userInfo?.collectStock === 0
 										? quantity > 99999
 											? '99999'
 											: quantity.toString()
-										: user.userInfo.collectStock.toString(),
+										: user.userInfo?.collectStock.toString(),
 								sku_id: script_option[i].skuId,
 							});
 						}
@@ -607,7 +607,7 @@ export class taobao {
 		let timeout = 0;
 
 		while (true) {
-			if (timeout === user.userInfo.collectTimeout)
+			if (timeout === user.userInfo?.collectTimeout)
 				return {
 					error: '타오바오 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
 				};
@@ -633,7 +633,7 @@ export class taobao {
 					return await scrape(originalData, user);
 				} catch (e) {
 					console.log(e);
-					timeout = user.userInfo.collectTimeout;
+					timeout = user.userInfo?.collectTimeout!;
 
 					continue;
 				}
@@ -696,7 +696,7 @@ export class taobao {
 								input.checked = picker?.value === 'false' ? false : true;
 								input.type = 'checkbox';
 
-								if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+								if (user.userInfo?.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
 								else input.setAttribute('style', 'right: 0px !important');
 
 								const root = products[i].parentNode.parentNode.parentNode.parentNode;
@@ -784,7 +784,7 @@ export class taobao {
 									input.checked = picker?.value === 'false' ? false : true;
 									input.type = 'checkbox';
 									// input.setAttribute("style", "left: 0px !important");
-									if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+									if (user.userInfo?.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
 									else input.setAttribute('style', 'right: 0px !important');
 
 									products[i].parentNode.style.position = 'relative';
@@ -851,7 +851,7 @@ export class taobao {
 						input.checked = picker?.value === 'false' ? false : true;
 						input.type = 'checkbox';
 
-						if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+						if (user.userInfo?.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
 						else input.setAttribute('style', 'right: 0px !important');
 
 						links[j].parentNode.style.position = 'relative';

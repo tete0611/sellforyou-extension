@@ -5,10 +5,10 @@ import { form } from './common/data';
 import { injectScript } from './common/utils';
 import { sleep, getImageSize, getCookie, onInsertDom } from '../../../../common/function';
 import CryptoJS from 'crypto-js';
-import { User } from '../../../type/type';
+import { User } from '../../../type/schema';
 
 // 상품정보 크롤링
-async function scrape(items: any, user: any) {
+async function scrape(items: any, user: User) {
 	let result: any = form;
 	result.user = user;
 
@@ -217,11 +217,11 @@ async function scrape(items: any, user: any) {
 						properties: properties_id,
 						properties_name: properties_name,
 						quantity:
-							user.userInfo.collectStock === 0
+							user.userInfo?.collectStock === 0
 								? quantity > 99999
 									? '99999'
 									: quantity.toString()
-								: user.userInfo.collectStock.toString(),
+								: user.userInfo?.collectStock.toString(),
 						sku_id: items.iDetailData.sku.skuMap[i].skuId.toString(),
 					});
 			}
@@ -426,11 +426,11 @@ async function scrape(items: any, user: any) {
 						properties: properties_id,
 						properties_name: properties_name,
 						quantity:
-							user.userInfo.collectStock === 0
+							user.userInfo?.collectStock === 0
 								? quantity > 99999
 									? '99999'
 									: quantity.toString()
-								: user.userInfo.collectStock.toString(),
+								: user.userInfo?.collectStock.toString(),
 						sku_id: items.iDetailData.skuModel.skuInfoMap[i].skuId.toString(),
 					});
 			}
@@ -481,7 +481,7 @@ export class alibaba {
 		let timeout = 0;
 
 		while (true) {
-			if (timeout === user.userInfo.collectTimeout)
+			if (timeout === user.userInfo?.collectTimeout)
 				return {
 					error: '1688 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
 				};

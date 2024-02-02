@@ -2879,7 +2879,7 @@ const Settings = observer(() => {
 														onChange={async (e) => {
 															if (user.purchaseInfo2.level < 3) return alert('[프로] 등급부터 사용 가능한 기능입니다.');
 
-															const thumbnailRepresentNo = parseInt(e.target.value);
+															const thumbnailRepresentNo = parseInt(e.target.value!);
 
 															if (isNaN(thumbnailRepresentNo))
 																return alert('[대표이미지기준값설정] 입력이 잘못되었습니다.');

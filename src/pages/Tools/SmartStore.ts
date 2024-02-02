@@ -477,7 +477,7 @@ export const uploadSmartStore = async (productStore: product, commonStore: commo
 
 		let store_id = store_json.simpleAccountInfo?.creatableChannelInfoListMap?.STOREFARM[0].url;
 
-		if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
+		if (commonStore.user.userInfo?.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
 			productStore.addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
@@ -892,7 +892,7 @@ export const uploadSmartStore = async (productStore: product, commonStore: commo
 											},
 										},
 								  }
-								: commonStore.user.userInfo.discountAmount > 0
+								: commonStore.user.userInfo.discountAmount! > 0
 								? {
 										immediateDiscountPolicy: {
 											discountMethod: {
@@ -1165,7 +1165,7 @@ export const uploadSmartStore = async (productStore: product, commonStore: commo
 												},
 											},
 									  }
-									: commonStore.user.userInfo.discountAmount > 0
+									: commonStore.user.userInfo.discountAmount! > 0
 									? {
 											immediateDiscountPolicy: {
 												discountMethod: {
@@ -1311,7 +1311,7 @@ export const deleteSmartStore = async (productStore: product, commonStore: commo
 
 		let store_id = store_json.simpleAccountInfo?.creatableChannelInfoListMap?.STOREFARM[0].url;
 
-		if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
+		if (commonStore.user.userInfo?.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
 			productStore.addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
@@ -1451,7 +1451,7 @@ export const newOrderSmartStore = async (commonStore: common, shopInfo: any) => 
 
 		let store_id = store_json.simpleAccountInfo?.creatableChannelInfoListMap?.STOREFARM[0].url;
 
-		if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
+		if (commonStore.user.userInfo?.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
 			return [];
@@ -1662,7 +1662,7 @@ export const productPreparedSmartStore = async (commonStore: common, shopInfo: a
 
 		let store_id = store_json.simpleAccountInfo?.creatableChannelInfoListMap?.STOREFARM[0].url;
 
-		if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
+		if (commonStore.user.userInfo?.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
 			return [];
@@ -1728,7 +1728,7 @@ export const deliveryOrderSmartStore = async (commonStore: common, shopInfo: any
 
 		let store_id = store_json.simpleAccountInfo?.creatableChannelInfoListMap?.STOREFARM[0].url;
 
-		if (commonStore.user.userInfo.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
+		if (commonStore.user.userInfo?.naverStoreUrl !== 'https://smartstore.naver.com/' + store_id) {
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 			return [];
 		}

@@ -22,9 +22,9 @@ import { deleteLotteon, uploadLotteon } from '../../pages/Tools/Lotteon';
 import { deleteTmon, uploadTmon } from '../../pages/Tools/Tmon';
 import { createTabCompletely, getLocalStorage, setLocalStorage, sendTabMessage } from '../../pages/Tools/ChromeAsync';
 import { common } from './common';
-import { AppInfo, Item, ItemInfo, ManyPriceInfo, ModalInfo, SearchType, User } from '../../type/type';
+import { AppInfo, Item, ItemInfo, ManyPriceInfo, ModalInfo, SearchType } from '../../type/type';
 import { SHOPCODE } from '../../type/variable';
-import { MutationUpdateKeywardListArgs, ProductWhereInput } from '../../type/schema';
+import { MutationUpdateKeywardListArgs, ProductWhereInput, User } from '../../type/schema';
 
 const {
 	AUCTION_1,
@@ -1703,7 +1703,7 @@ export class product {
 				price = (data.priceCny * priceInfo.cnyRate + data.defaultShippingFee) * (1 + priceInfo.marginRate / 100);
 			else price = data.priceCny * priceInfo.cnyRate + data.defaultShippingFee + priceInfo.marginRate;
 
-			const wonType = commonStore.user.userInfo.calculateWonType;
+			const wonType = commonStore.user.userInfo!.calculateWonType as any;
 
 			price = Math.round(price / wonType) * wonType;
 		} else price = data.price;
@@ -1804,7 +1804,7 @@ export class product {
 		});
 
 		if (optionNames.length > 0) {
-			const wonType = commonStore.user.userInfo.calculateWonType;
+			const wonType = commonStore.user.userInfo!.calculateWonType;
 
 			let combination = cartesian(...optionNames);
 
@@ -1866,7 +1866,7 @@ export class product {
 							(priceInfo.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee) * (1 + priceInfo.marginRate / 100);
 					else price = priceInfo.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee + priceInfo.marginRate;
 
-					price = Math.round(price / wonType) * wonType;
+					price = Math.round(price / Number(wonType)) * Number(wonType);
 
 					option['priceCny'] = priceInfo.priceCny;
 					option['price'] = price;
@@ -2093,9 +2093,9 @@ export class product {
 				(originalPrice * priceInfo.cnyRate + priceInfo.localShippingFee) * (1 + priceInfo.marginRate / 100);
 		else priceInfo.price = originalPrice * priceInfo.cnyRate + priceInfo.localShippingFee + priceInfo.marginRate;
 
-		const wonType = commonStore.user.userInfo.calculateWonType;
+		const wonType = commonStore.user.userInfo!.calculateWonType;
 
-		priceInfo.price = Math.round(priceInfo.price / wonType) * wonType;
+		priceInfo.price = Math.round(priceInfo.price / Number(wonType)) * Number(wonType);
 
 		let options: any = null;
 
@@ -2108,7 +2108,7 @@ export class product {
 						(v.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee) * (1 + priceInfo.marginRate / 100);
 				else optionPrice = v.priceCny * priceInfo.cnyRate + priceInfo.localShippingFee + priceInfo.marginRate;
 
-				optionPrice = Math.round(optionPrice / wonType) * wonType;
+				optionPrice = Math.round(optionPrice / Number(wonType)) * Number(wonType);
 
 				v.price = optionPrice ?? v.price;
 				v.defaultShippingFee = priceInfo.localShippingFee;
@@ -3701,8 +3701,8 @@ export class product {
 				if (v.storeProductId !== '0') return window.open(v.storeUrl);
 
 				const body = {
-					accesskey: user.userInfo.coupangAccessKey,
-					secretkey: user.userInfo.coupangSecretKey,
+					accesskey: user.userInfo!.coupangAccessKey,
+					secretkey: user.userInfo!.coupangSecretKey,
 					path: `/v2/providers/seller_api/apis/api/v1/marketplace/seller-products/${v.etcVendorItemId}`,
 					query: '',
 					method: 'GET',

@@ -2,7 +2,7 @@ import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
 import { sleep, getImageSize } from '../../../../common/function';
-import { User } from '../../../type/type';
+import { User } from '../../../type/schema';
 
 /** 하단까지 스크롤을 부드럽게 해주는 함수 , 기본값:0.5초 */
 const scrollToBottomSmooth = async (duration: number = 500) => {
@@ -266,11 +266,11 @@ const scrape = async (items: any, user: User) => {
 						properties: properties_id,
 						properties_name: properties_name,
 						quantity:
-							user.userInfo.collectStock === 0
+							user.userInfo!.collectStock === 0
 								? quantity > 99999
 									? '99999'
 									: quantity.toString()
-								: user.userInfo.collectStock.toString(),
+								: user.userInfo!.collectStock.toString(),
 						sku_id: skus.skuIdStr,
 					});
 				}
@@ -527,11 +527,11 @@ const scrape = async (items: any, user: User) => {
 						properties: properties_id,
 						properties_name: properties_name,
 						quantity:
-							user.userInfo.collectStock === 0
+							user.userInfo!.collectStock === 0
 								? quantity > 99999
 									? '99999'
 									: quantity.toString()
-								: user.userInfo.collectStock.toString(),
+								: user.userInfo!.collectStock.toString(),
 						sku_id: skus.skuIdStr,
 					});
 				}
@@ -790,11 +790,11 @@ const scrape = async (items: any, user: User) => {
 						properties: properties_id,
 						properties_name: properties_name,
 						quantity:
-							user.userInfo.collectStock === 0
+							user.userInfo!.collectStock === 0
 								? quantity > 99999
 									? '99999'
 									: quantity.toString()
-								: user.userInfo.collectStock.toString(),
+								: user.userInfo!.collectStock.toString(),
 						sku_id: skus.skuIdStr,
 					});
 				}
@@ -845,7 +845,7 @@ export class express {
 		let timeout = 0;
 
 		while (true) {
-			if (timeout === user.userInfo.collectTimeout)
+			if (timeout === user.userInfo!.collectTimeout)
 				return {
 					error: '알리익스프레스 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
 				};

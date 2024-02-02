@@ -422,7 +422,7 @@ export const DeliverySummary = observer((props: any) => {
 											<Search
 												disabled={
 													!delivery.deliveryList.find(
-														(v) => v.name === common.user.userInfo.orderToDeliveryName && v.hscode,
+														(v) => v.name === common.user.userInfo!.orderToDeliveryName && v.hscode,
 													)
 												}
 												value={props.item.deliveryInfo.category}
