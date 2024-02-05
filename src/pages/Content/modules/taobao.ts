@@ -609,7 +609,8 @@ export class taobao {
 		while (true) {
 			if (timeout === user.userInfo?.collectTimeout)
 				return {
-					error: '타오바오 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
+					error:
+						'상품정보가 정상적으로 로드되지 않았습니다.\n타오바오 로그인이 되어있는지 확인해주세요.\n타오바오 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
 				};
 
 			let data = sessionStorage.getItem('sfy-taobao-item');
