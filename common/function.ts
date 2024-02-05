@@ -437,19 +437,23 @@ export const getStoreUrl = (commonStore: common, marketCode: string, productId: 
 //   })();">`;
 // }
 
-/** 셀포유 추적코드 (스마트스토어, 11번가(글로벌/일반), 지마켓, 옥션, 인터파크, 위메프) */
+/** 셀포유 추적코드V1 (스마트스토어, 11번가(글로벌/일반), 지마켓, 옥션, 인터파크, 위메프) */
 export const getStoreTraceCodeV1 = (productId: number, siteCode: string) => {
 	// return `<img src="https://api.sellforyou.co.kr/api/dataProvider?productId=${productId}&siteCode=${siteCode}" style="display: none;">`;
 	return `<img src="https://api.sellforyou.co.kr/api/dataProvider?productId=${productId}&siteCode=${siteCode}" width="1px" height="1px">`;
 };
 
-/** 셀포유 추적코드 (쿠팡, 롯데온(글로벌/일반), 티몬) */
+/** 셀포유 추적코드V2 (롯데온(글로벌/일반), 티몬) */
 export const getStoreTraceCodeV2 = (productId: number, siteCode: string) => {
 	return `<iframe src="https://api.sellforyou.co.kr/api/dataProvider?youtube.com&productId=${productId}&siteCode=${siteCode}" style="display:none;visibility:hidden"></iframe>`;
 };
 
+/** 셀포유 추적코드V3 (쿠팡 -> iframe 태그 막힘으로 변경) */
+export const getStoreTraceCodeV3 = (productId: number, siteCode: string) =>
+	`<p style="height:1px; width:1px;  margin:0px; visibility: hidden; background-image: url(https://api.sellforyou.co.kr/api/dataProvider?productId=${productId}&siteCode=${siteCode})"></p>`;
+
 /** 난수 생성기 (이미지 스왑용으로 사용 중) */
-export const getRandomIntInclusive = (min, max) => {
+export const getRandomIntInclusive = (min: number, max: number) => {
 	min = Math.ceil(min);
 	max = Math.floor(max);
 
@@ -648,7 +652,7 @@ export const sendCallback = async (
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** Object의 특정 key의 value 값을 기준으로 정렬하는 함수 */
-export const sortBy = (array: any, key: string, asc: boolean) => {
+export const sortBy = (array: any[], key: string, asc: boolean) => {
 	let sorted = array.sort((a: any, b: any) => {
 		if (a[key] < b[key]) return asc ? -1 : 1;
 		if (a[key] > b[key]) return asc ? 1 : -1;
@@ -660,8 +664,8 @@ export const sortBy = (array: any, key: string, asc: boolean) => {
 };
 
 /** Date 날짜객체를 ISO 시간대 문자열로 변환 */
-export const toISO = (date: any) => {
-	const pad = (num: any) => {
+export const toISO = (date: Date) => {
+	const pad = (num: number) => {
 		let norm = Math.floor(Math.abs(num));
 
 		return (norm < 10 ? '0' : '') + norm;

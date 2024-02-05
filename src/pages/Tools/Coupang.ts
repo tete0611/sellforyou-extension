@@ -8,7 +8,7 @@ import {
 	floatingToast,
 	getClock,
 	getClockOffset,
-	getStoreTraceCodeV2,
+	getStoreTraceCodeV3,
 	matchesCharacter,
 	notificationByEveryTime,
 	sendCallback,
@@ -349,7 +349,7 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 										contentsType: 'HTML',
 										contentDetails: [
 											{
-												content: `${getStoreTraceCodeV2(market_item.id, data.DShopInfo.site_code)}${
+												content: `${getStoreTraceCodeV3(market_item.id, data.DShopInfo.site_code)}${
 													market_item.content2
 												}${
 													commonStore.user.userInfo!.descriptionShowTitle === 'Y'
@@ -371,7 +371,7 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 								saleAgentCommission: 10.5,
 								notices: category_sill_array,
 								maximumBuyForPerson: commonStore.user.userInfo?.coupangMaximumBuyForPerson
-									? commonStore.user.userInfo.coupangMaximumBuyForPerson
+									? commonStore.user.userInfo!.coupangMaximumBuyForPerson
 									: 0,
 								maximumBuyForPersonPeriod: 1,
 								certifications: [
@@ -385,7 +385,7 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 								parallelImported: 'NOT_PARALLEL_IMPORTED',
 								pccNeeded: true,
 								outboundShippingTimeDay: commonStore.user.userInfo?.coupangOutboundShippingTimeDay
-									? commonStore.user.userInfo.coupangOutboundShippingTimeDay
+									? commonStore.user.userInfo!.coupangOutboundShippingTimeDay
 									: 12,
 								searchTags: search_tags,
 								overseasPurchased: 'OVERSEAS_PURCHASED',
@@ -431,7 +431,7 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 								contentsType: 'HTML',
 								contentDetails: [
 									{
-										content: `${getStoreTraceCodeV2(market_item.id, data.DShopInfo.site_code)}${market_item.content2}${
+										content: `${getStoreTraceCodeV3(market_item.id, data.DShopInfo.site_code)}${market_item.content2}${
 											commonStore.user.userInfo?.descriptionShowTitle === 'Y'
 												? `<br /><br /><div style="text-align: center;">${market_item.name3}</div><br /><br />`
 												: `<br /><br />`
