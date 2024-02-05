@@ -1,6 +1,6 @@
 import { alibaba, amazon, express, taobao, tmall, vvic } from './modules';
-import { sendRuntimeMessage } from '../Tools/ChromeAsync';
-import { getCookie } from '../../../common/function';
+import { createTab, sendRuntimeMessage } from '../Tools/ChromeAsync';
+import { getCookie, sleep } from '../../../common/function';
 import { getTaobaoData } from '../Tools/Taobao';
 import {
 	deleteA077Products,
@@ -334,6 +334,9 @@ const main = async () => {
 		await new vvic().bulkTypeFour(info.user);
 		// const shopId = parseInt(currentUrl.match(/\/list\/(\d+)/)?.[1] ?? '0');
 		floatingButton({ info, shop: 'vvic', result: true as any, bulk: true });
+
+		await sleep(10000);
+		await createTab({ active: true, url: `${chrome.runtime.getURL('app.html')}?collected` });
 
 		/** */
 	} else if (/www.amazon.com\/.+\/dp\//.test(currentUrl) || /www.amazon.com\/dp/.test(currentUrl)) {

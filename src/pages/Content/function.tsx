@@ -2,7 +2,7 @@ import { renderToString } from 'react-dom/server';
 import { bulkCollectUsingApi, pageRefresh, sleep } from '../../../common/function';
 import { User } from '../../type/schema';
 import { BulkInfo, CollectInfo, Sender, Shop, Source } from '../../type/type';
-import { getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../Tools/ChromeAsync';
+import { createTab, getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../Tools/ChromeAsync';
 import {
 	BulkHasFailedForm,
 	BulkSuccessForm,
@@ -165,11 +165,7 @@ export const resultDetails = async (data: BulkInfo) => {
 	});
 
 	document.getElementById('sfyConnect')?.addEventListener('click', async () => {
-		const newWindow = window.open(chrome.runtime.getURL('app.html'))!;
-		console.log({ newWindow });
-		newWindow.addEventListener('load', () => {
-			newWindow.postMessage({ page: 'collected' }, '*');
-		});
+		await createTab({ active: true, url: `${chrome.runtime.getURL('app.html')}?collected` });
 	});
 
 	document.getElementById('sfyCopy')?.addEventListener('click', () => {
@@ -346,10 +342,10 @@ export const floatingButton = ({
 	buttonCollect.addEventListener('click', async () => {
 		if (!info.isBulk && result.error) {
 			if (confirm(`${result.error}\n[확인]을 누르시면 수집상품목록으로 이동합니다.`)) {
-				// navigate({ pathname: '/', search: '&page=collected' }, { replace: true });
+				const url = new URL(chrome.runtime.getURL('app.html'));
+				url.search = 'collected';
+				window.open(url);
 			}
-
-			return;
 		}
 
 		if (isCollecting) return;
@@ -787,9 +783,8 @@ export const floatingButton = ({
 			buttonLogo.className = 'SELLFORYOU-COLLECT';
 			buttonLogo.style.height = '40px';
 			buttonLogo.innerHTML = buttonLogoDefault;
-			buttonLogo.addEventListener('click', () => {
-				const url = `${chrome.runtime.getURL('app.html')}${encodeURIComponent('collected')}`;
-				window.open(url);
+			buttonLogo.addEventListener('click', async () => {
+				await createTab({ active: true, url: `${chrome.runtime.getURL('app.html')}?collected` });
 			});
 
 			const logoCol = document.createElement('td');
