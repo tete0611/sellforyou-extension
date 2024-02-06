@@ -179,6 +179,9 @@ const scrape = async (items: any, user: User) => {
 
 			let quantity = 999;
 
+			const price = items.skuMap[i].discount_price ?? parseInt(items.skuMap[i].price);
+			if (isNaN(price)) throw Error;
+
 			if (quantity > 0)
 				result['item']['skus']['sku'].push({
 					price: items.skuMap[i].discount_price ?? parseInt(items.skuMap[i].price), // 49
@@ -195,10 +198,10 @@ const scrape = async (items: any, user: User) => {
 					sku_id: items.skuMap[i].skuId.toString(), // "401302558"
 				});
 		}
-	} catch (e) {
+	} catch (e: any) {
 		console.log('에러: 옵션 세부정보를 가져오지 못했습니다. (', e, ')');
 
-		return { error: '옵션 세부정보를 가져오지 못했습니다.' };
+		return { error: `옵션 세부정보를 가져오지 못했습니다.\nVVIC 로그인 유무를 확인해주세요.` };
 	}
 
 	let min_price = parseFloat(result['item']['price']);
@@ -225,49 +228,49 @@ const scrape = async (items: any, user: User) => {
 	return result;
 };
 
-const bulkTypeTwo = async (user: User) => {
-	let timeout = 0;
+// const bulkTypeTwo = async (user: User) => {
+// 	let timeout = 0;
 
-	while (true) {
-		if (timeout === 10) return 0;
+// 	while (true) {
+// 		if (timeout === 10) return 0;
 
-		let count = 0;
-		let products: any = document.querySelectorAll(
-			'body > div.w.item-search-container > div.fl.search-main.j-search-main.item-search-main > div.goods-list.clearfix.type1 a',
-		);
-		for (let i in products) {
-			try {
-				let img = products[i].querySelector('img');
+// 		let count = 0;
+// 		let products: any = document.querySelectorAll(
+// 			'body > div.w.item-search-container > div.fl.search-main.j-search-main.item-search-main > div.goods-list.clearfix.type1 a',
+// 		);
+// 		for (let i in products) {
+// 			try {
+// 				let img = products[i].querySelector('img');
 
-				if (img && products[i].getAttribute('href').includes('item')) {
-					let input = document.createElement('input');
-					let picker: any = document.getElementById('sfyPicker');
+// 				if (img && products[i].getAttribute('href').includes('item')) {
+// 					let input = document.createElement('input');
+// 					let picker: any = document.getElementById('sfyPicker');
 
-					input.id = window.location.origin + products[i].getAttribute('href');
-					input.className = 'SELLFORYOU-CHECKBOX';
-					input.checked = picker?.value === 'false' ? false : true;
-					input.type = 'checkbox';
+// 					input.id = window.location.origin + products[i].getAttribute('href');
+// 					input.className = 'SELLFORYOU-CHECKBOX';
+// 					input.checked = picker?.value === 'false' ? false : true;
+// 					input.type = 'checkbox';
 
-					if (user.userInfo?.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
-					else input.setAttribute('style', 'right: 0px !important');
+// 					if (user.userInfo?.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+// 					else input.setAttribute('style', 'right: 0px !important');
 
-					products[i].style.position = 'relative';
-					products[i].parentNode.insertBefore(input, products[i].nextSibling);
+// 					products[i].style.position = 'relative';
+// 					products[i].parentNode.insertBefore(input, products[i].nextSibling);
 
-					count++;
-				}
-			} catch (e) {
-				continue;
-			}
-		}
+// 					count++;
+// 				}
+// 			} catch (e) {
+// 				continue;
+// 			}
+// 		}
 
-		if (count > 0) return count;
+// 		if (count > 0) return count;
 
-		await sleep(1000 * 1);
+// 		await sleep(1000 * 1);
 
-		timeout++;
-	}
-};
+// 		timeout++;
+// 	}
+// };
 
 const bulkTypeThree = async (user: User) => {
 	let timeout = 0;
@@ -383,11 +386,11 @@ export class vvic {
 		//TODO 이후에 2,3 마저 분리해야함
 		document.addEventListener('DOMContentLoaded', (e: any) => {
 			switch (bulkType) {
-				case 2: {
-					bulkTypeTwo(user);
+				// case 2: {
+				// 	bulkTypeTwo(user);
 
-					break;
-				}
+				// 	break;
+				// }
 
 				case 3: {
 					bulkTypeThree(user);
