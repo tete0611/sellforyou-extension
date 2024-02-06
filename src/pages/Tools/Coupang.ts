@@ -650,6 +650,7 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 					// 	}),
 					// );
 
+					// 쿠팡 API 호출 정책으로 인한 for문 사용 (무분별한 map 사용금지)
 					// 옵션가 수정 - for문 사용
 					for (let v of optn_array) {
 						let detail_body: CoupangProps = {
@@ -715,37 +716,32 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 						method: 'PUT',
 					};
 
+					/** 상품 수정시 */
 					let product_json = await coupangApiGateway(product_body);
 
 					if (product_json.code === 'ERROR') {
 						productStore.addRegisteredFailed(Object.assign(market_item, { error: product_json.message }));
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 실패`);
-
 						await sendCallback(commonStore, data, market_code, parseInt(product), 2, product_json.message);
 					} else {
 						productStore.addRegisteredSuccess(Object.assign(market_item, { error: product_json.data.toString() }));
-						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 성공`);
-
+						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 수정 성공`);
 						await sendCallback(commonStore, data, market_code, parseInt(product), 1, product_json.data.toString());
 					}
+					/** 상품 등록시 */
 				} else {
 					productStore.addRegisteredQueue(market_item);
 					productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 중...`);
 
-					// console.log({ product_body });
-					// productStore.addConsoleText(`(${shopName}) [${market_code}] 테스트`);
-					// return false;
 					let product_json = await coupangApiGateway(product_body);
 
 					if (product_json.code === 'ERROR') {
 						productStore.addRegisteredFailed(Object.assign(market_item, { error: product_json.message }));
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 실패`);
-
 						await sendCallback(commonStore, data, market_code, parseInt(product), 2, product_json.message);
 					} else {
 						productStore.addRegisteredSuccess(Object.assign(market_item, { error: product_json.data.toString() }));
 						productStore.addConsoleText(`(${shopName}) [${market_code}] 상품 등록 성공`);
-
 						await sendCallback(commonStore, data, market_code, parseInt(product), 1, product_json.data.toString());
 					}
 				}

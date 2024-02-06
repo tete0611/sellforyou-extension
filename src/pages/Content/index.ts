@@ -245,7 +245,7 @@ const main = async () => {
 			floatingButton({ info: info, shop: 'tmall2', result: true as any, bulk: true });
 		}
 
-		/** */
+		/** 알리 단일 페이지 */
 	} else if (/aliexpress.com\/item/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new express().get(info.user);
@@ -310,7 +310,7 @@ const main = async () => {
 	} else if (/www.vvic.com\/.+\/search/.test(currentUrl) || /www.vvic.com\/.+\/topic/.test(currentUrl)) {
 		console.log(`vvic 검색 페이지 진입`);
 		const info = await initInfo(false);
-		await new vvic().bulkTypeOne(info.user, 2);
+		await new vvic().bulkTypeFour(info.user);
 		floatingButton({ info, shop: 'vvic', result: true as any, bulk: true });
 
 		/** vvic 상점 페이지 */
@@ -327,7 +327,7 @@ const main = async () => {
 			urlUnchangedPage: { shopId: shopId, method: 'api' },
 		});
 
-		/** */
+		/** vvic 리스트 페이지 */
 	} else if (/www.vvic.com\/.+\/list/.test(currentUrl)) {
 		console.log('vvic 리스트 페이지 진입');
 		const info = await initInfo(false);
@@ -335,28 +335,25 @@ const main = async () => {
 		// const shopId = parseInt(currentUrl.match(/\/list\/(\d+)/)?.[1] ?? '0');
 		floatingButton({ info, shop: 'vvic', result: true as any, bulk: true });
 
-		await sleep(10000);
-		await createTab({ active: true, url: `${chrome.runtime.getURL('app.html')}?collected` });
-
-		/** */
+		/** 아마존 페이지 */
 	} else if (/www.amazon.com\/.+\/dp\//.test(currentUrl) || /www.amazon.com\/dp/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new amazon().get(info.user, 'us');
 		floatingButton({ info, shop: 'amazon', result, bulk: false });
 
-		/** */
+		/** 아마존 페이지 */
 	} else if (/www.amazon.co.jp\/.+\/dp\//.test(currentUrl) || /www.amazon.co.jp\/dp/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new amazon().get(info.user, 'jp');
 		floatingButton({ info, shop: 'amazon', result, bulk: false });
 
-		/** */
+		/** 아마존 페이지 */
 	} else if (/www.amazon.de\/.+\/dp\//.test(currentUrl) || /www.amazon.de\/dp/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new amazon().get(info.user, 'de');
 		floatingButton({ info, shop: 'amazon', result, bulk: false });
 
-		/** */
+		/** 아마존 페이지 */
 	} else if (
 		/www.amazon.com\/s\?/.test(currentUrl) ||
 		/www.amazon.com\/s\//.test(currentUrl) ||
@@ -366,13 +363,13 @@ const main = async () => {
 		await new amazon().bulkTypeOne(info.user, 'amazon.com');
 		floatingButton({ info, shop: 'amazon1', result: true as any, bulk: true });
 
-		/** */
+		/** 아마존 페이지 */
 	} else if (/www.amazon.com\/stores/.test(currentUrl)) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.com');
 		floatingButton({ info, shop: 'amazon2', result: true as any, bulk: true });
 
-		/** */
+		/** 아마존 페이지 */
 	} else if (
 		/www.amazon.co.jp\/s\?/.test(currentUrl) ||
 		/www.amazon.co.jp\/s\//.test(currentUrl) ||
@@ -382,13 +379,13 @@ const main = async () => {
 		await new amazon().bulkTypeOne(info.user, 'amazon.co.jp');
 		floatingButton({ info, shop: 'amazon1', result: true as any, bulk: true });
 
-		/** */
+		/** 아마존 페이지 */
 	} else if (/www.amazon.co.jp\/stores/.test(currentUrl)) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.co.jp');
 		floatingButton({ info, shop: 'amazon2', result: true as any, bulk: true });
 
-		/** */
+		/** 아마존 페이지 */
 	} else if (
 		/www.amazon.de\/s\?/.test(currentUrl) ||
 		/www.amazon.de\/s\//.test(currentUrl) ||
@@ -398,7 +395,7 @@ const main = async () => {
 		await new amazon().bulkTypeOne(info.user, 'amazon.de');
 		floatingButton({ info, shop: 'amazon1', result: true as any, bulk: true });
 
-		/** */
+		/** 아마존 페이지 */
 	} else if (/www.amazon.de\/stores/.test(currentUrl)) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.de');
