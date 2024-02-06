@@ -165,7 +165,10 @@ export const resultDetails = async (data: BulkInfo) => {
 	});
 
 	document.getElementById('sfyConnect')?.addEventListener('click', async () => {
-		await createTab({ active: true, url: `${chrome.runtime.getURL('app.html')}?collected` });
+		const url = new URL(chrome.runtime.getURL('app.html'));
+		url.search = 'collected';
+		window.open(url);
+		// await createTab({ active: true, url: `${chrome.runtime.getURL('app.html')}?collected` });
 	});
 
 	document.getElementById('sfyCopy')?.addEventListener('click', () => {
@@ -784,7 +787,10 @@ export const floatingButton = ({
 			buttonLogo.style.height = '40px';
 			buttonLogo.innerHTML = buttonLogoDefault;
 			buttonLogo.addEventListener('click', async () => {
-				await createTab({ active: true, url: `${chrome.runtime.getURL('app.html')}?collected` });
+				const url = new URL(chrome.runtime.getURL('app.html'));
+				url.search = 'collected';
+				window.open(url);
+				// await createTab({ active: true, url: `${chrome.runtime.getURL('app.html')}?collected` });
 			});
 
 			const logoCol = document.createElement('td');

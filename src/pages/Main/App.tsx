@@ -27,11 +27,10 @@ const App = () => {
 	const [darkTheme, setDarkTheme] = useState(common.darkTheme);
 
 	useEffect(() => {
-		console.log({ location });
-
 		getLocalStorage<AppInfo>('appInfo').then((v) => {
 			setDarkTheme(v.darkTheme);
 		});
+		/** 페이지 로드시 쿼리스트링이 있으면 searchParams에 반영 */
 		if (location.search && location.search !== '') {
 			searchParams.set('page', location.search.replace('?', ''));
 			setSearchParams(searchParams, { replace: true });
