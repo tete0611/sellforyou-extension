@@ -547,3 +547,10 @@ export type OriginalData = {
 		url: string;
 	};
 };
+
+/** FloatingButton / FloatingButtonBulk에 파라미터로 들어가는 info 타입 */
+export type Info = {
+	user: User;
+	isBulkProcessing: boolean;
+	tabInfo: Sender;
+};

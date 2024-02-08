@@ -1,6 +1,6 @@
 import { alibaba, amazon, express, taobao, tmall, vvic } from './modules';
-import { createTab, sendRuntimeMessage } from '../Tools/ChromeAsync';
-import { getCookie, sleep } from '../../../common/function';
+import { sendRuntimeMessage } from '../Tools/ChromeAsync';
+import { getCookie } from '../../../common/function';
 import { getTaobaoData } from '../Tools/Taobao';
 import {
 	deleteA077Products,
@@ -11,7 +11,17 @@ import {
 } from '../Tools/SmartStore';
 import { uploadWemakeprice2, editWemakeprice, deleteWemakeprice2 } from '../Tools/Wemakeprice';
 import { RuntimeMessage } from '../../type/type';
-import { addExcelInfo, cardPay, floatingButton, getsetPage, initInfo, resultDetails, skip } from './function';
+import {
+	addExcelInfo,
+	cardPay,
+	floatingButton,
+	floatingButtonBulk,
+	getsetPage,
+	initInfo,
+	resultDetails,
+	skip,
+} from './function';
+import { SMARTSTORE_UPLOAD_PAPER, STYLE_SHEET, WEMAKEPRICE_UPLOAD_PAPER } from './components/elements';
 
 /**
  *
@@ -25,11 +35,7 @@ import { addExcelInfo, cardPay, floatingButton, getsetPage, initInfo, resultDeta
 
 const main = async () => {
 	/** 스타일시트 링크 삽입 */
-	let link = document.createElement('link');
-	link.href = chrome.runtime.getURL('ui/css/uicons-regular-straight.css');
-	link.type = 'text/css';
-	link.rel = 'stylesheet';
-	document.documentElement.insertBefore(link, null);
+	document.documentElement.insertBefore(STYLE_SHEET, null);
 
 	/** 이벤트리스너 등록 */
 	chrome.runtime.onMessage.addListener((request: RuntimeMessage, _, sendResponse) => {
@@ -54,52 +60,16 @@ const main = async () => {
 				return true;
 			}
 
-			//위메프
+			/** 위메프 */
 			case 'upload-B719': {
-				let paper = document.createElement('div');
-				paper.id = 'sfyPaper';
-				paper.className = 'SELLFORYOU-INFORM';
-				paper.innerHTML = `
-                    <div style="margin-bottom: 40px;">
-                        위메프에 업로드가 진행 중입니다.
-                    </div>
-            
-                    <div style="color: #ff4b4b; font-size: 24px; margin-bottom: 10px;">
-                        업로드가 진행되는 동안 다른 탭을 이용해주시기 바랍니다.
-                    </div>
-            
-                    <div style="color: #ff4b4b; font-size: 24px;">
-                        현재 탭에서 페이지를 이동할 경우 업로드가 중단될 수 있습니다.
-                    </div>
-                `;
-
-				document.documentElement.appendChild(paper);
-
+				document.documentElement.appendChild(WEMAKEPRICE_UPLOAD_PAPER);
 				uploadWemakeprice2(request.source).then(sendResponse);
-
 				return true;
 			}
-			/** 스마트스토어 */
+
+			/** 스마트스토어 이미지,동영상 업로드 */
 			case 'upload-A077': {
-				let paper = document.createElement('div');
-				paper.id = 'sfyPaper';
-				paper.className = 'SELLFORYOU-INFORM';
-				paper.innerHTML = `
-                    <div style="margin-bottom: 40px;">
-                        스마트스토어 업로드가 진행 중입니다.
-                    </div>
-            
-                    <div style="color: #ff4b4b; font-size: 24px; margin-bottom: 10px;">
-                        업로드가 진행되는 동안 다른 탭을 이용해주시기 바랍니다.
-                    </div>
-            
-                    <div style="color: #ff4b4b; font-size: 24px;">
-                        현재 탭에서 페이지를 이동할 경우 업로드가 중단될 수 있습니다.
-                    </div>
-                `;
-
-				document.documentElement.appendChild(paper);
-
+				document.documentElement.appendChild(SMARTSTORE_UPLOAD_PAPER);
 				uploadA077Resources(request.source).then(sendResponse);
 				return true;
 			}
@@ -192,21 +162,21 @@ const main = async () => {
 		console.log('타오바오 단일상품 페이지 진입');
 		const info = await initInfo(true);
 		const result = await new taobao().get(info.user);
-		floatingButton({ info: info, shop: null, result: result as any, bulk: false });
+		floatingButton({ info: info, result: result as any });
 
 		/** 타오바오 리스트 페이지 */
 	} else if (/\bs.taobao.com\/search/.test(currentUrl)) {
 		console.log('타오바오 리스트 페이지 진입');
 		const info = await initInfo(false);
 		await new taobao().bulkTypeOne(info.user);
-		floatingButton({ info: info, shop: 'taobao1', result: true as any, bulk: true });
+		floatingButtonBulk({ info: info, shop: 'taobao1' });
 
 		/**  */
 	} else if (/world.taobao.com\/wow/.test(currentUrl)) {
 		console.log('월드 타오바오 페이지 진입');
 		const info = await initInfo(false);
 		await new taobao().bulkTypeThree(info.user);
-		floatingButton({ info: info, shop: 'taobao1', result: true as any, bulk: true });
+		floatingButtonBulk({ info: info, shop: 'taobao1' });
 
 		/** 타오바오 상점 페이지 */
 	} else if (
@@ -217,7 +187,7 @@ const main = async () => {
 		console.log('타오바오 상점 페이지 진입');
 		const info = await initInfo(false);
 		await new taobao().bulkTypeTwo(info.user);
-		floatingButton({ info: info, shop: 'taobao2', result: true as any, bulk: true });
+		floatingButtonBulk({ info: info, shop: 'taobao2' });
 
 		/**  */
 	} else if (/guang.taobao.com/.test(currentUrl)) {
@@ -232,24 +202,24 @@ const main = async () => {
 		console.log('티몰 상세페이지 진입');
 		const info = await initInfo(true);
 		const result = await new tmall().get(info.user);
-		floatingButton({ info: info, shop: null, result: result, bulk: false });
+		floatingButton({ info: info, result: result });
 
 		/** 티몰 리스트페이지 */
 	} else if (/tmall.com/.test(currentUrl)) {
 		const info = await initInfo(false);
 		if (/list.tmall.com/.test(currentUrl)) {
 			await new tmall().bulkTypeOne(info.user);
-			floatingButton({ info: info, shop: 'tmall1', result: true as any, bulk: true });
+			floatingButtonBulk({ info: info, shop: 'tmall1' });
 		} else {
 			await new tmall().bulkTypeTwo(info.user);
-			floatingButton({ info: info, shop: 'tmall2', result: true as any, bulk: true });
+			floatingButtonBulk({ info: info, shop: 'tmall2' });
 		}
 
 		/** 알리 단일 페이지 */
 	} else if (/aliexpress.com\/item/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new express().get(info.user);
-		floatingButton({ info: info, shop: 'express', result: result, bulk: false });
+		floatingButton({ info: info, result: result });
 
 		/** 알리 검색 페이지 */
 	} else if (
@@ -265,21 +235,21 @@ const main = async () => {
 		const info = await initInfo(false);
 		await new express().bulkTypeOne(info.user);
 		await new express().bulkTypeTwo(info.user);
-		floatingButton({ info: info, shop: 'express', result: true as any, bulk: true });
+		floatingButtonBulk({ info: info, shop: 'express' });
 
 		/** 알리 상점 페이지 */
 	} else if (/aliexpress.com\/store/.test(currentUrl)) {
 		console.log('알리 상점 페이지 진입');
 		const info = await initInfo(false);
 		await new express().bulkTypeThree(info.user);
-		floatingButton({ info: info, shop: 'express', result: true as any, bulk: true });
+		floatingButtonBulk({ info: info, shop: 'express' });
 
 		/** 1688 단일상품 페이지 */
 	} else if (/detail.1688.com/.test(currentUrl)) {
 		console.log('1688 단일상품 페이지');
 		const info = await initInfo(true);
 		const result = await new alibaba().get(info.user);
-		floatingButton({ info, shop: 'alibaba', result, bulk: false });
+		floatingButton({ info, result });
 
 		/** 1688 상점 페이지 and 검색 페이지 */
 	} else if (
@@ -291,27 +261,27 @@ const main = async () => {
 		const info = await initInfo(false);
 		await new alibaba().bulkTypeOne(info.user);
 		await new alibaba().bulkTypeTwo(info.user);
-		floatingButton({ info, shop: 'alibaba', result: true as any, bulk: true });
+		floatingButtonBulk({ info, shop: 'alibaba' });
 
 		/** 1688 리스트 페이지 */
 	} else if (/show.1688.com\/pinlei\/industry\/pllist.html/.test(currentUrl)) {
 		console.log('1688 리스트페이지 진입');
 		const info = await initInfo(false);
 		await new alibaba().bulkTypeOne(info.user);
-		floatingButton({ info, shop: 'alibaba', result: true as any, bulk: true });
+		floatingButtonBulk({ info, shop: 'alibaba' });
 
 		/** vvic 단일상품 페이지 */
 	} else if (/www.vvic.com\/item/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new vvic().get(info.user);
-		floatingButton({ info, shop: 'vvic', result, bulk: false });
+		floatingButton({ info, result });
 
 		/** vvic 검색 페이지 */
 	} else if (/www.vvic.com\/.+\/search/.test(currentUrl) || /www.vvic.com\/.+\/topic/.test(currentUrl)) {
 		console.log(`vvic 검색 페이지 진입`);
 		const info = await initInfo(false);
 		await new vvic().bulkTypeFour(info.user);
-		floatingButton({ info, shop: 'vvic', result: true as any, bulk: true });
+		floatingButtonBulk({ info, shop: 'vvic' });
 
 		/** vvic 상점 페이지 */
 	} else if (/www.vvic.com\/shop\/(\d+)/.test(currentUrl)) {
@@ -319,11 +289,9 @@ const main = async () => {
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 3);
 		const shopId = parseInt(currentUrl.match(/\/shop\/(\d+)/)?.[1] ?? '0');
-		floatingButton({
+		floatingButtonBulk({
 			info,
 			shop: 'vvic',
-			result: true as any,
-			bulk: true,
 			urlUnchangedPage: { shopId: shopId, method: 'api' },
 		});
 
@@ -333,25 +301,25 @@ const main = async () => {
 		const info = await initInfo(false);
 		await new vvic().bulkTypeFour(info.user);
 		// const shopId = parseInt(currentUrl.match(/\/list\/(\d+)/)?.[1] ?? '0');
-		floatingButton({ info, shop: 'vvic', result: true as any, bulk: true });
+		floatingButtonBulk({ info, shop: 'vvic' });
 
 		/** 아마존 페이지 */
 	} else if (/www.amazon.com\/.+\/dp\//.test(currentUrl) || /www.amazon.com\/dp/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new amazon().get(info.user, 'us');
-		floatingButton({ info, shop: 'amazon', result, bulk: false });
+		floatingButton({ info, result });
 
 		/** 아마존 페이지 */
 	} else if (/www.amazon.co.jp\/.+\/dp\//.test(currentUrl) || /www.amazon.co.jp\/dp/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new amazon().get(info.user, 'jp');
-		floatingButton({ info, shop: 'amazon', result, bulk: false });
+		floatingButton({ info, result });
 
 		/** 아마존 페이지 */
 	} else if (/www.amazon.de\/.+\/dp\//.test(currentUrl) || /www.amazon.de\/dp/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new amazon().get(info.user, 'de');
-		floatingButton({ info, shop: 'amazon', result, bulk: false });
+		floatingButton({ info, result });
 
 		/** 아마존 페이지 */
 	} else if (
@@ -361,13 +329,13 @@ const main = async () => {
 	) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeOne(info.user, 'amazon.com');
-		floatingButton({ info, shop: 'amazon1', result: true as any, bulk: true });
+		floatingButtonBulk({ info, shop: 'amazon1' });
 
 		/** 아마존 페이지 */
 	} else if (/www.amazon.com\/stores/.test(currentUrl)) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.com');
-		floatingButton({ info, shop: 'amazon2', result: true as any, bulk: true });
+		floatingButtonBulk({ info, shop: 'amazon2' });
 
 		/** 아마존 페이지 */
 	} else if (
@@ -377,13 +345,13 @@ const main = async () => {
 	) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeOne(info.user, 'amazon.co.jp');
-		floatingButton({ info, shop: 'amazon1', result: true as any, bulk: true });
+		floatingButtonBulk({ info, shop: 'amazon1' });
 
 		/** 아마존 페이지 */
 	} else if (/www.amazon.co.jp\/stores/.test(currentUrl)) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.co.jp');
-		floatingButton({ info, shop: 'amazon2', result: true as any, bulk: true });
+		floatingButtonBulk({ info, shop: 'amazon2' });
 
 		/** 아마존 페이지 */
 	} else if (
@@ -393,13 +361,13 @@ const main = async () => {
 	) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeOne(info.user, 'amazon.de');
-		floatingButton({ info, shop: 'amazon1', result: true as any, bulk: true });
+		floatingButtonBulk({ info, shop: 'amazon1' });
 
 		/** 아마존 페이지 */
 	} else if (/www.amazon.de\/stores/.test(currentUrl)) {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.de');
-		floatingButton({ info, shop: 'amazon2', result: true as any, bulk: true });
+		floatingButtonBulk({ info, shop: 'amazon2' });
 
 		/** 테무 리스트 페이지 */
 	} else if (/.temu.com\/kr-en\/.*opt_level/.test(currentUrl)) {
