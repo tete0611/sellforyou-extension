@@ -2,7 +2,7 @@ import { renderToString } from 'react-dom/server';
 import { bulkCollectUsingApi, pageRefresh, sleep } from '../../../common/function';
 import { User } from '../../type/schema';
 import { BulkInfo, CollectInfo, Info, Sender, Shop, Source } from '../../type/type';
-import { createTab, getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../Tools/ChromeAsync';
+import { getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../Tools/ChromeAsync';
 import {
 	BulkHasFailedForm,
 	BulkSuccessForm,
@@ -12,6 +12,8 @@ import {
 	ButtonCollectAll,
 } from './components';
 import React from 'react';
+import { render } from 'react-dom';
+import { CollectButton } from './components/CollectButton';
 
 export const bulkCollect = async (useChecked: boolean, useMedal: boolean) => {
 	let inputs: CollectInfo['inputs'] = [];
@@ -306,142 +308,15 @@ interface FloatingButtonProps {
 	info: Info;
 	result: Source & { message: string };
 }
-
 /** 수집버튼 띄우는 함수 */
 export const floatingButton = ({ info, result }: FloatingButtonProps) => {
 	if (!result) return;
 
-	let isCollecting = false;
-	const wrapper = Object.assign(document.createElement('div'), {
-		innerHTML: renderToString(
-			<table className='SELLFORYOU-FLOATING'>
-				<tr>
-					<td className='SELLFORYOU-CELL'>
-						<button
-							className='SELLFORYOU-COLLECT'
-							onClick={async () => {
-								console.log(`클릭함`);
-								// 수집 끝났을 경우
-								if (!info.isBulkProcessing && result.message)
-									if (confirm(`${result.message}\n[확인]을 누르시면 수집상품목록으로 이동합니다.`)) {
-										const url = new URL(chrome.runtime.getURL('app.html'));
-										url.search = 'collected';
-										window.open(url);
-									}
-
-								if (isCollecting) return;
-
-								isCollecting = true;
-
-								buttonCollect.innerHTML = `<div class="SELLFORYOU-LOADING" />`;
-
-								const response = await sendRuntimeMessage<{ status: string; statusMessage: string }>({
-									action: 'collect',
-									source: result,
-								});
-
-								if (!response) return;
-								if (response.status === 'success')
-									buttonCollect.innerHTML = `
-									<img src=${chrome.runtime.getURL(
-										'resources/icon-success.png',
-									)} width="20px" height="20px" style="margin-bottom: 5px;" />
-
-									수집완료
-							`;
-								else
-									buttonCollect.innerHTML = `
-									<img src=${chrome.runtime.getURL('resources/icon-failed.png')} width="20px" height="20px" style="margin-bottom: 5px;" />
-
-									수집실패
-							`;
-
-								result.message = response.statusMessage;
-
-								if (info.isBulkProcessing) sendRuntimeMessage({ action: 'collect-finish' });
-							}}
-						>
-							<i className='fi fi-rs-inbox-in' style={{ display: 'flex', alignItems: 'center', fontSize: 32 }}></i>
-						</button>
-					</td>
-				</tr>
-			</table>,
-		),
-	});
-
-	// 컨테이너 생성
-	const buttonRoot = Object.assign(document.createElement('table'), {
-		className: 'SELLFORYOU-FLOATING',
-	});
-
-	const buttonRow = document.createElement('tr');
-	const buttonCol = Object.assign(document.createElement('td'), {
-		className: 'SELLFORYOU-CELL',
-	});
-	// 수집버튼 생성
-	const buttonCollect = Object.assign(document.createElement('button'), {
-		className: 'SELLFORYOU-COLLECT',
-		innerHTML: renderToString(<ButtonCollect bulk={false} state='default' />),
-	});
-	buttonCol.append(buttonCollect);
-	buttonRow.append(buttonCol);
-	buttonRoot.append(buttonRow);
-
-	buttonCollect.addEventListener('click', async () => {
-		// 수집 끝났을 경우
-		if (!info.isBulkProcessing && result.message)
-			if (confirm(`${result.message}\n[확인]을 누르시면 수집상품목록으로 이동합니다.`)) {
-				const url = new URL(chrome.runtime.getURL('app.html'));
-				url.search = 'collected';
-				window.open(url);
-			}
-
-		if (isCollecting) return;
-
-		isCollecting = true;
-
-		buttonCollect.innerHTML = `<div class="SELLFORYOU-LOADING" />`;
-
-		const response = await sendRuntimeMessage<{ status: string; statusMessage: string }>({
-			action: 'collect',
-			source: result,
-		});
-
-		if (!response) return;
-		if (response.status === 'success')
-			buttonCollect.innerHTML = `
-                    <img src=${chrome.runtime.getURL(
-											'resources/icon-success.png',
-										)} width="20px" height="20px" style="margin-bottom: 5px;" />
-
-                    수집완료
-                `;
-		else
-			buttonCollect.innerHTML = `
-                    <img src=${chrome.runtime.getURL(
-											'resources/icon-failed.png',
-										)} width="20px" height="20px" style="margin-bottom: 5px;" />
-
-                    수집실패
-                `;
-
-		result.message = response.statusMessage;
-
-		if (info.isBulkProcessing) sendRuntimeMessage({ action: 'collect-finish' });
-	});
-	buttonCollect.addEventListener('mouseenter', () => {
-		if (isCollecting) return;
-
-		buttonCollect.innerHTML = renderToString(<ButtonCollect bulk={false} state='enter' />);
-	});
-	buttonCollect.addEventListener('mouseleave', () => {
-		if (isCollecting) return;
-
-		buttonCollect.innerHTML = renderToString(<ButtonCollect bulk={false} state='default' />);
-	});
-
+	const wrapper = document.createElement('div');
+	render(<CollectButton info={info} result={result} />, wrapper);
 	document.documentElement.appendChild(wrapper);
 
+	const buttonCollect = document.getElementsByClassName('SELLFORYOU-COLLECT').item(0) as HTMLButtonElement; // 자동으로 클릭시키기 위해 돔을 찾아옴
 	if (info.isBulkProcessing) buttonCollect.click();
 };
 
@@ -450,12 +325,9 @@ interface FloatingButtonBulkProps {
 	shop: Shop | null;
 	urlUnchangedPage?: { shopId: number; method: 'api' | 'element' };
 }
-
-/** 대량수집버튼 */
+/** 대량수집버튼 띄우는 함수 */
 export const floatingButtonBulk = ({ info, shop, urlUnchangedPage }: FloatingButtonBulkProps) => {
-	console.log(`대량버튼의 isBulkProcessing : ${info.isBulkProcessing}`);
 	let isCollecting = false;
-	// 컨테이너 생성
 	const buttonRoot = Object.assign(document.createElement('table'), {
 		className: 'SELLFORYOU-FLOATING',
 	});
