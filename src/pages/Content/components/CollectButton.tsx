@@ -1,12 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { sendRuntimeMessage } from '../../Tools/ChromeAsync';
-import { Info, Source } from '../../../type/type';
-
-interface FloatingButtonProps {
-	info: Info;
-	result: Source & { message: string };
-}
+import { FloatingButtonProps } from '../function';
 
 export const CollectButton = ({ info, result }: FloatingButtonProps) => {
 	const [inner, setInner] = useState<'default' | 'success' | 'failed' | 'loading' | 'entered'>('default'); // inner 엘리먼트 상태

@@ -6,3 +6,4 @@ export { BackGroundPaper } from './BackGroundPaper';
 export { BulkSettingPaper } from './BulkSettingPaper';
 export { ButtonCollect } from './ButtonCollect';
 export { ButtonCollectAll } from './ButtonCollectAll';
+export { CollectButtonBulk } from './CollectButtonBulk';
