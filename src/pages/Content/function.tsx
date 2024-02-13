@@ -6,7 +6,7 @@ import { getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../Tools/C
 import { BulkHasFailedForm, BulkSuccessForm, BackGroundPaper, CollectButtonBulk } from './components';
 import React from 'react';
 import { render } from 'react-dom';
-import { CollectButton } from './components/CollectButton';
+import { CollectButton } from './components';
 
 export interface FloatingButtonProps {
 	info: Info;
@@ -170,7 +170,6 @@ export const resultDetails = async (data: BulkInfo) => {
 		const url = new URL(chrome.runtime.getURL('app.html'));
 		url.search = 'collected';
 		window.open(url);
-		// await createTab({ active: true, url: `${chrome.runtime.getURL('app.html')}?collected` });
 	});
 
 	document.getElementById('sfyCopy')?.addEventListener('click', () => {
@@ -311,17 +310,20 @@ export const getsetPage = async (body) => {
 export const floatingButton = ({ info, result }: FloatingButtonProps) => {
 	if (!result) return;
 
+	/** 단일수집버튼 컴포넌트 */
 	const wrapper = document.createElement('div');
 	render(<CollectButton info={info} result={result} />, wrapper);
 	document.documentElement.appendChild(wrapper);
 
 	const buttonCollect = document.getElementsByClassName('SELLFORYOU-COLLECT').item(0) as HTMLButtonElement; // 자동으로 클릭시키기 위해 돔을 찾아옴
-	if (info.isBulkProcessing) buttonCollect.click();
+	if (info.isBulkProcessing) buttonCollect.click(); // 대량수집 진행중일시
 };
 
 /** 대량수집버튼 띄우는 함수 */
 export const floatingButtonBulk = (props: FloatingButtonBulkProps) => {
 	const { info, shop, urlUnchangedPage } = props;
+
+	/** 대량수집버튼 컴포넌트 */
 	const wrapper = document.createElement('div');
 	render(<CollectButtonBulk {...props} />, wrapper);
 	document.documentElement.appendChild(wrapper);

@@ -21,7 +21,7 @@ import {
 	resultDetails,
 	skip,
 } from './function';
-import { SMARTSTORE_UPLOAD_PAPER, STYLE_SHEET, WEMAKEPRICE_UPLOAD_PAPER } from './components/elements';
+import { SMARTSTORE_UPLOAD_PAPER, STYLE_SHEET, WEMAKEPRICE_UPLOAD_PAPER } from './components';
 
 /**
  *
