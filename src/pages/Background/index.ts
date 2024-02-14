@@ -30,14 +30,32 @@ const addBulkInfo = async (source: Source, sender: Sender, isExcel: boolean) => 
 	const tabs = await queryTabs({});
 	let bulkInfo = (await getLocalStorage<BulkInfo[]>('bulkInfo')) ?? [];
 
-	// 수집 테스트시 아래코드 주석해제
+	/** 중복된 상품 url 제거 */
+	const uniqueUrls = new Set<string>();
+	const duplicateDeleteSource: CollectInfo['inputs'] = [];
+	source.data.forEach((v) => {
+		if (!uniqueUrls.has(v.url)) {
+			uniqueUrls.add(v.url);
+			duplicateDeleteSource.push(v);
+		}
+	});
+
+	/** 수집 테스트시 아래코드 주석해제 */
 	// console.group('수집테스트');
 	// console.log({ source });
 	// console.log(`url 중복제거 후`);
-	// const setSource = new Set(source.data.map((v) => v.url));
-	// console.log({ setSource });
+	// console.log({ duplicateDeleteSource });
+	// if (duplicateDeleteSource.length !== source.data.length) {
+	// 	const indexMap: { [key: string]: number[] } = {};
+	// 	source.data.forEach((v, i) => {
+	// 		if (indexMap[v.url] === undefined) indexMap[v.url] = [i];
+	// 		else indexMap[v.url].push(i);
+	// 	});
+	// 	console.log({ indexMap });
+	// }
 	// console.groupEnd();
 	// return false;
+	/**************************** */
 
 	bulkInfo = bulkInfo.filter((v) => {
 		if (v.sender.tab.id === sender.tab.id) {
@@ -56,7 +74,7 @@ const addBulkInfo = async (source: Source, sender: Sender, isExcel: boolean) => 
 	bulkInfo.push({
 		current: 0,
 		currentPage: 1,
-		inputs: source.data,
+		inputs: duplicateDeleteSource,
 		isBulk: true,
 		isCancel: false,
 		isComplete: false,
