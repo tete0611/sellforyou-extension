@@ -1,18 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { sendRuntimeMessage } from '../../Tools/ChromeAsync';
 
-interface Props {
-	state: 'paused' | 'onGoing';
-}
+export const BackGroundPaper = () => {
+	const [collectState, setCollectState] = useState<'onGoing' | 'paused'>('onGoing');
 
-export const BackGroundPaper = ({ state }: Props) => {
+	const onCollectStop = () => {
+		setCollectState('paused');
+		sendRuntimeMessage({ action: 'collect-stop' });
+	};
+
+	window.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape') onCollectStop();
+	});
+
 	return (
 		<div id='sfyPaper' className='SELLFORYOU-INFORM'>
-			{state === 'onGoing' && (
+			{collectState === 'onGoing' && (
 				<>
 					<div style={{ marginBottom: 40 }}>대량 수집이 진행 중입니다.</div>
 					<div style={{ color: 'black', fontSize: 24, marginBottom: 40 }}>
 						수집을 중단하려면
-						<button id='sfyPause' style={{ fontWeight: 'bolder', padding: 10, marginLeft: 10, marginRight: 10 }}>
+						<button
+							id='sfyPause'
+							style={{ fontWeight: 'bolder', padding: 10, marginLeft: 10, marginRight: 10 }}
+							onClick={onCollectStop}
+						>
 							여기를 클릭
 						</button>
 						하거나
@@ -27,14 +39,18 @@ export const BackGroundPaper = ({ state }: Props) => {
 					</div>
 					<div style={{ color: 'black', fontSize: 24 }}>
 						이 페이지에서의 수집을 건너뛰려면
-						<button id='sfySkip' style={{ fontWeight: 'bolder', padding: 10, marginLeft: 10, marginRight: 10 }}>
+						<button
+							id='sfySkip'
+							style={{ fontWeight: 'bolder', padding: 10, marginLeft: 10, marginRight: 10 }}
+							onClick={() => sendRuntimeMessage({ action: 'collect-finish' })}
+						>
 							여기를 클릭
 						</button>
 						해주세요.
 					</div>
 				</>
 			)}
-			{state === 'paused' && (
+			{collectState === 'paused' && (
 				<>
 					<div style={{ marginBottom: 40 }}>대량 수집을 중단하는 중입니다.</div>
 

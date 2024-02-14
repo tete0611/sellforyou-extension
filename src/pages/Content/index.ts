@@ -21,7 +21,7 @@ import {
 	resultDetails,
 	skip,
 } from './function';
-import { SMARTSTORE_UPLOAD_PAPER, STYLE_SHEET, WEMAKEPRICE_UPLOAD_PAPER } from './components';
+import { STYLE_SHEET, UPLOAD_PAPER } from './components';
 
 /**
  *
@@ -62,14 +62,14 @@ const main = async () => {
 
 			/** 위메프 */
 			case 'upload-B719': {
-				document.documentElement.appendChild(WEMAKEPRICE_UPLOAD_PAPER);
+				document.documentElement.appendChild(UPLOAD_PAPER({ shopName: '위메프' }));
 				uploadWemakeprice2(request.source).then(sendResponse);
 				return true;
 			}
 
 			/** 스마트스토어 이미지,동영상 업로드 */
 			case 'upload-A077': {
-				document.documentElement.appendChild(SMARTSTORE_UPLOAD_PAPER);
+				document.documentElement.appendChild(UPLOAD_PAPER({ shopName: '스마트스토어' }));
 				uploadA077Resources(request.source).then(sendResponse);
 				return true;
 			}
