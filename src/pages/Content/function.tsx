@@ -1,4 +1,3 @@
-import { renderToString } from 'react-dom/server';
 import { bulkCollectUsingApi, pageRefresh, sleep } from '../../../common/function';
 import { User } from '../../type/schema';
 import { BulkInfo, CollectInfo, Info, Sender, Shop, Source } from '../../type/type';
@@ -126,65 +125,27 @@ export const bulkPage = async (
 export const resultDetails = async (data: BulkInfo) => {
 	let paper = document.getElementById('sfyPaper') as HTMLDivElement | null;
 
-	if (!paper) {
-		paper = document.createElement('div');
-		paper.id = 'sfyPaper';
-		paper.className = 'SELLFORYOU-INFORM';
-		document.documentElement.appendChild(paper);
-	}
+	if (!paper)
+		paper = Object.assign(document.createElement('div'), {
+			id: 'sfyPaper',
+			className: 'SELLFORYOU-INFORM',
+		});
 
-	let failedResults = data?.results.filter((v) => v.status === 'failed')!;
+	const failedResults = data?.results.filter((v) => v.status === 'failed')!;
 
-	if (failedResults.length > 0) paper.innerHTML = renderToString(<BulkHasFailedForm results={failedResults} />);
-	else paper.innerHTML = renderToString(<BulkSuccessForm data={data} />);
+	/** 실패상품 포함여부에 따른 결과창 로드 */
+	failedResults.length > 0
+		? render(
+				<BulkHasFailedForm failedResults={failedResults} originalPage={data?.sender.tab.url!} isExcel={data.isExcel} />,
+				paper,
+		  )
+		: render(<BulkSuccessForm data={data} />, paper);
 
-	const checks = document.getElementsByClassName('SFY-RESULT-CHECK') as unknown as HTMLInputElement[];
-
-	for (let i = 0; i < checks.length; i++)
-		checks[i].addEventListener('change', (e: any) => (failedResults[e.target.id].checked = e.target.checked));
-
-	document.getElementById('sfyResultAll')?.addEventListener('change', (e: any) => {
-		failedResults.map((v) => (v.checked = e.target.checked));
-
-		for (let i = 0; i < checks.length; i++) checks[i].checked = e.target.checked;
-	});
-
-	document.getElementById('sfyPage')?.addEventListener('click', () => (window.location.href = data?.sender.tab.url!));
-
-	document.getElementById('sfyRetry')?.addEventListener('click', () => {
-		const inputs = failedResults.filter((v) => v.checked).map((v) => v.input) as CollectInfo['inputs'];
-
-		if (data?.isExcel)
-			sendRuntimeMessage({
-				action: 'collect-product-excel',
-				source: { data: inputs, retry: true },
-			});
-		else
-			sendRuntimeMessage({
-				action: 'collect-bulk',
-				source: { data: inputs, retry: true },
-			});
-	});
-
-	document.getElementById('sfyConnect')?.addEventListener('click', async () => {
-		const url = new URL(chrome.runtime.getURL('app.html'));
-		url.search = 'collected';
-		window.open(url);
-	});
-
-	document.getElementById('sfyCopy')?.addEventListener('click', () => {
-		const text = document.getElementById('sfyResultDetail')?.innerText ?? '';
-
-		navigator.clipboard.writeText(text).then(
-			() => alert('클립보드에 복사되었습니다.'),
-			() => alert('클립보드에 복사할 수 없습니다.'),
-		);
-	});
+	document.documentElement.appendChild(paper);
 
 	const tabInfo = await sendRuntimeMessage<Sender>({ action: 'tab-info' });
-
-	let collectInfo = (await getLocalStorage<CollectInfo[]>('collectInfo')) ?? [];
-	let collect = collectInfo.find((v) => v.sender.tab.id === tabInfo?.tab.id);
+	const collectInfo = (await getLocalStorage<CollectInfo[]>('collectInfo')) ?? [];
+	const collect = collectInfo.find((v) => v.sender.tab.id === tabInfo?.tab.id);
 
 	if (!collect) return;
 
@@ -236,26 +197,9 @@ export const initInfo = async (display: boolean): Promise<Info> => {
 	const tabInfo = (await sendRuntimeMessage<Sender>({ action: 'tab-info' }))!;
 
 	if (display && isBulkProcessing) {
-		let paper = document.createElement('div');
-		paper.innerHTML = renderToString(<BackGroundPaper state='onGoing' />);
+		const paper = document.createElement('div');
+		render(<BackGroundPaper />, paper);
 		document.documentElement.appendChild(paper);
-
-		window.addEventListener('keydown', (e) => {
-			if (e.key === 'Escape') {
-				paper.innerHTML = renderToString(<BackGroundPaper state='paused' />);
-
-				sendRuntimeMessage({ action: 'collect-stop' });
-			}
-		});
-
-		document.getElementById('sfyPause')?.addEventListener('click', () => {
-			paper.innerHTML = renderToString(<BackGroundPaper state='paused' />);
-			sendRuntimeMessage({ action: 'collect-stop' });
-		});
-
-		document
-			.getElementById('sfySkip')
-			?.addEventListener('click', () => sendRuntimeMessage({ action: 'collect-finish' }));
 	}
 
 	if (!user) alert('상품을 수집하려면 셀포유에 로그인되어 있어야 합니다.');
