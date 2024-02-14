@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Box, Popover } from '@mui/material';
 import { MyButton } from '../Common/UI';
+import { compareArray } from '../../../../common/function';
 
 // 일괄설정 선택메뉴 팝업
 export const UpdateManyProductPopOver = observer(() => {

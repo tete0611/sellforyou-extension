@@ -24,7 +24,7 @@ import {
 	TableCell,
 	Typography,
 } from '@mui/material';
-import { request } from '../../Tools/Common';
+import { request } from '../../../../common/function';
 import { useTheme } from '@mui/material/styles';
 import { ComboBox, Image } from '../Common/UI';
 
@@ -1234,7 +1234,7 @@ export const UploadModal = observer(() => {
 													`https://openapi.lotteon.com/v1/openapi/contract/v1/dvl/getDvCstListSr`,
 													{
 														headers: {
-															Authorization: `Bearer ${user.userInfo.lotteonApiKey}`,
+															Authorization: `Bearer ${user.userInfo!.lotteonApiKey}`,
 															Accept: 'application/json',
 															'Accept-Language': 'ko',
 															'X-Timezone': 'GMT+09:00',
@@ -1244,7 +1244,7 @@ export const UploadModal = observer(() => {
 														method: 'POST',
 
 														body: JSON.stringify({
-															afflTrCd: user.userInfo.lotteonVendorId,
+															afflTrCd: user.userInfo!.lotteonVendorId,
 														}),
 													},
 												);
@@ -1302,7 +1302,7 @@ export const UploadModal = observer(() => {
 													`https://openapi.lotteon.com/v1/openapi/contract/v1/dvl/getDvCstListSr`,
 													{
 														headers: {
-															Authorization: `Bearer ${user.userInfo.lotteonApiKey}`,
+															Authorization: `Bearer ${user.userInfo!.lotteonApiKey}`,
 															Accept: 'application/json',
 															'Accept-Language': 'ko',
 															'X-Timezone': 'GMT+09:00',
@@ -1312,7 +1312,7 @@ export const UploadModal = observer(() => {
 														method: 'POST',
 
 														body: JSON.stringify({
-															afflTrCd: user.userInfo.lotteonVendorId,
+															afflTrCd: user.userInfo!.lotteonVendorId,
 														}),
 													},
 												);
@@ -1367,7 +1367,9 @@ export const UploadModal = observer(() => {
 												if (deliveryPolicy.tmonPolicyList.length > 0) return;
 
 												const deliveryResp: any = await request(
-													`https://spc-om.tmon.co.kr/api/delivery/template?productType=DP03&deliverySpot=DIRECT&scCatYn=N&partnerNo=${user.userInfo.tmonId}&detail=true`,
+													`https://spc-om.tmon.co.kr/api/delivery/template?productType=DP03&deliverySpot=DIRECT&scCatYn=N&partnerNo=${
+														user.userInfo!.tmonId
+													}&detail=true`,
 													{ method: 'GET' },
 												);
 
@@ -1446,7 +1448,7 @@ export const UploadModal = observer(() => {
 													onClick={() => {
 														switch (v.site_code) {
 															case 'A077': {
-																window.open(`${user.userInfo.naverStoreUrl}/products/${v.error}`);
+																window.open(`${user.userInfo!.naverStoreUrl}/products/${v.error}`);
 																break;
 															}
 

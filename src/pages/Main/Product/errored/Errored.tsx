@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, FocusEvent } from 'react';
 import { Sync as SyncIcon, Search as SearchIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
@@ -6,22 +6,21 @@ import { SearchFilterModal } from '../../Modals';
 import { Box, Container, IconButton, MenuItem, Pagination, Paper, Tooltip, Typography } from '@mui/material';
 import { ImagePopOver } from '../../PopOver';
 import { ComboBox, Input, Title } from '../../Common/UI';
-import { createTheme } from '@mui/material/styles';
 import { ErroredProductTables } from '../Components';
 
 // 강제관리 탭 목록 테이블 뷰
 const Errored = observer(() => {
 	// MobX 스토리지 로드
-	const { common, product } = React.useContext(AppContext);
+	const { common, product } = useContext(AppContext);
 	const checkLength = product.itemInfo.items.filter((v) => v.checked).length;
 
 	// 컴포넌트 초기설정
-	React.useEffect(() => {
+	useEffect(() => {
 		// 태그사전 데이터 가져오기
 		product.getTagDict();
 
-		// 검색조건 설정
-		product.setSearchWhereAndInput([]);
+		// 검색조건 초기화
+		product.initProductWhereInput({ state: { in: [7, 6] } });
 
 		// 상품 정보 가져오기
 		product.refreshProduct(common);
@@ -41,21 +40,7 @@ const Errored = observer(() => {
 		});
 	}, []);
 
-	// 다크모드 지원 설정
-	const theme = React.useMemo(
-		() =>
-			createTheme({
-				palette: {
-					mode: common.darkTheme ? 'dark' : 'light',
-				},
-			}),
-		[common.darkTheme],
-	);
-
 	return (
-		// <ThemeProvider theme={theme}>
-		// 	<Frame dark={common.darkTheme}>
-		// 		<Header />
 		<>
 			<Container maxWidth={'xl'}>
 				<Paper variant='outlined'>
@@ -129,12 +114,13 @@ const Errored = observer(() => {
 							</Tooltip>
 							&nbsp;
 							<Input
+								inputProps={{ max: product.pages }}
 								id='product_page'
 								type='number'
 								width={50}
 								value={product.pageTemp}
-								onChange={(e) => product.setPageTemp(e.target.value.replace(/[^0-9]/g, ''))}
-								onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
+								onChange={(e) => product.setPageTemp(parseInt(e.target.value.replace(/[^0-9]/g, '')))}
+								onBlur={(e) => {
 									const page = parseInt(e.target.value);
 									if (!page) return;
 
@@ -177,8 +163,6 @@ const Errored = observer(() => {
 
 			<SearchFilterModal />
 		</>
-		// 	{/* </Frame>
-		// </ThemeProvider> */}
 	);
 });
 export default Errored;

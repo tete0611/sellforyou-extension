@@ -13,7 +13,7 @@ import {
 	notificationByEveryTime,
 	sendCallback,
 	transformContent,
-} from './Common';
+} from '../../../common/function';
 
 // 롯데온 상품등록해제
 export async function deleteLotteon(productStore: product, commonStore: common, data: any) {
@@ -26,8 +26,8 @@ export async function deleteLotteon(productStore: product, commonStore: common, 
 	console.log(`(${shopName}) 등록정보:`, data);
 
 	try {
-		let transId = commonStore.user.userInfo.lotteonVendorId;
-		let apiKey = commonStore.user.userInfo.lotteonApiKey;
+		let transId = commonStore.user.userInfo?.lotteonVendorId;
+		let apiKey = commonStore.user.userInfo?.lotteonApiKey;
 
 		// 루프돌면서 상품정보 생성
 		for (let product in data.DShopInfo.prod_codes) {
@@ -131,8 +131,8 @@ export async function uploadLotteon(productStore: product, commonStore: common, 
 	try {
 		const time = getClock();
 
-		let transId = commonStore.user.userInfo.lotteonVendorId;
-		let apiKey = commonStore.user.userInfo.lotteonApiKey;
+		let transId = commonStore.user.userInfo?.lotteonVendorId;
+		let apiKey = commonStore.user.userInfo?.lotteonApiKey;
 
 		let outbound = null;
 		let inbound = null;
@@ -592,7 +592,7 @@ export async function uploadLotteon(productStore: product, commonStore: common, 
 								{
 									pdEpnTypCd: 'DSCRP',
 									cnts: `${getStoreTraceCodeV2(market_item.id, data.DShopInfo.site_code)}${market_item.content2}${
-										commonStore.user.userInfo.descriptionShowTitle === 'Y'
+										commonStore.user.userInfo?.descriptionShowTitle === 'Y'
 											? `<br /><br /><div style="text-align: center;">${market_item.name3}</div><br /><br />`
 											: `<br /><br />`
 									}${transformContent(market_item.content1)}${market_item.content3}`,

@@ -4,7 +4,13 @@ import { product } from '../../containers/stores/product';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import QUERIES from '../Main/GraphQL/Queries';
 import gql from '../Main/GraphQL/Requests';
-import { byteSlice, getStoreTraceCodeV1, notificationByEveryTime, sendCallback, transformContent } from './Common';
+import {
+	byteSlice,
+	getStoreTraceCodeV1,
+	notificationByEveryTime,
+	sendCallback,
+	transformContent,
+} from '../../../common/function';
 
 // 지마켓/옥션 2.0 상품등록
 export const uploadESMPlus2 = async (productStore: product, commonStore: common, data: any) => {
@@ -52,7 +58,7 @@ export const uploadESMPlus2 = async (productStore: product, commonStore: common,
 
 				let user_g_json = await user_g_resp.json();
 
-				esmplusGmarketId = commonStore.user.userInfo.esmplusGmarketId;
+				esmplusGmarketId = commonStore.user.userInfo?.esmplusGmarketId;
 
 				if (esmplusGmarketId === user_g_json.sellerid) {
 					upload_type.push({ key: '1', value: '' });
@@ -102,7 +108,7 @@ export const uploadESMPlus2 = async (productStore: product, commonStore: common,
 
 				let user_a_json = await user_a_resp.json();
 
-				esmplusAuctionId = commonStore.user.userInfo.esmplusAuctionId;
+				esmplusAuctionId = commonStore.user.userInfo?.esmplusAuctionId;
 
 				if (esmplusAuctionId === user_a_json.sellerid) {
 					upload_type.push({ key: '1', value: esmplusAuctionId });
@@ -356,7 +362,7 @@ export const uploadESMPlus2 = async (productStore: product, commonStore: common,
 								: ``
 						}
 
-    				${commonStore.user.userInfo.descriptionShowTitle === 'Y' ? market_item.name3 : ``}
+    				${commonStore.user.userInfo?.descriptionShowTitle === 'Y' ? market_item.name3 : ``}
     			</div>
 
     			<br />
@@ -414,7 +420,7 @@ export const uploadESMPlus2 = async (productStore: product, commonStore: common,
 				// 옵션정보 생성
 				for (let i in market_optn) {
 					if (market_optn[i].code === market_code) {
-						if (commonStore.user.userInfo.autoPrice === 'Y') {
+						if (commonStore.user.userInfo?.autoPrice === 'Y') {
 							let iprice = market_item.sprice;
 							let oprice = market_item.sprice + market_optn[i].price;
 							let percent = Math.ceil((oprice / iprice - 1) * 100);
@@ -627,8 +633,8 @@ export const uploadESMPlus2 = async (productStore: product, commonStore: common,
 					MasterId: userMatched?.[1], //esm2.0추가
 					LoginId:
 						shopCode === 'A522'
-							? commonStore.user.userInfo.esmplusAuctionId
-							: commonStore.user.userInfo.esmplusGmarketId, //esm2.0추가
+							? commonStore.user.userInfo?.esmplusAuctionId
+							: commonStore.user.userInfo?.esmplusGmarketId, //esm2.0추가
 					//esm2.0추가 아래부터
 					GoodsNo: null,
 					SiteGoodsNo: null,
@@ -1054,8 +1060,8 @@ export const uploadESMPlus2 = async (productStore: product, commonStore: common,
 											FeeAmnt: market_item.deliv_fee,
 											PrepayIs: true,
 											CodIs: false,
-											JejuAddDeliveryFee: commonStore.user.userInfo.additionalShippingFeeJeju,
-											BackwoodsAddDeliveryFee: commonStore.user.userInfo.additionalShippingFeeJeju,
+											JejuAddDeliveryFee: commonStore.user.userInfo?.additionalShippingFeeJeju,
+											BackwoodsAddDeliveryFee: commonStore.user.userInfo?.additionalShippingFeeJeju,
 											ShipmentPlaceNo: delivery_shipping_code,
 											DetailList: [],
 									  })
@@ -1081,7 +1087,7 @@ export const uploadESMPlus2 = async (productStore: product, commonStore: common,
 							ReturnExchangeSetupDeliveryCOMP: null, // 1
 							ReturnExchangeSetupDeliveryCOMPName: null, // 1
 							ReturnExchangeDeliveryFee: '0', // 1
-							ReturnExchangeDeliveryFeeStr: commonStore.user.userInfo.refundShippingFee.toString(), // 1
+							ReturnExchangeDeliveryFeeStr: commonStore.user.userInfo?.refundShippingFee.toString(), // 1
 							IacTransPolicyNo: delivery_policy_code_iac, //  1
 							GmktTransPolicyNo: delivery_policy_code_gmk, // 1
 							BackwoodsDeliveryYn: 'Y', // 1 : Y로같음
@@ -1744,7 +1750,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 
 				let user_g_json = await user_g_resp.json();
 
-				esmplusGmarketId = commonStore.user.userInfo.esmplusGmarketId;
+				esmplusGmarketId = commonStore.user.userInfo?.esmplusGmarketId;
 
 				if (esmplusGmarketId === user_g_json.sellerid) {
 					upload_type.push({ key: '1', value: '' });
@@ -1793,7 +1799,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 
 				let user_a_json = await user_a_resp.json();
 
-				esmplusAuctionId = commonStore.user.userInfo.esmplusAuctionId;
+				esmplusAuctionId = commonStore.user.userInfo?.esmplusAuctionId;
 
 				if (esmplusAuctionId === user_a_json.sellerid) {
 					upload_type.push({ key: '1', value: esmplusAuctionId });
@@ -1910,7 +1916,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 							: ``
 					}
 
-					${commonStore.user.userInfo.descriptionShowTitle === 'Y' ? market_item.name3 : ``}
+					${commonStore.user.userInfo?.descriptionShowTitle === 'Y' ? market_item.name3 : ``}
 				</div>
 
 				<br />
@@ -2026,7 +2032,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 
 				for (let i in market_optn) {
 					if (market_optn[i].code === market_code) {
-						if (commonStore.user.userInfo.autoPrice === 'Y') {
+						if (commonStore.user.userInfo?.autoPrice === 'Y') {
 							let iprice = market_item.sprice;
 							let oprice = market_item.sprice + market_optn[i].price;
 							let percent = Math.ceil((oprice / iprice - 1) * 100);
@@ -2208,8 +2214,8 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 						MasterId: userMatched[1], //esm2.0추가
 						LoginId:
 							shopCode === 'A522'
-								? commonStore.user.userInfo.esmplusAuctionId
-								: commonStore.user.userInfo.esmplusGmarketId, //esm2.0추가
+								? commonStore.user.userInfo?.esmplusAuctionId
+								: commonStore.user.userInfo?.esmplusGmarketId, //esm2.0추가
 						//esm2.0추가 아래부터
 						GoodsNo: null,
 						SiteGoodsNo: null,
@@ -2647,8 +2653,8 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 												FeeAmnt: market_item.deliv_fee,
 												PrepayIs: true,
 												CodIs: false,
-												JejuAddDeliveryFee: commonStore.user.userInfo.additionalShippingFeeJeju,
-												BackwoodsAddDeliveryFee: commonStore.user.userInfo.additionalShippingFeeJeju,
+												JejuAddDeliveryFee: commonStore.user.userInfo?.additionalShippingFeeJeju,
+												BackwoodsAddDeliveryFee: commonStore.user.userInfo?.additionalShippingFeeJeju,
 												ShipmentPlaceNo: delivery_shipping_code,
 												DetailList: [],
 										  })
@@ -2674,7 +2680,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 								ReturnExchangeSetupDeliveryCOMP: null,
 								ReturnExchangeSetupDeliveryCOMPName: null,
 								ReturnExchangeDeliveryFee: '0',
-								ReturnExchangeDeliveryFeeStr: commonStore.user.userInfo.refundShippingFee.toString(),
+								ReturnExchangeDeliveryFeeStr: commonStore.user.userInfo?.refundShippingFee.toString(),
 								IacTransPolicyNo: delivery_policy_code_iac,
 								GmktTransPolicyNo: delivery_policy_code_gmk,
 								BackwoodsDeliveryYn: 'Y',
@@ -3049,8 +3055,8 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 						MasterId: userMatched[1], //esm2.0추가
 						LoginId:
 							shopCode === 'A522'
-								? commonStore.user.userInfo.esmplusAuctionId
-								: commonStore.user.userInfo.esmplusGmarketId, //esm2.0추가
+								? commonStore.user.userInfo?.esmplusAuctionId
+								: commonStore.user.userInfo?.esmplusGmarketId, //esm2.0추가
 						//esm2.0추가 아래부터
 						GoodsNo: null,
 						SiteGoodsNo: null,
@@ -3491,8 +3497,8 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 												FeeAmnt: market_item.deliv_fee,
 												PrepayIs: true,
 												CodIs: false,
-												JejuAddDeliveryFee: commonStore.user.userInfo.additionalShippingFeeJeju,
-												BackwoodsAddDeliveryFee: commonStore.user.userInfo.additionalShippingFeeJeju,
+												JejuAddDeliveryFee: commonStore.user.userInfo?.additionalShippingFeeJeju,
+												BackwoodsAddDeliveryFee: commonStore.user.userInfo?.additionalShippingFeeJeju,
 												ShipmentPlaceNo: delivery_shipping_code,
 												DetailList: [],
 										  })
@@ -3518,7 +3524,7 @@ export const deleteESMPlus2 = async (productStore: product, commonStore: common,
 								ReturnExchangeSetupDeliveryCOMP: null,
 								ReturnExchangeSetupDeliveryCOMPName: null,
 								ReturnExchangeDeliveryFee: '0',
-								ReturnExchangeDeliveryFeeStr: commonStore.user.userInfo.refundShippingFee.toString(),
+								ReturnExchangeDeliveryFeeStr: commonStore.user.userInfo?.refundShippingFee.toString(),
 								IacTransPolicyNo: delivery_policy_code_iac, // 2023-10-10변경
 								GmktTransPolicyNo: delivery_policy_code_gmk,
 								BackwoodsDeliveryYn: null,

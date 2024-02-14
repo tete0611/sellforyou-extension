@@ -26,7 +26,7 @@ import {
 	Paper,
 } from '@mui/material';
 import { Image, Input, Title } from '../../../Common/UI';
-import { byteLength } from '../../../../Tools/Common';
+import { byteLength } from '../../../../../../common/function';
 import { Item } from '../../../../../type/type';
 
 // 커스텀 테이블 컬럼 스타일

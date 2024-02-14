@@ -2,9 +2,9 @@ import CryptoJS from 'crypto-js';
 import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
-import { getCookie, sleep, getImageSize } from '../../Tools/Common';
+import { getCookie, sleep, getImageSize } from '../../../../common/function';
 import { sendRuntimeMessage } from '../../Tools/ChromeAsync';
-import { User } from '../../../type/type';
+import { User } from '../../../type/schema';
 
 // 티몰 상품정보 크롤링
 const scrape = async (items: any, user: User) => {
@@ -218,11 +218,11 @@ const scrape = async (items: any, user: User) => {
 								properties: properties_id,
 								properties_name: properties_name,
 								quantity:
-									user.userInfo.collectStock === 0
+									user.userInfo!.collectStock === 0
 										? quantity > 99999
 											? '99999'
 											: quantity.toString()
-										: user.userInfo.collectStock.toString(),
+										: user.userInfo!.collectStock.toString(),
 								sku_id: items.skuMap[i].skuId,
 							});
 						}
@@ -491,11 +491,11 @@ const scrape = async (items: any, user: User) => {
 								properties: dataJson.data.skuBase.skus[i].propPath,
 								properties_name: properties_name,
 								quantity:
-									user.userInfo.collectStock === 0
+									user.userInfo!.collectStock === 0
 										? quantity > 99999
 											? '99999'
 											: quantity.toString()
-										: user.userInfo.collectStock.toString(),
+										: user.userInfo!.collectStock.toString(),
 								sku_id: skuId,
 							});
 						}
@@ -548,7 +548,7 @@ export class tmall {
 		let timeout = 0;
 
 		while (true) {
-			if (timeout === user.userInfo.collectTimeout)
+			if (timeout === user.userInfo!.collectTimeout)
 				return {
 					error: '티몰 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
 				};
@@ -565,7 +565,7 @@ export class tmall {
 					});
 
 					if (!desc) {
-						timeout = user.userInfo.collectTimeout;
+						timeout = user.userInfo!.collectTimeout;
 
 						continue;
 					}

@@ -305,7 +305,7 @@ var options = {
 		// }),
 
 		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Collected', 'index.html'),
+		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'index.html'),
 		// 	filename: 'product/collected.html',
 		// 	chunks: ['collected'],
 		// 	cache: false,

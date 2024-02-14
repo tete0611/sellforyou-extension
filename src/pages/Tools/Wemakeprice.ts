@@ -13,7 +13,7 @@ import {
 	request,
 	sendCallback,
 	transformContent,
-} from './Common';
+} from '../../../common/function';
 // 위메프 상품삭제 메시지 탭
 export async function deleteWemakeprice2(data: any) {
 	const deleteResp: any = await request('https://wpartner.wemakeprice.com/product/setProdStatus.json', {
@@ -132,7 +132,7 @@ export async function uploadWemakeprice(productStore: product, commonStore: comm
 			return false;
 		}
 
-		if (login_json.userId !== user.userInfo.wemakepriceId) {
+		if (login_json.userId !== user.userInfo?.wemakepriceId) {
 			addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
@@ -338,7 +338,7 @@ export async function uploadWemakeprice(productStore: product, commonStore: comm
 					prodDesc: `
         ${getStoreTraceCodeV1(market_item.id, data.DShopInfo.site_code)}
         ${market_item.content2}${
-						user.userInfo.descriptionShowTitle === 'Y'
+						user.userInfo?.descriptionShowTitle === 'Y'
 							? `<br /><br /><div style="text-align: center;">${market_item.name3}</div><br /><br />`
 							: `<br /><br />`
 					}${transformContent(market_item.content1)}${market_item.content3}`,
@@ -720,7 +720,7 @@ export async function deleteWemakeprice(productStore: product, commonStore: comm
 			return false;
 		}
 
-		if (login_json.userId !== user.userInfo.wemakepriceId) {
+		if (login_json.userId !== user.userInfo?.wemakepriceId) {
 			addConsoleText(`(${shopName}) 스토어 연동정보 확인 실패`);
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
@@ -830,7 +830,7 @@ export async function newOrderWemakeprice(commonStore: common, shopInfo: any) {
 			return [];
 		}
 
-		if (login_json.userId !== user.userInfo.wemakepriceId) {
+		if (login_json.userId !== user.userInfo?.wemakepriceId) {
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
 			return [];
@@ -921,7 +921,7 @@ export async function productPreparedWemakeprice(commonStore: common, shopInfo: 
 			return [];
 		}
 
-		if (login_json.userId !== user.userInfo.wemakepriceId) {
+		if (login_json.userId !== user.userInfo?.wemakepriceId) {
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
 			return [];
@@ -981,7 +981,7 @@ export async function deliveryOrderWemakeprice(commonStore: common, shopInfo: an
 			return [];
 		}
 
-		if (login_json.userId !== user.userInfo.wemakepriceId) {
+		if (login_json.userId !== user.userInfo?.wemakepriceId) {
 			notificationByEveryTime(`(${shopName}) 스토어 연동정보가 일치하지 않습니다. 오픈마켓연동 상태를 확인해주세요.`);
 
 			return [];

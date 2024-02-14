@@ -163,6 +163,7 @@ const QUERIES = {
                 imageThumbnail
                 name
                 productCode
+                myLock
 
                 sillCodeA077
                 sillCodeB378

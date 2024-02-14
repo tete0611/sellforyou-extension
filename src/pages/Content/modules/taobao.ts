@@ -3,17 +3,17 @@ import html2canvas from 'html2canvas';
 import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
-import { sleep, getImageSize, getCookie } from '../../Tools/Common';
+import { sleep, getImageSize, getCookie, onInsertDom } from '../../../../common/function';
 import { Buffer } from 'buffer';
-import { User } from '../../../type/type';
 import { sendRuntimeMessage } from '../../Tools/ChromeAsync';
+import { User } from '../../../type/schema';
 
 const iconv = require('iconv-lite');
 
 /** 타오바오 상품정보 크롤링 */
 const scrape = async (items: any, user: User) => {
-	let result: any = form;
-	result.user = user;
+	let result = form;
+	result.user = user as any;
 
 	/** 페이지별 크롤링 방식 다름 */
 	// 페이지 타입 : 2
@@ -36,7 +36,6 @@ const scrape = async (items: any, user: User) => {
 
 		let dataResp = await fetch(dataUrl, { credentials: 'include' });
 		let dataJson = await dataResp.json();
-		console.log({ dataJson });
 		let thumnails = dataJson.data.item?.images;
 		let filteredThumbnails = thumnails.filter((v) => v.includes('http://') || v.includes('https://'));
 
@@ -152,9 +151,9 @@ const scrape = async (items: any, user: User) => {
 		result['item']['pic_url'] = filteredThumbnails[0];
 		result['item']['desc'] = desc_output;
 		result['item']['desc_img'] = desc_imgs;
-		result['item']['tmall'] = true;
+		// result['item']['tmall'] = true;
 		result['item']['post_fee'] = shipping_fee;
-		result['item']['shop_id'] = 'tmall';
+		result['item']['shop_id'] = 'taobao';
 
 		try {
 			result['item']['video'] = dataJson.data.componentsVO.headImageVO.videos[0].url;
@@ -225,11 +224,11 @@ const scrape = async (items: any, user: User) => {
 								properties: dataJson.data.skuBase.skus[i].propPath,
 								properties_name: properties_name,
 								quantity:
-									user.userInfo.collectStock === 0
+									user.userInfo?.collectStock === 0
 										? quantity > 99999
 											? '99999'
 											: quantity.toString()
-										: user.userInfo.collectStock.toString(),
+										: user.userInfo?.collectStock.toString(),
 								sku_id: skuId,
 							});
 						}
@@ -533,11 +532,11 @@ const scrape = async (items: any, user: User) => {
 								properties: properties_id,
 								properties_name: properties_name,
 								quantity:
-									user.userInfo.collectStock === 0
+									user.userInfo?.collectStock === 0
 										? quantity > 99999
 											? '99999'
 											: quantity.toString()
-										: user.userInfo.collectStock.toString(),
+										: user.userInfo?.collectStock.toString(),
 								sku_id: script_option[i].skuId,
 							});
 						}
@@ -608,10 +607,10 @@ export class taobao {
 		let timeout = 0;
 
 		while (true) {
-			console.log({ timeout });
-			if (timeout === user.userInfo.collectTimeout)
+			if (timeout === user.userInfo?.collectTimeout)
 				return {
-					error: '타오바오 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
+					error:
+						'상품정보가 정상적으로 로드되지 않았습니다.\n타오바오 로그인이 되어있는지 확인해주세요.\n타오바오 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
 				};
 
 			let data = sessionStorage.getItem('sfy-taobao-item');
@@ -632,12 +631,10 @@ export class taobao {
 						};
 					}
 
-					console.log(originalData);
-
 					return await scrape(originalData, user);
 				} catch (e) {
 					console.log(e);
-					timeout = user.userInfo.collectTimeout;
+					timeout = user.userInfo?.collectTimeout!;
 
 					continue;
 				}
@@ -651,18 +648,42 @@ export class taobao {
 
 	// 페이지별 대량수집 체크버튼 활성화
 	async bulkTypeOne(user: User) {
+		// const params = new Proxy(new URLSearchParams(window.location.search), {
+		// 	get: (searchParams: any, prop) => searchParams.get(prop),
+		// });
+		// const tokenFull = getCookie('_m_h5_tk');
+		// const token = tokenFull.split('_')[0];
+		// const appKey = '12574478';
+		// const timestamp = new Date().getTime();
+		// const data1 = `{\"id\":\"${params.id}\",\"detail_v\":\"3.3.2\",\"exParams\":\"{\\\"queryParams\\\":\\\"id=${params.id}\\\",\\\"id\\\":\\\"${params.id}\\\"}\"}`;
+		// const text1 = token + '&' + timestamp + '&' + appKey;
+		// const signature = CryptoJS.MD5(text1).toString();
+
+		// const resp = fetch(
+		// 	`https://h5api.m.taobao.com/h5/mtop.relationrecommend.wirelessrecommend.recommend/2.0/?jsv=2.6.2&appKey=${appKey}&t=${timestamp}&sign=ac52aa16622269447dd076822ad5c683&api=mtop.relationrecommend.WirelessRecommend.recommend&v=2.0&type=jsonp&dataType=jsonp&callback=mtopjsonp2&data=%7B%22appId%22%3A%2234385%22%2C%22params%22%3A%22%7B%5C%22device%5C%22%3A%5C%22HMA-AL00%5C%22%2C%5C%22isBeta%5C%22%3A%5C%22false%5C%22%2C%5C%22grayHair%5C%22%3A%5C%22false%5C%22%2C%5C%22from%5C%22%3A%5C%22nt_history%5C%22%2C%5C%22brand%5C%22%3A%5C%22HUAWEI%5C%22%2C%5C%22info%5C%22%3A%5C%22wifi%5C%22%2C%5C%22index%5C%22%3A%5C%224%5C%22%2C%5C%22rainbow%5C%22%3A%5C%22%5C%22%2C%5C%22schemaType%5C%22%3A%5C%22auction%5C%22%2C%5C%22elderHome%5C%22%3A%5C%22false%5C%22%2C%5C%22isEnterSrpSearch%5C%22%3A%5C%22true%5C%22%2C%5C%22newSearch%5C%22%3A%5C%22false%5C%22%2C%5C%22network%5C%22%3A%5C%22wifi%5C%22%2C%5C%22subtype%5C%22%3A%5C%22%5C%22%2C%5C%22hasPreposeFilter%5C%22%3A%5C%22false%5C%22%2C%5C%22prepositionVersion%5C%22%3A%5C%22v2%5C%22%2C%5C%22client_os%5C%22%3A%5C%22Android%5C%22%2C%5C%22gpsEnabled%5C%22%3A%5C%22false%5C%22%2C%5C%22searchDoorFrom%5C%22%3A%5C%22srp%5C%22%2C%5C%22debug_rerankNewOpenCard%5C%22%3A%5C%22false%5C%22%2C%5C%22homePageVersion%5C%22%3A%5C%22v7%5C%22%2C%5C%22searchElderHomeOpen%5C%22%3A%5C%22false%5C%22%2C%5C%22search_action%5C%22%3A%5C%22initiative%5C%22%2C%5C%22sugg%5C%22%3A%5C%22_4_1%5C%22%2C%5C%22sversion%5C%22%3A%5C%2213.6%5C%22%2C%5C%22style%5C%22%3A%5C%22list%5C%22%2C%5C%22ttid%5C%22%3A%5C%22600000%40taobao_pc_10.7.0%5C%22%2C%5C%22needTabs%5C%22%3A%5C%22true%5C%22%2C%5C%22areaCode%5C%22%3A%5C%22KR%5C%22%2C%5C%22vm%5C%22%3A%5C%22nw%5C%22%2C%5C%22countryNum%5C%22%3A%5C%22410%5C%22%2C%5C%22m%5C%22%3A%5C%22pc%5C%22%2C%5C%22page%5C%22%3A2%2C%5C%22n%5C%22%3A48%2C%5C%22q%5C%22%3A%5C%22%25E5%25A5%25B3%25E8%25A3%2585%5C%22%2C%5C%22tab%5C%22%3A%5C%22mall%5C%22%2C%5C%22pageSize%5C%22%3A%5C%2248%5C%22%2C%5C%22totalPage%5C%22%3A%5C%22100%5C%22%2C%5C%22totalResults%5C%22%3A%5C%22121738%5C%22%2C%5C%22sourceS%5C%22%3A%5C%220%5C%22%2C%5C%22sort%5C%22%3A%5C%22_coefp%5C%22%2C%5C%22bcoffset%5C%22%3A%5C%220%5C%22%2C%5C%22ntoffset%5C%22%3A%5C%223%5C%22%2C%5C%22filterTag%5C%22%3A%5C%22%5C%22%2C%5C%22service%5C%22%3A%5C%22%5C%22%2C%5C%22prop%5C%22%3A%5C%22%5C%22%2C%5C%22loc%5C%22%3A%5C%22%5C%22%2C%5C%22start_price%5C%22%3Anull%2C%5C%22end_price%5C%22%3Anull%2C%5C%22startPrice%5C%22%3Anull%2C%5C%22endPrice%5C%22%3Anull%7D%22%7D`,
+		// 	{
+		// 		headers: {
+		// 			accept: '*/*',
+		// 			'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+		// 			'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+		// 			'sec-ch-ua-mobile': '?0',
+		// 			'sec-ch-ua-platform': '"Windows"',
+		// 			'sec-fetch-dest': 'script',
+		// 			'sec-fetch-mode': 'no-cors',
+		// 			'sec-fetch-site': 'same-site',
+		// 		},
+		// 		referrer: 'https://s.taobao.com/',
+		// 		referrerPolicy: 'strict-origin-when-cross-origin',
+		// 		body: null,
+		// 		method: 'GET',
+		// 		mode: 'cors',
+		// 		credentials: 'include',
+		// 	},
+		// );
+
 		document.addEventListener('DOMNodeInserted', async (e: any) => {
-			//콘솔테스트 예시
-			//아래 항목의 products 항목만 좀 바꿔서 하면 됨 a태그 찾아서
-			// console.log("DomNode", e.target);
-			// let products: any = document.querySelectorAll(
-			//   "#root > div > div:nth-child(2) > div.PageContent--contentWrap--mep7AEm > div.LeftLay--leftWrap--xBQipVc a"
-			// );
-			// console.log("products", products);
 			try {
 				if (e.target.getAttribute('class') === 'm-feedback') {
-					//DomNode콘솔찍으면서 products에 상품 리스트가 모두 들어오고난 다음 e.target에 뜨는 고유의 class나 id를 해당 조건에 넣어서
-					//배열이 다 모였을때 체크박스 뜨도록 하기위함
 					let products: any = document.querySelectorAll('#main > div:nth-child(3) > div.grid-left a');
 
 					for (let i in products) {
@@ -676,7 +697,7 @@ export class taobao {
 								input.checked = picker?.value === 'false' ? false : true;
 								input.type = 'checkbox';
 
-								if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+								if (user.userInfo?.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
 								else input.setAttribute('style', 'right: 0px !important');
 
 								const root = products[i].parentNode.parentNode.parentNode.parentNode;
@@ -696,14 +717,10 @@ export class taobao {
 				if (e.target.getAttribute('class') === 'container') {
 					/** 상품조회 API */
 					// function mtopjsonp4(json) {
-					// 	console.log('함수발동했는디');
-					// 	console.log(json);
 					// 	const start = json.indexOf('{');
 					// 	const end = json.lastIndexOf('}');
 					// 	const result = json.substring(start, end + 1);
-					// 	console.log(JSON.parse(result));
 					// }
-					// console.log('여기왔느냐');
 					// const params = new Proxy(new URLSearchParams(window.location.search), {
 					// 	get: (searchParams: any, prop) => searchParams.get(prop),
 					// });
@@ -742,7 +759,6 @@ export class taobao {
 					// 			credentials: 'include',
 					// 		},
 					// 	);
-					// 	console.log({ resp });
 					// 	const text = await resp.text();
 					// 	mtopjsonp4(text);
 					// } catch (error) {
@@ -753,6 +769,7 @@ export class taobao {
 					let products: any = document.querySelectorAll(
 						'#root > div > div:nth-child(2) > div.PageContent--contentWrap--mep7AEm > div.LeftLay--leftWrap--xBQipVc a',
 					);
+
 					for (let i in products) {
 						try {
 							if (products[i].getAttribute('class').includes('Card--doubleCardWrapper--L2XFE73')) {
@@ -768,7 +785,7 @@ export class taobao {
 									input.checked = picker?.value === 'false' ? false : true;
 									input.type = 'checkbox';
 									// input.setAttribute("style", "left: 0px !important");
-									if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+									if (user.userInfo?.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
 									else input.setAttribute('style', 'right: 0px !important');
 
 									products[i].parentNode.style.position = 'relative';
@@ -785,6 +802,27 @@ export class taobao {
 				//
 			}
 		});
+
+		//** 48개의 상품 div를 가지고있는 parent 돔 */
+		const contentInner = document.querySelector('[class*="Content--contentInner"]');
+		const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
+
+		if (contentInner) {
+			const observer = new MutationObserver((e) => {
+				/** 48번의 이벤트가 발생하니 그중 한개만 가져오면됨 */
+				const container = e.find((v: any) => v.target?.className.includes('Content--contentInner'));
+				container?.target.childNodes.forEach((v) => {
+					const a = v?.firstChild as HTMLAnchorElement;
+
+					try {
+						onInsertDom({ element: a, picker: picker, user: user });
+					} catch (error) {
+						// 알아서 패스
+					}
+				});
+			});
+			observer.observe(contentInner, { childList: true, subtree: true });
+		}
 	}
 
 	async bulkTypeTwo(user: User) {
@@ -814,7 +852,7 @@ export class taobao {
 						input.checked = picker?.value === 'false' ? false : true;
 						input.type = 'checkbox';
 
-						if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+						if (user.userInfo?.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
 						else input.setAttribute('style', 'right: 0px !important');
 
 						links[j].parentNode.style.position = 'relative';

@@ -2,7 +2,7 @@
 
 import { runInAction, makeAutoObservable } from 'mobx';
 import { getLocalStorage, setLocalStorage } from '../../pages/Tools/ChromeAsync';
-import { checkIndividualCustomUniqueCode, downloadExcel, floatingToast } from '../../pages/Tools/Common';
+import { checkIndividualCustomUniqueCode, downloadExcel, floatingToast } from '../../../common/function';
 import { deliveryOrderCoupang } from '../../pages/Tools/Coupang';
 import { getBaruenjgForm } from '../../pages/Tools/DC/Baruenjg';
 import { getBigboyForm } from '../../pages/Tools/DC/Bigboy';
@@ -391,7 +391,7 @@ export class delivery {
 
 		let result: any = null;
 
-		switch (commonStore.user.userInfo.orderToDeliveryName) {
+		switch (commonStore.user.userInfo?.orderToDeliveryName) {
 			case '더베이': {
 				result = await getThebayForm(filtered, commonStore);
 				break;
@@ -463,7 +463,7 @@ export class delivery {
 		downloadExcel(
 			result.data,
 			result.name,
-			`배송신청서_${commonStore.user.userInfo.orderToDeliveryName}`,
+			`배송신청서_${commonStore.user.userInfo?.orderToDeliveryName}`,
 			false,
 			result.type,
 		);

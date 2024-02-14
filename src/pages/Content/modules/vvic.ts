@@ -1,8 +1,8 @@
 import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
-import { sleep, getImageSize } from '../../Tools/Common';
-import { User } from '../../../type/type';
+import { sleep, getImageSize, onInsertDom } from '../../../../common/function';
+import { User } from '../../../type/schema';
 
 // VVIC 상품정보 크롤링
 const scrape = async (items: any, user: User) => {
@@ -187,11 +187,11 @@ const scrape = async (items: any, user: User) => {
 					properties: properties_id, // "20509:142;1627207:9999906"
 					properties_name: properties_name, // "20509:142:尺码:大码L;1627207:9999906:颜色:咖色"
 					quantity:
-						user.userInfo.collectStock === 0
+						user.userInfo?.collectStock === 0
 							? quantity > 99999
 								? '99999'
 								: quantity.toString()
-							: user.userInfo.collectStock.toString(), // 150
+							: user.userInfo?.collectStock.toString(), // 150
 					sku_id: items.skuMap[i].skuId.toString(), // "401302558"
 				});
 		}
@@ -248,7 +248,7 @@ const bulkTypeTwo = async (user: User) => {
 					input.checked = picker?.value === 'false' ? false : true;
 					input.type = 'checkbox';
 
-					if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+					if (user.userInfo?.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
 					else input.setAttribute('style', 'right: 0px !important');
 
 					products[i].style.position = 'relative';
@@ -291,51 +291,7 @@ const bulkTypeThree = async (user: User) => {
 					input.checked = picker?.value === 'false' ? false : true;
 					input.type = 'checkbox';
 
-					if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
-					else input.setAttribute('style', 'right: 0px !important');
-
-					products[i].style.position = 'relative';
-					products[i].parentNode.insertBefore(input, products[i].nextSibling);
-
-					count++;
-				}
-			} catch (e) {
-				continue;
-			}
-		}
-
-		if (count > 0) return count;
-
-		await sleep(1000 * 1);
-
-		timeout++;
-	}
-};
-
-const bulkTypeFour = async (user: User) => {
-	let timeout = 0;
-
-	while (true) {
-		if (timeout === 10) return 0;
-
-		let count = 0;
-		let products: any = document.querySelectorAll(
-			'body > div.w > div.j-list-main.fl.search-main > div.goods-list.clearfix.type1 a',
-		);
-
-		for (let i in products) {
-			try {
-				let img = products[i].querySelector('img');
-
-				if (img && products[i].getAttribute('href').includes('item')) {
-					let input = document.createElement('input');
-
-					input.id = window.location.origin + products[i].getAttribute('href');
-					input.className = 'SELLFORYOU-CHECKBOX';
-					input.checked = true;
-					input.type = 'checkbox';
-
-					if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
+					if (user.userInfo?.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
 					else input.setAttribute('style', 'right: 0px !important');
 
 					products[i].style.position = 'relative';
@@ -371,7 +327,7 @@ export class vvic {
 		let timeout = 0;
 
 		while (true) {
-			if (timeout === user.userInfo.collectTimeout)
+			if (timeout === user.userInfo?.collectTimeout)
 				return {
 					error: 'VVIC 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
 				};
@@ -424,6 +380,7 @@ export class vvic {
 			}
 		});
 
+		//TODO 이후에 2,3 마저 분리해야함
 		document.addEventListener('DOMContentLoaded', (e: any) => {
 			switch (bulkType) {
 				case 2: {
@@ -438,12 +395,64 @@ export class vvic {
 					break;
 				}
 
-				case 4: {
-					bulkTypeFour(user);
+				// case 4: {
+				// 	bulkTypeFour(user);
 
-					break;
-				}
+				// 	break;
+				// }
 			}
 		});
+	}
+
+	async bulkTypeFour(user: User) {
+		/** 옵저버 부착 (페이지이동시 체크박스 삽입용) */
+		const observer = new MutationObserver((e) => {
+			// <div className='loading-content'> 라는 요소가 사라질때의 해당 이벤트가 상품이 로드될때임
+			const selectedRecord = e.find((v: any) => v.removedNodes.item(0)?.className === 'loading-content') as any;
+			if (selectedRecord) {
+				const parent_two = selectedRecord?.target?.querySelector('.item-list') as HTMLDivElement;
+				parent_two?.childNodes?.forEach((item: any) => {
+					try {
+						const a = item.querySelector('a') as HTMLAnchorElement;
+						onInsertDom({ element: a, picker: picker, user: user });
+					} catch (error) {
+						//
+					}
+				});
+			}
+		});
+		observer.observe(document, { subtree: true, childList: true });
+
+		let timeout = 0;
+		const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
+
+		while (true) {
+			if (timeout === 10) return 0;
+
+			let count = 0;
+
+			/** 초기로딩 (refresh등)에 체크박스를 한번 삽입 */
+			const products_new = document.querySelector('.item-list');
+			if (products_new) {
+				await Promise.all([
+					products_new.childNodes.forEach((v) => {
+						const asV = v as Element;
+						try {
+							const a = asV.querySelector('a');
+							onInsertDom({ element: a, picker: picker, user: user });
+						} catch (error) {
+							// pass
+						}
+					}),
+				]);
+				count++;
+			}
+
+			if (count > 0) return count;
+
+			await sleep(1000 * 1);
+
+			timeout++;
+		}
 	}
 }

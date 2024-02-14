@@ -1,4 +1,4 @@
-import { getCookie } from '../../../Tools/Common';
+import { getCookie } from '../../../../../common/function';
 
 // 상품 수집 전 페이지 사전 점검 (로그인, 페이지 언어/통화 설정)
 async function checkLogin(type: string) {

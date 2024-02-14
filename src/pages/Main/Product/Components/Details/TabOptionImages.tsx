@@ -1,7 +1,7 @@
 import React from 'react';
 import { Add as AddIcon, Clear as ClearIcon, Error as ErrorIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
-import { readFileDataURL } from '../../../../Tools/Common';
+import { readFileDataURL } from '../../../../../../common/function';
 import { AppContext } from '../../../../../containers/AppContext';
 import { Box, CircularProgress, IconButton, ImageList, ImageListItem, Typography, Button, Paper } from '@mui/material';
 import { Image, Title } from '../../../Common/UI';

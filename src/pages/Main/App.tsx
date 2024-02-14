@@ -22,7 +22,7 @@ const BanWords = lazy(() => import('./BanWords/BanWords'));
 
 const App = () => {
 	const { common } = useContext(AppContext);
-	const [searchParams] = useSearchParams();
+	const [searchParams, setSearchParams] = useSearchParams();
 	const currentComponent = searchParams.get('page');
 	const [darkTheme, setDarkTheme] = useState(common.darkTheme);
 
@@ -30,6 +30,11 @@ const App = () => {
 		getLocalStorage<AppInfo>('appInfo').then((v) => {
 			setDarkTheme(v.darkTheme);
 		});
+		/** 페이지 로드시 쿼리스트링이 있으면 searchParams에 반영 */
+		if (location.search && location.search !== '') {
+			searchParams.set('page', location.search.replace('?', ''));
+			setSearchParams(searchParams, { replace: true });
+		}
 	}, []);
 
 	// 다크모드 지원 설정

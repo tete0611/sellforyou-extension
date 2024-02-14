@@ -95,10 +95,7 @@ export class dashboard {
 				commonStore,
 				commonStore.uploadInfo.markets.find((v) => v.code === SMART_STORE),
 			),
-			newOrderCoupang(
-				commonStore,
-				commonStore.uploadInfo.markets.find((v) => v.code === COUPANG),
-			),
+			newOrderCoupang(commonStore, commonStore.uploadInfo.markets.find((v) => v.code === COUPANG)!),
 			newOrderStreet(
 				commonStore,
 				commonStore.uploadInfo.markets.find((v) => v.code === STREET11_GLOBAL),

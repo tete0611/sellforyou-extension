@@ -1,11 +1,11 @@
 import { injectScript } from './common/utils';
-import { request, sleep } from '../../Tools/Common';
+import { request, sleep } from '../../../../common/function';
 import { form } from './common/data';
 import { checkLogin } from './common/auth';
-import { User } from '../../../type/type';
+import { User } from '../../../type/schema';
 
 // 아마존 상품정보 크롤링
-async function scrape(items: any, user: any, region: string) {
+async function scrape(items: any, user: User, region: string) {
 	let result: any = form;
 
 	result.user = user;
@@ -242,7 +242,7 @@ async function scrape(items: any, user: any, region: string) {
 				original_price: 0,
 				properties: properties_list[i],
 				properties_name: properties_name_list[i],
-				quantity: user.userInfo.collectStock === 0 ? '99999' : user.userInfo.collectStock.toString(),
+				quantity: user.userInfo?.collectStock === 0 ? '99999' : user.userInfo?.collectStock.toString(),
 				sku_id: Object.values(skuNumSort)[i],
 			});
 		}
@@ -581,7 +581,7 @@ export class amazon {
 		let timeout = 0;
 
 		while (true) {
-			if (timeout === user.userInfo.collectTimeout) {
+			if (timeout === user.userInfo?.collectTimeout) {
 				return {
 					error: '아마존 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
 				};

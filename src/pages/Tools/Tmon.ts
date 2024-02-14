@@ -15,7 +15,7 @@ import {
 	sendCallback,
 	transformContent,
 	urlEncodedObject,
-} from './Common';
+} from '../../../common/function';
 
 // 티몬 상세페이지 지원형식 변환 함수
 const convertB956Resources = async (content: any, type: any) => {
@@ -63,7 +63,7 @@ export const uploadTmon = async (productStore: product, commonStore: common, dat
 
 	try {
 		let time = getClock();
-		let partnerNo = parseInt(commonStore.user.userInfo.tmonId);
+		let partnerNo = parseInt(commonStore.user.userInfo?.tmonId!);
 		let loginResp: any = await request('https://spc-om.tmon.co.kr/api/partner/creatable-deal-count', { method: 'GET' });
 		let loginJson: any = null;
 
@@ -165,7 +165,7 @@ export const uploadTmon = async (productStore: product, commonStore: common, dat
 					isContract: 'Y',
 					salesManager: {
 						name: commonStore.user.email,
-						phoneNumber: commonStore.user.userInfo.asTel,
+						phoneNumber: commonStore.user.userInfo?.asTel,
 						email: commonStore.user.email,
 					},
 					title: name,
@@ -300,7 +300,7 @@ export const uploadTmon = async (productStore: product, commonStore: common, dat
 						isContract: 'Y',
 						salesManager: {
 							name: commonStore.user.email,
-							phoneNumber: commonStore.user.userInfo.asTel,
+							phoneNumber: commonStore.user.userInfo?.asTel,
 							email: commonStore.user.email,
 						},
 						title: '임시 저장된 상품',
@@ -742,7 +742,8 @@ export const uploadTmon = async (productStore: product, commonStore: common, dat
 					useInfoTitle5: '\\;\\',
 					useInfoTitle6: '\\;\\',
 					useInfoDesc1: '상품상세설명 참조',
-					useInfoDesc2: commonStore.user.userInfo.asInfo,
+					//@ts-ignore
+					useInfoDesc2: commonStore.user.userInfo?.asInfo,
 					useInfoDesc3: '',
 					useInfoDesc4: '',
 					useInfoDesc5: '',
@@ -783,7 +784,7 @@ export const uploadTmon = async (productStore: product, commonStore: common, dat
             ${getStoreTraceCodeV2(market_item.id, data.DShopInfo.site_code)}
             ${transformContent(market_item.content2)}
             ${
-							commonStore.user.userInfo.descriptionShowTitle === 'Y'
+							commonStore.user.userInfo?.descriptionShowTitle === 'Y'
 								? `<br /><br /><div style="text-align: center;">${market_item.name3}</div><br /><br />`
 								: `<br /><br />`
 						}
@@ -822,7 +823,7 @@ export const uploadTmon = async (productStore: product, commonStore: common, dat
 					isContract: 'Y',
 					salesManager: {
 						name: commonStore.user.email,
-						phoneNumber: commonStore.user.userInfo.asTel,
+						phoneNumber: commonStore.user.userInfo?.asTel,
 						email: commonStore.user.email,
 					},
 					title: name,
@@ -957,7 +958,7 @@ export const uploadTmon = async (productStore: product, commonStore: common, dat
 						isContract: 'Y',
 						salesManager: {
 							name: commonStore.user.email,
-							phoneNumber: commonStore.user.userInfo.asTel,
+							phoneNumber: commonStore.user.userInfo?.asTel,
 							email: commonStore.user.email,
 						},
 						title: name,
@@ -1161,7 +1162,7 @@ export const deleteTmon = async (productStore: product, commonStore: common, dat
 	console.log(`(${shopName}) 등록정보:`, data);
 
 	try {
-		let partnerNo = parseInt(commonStore.user.userInfo.tmonId);
+		let partnerNo = parseInt(commonStore.user.userInfo?.tmonId!);
 		let loginResp: any = await request('https://spc-om.tmon.co.kr/api/partner/creatable-deal-count', { method: 'GET' });
 		let loginJson: any = null;
 
@@ -1240,7 +1241,7 @@ export const newOrderTmon = async (commonStore: common, shopInfo: any) => {
 	if (!shopInfo.connected || shopInfo.disabled) return [];
 
 	try {
-		let partnerNo = parseInt(commonStore.user.userInfo.tmonId);
+		let partnerNo = parseInt(commonStore.user.userInfo?.tmonId!);
 		let loginResp: any = await request('https://spc-om.tmon.co.kr/api/partner/creatable-deal-count', { method: 'GET' });
 		let loginJson: any = null;
 

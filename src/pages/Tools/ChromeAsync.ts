@@ -1,5 +1,5 @@
 import { RuntimeMessage } from '../../type/type';
-import { sleep } from './Common';
+import { sleep } from '../../../common/function';
 
 // 크롬 스토리지는 일반 브라우저 스토리지랑 공유되지 않음 (서로 접근불가)
 // sessionStorage / localStorage 는 일반 브라우저에서 사용
@@ -51,21 +51,29 @@ export const sendRuntimeMessage = <T>(obj: RuntimeMessage): Promise<T | null> =>
 	console.log('runtime', obj);
 
 	return new Promise((resolve, reject) => {
-		chrome.runtime.sendMessage(obj, (response) => {
-			let lastError = chrome.runtime.lastError;
+		try {
+			chrome.runtime.sendMessage(obj, (response) => {
+				let lastError = chrome.runtime.lastError;
 
-			if (lastError) {
-				console.log('runtime rejected', obj, lastError.message);
+				if (lastError) {
+					console.error('runtime rejected', obj, lastError.message);
 
-				resolve(null);
+					resolve(null);
 
-				return;
-			}
+					return;
+				}
 
-			console.log('runtime resolved', obj, response);
+				console.log('runtime resolved', obj, response);
 
-			resolve(response);
-		});
+				resolve(response);
+			});
+		} catch (error) {
+			const err = error as Error;
+			if (err.message.includes('Extension context invalidated'))
+				alert('확장프로그램 정보가 수신되지 않았습니다\n새로고침 후 진행해주세요.');
+			console.error('runtime rejected', obj, error);
+			resolve(null);
+		}
 	});
 };
 

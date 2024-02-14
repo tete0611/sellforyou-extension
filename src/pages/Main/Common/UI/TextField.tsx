@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TextField } from '@mui/material';
+import { TextField, TextFieldProps } from '@mui/material';
 
 // 입력창 스타일
 const inputStyles = (props: any) => {
@@ -26,7 +26,7 @@ const inputStyles = (props: any) => {
 };
 
 // 입력창 뷰
-export const Input = (props: any) => {
+export const Input = (props: Partial<TextFieldProps> & { options?: any; readOnly?: any; width?: number }) => {
 	return (
 		<TextField
 			size='small'

@@ -18,23 +18,23 @@ export const ManyFeeModal = observer(() => {
 
 		// 기본설정에 저장된 값을 토대로 초기값 설정
 		product.setManyFeeInfo({
-			naverFee: common.user.userInfo.naverFee,
-			coupangFee: common.user.userInfo.coupangFee,
-			streetFee: common.user.userInfo.streetFee,
-			streetNormalFee: common.user.userInfo.streetNormalFee,
-			gmarketFee: common.user.userInfo.gmarketFee,
-			auctionFee: common.user.userInfo.auctionFee,
-			interparkFee: common.user.userInfo.interparkFee,
-			wemakepriceFee: common.user.userInfo.wemakepriceFee,
-			lotteonFee: common.user.userInfo.lotteonFee,
-			lotteonNormalFee: common.user.userInfo.lotteonNormalFee,
-			tmonFee: common.user.userInfo.tmonFee,
+			naverFee: common.user.userInfo!!.naverFee,
+			coupangFee: common.user.userInfo!!.coupangFee,
+			streetFee: common.user.userInfo!.streetFee,
+			streetNormalFee: common.user.userInfo!.streetNormalFee,
+			gmarketFee: common.user.userInfo!.gmarketFee,
+			auctionFee: common.user.userInfo!.auctionFee,
+			interparkFee: common.user.userInfo!.interparkFee,
+			wemakepriceFee: common.user.userInfo!.wemakepriceFee,
+			lotteonFee: common.user.userInfo!.lotteonFee,
+			lotteonNormalFee: common.user.userInfo!.lotteonNormalFee,
+			tmonFee: common.user.userInfo!.tmonFee,
 		});
 	}, [common.loaded]);
 
 	return (
 		<Modal open={product.modalInfo.fee} onClose={() => product.toggleManyFeeModal(false)}>
-			{common.user.userInfo ? (
+			{common.user.userInfo! ? (
 				<Paper
 					className='uploadModal'
 					sx={{

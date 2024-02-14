@@ -20,7 +20,7 @@ import {
 import { Title } from '../Common/UI';
 import { createTheme } from '@mui/material/styles';
 import { SHOPCODE } from '../../../type/variable';
-import { trimSpaces } from '../../Tools/Common';
+import { trimSpaces } from '../../../../common/function';
 
 // 오픈마켓 연동 뷰
 const Connects = observer(() => {
@@ -478,14 +478,14 @@ const Connects = observer(() => {
 												height: 26,
 											}}
 											onClick={() => {
-												if (!common.user.userInfo.streetApiKey)
+												if (!common.user.userInfo?.streetApiKey)
 													return alert('글로벌셀러 오픈 API 키 최초등록을 먼저 진행해주세요.');
 												if (common.streetMaxmumCount > 3) return alert('더 이상 추가할 수 없습니다.');
 
 												const apiKey = prompt('글로벌셀러 오픈 API 키를 입력해주세요.');
 
 												if (!apiKey) return alert('글로벌셀러 오픈 API 키가 입력되지 않았습니다.');
-												if (!common.user.userInfo.streetApiKey2) {
+												if (!common.user.userInfo?.streetApiKey2) {
 													common.setUserInfo({
 														...common.user.userInfo,
 														streetUseKeyType: '2',
@@ -1011,14 +1011,14 @@ const Connects = observer(() => {
 												height: 26,
 											}}
 											onClick={() => {
-												if (!common.user.userInfo.streetNormalApiKey)
+												if (!common.user.userInfo?.streetNormalApiKey)
 													return alert('일반셀러 오픈 API 키 최초등록을 먼저 진행해주세요.');
 												if (common.streetMaxmumCount > 3) return alert('더 이상 추가할 수 없습니다.');
 
 												const apiKey = prompt('일반셀러 오픈 API 키를 입력해주세요.');
 
 												if (!apiKey) return alert('일반셀러 오픈 API 키가 입력되지 않았습니다.');
-												if (!common.user.userInfo.streetNormalApiKey2) {
+												if (!common.user.userInfo?.streetNormalApiKey2) {
 													common.setUserInfo({
 														...common.user.userInfo,
 														streetNormalUseKeyType: '2',

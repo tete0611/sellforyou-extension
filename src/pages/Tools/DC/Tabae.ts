@@ -1,6 +1,6 @@
 // 타배 엑셀 대량등록 데이터 생성
 
-import { floatingToast, getAirportName } from '../Common';
+import { floatingToast, getAirportName } from '../../../../common/function';
 
 export async function getTabaeForm(data, commonStore) {
 	if (!commonStore.user.userInfo.orderToDeliveryMethod) {

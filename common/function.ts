@@ -1,8 +1,10 @@
 // 자주사용하는 유용한 함수 모음
 import { ApolloError } from '@apollo/client';
-import { common } from '../../containers/stores/common';
-import MUTATIONS from '../Main/GraphQL/Mutations';
-import gql from '../Main/GraphQL/Requests';
+import { common } from '../src/containers/stores/common';
+import MUTATIONS from '../src/pages/Main/GraphQL/Mutations';
+import gql from '../src/pages/Main/GraphQL/Requests';
+import { CollectInfo, Nullable, Shop } from '../src/type/type';
+import { User } from '../src/type/schema';
 
 const XLSX = require('xlsx');
 const xml2js = require('xml2js');
@@ -366,7 +368,7 @@ export const getImageSize = async (url: string): Promise<number | string> => {
 export const getStoreUrl = (commonStore: common, marketCode: string, productId: number) => {
 	switch (marketCode) {
 		case 'A077': {
-			return `${commonStore.user.userInfo.naverStoreUrl}/products/${productId}`;
+			return `${commonStore.user.userInfo?.naverStoreUrl}/products/${productId}`;
 		}
 		case 'B378': {
 			return `https://www.coupang.com/vp/products/${productId}`;
@@ -435,19 +437,23 @@ export const getStoreUrl = (commonStore: common, marketCode: string, productId: 
 //   })();">`;
 // }
 
-/** 셀포유 추적코드 (스마트스토어, 11번가(글로벌/일반), 지마켓, 옥션, 인터파크, 위메프) */
+/** 셀포유 추적코드V1 (스마트스토어, 11번가(글로벌/일반), 지마켓, 옥션, 인터파크, 위메프) */
 export const getStoreTraceCodeV1 = (productId: number, siteCode: string) => {
 	// return `<img src="https://api.sellforyou.co.kr/api/dataProvider?productId=${productId}&siteCode=${siteCode}" style="display: none;">`;
 	return `<img src="https://api.sellforyou.co.kr/api/dataProvider?productId=${productId}&siteCode=${siteCode}" width="1px" height="1px">`;
 };
 
-/** 셀포유 추적코드 (쿠팡, 롯데온(글로벌/일반), 티몬) */
+/** 셀포유 추적코드V2 (롯데온(글로벌/일반), 티몬) */
 export const getStoreTraceCodeV2 = (productId: number, siteCode: string) => {
 	return `<iframe src="https://api.sellforyou.co.kr/api/dataProvider?youtube.com&productId=${productId}&siteCode=${siteCode}" style="display:none;visibility:hidden"></iframe>`;
 };
 
+/** 셀포유 추적코드V3 (쿠팡 -> iframe 태그 막힘으로 변경) */
+export const getStoreTraceCodeV3 = (productId: number, siteCode: string) =>
+	`<p style="height:1px; width:1px;  margin:0px; visibility: hidden; background-image: url(https://api.sellforyou.co.kr/api/dataProvider?productId=${productId}&siteCode=${siteCode})"></p>`;
+
 /** 난수 생성기 (이미지 스왑용으로 사용 중) */
-export const getRandomIntInclusive = (min, max) => {
+export const getRandomIntInclusive = (min: number, max: number) => {
 	min = Math.ceil(min);
 	max = Math.floor(max);
 
@@ -646,7 +652,7 @@ export const sendCallback = async (
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** Object의 특정 key의 value 값을 기준으로 정렬하는 함수 */
-export const sortBy = (array: any, key: string, asc: boolean) => {
+export const sortBy = (array: any[], key: string, asc: boolean) => {
 	let sorted = array.sort((a: any, b: any) => {
 		if (a[key] < b[key]) return asc ? -1 : 1;
 		if (a[key] > b[key]) return asc ? 1 : -1;
@@ -658,8 +664,8 @@ export const sortBy = (array: any, key: string, asc: boolean) => {
 };
 
 /** Date 날짜객체를 ISO 시간대 문자열로 변환 */
-export const toISO = (date: any) => {
-	const pad = (num: any) => {
+export const toISO = (date: Date) => {
+	const pad = (num: number) => {
 		let norm = Math.floor(Math.abs(num));
 
 		return (norm < 10 ? '0' : '') + norm;
@@ -744,4 +750,130 @@ export const normalizeUrl = (input: string): string => {
 			return input;
 		}
 	}
+};
+
+/** SELLFORYOU-CHECKBOX 삽입 함수 */
+export const onInsertDom = ({
+	element, // 삽입하고자 하는 element
+	picker, // 상품일괄 선택/해제 박스
+	user, // User 객체
+}: {
+	element: Nullable<HTMLAnchorElement>;
+	picker: HTMLButtonElement | null;
+	user: User;
+}) => {
+	if (!element) return;
+	if (!element.href || element.href === '') return;
+
+	const input = Object.assign(document.createElement('input'), {
+		className: 'SELLFORYOU-CHECKBOX',
+		checked: picker?.value !== 'false',
+		type: 'checkbox',
+		id: normalizeUrl(element.href),
+		style: user.userInfo?.collectCheckPosition === 'L' ? 'left: 0px !important' : 'right: 0px !important',
+	});
+	const sfyBox = element.querySelector('.SELLFORYOU-CHECKBOX');
+
+	// 이미 있으면 id 값만 업데이트
+	if (sfyBox) sfyBox.id = input.id;
+	else {
+		element.style.position = 'relative';
+		element.appendChild(input);
+	}
+};
+
+/** 배열이 정확히 같은지 비교 */
+export const compareArray = (arr1: any[], arr2: any[]) => JSON.stringify(arr1) === JSON.stringify(arr2);
+
+/** api로 대량수집하기 함수 */
+export const bulkCollectUsingApi = async (shop: string | null, shopId: number, currentPage: number) => {
+	let urls: CollectInfo['inputs'] = [];
+
+	switch (shop) {
+		case 'vvic': {
+			const resp = await fetch(
+				`https://www.vvic.com/apif/shop/itemlist?id=${shopId}&currentPage=${currentPage}&sort=up_time-desc&merge=0`,
+				{
+					headers: {
+						accept: 'application/json, text/plain, */*',
+						'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+						'sec-ch-ua': '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
+						'sec-ch-ua-mobile': '?0',
+						'sec-ch-ua-platform': '"Windows"',
+						'sec-fetch-dest': 'empty',
+						'sec-fetch-mode': 'cors',
+						'sec-fetch-site': 'same-origin',
+						token: 'RajToken',
+					},
+					referrer: `https://www.vvic.com/shop/list/${shopId}/content_all`,
+					referrerPolicy: 'strict-origin-when-cross-origin',
+					body: null,
+					method: 'GET',
+					mode: 'cors',
+					credentials: 'include',
+				},
+			);
+			if (resp.status !== 200) {
+				alert('상품수집 api Error\n채널톡에 문의 바랍니다.');
+				return [];
+			}
+			const json = await resp.json();
+			urls = json?.data?.recordList?.map((v) => ({
+				url: `https://www.vvic.com/item/${v.vid}`,
+				productName: '',
+				productTags: '',
+			}));
+
+			break;
+		}
+		case 'taobao1': {
+		}
+	}
+	return urls;
+};
+
+/** 페이지 새로고침 */
+export const pageRefresh = async (shop: Shop | null, page: number) => {
+	let url: string | null = null;
+
+	switch (shop) {
+		case 'taobao1': {
+			url = updateQueryStringParameter(window.location.href, '', `${44 * (page - 1)}`);
+			break;
+		}
+		case 'taobao2': {
+			url = updateQueryStringParameter(window.location.href, 'pageNo', `${page}`);
+			break;
+		}
+		case 'tmall1': {
+			url = updateQueryStringParameter(window.location.href, 's', `${60 * (page - 1)}`);
+			break;
+		}
+		case 'tmall2': {
+			url = updateQueryStringParameter(window.location.href, 'pageNo', `${page}`);
+			break;
+		}
+		case 'express': {
+			url = updateQueryStringParameter(window.location.href, 'page', `${page}`);
+			break;
+		}
+		case 'alibaba': {
+			url = updateQueryStringParameter(window.location.href, 'beginPage', `${page}`);
+			break;
+		}
+		case 'vvic': {
+			url = updateQueryStringParameter(window.location.href, 'currentPage', `${page}`);
+			break;
+		}
+		case 'amazon1': {
+			url = updateQueryStringParameter(window.location.href, 'page', `${page}`);
+			break;
+		}
+		default:
+			break;
+	}
+
+	if (!url) return;
+
+	window.location.href = url.replaceAll('#', '');
 };

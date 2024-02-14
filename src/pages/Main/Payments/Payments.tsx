@@ -6,7 +6,7 @@ import MUTATIONS from '../../../pages/Main/GraphQL/Mutations';
 import { Info as InfoIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
-import { readFileDataURL } from '../../Tools/Common';
+import { readFileDataURL } from '../../../../common/function';
 import { makeStyles } from '@material-ui/core/styles';
 import {
 	Avatar,
@@ -232,7 +232,7 @@ export const Payments = observer(() => {
 							amount: payments.priceInfo.total,
 							buyer_email: common.user.email,
 							buyer_name: payments.payInfo.name,
-							buyer_tel: common.user.userInfo.phone,
+							buyer_tel: common.user.userInfo!.phone,
 							buyer_addr: '없음',
 							buyer_postcode: '000-000',
 							m_redirect_url: '{모바일에서 결제 완료 후 리디렉션 될 URL}',
@@ -350,7 +350,7 @@ export const Payments = observer(() => {
 			servicetype: parseInt(payments.payInfo.period),
 			user: {
 				name: payments.payInfo.name,
-				phone: common.user.userInfo.phone,
+				phone: common.user.userInfo!.phone,
 				company: payments.payInfo.type === 'CASH' ? payments.payInfo.company : 'null',
 			},
 			etc1: payments.payInfo.type,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FilterAlt as FilterAltIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
@@ -27,6 +27,7 @@ import { ErroredSummary } from './ErroredSummary';
 import { Details } from './Details/Details';
 import '../../Common/Styles.css';
 import { ImageSummary } from './';
+import { SearchType } from '../../../../type/type';
 
 // 커스텀 테이블 컬럼 스타일
 const StyledTableCell = styled(TableCell)({
@@ -39,8 +40,21 @@ const StyledTableCell = styled(TableCell)({
 export const ErroredProductTables = observer(() => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
+	const [searchType, setSearchType] = useState<SearchType>('PCODE');
+	const [keyword, setKeyword] = useState('');
+
 	// 테이블 엘리먼트 참조변수 생성
 	const tableRef = React.useRef();
+
+	// 검색클릭
+	const onSearch = () => {
+		const success = product.setSearchKeyword({ type: searchType, keyword: keyword });
+		if (success) {
+			product.onStageWhere();
+			product.getProduct(common, 1);
+		}
+	};
+
 	// 가상화 렌더링 요소 (리스트뷰)
 	const rowRenderer = (props) => {
 		const item = product.itemInfo.items[props.index];
@@ -143,13 +157,8 @@ export const ErroredProductTables = observer(() => {
 													minWidth: 100,
 													mx: 0.5,
 												}}
-												defaultValue={product.searchInfo.searchType}
-												onChange={(e: any) =>
-													product.setSearchInfo({
-														...product.searchInfo,
-														searchType: e.target.value,
-													})
-												}
+												value={searchType}
+												onChange={(e) => setSearchType(e.target.value as SearchType)}
 											>
 												{/* <MenuItem value="ALL">
                         통합검색
@@ -160,18 +169,17 @@ export const ErroredProductTables = observer(() => {
 												<MenuItem value='CNAME'>카테고리명</MenuItem>
 												<MenuItem value='OID'>구매처상품번호</MenuItem>
 												<MenuItem value='MID'>판매채널상품번호</MenuItem>
-												{common?.user?.purchaseInfo2?.level >= 3 ? <MenuItem value='KEYWARD'>개인분류</MenuItem> : null}
+												{common?.user?.purchaseInfo2?.level >= 3 ? (
+													<MenuItem value='MYKEYWORD'>개인분류</MenuItem>
+												) : null}
 											</Select>
 
 											<Input
 												id='product_tables_keyword'
-												onChange={(e: any) =>
-													product.setSearchInfo({
-														...product.searchInfo,
-														searchKeyword: e.target.value,
-													})
-												}
-												onKeyPress={(e: any) => e.key === 'Enter' && product.getSearchResult(common, true)}
+												onChange={(e) => setKeyword(e.target.value)}
+												onKeyPress={(e) => {
+													if (e.key === 'Enter') onSearch();
+												}}
 											/>
 											<MyButton
 												disableElevation
@@ -181,7 +189,7 @@ export const ErroredProductTables = observer(() => {
 													minWidth: 60,
 													ml: 0.5,
 												}}
-												onClick={() => product.getSearchResult(common, true)}
+												onClick={onSearch}
 											>
 												검색
 											</MyButton>
@@ -231,7 +239,7 @@ export const ErroredProductTables = observer(() => {
 										fontSize: 11,
 									}}
 								>
-									상품코드/{product.state === 6 ? '수집일' : '등록일'}
+									상품코드/수집일
 								</Box>
 							</StyledTableCell>
 
@@ -355,16 +363,7 @@ export const ErroredProductTables = observer(() => {
 															height={height}
 															rowCount={product.itemInfo.items.length}
 															rowRenderer={rowRenderer}
-															rowHeight={83}
-															// rowHeight={({ index }) =>
-															// 	product.itemInfo.items[index].collapse
-															// 		? product.state === 7
-															// 			? 577 + 30
-															// 			: 577
-															// 		: product.state === 7
-															// 		? 83 + 30
-															// 		: 83
-															// }
+															rowHeight={({ index }) => (product.itemInfo.items[index].collapse ? 577 : 83)}
 															ref={tableRef}
 														/>
 													)}

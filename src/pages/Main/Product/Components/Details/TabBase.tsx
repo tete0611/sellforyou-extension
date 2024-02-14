@@ -15,7 +15,7 @@ import {
 	Paper,
 } from '@mui/material';
 import { Input, Search, Title } from '../../../Common/UI';
-import { floatingToast } from '../../../../Tools/Common';
+import { floatingToast } from '../../../../../../common/function';
 // import { makeStyles } from '@material-ui/core/styles';
 import { SHOPCODE } from '../../../../../type/variable';
 import { Item } from '../../../../../type/type';

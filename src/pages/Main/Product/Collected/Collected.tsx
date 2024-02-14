@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FocusEvent, useContext, useEffect } from 'react';
 import { Sync as SyncIcon, Search as SearchIcon } from '@mui/icons-material';
 import { observer } from 'mobx-react';
 import { ProductTables } from '../Components';
@@ -34,17 +34,16 @@ import { ComboBox, Input, MyButton, Title } from '../../Common/UI';
 // 상품수집관리 목록 테이블 뷰
 const Collected = observer(() => {
 	// MobX 스토리지 로드
-	const { common, product } = React.useContext(AppContext);
+	const { common, product } = useContext(AppContext);
 	const checkLength = product.itemInfo.items.filter((v) => v.checked).length;
 
 	// 컴포넌트 초기설정
-	React.useEffect(() => {
+	useEffect(() => {
 		// 태그사전 데이터 가져오기
 		product.getTagDict();
 
-		// 검색조건 설정
-		product.setState(6);
-		product.setSearchWhereAndInput([{ state: { equals: product.state } }]);
+		//검색조건 초기화
+		product.initProductWhereInput({ state: { equals: 6 } });
 
 		// 상품 정보 가져오기
 		product.refreshProduct(common);
@@ -71,9 +70,6 @@ const Collected = observer(() => {
 	}, []);
 
 	return (
-		//<ThemeProvider theme={theme}>
-		//	<Frame dark={common.darkTheme}>
-		//		<Header />
 		<>
 			<Container maxWidth={'xl'}>
 				<Paper variant='outlined'>
@@ -166,12 +162,13 @@ const Collected = observer(() => {
 							</Tooltip>
 							&nbsp;
 							<Input
+								inputProps={{ max: product.pages }}
 								id='product_page'
 								type='number'
 								width={50}
 								value={product.pageTemp}
-								onChange={(e) => product.setPageTemp(e.target.value.replace(/[^0-9]/g, ''))}
-								onBlur={(e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
+								onChange={(e) => product.setPageTemp(parseInt(e.target.value.replace(/[^0-9]/g, '')))}
+								onBlur={(e) => {
 									const page = parseInt(e.target.value);
 									if (!page) return;
 
@@ -231,12 +228,8 @@ const Collected = observer(() => {
 			<MyKeywardModal />
 			<SearchFilterModal />
 			<UploadModal />
-			{/* <Esm2UploadModal /> */}
 			<UploadFailedModal />
-			{/* <PreviewModal /> */}
 		</>
-		//	</Frame>
-		//</ThemeProvider>
 	);
 });
 export default Collected;

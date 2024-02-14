@@ -5,19 +5,21 @@ import gql from '../Main/GraphQL/Requests';
 import QUERIES from '../Main/GraphQL/Queries';
 import MUTATIONS from '../Main/GraphQL/Mutations';
 import {
+	floatingToast,
 	getClock,
 	getClockOffset,
-	getStoreTraceCodeV2,
+	getStoreTraceCodeV3,
 	matchesCharacter,
 	notificationByEveryTime,
 	sendCallback,
 	sleep,
 	toISO,
 	transformContent,
-} from './Common';
+} from '../../../common/function';
 import { getLocalStorage } from './ChromeAsync';
 import { product } from '../../containers/stores/product';
 import { common } from '../../containers/stores/common';
+import { UploadInfo } from '../../type/type';
 
 interface CoupangProps {
 	method: string;
@@ -55,8 +57,7 @@ export const coupangApiGateway = async (body: CoupangProps) => {
 		body: method === 'GET' || method === 'HEAD' ? null : JSON.stringify(body.data),
 	});
 
-	if (coupang_resp.status === 403 && body.method === 'DELETE')
-		throw new Error('쿠팡 API 403에러발생.\n관리자에게 문의해주세요.');
+	// if (coupang_resp.status === 403) throw new Error('쿠팡 API 403에러발생.\n관리자에게 문의해주세요.');
 	const json = await coupang_resp.json();
 	return json;
 };
@@ -70,14 +71,14 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 	console.log(`(${shopName}) 등록정보:`, data);
 
 	try {
-		let accesskey = commonStore.user.userInfo.coupangAccessKey;
-		let secretkey = commonStore.user.userInfo.coupangSecretKey;
+		let accesskey = commonStore.user.userInfo?.coupangAccessKey;
+		let secretkey = commonStore.user.userInfo?.coupangSecretKey;
 
 		const coupangOutbound = commonStore.deliveryPolicy.coupangOutboundList.find(
-			(v: any) => `${v.outboundShippingPlaceCode}` === `${commonStore.user.userInfo.coupangDefaultOutbound}`,
+			(v: any) => `${v.outboundShippingPlaceCode}` === `${commonStore.user.userInfo?.coupangDefaultOutbound}`,
 		);
 		const coupangInbound = commonStore.deliveryPolicy.coupangInboundList.find(
-			(v: any) => `${v.returnCenterCode}` === `${commonStore.user.userInfo.coupangDefaultInbound}`,
+			(v: any) => `${v.returnCenterCode}` === `${commonStore.user.userInfo?.coupangDefaultInbound}`,
 		);
 
 		if (!coupangOutbound) {
@@ -173,7 +174,7 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 							{ code: '소비자상담 관련 전화번호', name: '소비자상담 관련 전화번호', type: 'input' },
 					  ];
 
-				let category_json = await coupangApiGateway(category_body);
+				let category_json = await coupangApiGateway(category_body as CoupangProps);
 				let category_option_array: any = [];
 				let category_sill_array: any = sillData.map((v) => {
 					return {
@@ -282,7 +283,7 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 
 								// 기본설정 - 쿠팡 대표이미지를 옵션이미지로 사용 시 동작
 								// 옵션별 노출 최적화 로직 (옵션명 최적화)
-								if (commonStore.user.userInfo.coupangImageOpt !== 'N') {
+								if (commonStore.user.userInfo!.coupangImageOpt !== 'N') {
 									let j_formatted = j.toLowerCase();
 
 									if (j_formatted.includes('색깔') || j_formatted.includes('color') || j_formatted.includes('색상'))
@@ -315,7 +316,7 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 							let images_temp: any = [];
 
 							// 옵션별 노출 최적화 로직 (옵션별 대표이미지 별도 설정)
-							if (commonStore.user.userInfo.coupangImageOpt !== 'N' && market_optn[i].optimg) {
+							if (commonStore.user.userInfo!.coupangImageOpt !== 'N' && market_optn[i].optimg) {
 								images_temp.push({
 									imageOrder: 0,
 									imageType: 'REPRESENTATION',
@@ -348,10 +349,10 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 										contentsType: 'HTML',
 										contentDetails: [
 											{
-												content: `${getStoreTraceCodeV2(market_item.id, data.DShopInfo.site_code)}${
+												content: `${getStoreTraceCodeV3(market_item.id, data.DShopInfo.site_code)}${
 													market_item.content2
 												}${
-													commonStore.user.userInfo.descriptionShowTitle === 'Y'
+													commonStore.user.userInfo!.descriptionShowTitle === 'Y'
 														? `<br /><br /><div style="text-align: center;">${market_item.name3}</div><br /><br />`
 														: `<br /><br />`
 												}${transformContent(market_item.content1)}${market_item.content3}`,
@@ -369,8 +370,8 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 								attributes: optn_attrs,
 								saleAgentCommission: 10.5,
 								notices: category_sill_array,
-								maximumBuyForPerson: commonStore.user.userInfo.coupangMaximumBuyForPerson
-									? commonStore.user.userInfo.coupangMaximumBuyForPerson
+								maximumBuyForPerson: commonStore.user.userInfo?.coupangMaximumBuyForPerson
+									? commonStore.user.userInfo!.coupangMaximumBuyForPerson
 									: 0,
 								maximumBuyForPersonPeriod: 1,
 								certifications: [
@@ -383,8 +384,8 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 								adultOnly: 'EVERYONE',
 								parallelImported: 'NOT_PARALLEL_IMPORTED',
 								pccNeeded: true,
-								outboundShippingTimeDay: commonStore.user.userInfo.coupangOutboundShippingTimeDay
-									? commonStore.user.userInfo.coupangOutboundShippingTimeDay
+								outboundShippingTimeDay: commonStore.user.userInfo?.coupangOutboundShippingTimeDay
+									? commonStore.user.userInfo!.coupangOutboundShippingTimeDay
 									: 12,
 								searchTags: search_tags,
 								overseasPurchased: 'OVERSEAS_PURCHASED',
@@ -430,8 +431,8 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 								contentsType: 'HTML',
 								contentDetails: [
 									{
-										content: `${getStoreTraceCodeV2(market_item.id, data.DShopInfo.site_code)}${market_item.content2}${
-											commonStore.user.userInfo.descriptionShowTitle === 'Y'
+										content: `${getStoreTraceCodeV3(market_item.id, data.DShopInfo.site_code)}${market_item.content2}${
+											commonStore.user.userInfo?.descriptionShowTitle === 'Y'
 												? `<br /><br /><div style="text-align: center;">${market_item.name3}</div><br /><br />`
 												: `<br /><br />`
 										}${transformContent(market_item.content1)}${market_item.content3}`,
@@ -469,8 +470,8 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 				}
 
 				let deliveryCharge = market_item.deliv_fee;
-				let deliveryChargeOnReturn = commonStore.user.userInfo.refundShippingFee;
-				let returnCharge = commonStore.user.userInfo.refundShippingFee;
+				let deliveryChargeOnReturn = commonStore.user.userInfo!.refundShippingFee;
+				let returnCharge = commonStore.user.userInfo!.refundShippingFee;
 
 				//유료배송비가 있는 경우
 				if (deliveryCharge > 0) {
@@ -516,7 +517,7 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 					data: {
 						displayCategoryCode: market_item.cate_code,
 						sellerProductName: market_item.name3,
-						vendorId: commonStore.user.userInfo.coupangVendorId,
+						vendorId: commonStore.user.userInfo!.coupangVendorId,
 						saleStartedAt: toISO(new Date()),
 						saleEndedAt: '2099-01-01T23:59:59',
 						displayProductName: market_item.name3,
@@ -531,7 +532,7 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 						deliveryChargeOnReturn: deliveryChargeOnReturn, // 초도반품비
 						remoteAreaDeliverable: 'Y', // 도서산간 배송여부
 						unionDeliveryType:
-							commonStore.user.userInfo.coupangUnionDeliveryType === 'Y' ? 'UNION_DELIVERY' : 'NOT_UNION_DELIVERY', // 묶음배송여부
+							commonStore.user.userInfo!.coupangUnionDeliveryType === 'Y' ? 'UNION_DELIVERY' : 'NOT_UNION_DELIVERY', // 묶음배송여부
 						returnCenterCode: coupangInbound.returnCenterCode,
 						returnChargeName: coupangInbound.shippingPlaceName,
 						companyContactNumber: coupangOutbound.placeAddresses[0].companyContactNumber,
@@ -540,10 +541,10 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 						returnAddressDetail: coupangInbound.placeAddresses[0].returnAddressDetail,
 						returnCharge: returnCharge, // 반품비
 						returnChargeVendor: 'N', // 착불 여부
-						afterServiceInformation: commonStore.user.userInfo.asInformation,
-						afterServiceContactNumber: commonStore.user.userInfo.asTel,
+						afterServiceInformation: commonStore.user.userInfo!.asInformation,
+						afterServiceContactNumber: commonStore.user.userInfo!.asTel,
 						outboundShippingPlaceCode: coupangOutbound.outboundShippingPlaceCode,
-						vendorUserId: commonStore.user.userInfo.coupangLoginId,
+						vendorUserId: commonStore.user.userInfo!.coupangLoginId,
 						requested: true, // 자동승인요청여부
 						items: optn_array,
 						requiredDocuments: [
@@ -577,9 +578,9 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 					}
 
 					// 상품 조회 API
-					let search_body = {
-						accesskey: accesskey,
-						secretkey: secretkey,
+					let search_body: CoupangProps = {
+						accesskey: accesskey!,
+						secretkey: secretkey!,
 						path: `/v2/providers/seller_api/apis/api/v1/marketplace/seller-products/${productId}`,
 						query: '',
 						method: 'GET',
@@ -651,9 +652,9 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 
 					// 옵션가 수정 - for문 사용
 					for (let v of optn_array) {
-						let detail_body = {
-							accesskey: accesskey,
-							secretkey: secretkey,
+						let detail_body: CoupangProps = {
+							accesskey: accesskey!,
+							secretkey: secretkey!,
 							path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/prices/${v['salePrice']}`,
 							query: '',
 							method: 'PUT',
@@ -669,9 +670,9 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 
 					// 판매가 수정 - for 사용
 					for (let v of optn_array) {
-						let detail_body = {
-							accesskey: accesskey,
-							secretkey: secretkey,
+						let detail_body: CoupangProps = {
+							accesskey: accesskey!,
+							secretkey: secretkey!,
 							path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/original-prices/${v['originalPrice']}`,
 							query: '',
 							method: 'PUT',
@@ -687,9 +688,9 @@ export const uploadCoupang = async (productStore: product, commonStore: common, 
 
 					// 재고수량 수정 - for 사용
 					for (let v of optn_array) {
-						let detail_body = {
-							accesskey: accesskey,
-							secretkey: secretkey,
+						let detail_body: CoupangProps = {
+							accesskey: accesskey!,
+							secretkey: secretkey!,
 							path: `/v2/providers/seller_api/apis/api/v1/marketplace/vendor-items/${v['vendorItemId']}/quantities/${v['maximumBuyCount']}`,
 							query: '',
 							method: 'PUT',
@@ -777,8 +778,8 @@ export const deleteCoupang = async (productStore: product, commonStore: common, 
 	console.log(`(${shopName}) 등록정보:`, data);
 
 	try {
-		let accesskey = commonStore.user.userInfo.coupangAccessKey;
-		let secretkey = commonStore.user.userInfo.coupangSecretKey;
+		let accesskey = commonStore.user.userInfo!.coupangAccessKey;
+		let secretkey = commonStore.user.userInfo!.coupangSecretKey;
 
 		for (let product in data.DShopInfo.prod_codes) {
 			try {
@@ -890,15 +891,15 @@ export const deleteCoupang = async (productStore: product, commonStore: common, 
 };
 
 /** 쿠팡 신규주문 조회 */
-export const newOrderCoupang = async (commonStore: common, shopInfo: any) => {
+export const newOrderCoupang = async (commonStore: common, shopInfo: UploadInfo['markets'][0]) => {
 	const shopName = shopInfo.name;
 
 	if (!shopInfo.connected || shopInfo.disabled) return [];
 
 	try {
-		let accesskey = commonStore.user.userInfo.coupangAccessKey;
-		let secretkey = commonStore.user.userInfo.coupangSecretKey;
-		let vendorId = commonStore.user.userInfo.coupangVendorId;
+		let accesskey = commonStore.user.userInfo!.coupangAccessKey;
+		let secretkey = commonStore.user.userInfo!.coupangSecretKey;
+		let vendorId = commonStore.user.userInfo!.coupangVendorId;
 		let dateStart = getClockOffset(0, 0, -7, 0, 0, 0);
 		let dateEnd = getClock();
 
@@ -919,6 +920,18 @@ export const newOrderCoupang = async (commonStore: common, shopInfo: any) => {
 		};
 
 		let orderJson = await coupangApiGateway(orderData);
+
+		if (orderJson.status === 403) {
+			if (orderJson.message.includes('Not allowed IP'))
+				floatingToast(
+					`쿠팡 허용되지않은 IP 에러\n쿠팡 Seller에 등록된 IP와 사용중인 PC의 IP가 같은지 확인바랍니다.`,
+					'failed',
+				);
+			if (orderJson.message.includes('Specified signature is expired'))
+				floatingToast('쿠팡 API 에러\n사용중인 PC가 표준시간대로 설정되어있는지 확인바랍니다.', 'failed');
+		}
+
+		console.log({ orderJson });
 
 		console.log(shopName, orderJson.data);
 
@@ -975,9 +988,9 @@ export const productPreparedCoupang = async (commonStore: common, shopInfo: any)
 	if (!shopInfo.connected || shopInfo.disabled) return [];
 
 	try {
-		let accesskey = commonStore.user.userInfo.coupangAccessKey;
-		let secretkey = commonStore.user.userInfo.coupangSecretKey;
-		let vendorId = commonStore.user.userInfo.coupangVendorId;
+		let accesskey = commonStore.user.userInfo!.coupangAccessKey;
+		let secretkey = commonStore.user.userInfo!.coupangSecretKey;
+		let vendorId = commonStore.user.userInfo!.coupangVendorId;
 
 		const orderData = {
 			accesskey: accesskey,
@@ -1010,9 +1023,9 @@ export const deliveryOrderCoupang = async (commonStore: common, shopInfo: any) =
 	if (!shopInfo.connected || shopInfo.disabled) return [];
 
 	try {
-		let accesskey = commonStore.user.userInfo.coupangAccessKey;
-		let secretkey = commonStore.user.userInfo.coupangSecretKey;
-		let vendorId = commonStore.user.userInfo.coupangVendorId;
+		let accesskey = commonStore.user.userInfo!.coupangAccessKey;
+		let secretkey = commonStore.user.userInfo!.coupangSecretKey;
+		let vendorId = commonStore.user.userInfo!.coupangVendorId;
 		let dateStart = getClockOffset(0, 0, -7, 0, 0, 0);
 		let dateEnd = getClock();
 

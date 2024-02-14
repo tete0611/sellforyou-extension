@@ -4,7 +4,7 @@ import QUERIES from '../../pages/Main/GraphQL/Queries';
 import gql from '../../pages/Main/GraphQL/Requests';
 
 import { runInAction, makeAutoObservable } from 'mobx';
-import { getClock, getClockOffset, readFileBinary, sortBy, stringToArrayBuffer } from '../../pages/Tools/Common';
+import { getClock, getClockOffset, readFileBinary, sortBy, stringToArrayBuffer } from '../../../common/function';
 
 var XLSX = require('xlsx');
 

@@ -1,4 +1,9 @@
 import { ITextOptions, TextOptions } from 'fabric/fabric-impl';
+import { SHOPCODE } from './variable';
+import { ProductWhereInput } from './schema';
+
+/** T와 U에서 겹치는 속성은 Pass, 그렇지 않으면 타입추가되어 반환 */
+type Overwrite<T, U> = { [P in Exclude<keyof T, keyof U>]: T[P] } & U;
 
 /** 오픈마켓종류 정의 */
 export type Shop =
@@ -86,7 +91,12 @@ export type BulkInfo = {
 	isCancel: boolean;
 	isComplete: boolean;
 	isExcel: boolean;
-	results: any[];
+	results: {
+		checked: boolean;
+		input: CollectInfo['inputs'][number];
+		status: string;
+		statusMessage: string;
+	}[];
 	sender: Sender;
 };
 
@@ -156,19 +166,19 @@ export type ManyPriceInfo = {
 };
 
 /** common -> User타입 */
-export type User = {
-	userInfo: UserInfo;
-	createdToken?: any;
-	purchaseInfo2?: any;
-	productCount: number;
-	email: string;
-	credit?: any;
-	id: number;
-	refCode: string | null;
-	connectedUsers?: any;
-	refAvailable: boolean;
-	keywardMemo?: any;
-};
+// export type User = {
+// 	userInfo: UserInfo;
+// 	createdToken?: any;
+// 	purchaseInfo2?: any;
+// 	productCount: number;
+// 	email: string;
+// 	credit?: any;
+// 	id: number;
+// 	refCode: string | null;
+// 	connectedUsers?: any;
+// 	refAvailable: boolean;
+// 	keywardMemo?: any;
+// };
 
 /** ChromeAsync 런타임메시지 파라미터 타입 */
 export type RuntimeMessage = {
@@ -460,3 +470,80 @@ export type SideBarList = {
 
 /** 사이드바 자식 타입 */
 export type SideBarItem = { name: string; engName: string; icon: ReactNode; customFunction?: () => void };
+
+/** 상품 검색 방법 */
+export type SearchType = 'PCODE' | 'ONAME' | 'NAME' | 'CNAME' | 'OID' | 'MID' | 'MYKEYWORD';
+
+/** taobao_product 테이블의 original_data 필드타입
+ * @description 스키마에 string으로 정의되어 있어서 커스텀 필요
+ * */
+export type OriginalData = {
+	user: User;
+	item: {
+		num_iid: string;
+		id: string;
+		productId: string;
+		categoryId: string;
+		venderId: string;
+		title: string;
+		options: any[];
+		attr: any[];
+		requireDetailData: any[];
+		detailImage: string[];
+		desc_short: string;
+		price: string;
+		total_price: string;
+		suggestive_price: string;
+		original_price: string;
+		nick: string;
+		num: number;
+		detail_url: string;
+		pic_url: string;
+		brand: string;
+		manufacturer: string;
+		modelName: string;
+		brandId: string;
+		rootCatId: string;
+		cid: string;
+		nid: string;
+		desc: string;
+		item_imgs: { url: string }[];
+		item_weight: string;
+		post_fee: number;
+		freight: string;
+		express_fee: any;
+		ems_fee: any;
+		shipping_to: string;
+		video: string;
+		sample_id: string;
+		props_name: string;
+		prop_imgs: any;
+		props_imgs: any;
+		property_alias: string;
+		props: any[];
+		total_sold: string;
+		skus: any;
+		seller_id: string;
+		sales: number;
+		shop_id: string;
+		props_list: any;
+		seller_info: any;
+		tmall?: any;
+		error: string;
+		fav_count: any;
+		fans_count: string;
+		location: string;
+		data_from: string;
+		has_discount: string;
+		is_promotion: string;
+		promo_type: any;
+		props_img: any;
+		rate_grade: string;
+		desc_img: string[];
+		desc_text: string[];
+		shop_item: any[];
+		relate_items: any[];
+		shopName: string;
+		url: string;
+	};
+};

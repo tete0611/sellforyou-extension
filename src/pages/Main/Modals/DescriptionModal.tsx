@@ -7,7 +7,7 @@ import { ImageDrop } from 'quill-image-drop-module';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import { Box, Modal, Paper, Typography } from '@mui/material';
-import { readFileDataURL } from '../../Tools/Common';
+import { readFileDataURL } from '../../../../common/function';
 import { MyButton } from '../Common/UI';
 
 // 에디터 스타일 설정

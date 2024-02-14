@@ -9,7 +9,7 @@ import {
 	notificationByEveryTime,
 	sendCallback,
 	transformContent,
-} from './Common';
+} from '../../../common/function';
 import { Buffer } from 'buffer';
 import { product } from '../../containers/stores/product';
 import { common } from '../../containers/stores/common';
@@ -253,7 +253,7 @@ export async function uploadInterpark(productStore: product, commonStore: common
 							: ``
 					}
 
-					${commonStore.user.userInfo.descriptionShowTitle === 'Y' ? market_item.name3 : ``}
+					${commonStore.user.userInfo?.descriptionShowTitle === 'Y' ? market_item.name3 : ``}
 				</div>
 								
 				<br />
@@ -344,17 +344,17 @@ export async function uploadInterpark(productStore: product, commonStore: common
 								ippSubmitYn: 'Y', // 가격비교 등록 여부: 사용
 								originPrdNo: market_code, // 판매자상품코드
 								prdrtnCostUseYn: 'Y', // 반품비: 사용
-								rtndelvCost: commonStore.user.userInfo.refundShippingFee, // 반품비
+								rtndelvCost: commonStore.user.userInfo?.refundShippingFee, // 반품비
 								abroadBsYn: 'Y', // 해외구매대행상품 여부
 								prdCertStatus: 'N', // 상품인증여부: 인증대상아님
-								asInfo: commonStore.user.userInfo.asInformation, // A/S 정보
+								asInfo: commonStore.user.userInfo?.asInformation, // A/S 정보
 								entrDcUseYn: 'N',
 								// "entrDcUseYn": market_item.nprice > 0 || market_data.userInfo.discountAmount > 0 ? "Y" : "N",						// 즉시할인 여부
 								// "entrDcTp": market_item.nprice > 0 || market_data.userInfo.discountUnitType === 'WON' === "WON" ? "2" : "1",		// 즉시할인 할인구분 (1: 정률, 2: 정액)
 								// "entrDcNum": market_item.nprice > 0 ? market_item.nprice : market_data.userInfo.discountAmount,						// 즉시할인 금액 (판매가의 70%까지 등록 가능, 정률일경우 소수점 둘째짜리까지 가능)
 								jejuetcDelvCostUseYn: 'Y', //제주,도서비 사용
-								jejuDelvCost: commonStore.user.userInfo.additionalShippingFeeJeju, //제주 비용
-								etcDelvCost: commonStore.user.userInfo.additionalShippingFeeJeju, //도서 비용
+								jejuDelvCost: commonStore.user.userInfo?.additionalShippingFeeJeju, //제주 비용
+								etcDelvCost: commonStore.user.userInfo?.additionalShippingFeeJeju, //도서 비용
 								prdinfoNoti: sillResult,
 							},
 						},
@@ -397,7 +397,7 @@ export async function uploadInterpark(productStore: product, commonStore: common
 					const xmlText = await xmlResp.text();
 
 					let product_json: any = await interparkApiGateway(
-						`product/ProductAPIService.do?_method=UpdateProductAPIData&citeKey=${commonStore.user.userInfo.interparkEditCertKey}&secretKey=${commonStore.user.userInfo.interparkEditSecretKey}&dataUrl=${process.env.SELLFORYOU_MINIO_HTTP}/${xmlText}`,
+						`product/ProductAPIService.do?_method=UpdateProductAPIData&citeKey=${commonStore.user.userInfo?.interparkEditCertKey}&secretKey=${commonStore.user.userInfo?.interparkEditSecretKey}&dataUrl=${process.env.SELLFORYOU_MINIO_HTTP}/${xmlText}`,
 					);
 
 					if (product_json.result.hasOwnProperty('error')) {
@@ -450,7 +450,7 @@ export async function uploadInterpark(productStore: product, commonStore: common
 					const xmlText = await xmlResp.text();
 
 					let product_json: any = await interparkApiGateway(
-						`product/ProductAPIService.do?_method=InsertProductAPIData&citeKey=${commonStore.user.userInfo.interparkCertKey}&secretKey=${commonStore.user.userInfo.interparkSecretKey}&dataUrl=${process.env.SELLFORYOU_MINIO_HTTP}/${xmlText}`,
+						`product/ProductAPIService.do?_method=InsertProductAPIData&citeKey=${commonStore.user.userInfo?.interparkCertKey}&secretKey=${commonStore.user.userInfo?.interparkSecretKey}&dataUrl=${process.env.SELLFORYOU_MINIO_HTTP}/${xmlText}`,
 					);
 
 					if (product_json.result.hasOwnProperty('error')) {
@@ -561,7 +561,7 @@ export async function deleteInterpark(productStore: product, commonStore: common
 				const xmlText = await xmlResp.text();
 
 				const deleteJson: any = await interparkApiGateway(
-					`product/ProductAPIService.do?_method=UpdateProductAPIData&citeKey=${commonStore.user.userInfo.interparkEditCertKey}&secretKey=${commonStore.user.userInfo.interparkEditSecretKey}&dataUrl=${process.env.SELLFORYOU_MINIO_HTTP}/${xmlText}`,
+					`product/ProductAPIService.do?_method=UpdateProductAPIData&citeKey=${commonStore.user.userInfo?.interparkEditCertKey}&secretKey=${commonStore.user.userInfo?.interparkEditSecretKey}&dataUrl=${process.env.SELLFORYOU_MINIO_HTTP}/${xmlText}`,
 				);
 
 				if (!deleteJson.result.error) {
