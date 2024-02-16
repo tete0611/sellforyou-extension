@@ -11,10 +11,8 @@ import { Frame } from '../Common/UI';
 
 type SignInfo = {
 	password: string;
-
 	newPassword: string;
 	newPasswordConfirm: string;
-
 	loading: boolean | undefined;
 };
 
@@ -26,10 +24,8 @@ export const ChangePassword = observer(() => {
 	// 상태 초기화
 	const initSignInfo: SignInfo = {
 		password: '',
-
 		newPassword: '',
 		newPasswordConfirm: '',
-
 		loading: false,
 	};
 
@@ -44,23 +40,9 @@ export const ChangePassword = observer(() => {
 
 	// 비밀번호 변경 로직
 	const changePassword = async () => {
-		if (!signInfo.password) {
-			alert('기존 비밀번호를 입력해주세요.');
-
-			return;
-		}
-
-		if (!signInfo.newPassword) {
-			alert('새 비밀번호를 입력해주세요.');
-
-			return;
-		}
-
-		if (signInfo.newPassword !== signInfo.newPasswordConfirm) {
-			alert('새 비밀번호가 일치하지 않습니다.');
-
-			return;
-		}
+		if (!signInfo.password) return alert('기존 비밀번호를 입력해주세요.');
+		if (!signInfo.newPassword) return alert('새 비밀번호를 입력해주세요.');
+		if (signInfo.newPassword !== signInfo.newPasswordConfirm) return alert('새 비밀번호가 일치하지 않습니다.');
 
 		setSignInfo({ ...signInfo, loading: true });
 
@@ -89,10 +71,7 @@ export const ChangePassword = observer(() => {
 	};
 
 	// 로그인 페이지로 이동
-	const signIn = () => {
-		window.location.href = '/signin.html';
-	};
-
+	const signIn = () => (window.location.href = '/signin.html');
 	// 다크모드 지원 설정
 	const theme = React.useMemo(
 		() =>

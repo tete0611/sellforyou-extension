@@ -89,7 +89,7 @@ export const Summary = observer((props: any) => {
 							width: '400px',
 						}}
 					>
-						<Typography noWrap fontSize={14}>
+						<Typography noWrap fontSize={13} fontFamily={'NanumGothicR !important'}>
 							{props.item[0].product.name}
 						</Typography>
 					</Box>

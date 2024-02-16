@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { AppContext } from '../../../containers/AppContext';
 import {
@@ -19,7 +19,6 @@ import {
 } from '@mui/material';
 import { readFileDataURL } from '../../../../common/function';
 import { Title } from '../Common/UI';
-import { createTheme } from '@mui/material/styles';
 import { REG_EXP } from '../../../../common/regex';
 
 // 커스텀 테이블 컬럼 생성
@@ -80,20 +79,17 @@ const BanWords = observer(() => {
 	}, []);
 
 	// 다크모드 지원 설정
-	const theme = useMemo(
-		() =>
-			createTheme({
-				palette: {
-					mode: common.darkTheme ? 'dark' : 'light',
-				},
-			}),
-		[common.darkTheme],
-	);
+	// const theme = useMemo(
+	// 	() =>
+	// 		createTheme({
+	// 			palette: {
+	// 				mode: common.darkTheme ? 'dark' : 'light',
+	// 			},
+	// 		}),
+	// 	[common.darkTheme],
+	// );
 
 	return (
-		// <ThemeProvider theme={theme}>
-		// 	<Frame dark={common.darkTheme}>
-		// 		<Header />
 		<>
 			{restrictWordInfo.loading ? (
 				<>
@@ -173,7 +169,9 @@ const BanWords = observer(() => {
 														</StyledTableCell>
 
 														<StyledTableCell>
-															<Typography fontSize={14}>{v.findWord}</Typography>
+															<Typography fontSize={14} fontFamily={'nanumGothicR !important'}>
+																{v.findWord}
+															</Typography>
 														</StyledTableCell>
 													</TableRow>
 												))}
@@ -413,11 +411,15 @@ const BanWords = observer(() => {
 														</StyledTableCell>
 
 														<StyledTableCell>
-															<Typography fontSize={14}>{v.findWord}</Typography>
+															<Typography fontSize={14} fontFamily={'nanumGothicR !important'}>
+																{v.findWord}
+															</Typography>
 														</StyledTableCell>
 
 														<StyledTableCell>
-															<Typography fontSize={14}>{v.replaceWord}</Typography>
+															<Typography fontSize={14} fontFamily={'nanumGothicR !important'}>
+																{v.replaceWord}
+															</Typography>
 														</StyledTableCell>
 													</TableRow>
 												))}
@@ -625,8 +627,6 @@ const BanWords = observer(() => {
 				</>
 			) : null}
 		</>
-		// 	</Frame>
-		// </ThemeProvider>
 	);
 });
 export default BanWords;

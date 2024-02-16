@@ -2,6 +2,10 @@
 	font-family: 'NNSQUAREROUNDR';
 	src: url('/src/assets/fonts/NanumSquareRoundR.ttf');
 }
+@font-face {
+	font-family: 'nanumGothicR';
+	src: url('/src/assets/fonts/NanumGothic-Regular.ttf');
+}
 
 html * {
 	font-family: 'NNSQUAREROUNDR';
@@ -9,6 +13,10 @@ html * {
 
 body {
 	margin: 0px;
+}
+
+.MuiContainer-root * {
+	font-family: unset !important;
 }
 
 .uploadModal {

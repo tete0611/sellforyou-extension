@@ -10,3 +10,7 @@ html * {
 body {
 	margin: 0px;
 }
+
+.MuiContainer-root * {
+	font-family: unset !important;
+}
