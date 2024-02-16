@@ -110,7 +110,7 @@ export const Summary = observer((props: Props) => {
 					<Chip
 						size='small'
 						color='info'
-						sx={{ fontSize: 12, width: 85, mb: 1 }}
+						sx={{ fontSize: 12, width: 85, mb: 1, mr: 1 }}
 						label={props.item.productCode}
 						onClick={() => {
 							navigator.clipboard.writeText(props.item.productCode).then(
@@ -122,19 +122,19 @@ export const Summary = observer((props: Props) => {
 					{props.item.state === 6 ? (
 						<Chip
 							size='small'
-							sx={{ fontSize: 13, width: 85 }}
+							sx={{ fontSize: 13, width: 85, mr: 1 }}
 							label={`${format(new Date(props.item.createdAt), 'yy-MM-dd')}`}
 						/>
 					) : (
 						<Chip
 							size='small'
-							sx={{ fontSize: 13, width: 85 }}
+							sx={{ fontSize: 13, width: 85, mr: 1 }}
 							label={`${format(new Date(props.item.stockUpdatedAt), 'yy-MM-dd')}`}
 						/>
 					)}
 				</StyledTableCell>
 
-				<StyledTableCell width={100}>
+				<StyledTableCell width={props.item.state === 7 ? 105 : 82}>
 					<Box
 						sx={{
 							display: 'flex',
@@ -146,10 +146,10 @@ export const Summary = observer((props: Props) => {
 						}}
 						style={{
 							boxShadow:
-								'0px 4px 14px rgba(2, 136, 209, 0.15), ' +
-								'0px -4px 14px rgba(2, 136, 209, 0.15), ' +
-								'4px 0px 14px rgba(2, 136, 209, 0.15), ' +
-								'-4px 0px 14px rgba(2, 136, 209, 0.15)',
+								'0px 2px 14px rgba(2, 136, 209, 0.15), ' +
+								'0px -2px 14px rgba(2, 136, 209, 0.15), ' +
+								'2px 0px 14px rgba(2, 136, 209, 0.15), ' +
+								'-2px 0px 14px rgba(2, 136, 209, 0.15)',
 						}}
 					>
 						<Image
@@ -172,7 +172,7 @@ export const Summary = observer((props: Props) => {
 				</StyledTableCell>
 
 				<StyledTableCell>
-					<Grid container spacing={0.5}>
+					<Grid container spacing={0.5} style={{ marginLeft: 0 }}>
 						<Grid item xs={6} md={4.5}>
 							<Box
 								sx={{
