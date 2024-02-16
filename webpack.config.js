@@ -36,26 +36,11 @@ var options = {
 		signup: path.join(__dirname, 'src', 'pages', 'Main', 'SignUp', 'index.jsx'),
 		lostandfound: path.join(__dirname, 'src', 'pages', 'Main', 'LostAndFound', 'index.jsx'),
 		changepassword: path.join(__dirname, 'src', 'pages', 'Main', 'ChangePassword', 'index.jsx'),
-		// dashboard: path.join(__dirname, 'src', 'pages', 'Main', 'Dashboard', 'index.jsx'),
-		// collected: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Collected', 'index.jsx'),
-		// analysis: path.join(__dirname, 'src', 'pages', 'Main', 'Keyword', 'Analysis', 'index.jsx'),
-		// reference: path.join(__dirname, 'src', 'pages', 'Main', 'Keyword', 'Reference', 'index.jsx'),
-		// registered: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Registered', 'index.jsx'),
-		// locked: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Locked', 'index.jsx'),
-		// errored: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Errored', 'index.jsx'),
-		// new: path.join(__dirname, 'src', 'pages', 'Main', 'Order', 'New', 'index.jsx'),
-		// delivery: path.join(__dirname, 'src', 'pages', 'Main', 'Order', 'Delivery', 'index.jsx'),
-		// tax: path.join(__dirname, 'src', 'pages', 'Main', 'Order', 'Tax', 'index.jsx'),
-		// banwords: path.join(__dirname, 'src', 'pages', 'Main', 'BanWords', 'index.jsx'),
-		// settings: path.join(__dirname, 'src', 'pages', 'Main', 'Settings', 'index.jsx'),
-		// sourcing: path.join(__dirname, 'src', 'pages', 'Main', 'Sourcing', 'index.jsx'),
-		// connects: path.join(__dirname, 'src', 'pages', 'Main', 'Connects', 'index.jsx'),
 		popup: path.join(__dirname, 'src', 'pages', 'Popup', 'index.jsx'),
 		background: path.join(__dirname, 'src', 'pages', 'Background', 'index.ts'),
 		contentScript: path.join(__dirname, 'src', 'pages', 'Content', 'index.ts'),
 		trangers: path.join(__dirname, 'src', 'pages', 'Trangers', 'trangers.ts'),
 		payments: path.join(__dirname, 'src', 'pages', 'Main', 'Payments', 'index.jsx'),
-		// inflow: path.join(__dirname, 'src', 'pages', 'Main', 'Inflow', 'index.jsx'),
 		// 페이지 생성 1) 여기에 새로운 엔트리명과 페이지 경로를 추가한다.
 	},
 
@@ -297,104 +282,6 @@ var options = {
 			cache: false,
 		}),
 
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Dashboard', 'index.html'),
-		// 	filename: 'dashboard.html',
-		// 	chunks: ['dashboard'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'index.html'),
-		// 	filename: 'product/collected.html',
-		// 	chunks: ['collected'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Keyword', 'Analysis', 'index.html'),
-		// 	filename: 'keyword/analysis.html',
-		// 	chunks: ['analysis'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Keyword', 'Reference', 'index.html'),
-		// 	filename: 'keyword/reference.html',
-		// 	chunks: ['reference'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Registered', 'index.html'),
-		// 	filename: 'product/registered.html',
-		// 	chunks: ['registered'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Locked', 'index.html'),
-		// 	filename: 'product/locked.html',
-		// 	chunks: ['locked'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Product', 'Errored', 'index.html'),
-		// 	filename: 'product/errored.html',
-		// 	chunks: ['errored'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Order', 'New', 'index.html'),
-		// 	filename: 'order/new.html',
-		// 	chunks: ['new'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Order', 'Delivery', 'index.html'),
-		// 	filename: 'order/delivery.html',
-		// 	chunks: ['delivery'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Order', 'Tax', 'index.html'),
-		// 	filename: 'order/tax.html',
-		// 	chunks: ['tax'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'BanWords', 'index.html'),
-		// 	filename: 'banwords.html',
-		// 	chunks: ['banwords'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Settings', 'index.html'),
-		// 	filename: 'settings.html',
-		// 	chunks: ['settings'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Sourcing', 'index.html'),
-		// 	filename: 'sourcing.html',
-		// 	chunks: ['sourcing'],
-		// 	cache: false,
-		// }),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Connects', 'index.html'),
-		// 	filename: 'connects.html',
-		// 	chunks: ['connects'],
-		// 	cache: false,
-		// }),
-
 		new HtmlWebpackPlugin({
 			template: path.join(__dirname, 'src', 'pages', 'Main', 'Payments', 'index.html'),
 			filename: 'payments.html',
@@ -408,13 +295,6 @@ var options = {
 			chunks: ['popup'],
 			cache: false,
 		}),
-
-		// new HtmlWebpackPlugin({
-		// 	template: path.join(__dirname, 'src', 'pages', 'Main', 'Inflow', 'index.html'),
-		// 	filename: 'inflow.html',
-		// 	chunks: ['inflow'],
-		// 	cache: false,
-		// }),
 
 		// HTML 이랑 엮는 작업
 		// 페이지 생성 2) 새로운 페이지를 만들고 엔트리가 설정되면 플러그인을 추가해준다.
