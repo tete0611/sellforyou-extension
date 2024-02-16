@@ -144,6 +144,13 @@ export const Summary = observer((props: Props) => {
 							height: '100%',
 							width: '100%',
 						}}
+						style={{
+							boxShadow:
+								'0px 4px 14px rgba(2, 136, 209, 0.15), ' +
+								'0px -4px 14px rgba(2, 136, 209, 0.15), ' +
+								'4px 0px 14px rgba(2, 136, 209, 0.15), ' +
+								'-4px 0px 14px rgba(2, 136, 209, 0.15)',
+						}}
 					>
 						<Image
 							src={props.item.imageThumbnail[0]}
