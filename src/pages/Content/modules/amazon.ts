@@ -13,7 +13,6 @@ async function scrape(items: any, user: User, region: string) {
 	const sessionData = items.item;
 	const sessionOtionData = items.optionItem;
 	const sessionThumbnailData = items.thumbnailItem;
-
 	const parseData = JSON.parse(sessionData);
 	const parseThumbnailData = JSON.parse(sessionThumbnailData);
 	const optionsLength = Object.keys(parseData.colorImages).length;
@@ -30,16 +29,12 @@ async function scrape(items: any, user: User, region: string) {
 		let dimensions = parseOtionData.dimensions;
 		let dimensionsDisplay = parseOtionData.dimensionsDisplay;
 
-		for (let i = 0; i < dimensions.length; i++) {
-			sortLabel[dimensions[i]] = dimensionsDisplay[i];
-		}
+		for (let i = 0; i < dimensions.length; i++) sortLabel[dimensions[i]] = dimensionsDisplay[i];
 
-		Object.keys(sortLabel).map((v: any, vIndex: any) => {
-			if (!valueData[v]) {
-				return;
-			}
+		Object.keys(sortLabel).map((v, vIndex) => {
+			if (!valueData[v]) return;
 
-			valueData[v].map((w: any, wIndex: any) => {
+			valueData[v].map((w, wIndex) => {
 				newObject[`${sortLabel[v]}:${w}`] = '';
 				properties[`${vIndex}:${wIndex}`] = '';
 			});
@@ -48,10 +43,8 @@ async function scrape(items: any, user: User, region: string) {
 		let index0 = 0;
 		let index1 = 1;
 		let index2 = 2;
-
 		let properties_list: any = [];
 		let properties_name_list: any = [];
-
 		let properties0 = '';
 		let properties1 = '';
 		let properties2 = '';
@@ -64,17 +57,13 @@ async function scrape(items: any, user: User, region: string) {
 		for (let i = 0; i < propertiesLength; i++) {
 			let aa = parseOtionData.dimensions[0];
 
-			parseOtionData.variationValues[aa].map((v: any, i0: any) => {
+			parseOtionData.variationValues[aa].map((v, i0) => {
 				switch (propertiesLength) {
 					case 1: {
-						if (!parseOtionData.dimensionToAsinMap[i0]) {
-							return;
-						}
+						if (!parseOtionData.dimensionToAsinMap[i0]) return;
 
 						properties0 = index0 + ':' + i0;
-
 						name0 = parseOtionData.dimensionsDisplay[0] + ':' + v;
-
 						properties_list.push(properties0);
 						properties_name_list.push(properties0 + ':' + name0);
 
@@ -84,19 +73,15 @@ async function scrape(items: any, user: User, region: string) {
 					case 2: {
 						let bb = parseOtionData.dimensions[1];
 
-						parseOtionData.variationValues[bb].map((w: any, i1: any) => {
+						parseOtionData.variationValues[bb].map((w, i1) => {
 							let skuidInfo = i0 + '_' + i1;
 
-							if (!parseOtionData.dimensionToAsinMap[skuidInfo]) {
-								return;
-							}
+							if (!parseOtionData.dimensionToAsinMap[skuidInfo]) return;
 
 							properties0 = index0 + ':' + i0;
 							properties1 = index1 + ':' + i1;
-
 							name0 = parseOtionData.dimensionsDisplay[0] + ':' + v;
 							name1 = parseOtionData.dimensionsDisplay[1] + ':' + w;
-
 							properties_list.push(properties0 + ';' + properties1);
 							properties_name_list.push(properties0 + ':' + name0 + ';' + properties1 + ':' + name1);
 						});
@@ -108,18 +93,15 @@ async function scrape(items: any, user: User, region: string) {
 						let bb = parseOtionData.dimensions[1];
 						let cc = parseOtionData.dimensions[2];
 
-						parseOtionData.variationValues[bb].map((w: any, i1: any) => {
-							parseOtionData.variationValues[cc].map((z: any, i2: any) => {
+						parseOtionData.variationValues[bb].map((w, i1) => {
+							parseOtionData.variationValues[cc].map((z, i2) => {
 								let skuidInfo = i0 + '_' + i1 + '_' + i2;
 
-								if (!parseOtionData.dimensionToAsinMap[skuidInfo]) {
-									return;
-								}
+								if (!parseOtionData.dimensionToAsinMap[skuidInfo]) return;
 
 								properties0 = index0 + ':' + i0;
 								properties1 = index1 + ':' + i1;
 								properties2 = index2 + ':' + i2;
-
 								name0 = parseOtionData.dimensionsDisplay[0] + ':' + v;
 								name1 = parseOtionData.dimensionsDisplay[1] + ':' + w;
 								name2 = parseOtionData.dimensionsDisplay[2] + ':' + z;
@@ -144,12 +126,11 @@ async function scrape(items: any, user: User, region: string) {
 			Object.entries(parseOtionData.dimensionToAsinMap).sort(([a], [b]) => {
 				const inputA = a.split('_');
 				const inputB = b.split('_');
-
 				let outputA = ``;
 				let outputB = ``;
 
-				inputA.map((v: any) => (outputA += v.padStart(4, '0')));
-				inputB.map((v: any) => (outputB += v.padStart(4, '0')));
+				inputA.map((v) => (outputA += v.padStart(4, '0')));
+				inputB.map((v) => (outputB += v.padStart(4, '0')));
 
 				return Number(outputA) - Number(outputB) > 0 ? 1 : -1;
 			}),
@@ -191,19 +172,20 @@ async function scrape(items: any, user: User, region: string) {
 					}
 				}
 
-				const resp_parse = JSON.parse(('[' + resp.trim() + ']').replace(/&&&/g, ','));
-
-				const matched1 = resp_parse.find((v: any) => v.FeatureName === 'apex_desktop');
-				const matched2 = resp_parse.find((v: any) => v.FeatureName === 'twister-slot-price_feature_div');
+				const resp_parse: any[] = JSON.parse(('[' + resp.trim() + ']').replace(/&&&/g, ','));
+				const matched1 = resp_parse.find((v) => v.FeatureName === 'apex_desktop');
+				const matched2 = resp_parse.find((v) => v.FeatureName === 'twister-slot-price_feature_div');
+				// const asdasd = resp_parse.filter((v) => {
+				// 	for (const key in v.Value.content) {
+				// 		if (v.Value.content[key]?.match(/[0-9]/g)) return true;
+				// 	}
+				// 	return false;
+				// });
 
 				let textHtml = new DOMParser().parseFromString(matched1.Value.content.apex_desktop, 'text/html');
 				let textInPrice = textHtml.querySelector('.a-offscreen');
-
-				let price = matched2.Value.content.priceToSet ?? textInPrice?.innerHTML;
-
-				if (region === 'de') {
-					price = price.replace(',', '.');
-				}
+				let price = matched2?.Value?.content?.priceToSet ?? textInPrice?.innerHTML;
+				if (region === 'de') price = price.replace(',', '.');
 
 				return price.replace(/[^0-9.]/g, '');
 			}),
@@ -219,22 +201,17 @@ async function scrape(items: any, user: User, region: string) {
 		let valuesLength = 0;
 		let totalValuesLength = 1;
 
-		Object.keys(parseOtionData.variationValues).map((v: any) => {
-			valuesLength += parseOtionData.variationValues[v].length;
-		});
+		Object.keys(parseOtionData.variationValues).map((v) => (valuesLength += parseOtionData.variationValues[v].length));
 
-		Object.keys(parseOtionData.variationValues).map((v: any) => {
-			totalValuesLength *= parseOtionData.variationValues[v].length;
-		});
+		Object.keys(parseOtionData.variationValues).map(
+			(v) => (totalValuesLength *= parseOtionData.variationValues[v].length),
+		);
 
-		for (let i = 0; i < valuesLength; i++) {
+		for (let i = 0; i < valuesLength; i++)
 			result['item']['props_list'][Object.keys(properties)[i]] = Object.keys(newObject)[i];
-		}
 
 		for (let i = 0; i < totalValuesLength; i++) {
-			if (!priceList[i]) {
-				continue;
-			}
+			if (!priceList[i]) continue;
 
 			result['item']['skus']['sku'].push({
 				price: priceList[i],
@@ -284,7 +261,7 @@ async function scrape(items: any, user: User, region: string) {
 		}
 
 		let colorImages: any = [];
-		optionProperties.map((v: any) => {
+		optionProperties.map((v) => {
 			try {
 				colorImages.push(parseData.colorImages[v][0].large);
 			} catch (e) {
@@ -492,20 +469,17 @@ async function scrape(items: any, user: User, region: string) {
 		}
 	}
 
-	let price = document.querySelector('#corePrice_feature_div > div > span > span.a-offscreen')?.innerHTML ?? '0';
+	// let price =
+	// 	document.querySelector('#corePriceDisplay_desktop_feature_div > div > span > span.aok-offscreen')?.innerHTML ?? '0';
+	let price = document.querySelector('span[class*="a-price"]')?.querySelector('.a-offscreen')?.innerHTML ?? '0';
 
-	if (region === 'de') {
-		price = price.replace(',', '.');
-	}
+	if (region === 'de') price = price.replace(',', '.');
 
 	price = price.replace(/[^0-9.]/g, '');
 
 	if (!sessionOtionData) {
-		if (price === '0') {
-			return { error: '가격정보를 찾을 수 없습니다.' };
-		} else {
-			result['item']['price'] = price;
-		}
+		if (price === '0') return { error: '가격정보를 찾을 수 없습니다.' };
+		else result['item']['price'] = price;
 	}
 	// console.log("test", parseThumbnailData);
 	for (let i = 0; i < thumbnailLength; i++) {
