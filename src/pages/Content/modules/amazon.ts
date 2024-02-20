@@ -4,27 +4,40 @@ import { form } from './common/data';
 import { checkLogin } from './common/auth';
 import { User } from '../../../type/schema';
 
+type AmazonResp = {
+	Asin: string;
+	FeatureName: string;
+	Type: string;
+	Value: {
+		content: {
+			[key: string]: string;
+		};
+	};
+};
+
 // 아마존 상품정보 크롤링
-async function scrape(items: any, user: User, region: string) {
+const scrape = async (items: any, user: User, region: string) => {
 	let result: any = form;
 
 	result.user = user;
 
 	const sessionData = items.item;
-	const sessionOtionData = items.optionItem;
+	const sessionOptionData = items.optionItem;
 	const sessionThumbnailData = items.thumbnailItem;
 	const parseData = JSON.parse(sessionData);
 	const parseThumbnailData = JSON.parse(sessionThumbnailData);
 	const optionsLength = Object.keys(parseData.colorImages).length;
 	const thumbnailLength = document.querySelectorAll('.imageThumbnail').length;
+	let mainPrice = document.querySelector('span[class*="a-price"]')?.querySelector('.a-offscreen')?.innerHTML ?? ''; // 메인가격
+	if (region === 'de') mainPrice = mainPrice?.replace(',', '.');
+	mainPrice = mainPrice?.replace(/[^0-9.]/g, '');
 
 	// 옵션이 있는 상품 옵션데이터
-	if (sessionOtionData) {
+	if (sessionOptionData) {
 		let newObject = [];
 		let sortLabel = {};
 		let properties = {};
-
-		const parseOtionData = JSON.parse(sessionOtionData);
+		const parseOtionData = JSON.parse(sessionOptionData);
 		let valueData = parseOtionData.variationValues;
 		let dimensions = parseOtionData.dimensions;
 		let dimensionsDisplay = parseOtionData.dimensionsDisplay;
@@ -137,93 +150,123 @@ async function scrape(items: any, user: User, region: string) {
 		);
 
 		// 가격정보 가져오기
-		const priceList = await Promise.all(
-			Object.values(skuNumSort).map(async (asin: any) => {
-				switch (region) {
-					case 'jp': {
-						var resp: any = await request(
-							`https://www.amazon.co.jp/gp/twister/ajaxv2?&acAsin=${parentAsin}sid=141-7145968-2426033&ptd=BOOT&sCac=1&twisterView=glance&pgid=apparel_display_on_website&rid=0TVZCED6SB5V5K56VSEM&auiAjax=1&json=1&dpxAjaxFlag=1&isUDPFlag=1&ee=2&originalHttpReferer=https://www.amazon.com/&parentAsin=${parentAsin}&enPre=1&storeID=apparel&ppw=&ppl=&isFlushing=2&dpEnvironment=softlines&asinList=${asin}&id=${asin}&mType=partial&psc=1`,
-							{
-								method: 'GET',
-							},
-						);
+		try {
+			const priceList: string[] = await Promise.all(
+				Object.values(skuNumSort).map(async (asin) => {
+					switch (region) {
+						case 'jp': {
+							var resp: any = await request(
+								`https://www.amazon.co.jp/gp/twister/ajaxv2?&acAsin=${parentAsin}sid=141-7145968-2426033&ptd=BOOT&sCac=1&twisterView=glance&pgid=apparel_display_on_website&rid=0TVZCED6SB5V5K56VSEM&auiAjax=1&json=1&dpxAjaxFlag=1&isUDPFlag=1&ee=2&originalHttpReferer=https://www.amazon.com/&parentAsin=${parentAsin}&enPre=1&storeID=apparel&ppw=&ppl=&isFlushing=2&dpEnvironment=softlines&asinList=${asin}&id=${asin}&mType=partial&psc=1`,
+								{
+									method: 'GET',
+								},
+							);
 
-						break;
+							break;
+						}
+
+						case 'de': {
+							var resp: any = await request(
+								`https://www.amazon.de/gp/twister/ajaxv2?&acAsin=${parentAsin}sid=141-7145968-2426033&ptd=BOOT&sCac=1&twisterView=glance&pgid=apparel_display_on_website&rid=0TVZCED6SB5V5K56VSEM&auiAjax=1&json=1&dpxAjaxFlag=1&isUDPFlag=1&ee=2&originalHttpReferer=https://www.amazon.com/&parentAsin=${parentAsin}&enPre=1&storeID=apparel&ppw=&ppl=&isFlushing=2&dpEnvironment=softlines&asinList=${asin}&id=${asin}&mType=partial&psc=1`,
+								{
+									method: 'GET',
+								},
+							);
+
+							break;
+						}
+
+						default: {
+							var resp: any = await request(
+								`https://www.amazon.com/gp/twister/ajaxv2?&acAsin=${parentAsin}sid=141-7145968-2426033&ptd=BOOT&sCac=1&twisterView=glance&pgid=apparel_display_on_website&rid=0TVZCED6SB5V5K56VSEM&auiAjax=1&json=1&dpxAjaxFlag=1&isUDPFlag=1&ee=2&originalHttpReferer=https://www.amazon.com/&parentAsin=${parentAsin}&enPre=1&storeID=apparel&ppw=&ppl=&isFlushing=2&dpEnvironment=softlines&asinList=${asin}&id=${asin}&mType=partial&psc=1`,
+								{
+									method: 'GET',
+								},
+							);
+						}
 					}
+					const resp_parse: AmazonResp[] = JSON.parse(('[' + resp.trim() + ']')?.replace(/&&&/g, ','));
 
-					case 'de': {
-						var resp: any = await request(
-							`https://www.amazon.de/gp/twister/ajaxv2?&acAsin=${parentAsin}sid=141-7145968-2426033&ptd=BOOT&sCac=1&twisterView=glance&pgid=apparel_display_on_website&rid=0TVZCED6SB5V5K56VSEM&auiAjax=1&json=1&dpxAjaxFlag=1&isUDPFlag=1&ee=2&originalHttpReferer=https://www.amazon.com/&parentAsin=${parentAsin}&enPre=1&storeID=apparel&ppw=&ppl=&isFlushing=2&dpEnvironment=softlines&asinList=${asin}&id=${asin}&mType=partial&psc=1`,
-							{
-								method: 'GET',
-							},
-						);
+					/** 가격타입1) apex_desktop  */
+					const matched1 = resp_parse.find((v) => v.FeatureName === 'apex_desktop');
+					const matched1Html = new DOMParser().parseFromString(
+						matched1?.Value.content['apex_desktop'] ?? '',
+						'text/html',
+					);
+					const matched1Price = matched1Html.querySelector('.a-offscreen')?.innerHTML;
 
-						break;
-					}
+					/** 가격타입2) twisterPlusWWDesktop  */
+					const matched2 = resp_parse.find((v) => v.FeatureName === 'twisterPlusWWDesktop');
+					const matched2Text = new DOMParser()
+						.parseFromString(matched2?.Value.content['twisterPlusWWDesktop'] ?? '', 'text/html')
+						.querySelector('[class*="twister-plus-buying-options-price-data"]')?.childNodes[0].textContent;
+					const matched2Json = matched2Text ? JSON.parse(matched2Text) : undefined;
+					const matched2Price = matched2Json?.desktop_buybox_group_1[0]?.displayPrice;
 
-					default: {
-						var resp: any = await request(
-							`https://www.amazon.com/gp/twister/ajaxv2?&acAsin=${parentAsin}sid=141-7145968-2426033&ptd=BOOT&sCac=1&twisterView=glance&pgid=apparel_display_on_website&rid=0TVZCED6SB5V5K56VSEM&auiAjax=1&json=1&dpxAjaxFlag=1&isUDPFlag=1&ee=2&originalHttpReferer=https://www.amazon.com/&parentAsin=${parentAsin}&enPre=1&storeID=apparel&ppw=&ppl=&isFlushing=2&dpEnvironment=softlines&asinList=${asin}&id=${asin}&mType=partial&psc=1`,
-							{
-								method: 'GET',
-							},
-						);
-					}
+					/** 가격타입2를 우선시 생성 */
+					let price = matched2Price || matched1Price;
+					if (region === 'de') price = price?.replace(',', '.');
+
+					return price ? price.replace(/[^0-9.]/g, '') : '';
+				}),
+			);
+
+			/** priceList에 가격오류가 있을 경우 돔에서 옵션가격 가져옴 */
+			for (let i = 0; i < priceList.length; i++)
+				if (priceList[i] === '') {
+					const optionList = document.querySelector('#twisterContainer')?.querySelector('ul')?.querySelectorAll('li');
+					const optionHtml = optionList?.[i]
+						.querySelector('[class*="twisterSlotDiv"]')
+						?.children.item(0)
+						?.children.item(0)?.innerHTML;
+
+					// $ 뒤의 글자만 추출
+					const optionPrice = optionHtml?.match(/\$([\d,]+\.\d{2})/)?.[1].replace(/[^0-9.]/g, '');
+
+					// 그래도 없으면 메인가격 할당
+					priceList[i] = optionPrice || mainPrice;
 				}
 
-				const resp_parse: any[] = JSON.parse(('[' + resp.trim() + ']').replace(/&&&/g, ','));
-				const matched1 = resp_parse.find((v) => v.FeatureName === 'apex_desktop');
-				const matched2 = resp_parse.find((v) => v.FeatureName === 'twister-slot-price_feature_div');
-				// const asdasd = resp_parse.filter((v) => {
-				// 	for (const key in v.Value.content) {
-				// 		if (v.Value.content[key]?.match(/[0-9]/g)) return true;
-				// 	}
-				// 	return false;
-				// });
+			// 최종제작된 옵션가격중 하나라도 비어있을 경우 throw 에러
+			if (priceList.some((v) => v === '')) throw Error;
 
-				let textHtml = new DOMParser().parseFromString(matched1.Value.content.apex_desktop, 'text/html');
-				let textInPrice = textHtml.querySelector('.a-offscreen');
-				let price = matched2?.Value?.content?.priceToSet ?? textInPrice?.innerHTML;
-				if (region === 'de') price = price.replace(',', '.');
+			for (let i = 0; i < dispalyValuesLength; i++)
+				if (!priceList[i]) {
+					result['item']['price'] = priceList[i];
+					break;
+				}
 
-				return price.replace(/[^0-9.]/g, '');
-			}),
-		);
+			let valuesLength = 0;
+			let totalValuesLength = 1;
 
-		for (let i = 0; i < dispalyValuesLength; i++) {
-			if (!priceList[i]) {
-				result['item']['price'] = priceList[i];
-				break;
+			Object.keys(parseOtionData.variationValues).map(
+				(v) => (valuesLength += parseOtionData.variationValues[v].length),
+			);
+
+			Object.keys(parseOtionData.variationValues).map(
+				(v) => (totalValuesLength *= parseOtionData.variationValues[v].length),
+			);
+
+			for (let i = 0; i < valuesLength; i++)
+				result['item']['props_list'][Object.keys(properties)[i]] = Object.keys(newObject)[i];
+
+			for (let i = 0; i < totalValuesLength; i++) {
+				if (!priceList[i]) continue;
+
+				result['item']['skus']['sku'].push({
+					price: priceList[i],
+					total_price: 0,
+					original_price: 0,
+					properties: properties_list[i],
+					properties_name: properties_name_list[i],
+					quantity: user.userInfo?.collectStock === 0 ? '99999' : user.userInfo?.collectStock.toString(),
+					sku_id: Object.values(skuNumSort)[i],
+				});
 			}
+		} catch (error) {
+			console.error(error);
+			return { error: '옵션 가격정보를 찾을 수 없습니다.' };
 		}
-
-		let valuesLength = 0;
-		let totalValuesLength = 1;
-
-		Object.keys(parseOtionData.variationValues).map((v) => (valuesLength += parseOtionData.variationValues[v].length));
-
-		Object.keys(parseOtionData.variationValues).map(
-			(v) => (totalValuesLength *= parseOtionData.variationValues[v].length),
-		);
-
-		for (let i = 0; i < valuesLength; i++)
-			result['item']['props_list'][Object.keys(properties)[i]] = Object.keys(newObject)[i];
-
-		for (let i = 0; i < totalValuesLength; i++) {
-			if (!priceList[i]) continue;
-
-			result['item']['skus']['sku'].push({
-				price: priceList[i],
-				total_price: 0,
-				original_price: 0,
-				properties: properties_list[i],
-				properties_name: properties_name_list[i],
-				quantity: user.userInfo?.collectStock === 0 ? '99999' : user.userInfo?.collectStock.toString(),
-				sku_id: Object.values(skuNumSort)[i],
-			});
-		}
-
 		const visualImg = parseData.visualDimensions.length;
 		// console.log('test', visualImg);
 		let optionProperties: any = [];
@@ -471,14 +514,12 @@ async function scrape(items: any, user: User, region: string) {
 
 	// let price =
 	// 	document.querySelector('#corePriceDisplay_desktop_feature_div > div > span > span.aok-offscreen')?.innerHTML ?? '0';
-	let price = document.querySelector('span[class*="a-price"]')?.querySelector('.a-offscreen')?.innerHTML ?? '0';
-
+	let price = document.querySelector('span[class*="a-price"]')?.querySelector('.a-offscreen')?.innerHTML ?? '';
 	if (region === 'de') price = price.replace(',', '.');
-
 	price = price.replace(/[^0-9.]/g, '');
 
-	if (!sessionOtionData) {
-		if (price === '0') return { error: '가격정보를 찾을 수 없습니다.' };
+	if (!sessionOptionData) {
+		if (price === '') return { error: '가격정보를 찾을 수 없습니다.' };
 		else result['item']['price'] = price;
 	}
 	// console.log("test", parseThumbnailData);
@@ -538,7 +579,7 @@ async function scrape(items: any, user: User, region: string) {
 	result['item']['shop_id'] = `amazon-${region}`;
 
 	return result;
-}
+};
 
 export class amazon {
 	async get(user: User, region: string) {

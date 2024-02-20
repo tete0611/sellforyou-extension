@@ -144,7 +144,7 @@ const main = async () => {
 			case 'order-vvic': {
 				break;
 			}
-			/** 셀포유로 console.log 보내서 테스트 (소싱처에서 console.clear()메서드 등 발생으로 인한) */
+			/** 셀포유로 console.log 보내서 테스트 (소싱처에서 console.clear()메서드 등 발생으로 인한 확인 불가능시) */
 			case 'console': {
 				console.log(request.source);
 			}
@@ -303,36 +303,41 @@ const main = async () => {
 		// const shopId = parseInt(currentUrl.match(/\/list\/(\d+)/)?.[1] ?? '0');
 		floatingButtonBulk({ info, shop: 'vvic' });
 
-		/** 아마존 페이지 */
+		/** 아마존 페이지 1 */
 	} else if (/www.amazon.com\/.+\/dp\//.test(currentUrl) || /www.amazon.com\/dp/.test(currentUrl)) {
+		console.log(`amazon page type 1 entered`);
 		const info = await initInfo(true);
 		const result = await new amazon().get(info.user, 'us');
 		floatingButton({ info, result });
 
-		/** 아마존 페이지 */
+		/** 아마존 재팬 페이지 2 */
 	} else if (/www.amazon.co.jp\/.+\/dp\//.test(currentUrl) || /www.amazon.co.jp\/dp/.test(currentUrl)) {
+		console.log(`amazon page type 2 entered`);
 		const info = await initInfo(true);
 		const result = await new amazon().get(info.user, 'jp');
 		floatingButton({ info, result });
 
-		/** 아마존 페이지 */
+		/** 아마존 페이지 3 */
 	} else if (/www.amazon.de\/.+\/dp\//.test(currentUrl) || /www.amazon.de\/dp/.test(currentUrl)) {
+		console.log(`amazon page type 3 entered`);
 		const info = await initInfo(true);
 		const result = await new amazon().get(info.user, 'de');
 		floatingButton({ info, result });
 
-		/** 아마존 페이지 */
+		/** 아마존 페이지 4 */
 	} else if (
 		/www.amazon.com\/s\?/.test(currentUrl) ||
 		/www.amazon.com\/s\//.test(currentUrl) ||
 		/www.amazon.com\/b\//.test(currentUrl)
 	) {
+		console.log(`amazon page type 4 entered`);
 		const info = await initInfo(false);
 		await new amazon().bulkTypeOne(info.user, 'amazon.com');
 		floatingButtonBulk({ info, shop: 'amazon1' });
 
 		/** 아마존 페이지 */
 	} else if (/www.amazon.com\/stores/.test(currentUrl)) {
+		console.log(`amazon store page entered`);
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.com');
 		floatingButtonBulk({ info, shop: 'amazon2' });
@@ -343,12 +348,14 @@ const main = async () => {
 		/www.amazon.co.jp\/s\//.test(currentUrl) ||
 		/www.amazon.co.jp\/b\//.test(currentUrl)
 	) {
+		console.log(`amazon page type 5 entered`);
 		const info = await initInfo(false);
 		await new amazon().bulkTypeOne(info.user, 'amazon.co.jp');
 		floatingButtonBulk({ info, shop: 'amazon1' });
 
 		/** 아마존 페이지 */
 	} else if (/www.amazon.co.jp\/stores/.test(currentUrl)) {
+		console.log(`amazon page type 6 entered`);
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.co.jp');
 		floatingButtonBulk({ info, shop: 'amazon2' });
@@ -359,12 +366,14 @@ const main = async () => {
 		/www.amazon.de\/s\//.test(currentUrl) ||
 		/www.amazon.de\/b\//.test(currentUrl)
 	) {
+		console.log(`amazon page type 7 entered`);
 		const info = await initInfo(false);
 		await new amazon().bulkTypeOne(info.user, 'amazon.de');
 		floatingButtonBulk({ info, shop: 'amazon1' });
 
 		/** 아마존 페이지 */
 	} else if (/www.amazon.de\/stores/.test(currentUrl)) {
+		console.log(`amazon page type 8 entered`);
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.de');
 		floatingButtonBulk({ info, shop: 'amazon2' });
