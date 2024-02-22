@@ -322,14 +322,8 @@ export const getImageMeta = async (src: string) => {
 };
 
 /** 이미지 용량 구하기 */
-// async function getImageSize(url: any) {
-//   return fetch(url)
-//     .then((response) => response.blob())
-//     .then((blob) => blob.size)
-//     .catch((e) => {
-//       console.log(e);
-//     });
-// }
+// 타오바오 이미지는 로드하면 aliexpress의 이미지로 넘어가는데 해당 이미지의 프로토콜 문제로
+// 보안 이슈가 생기므로 https://images.weserv.nl 서비스를 사용함. 이 서비스는 입력받은 이미지 URL을 HTTP나 HTTPS 상관없이 HTTPS 프로토콜로 반환해주는 서비스입니다.
 export const getImageSize = async (url: string): Promise<number | string> => {
 	try {
 		const response = await fetch(url);
@@ -351,18 +345,6 @@ export const getImageSize = async (url: string): Promise<number | string> => {
 		}
 	}
 };
-
-//타오바오 이미지는 로드하면 aliexpress의 이미지로 넘어가는데 해당 이미지의 프로토콜 문제로
-//보안 이슈가 생기므로 https://images.weserv.nl 서비스를 사용함. 이 서비스는 입력받은 이미지 URL을 HTTP나 HTTPS 상관없이 HTTPS 프로토콜로 반환해주는 서비스입니다.
-
-// export async function getTaobaoImageSize(url: any) {
-// 	const httpsImageUrl = 'https://images.weserv.nl/?url=' + encodeURIComponent(url);
-// 	return fetch(httpsImageUrl, { method: 'HEAD' })
-// 		.then((response) => response.headers.get('content-length'))
-// 		.catch((error) => {
-// 			console.error(error);
-// 		});
-// }
 
 /** 오픈마켓 등록상품URL 가져오기 */
 export const getStoreUrl = (commonStore: common, marketCode: string, productId: number) => {

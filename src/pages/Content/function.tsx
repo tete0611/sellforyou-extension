@@ -2,10 +2,11 @@ import { bulkCollectUsingApi, pageRefresh, sleep } from '../../../common/functio
 import { User } from '../../type/schema';
 import { BulkInfo, CollectInfo, Info, Sender, Shop, Source } from '../../type/type';
 import { getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../Tools/ChromeAsync';
-import { BulkHasFailedForm, BulkSuccessForm, BackGroundPaper, CollectButtonBulk } from './components';
+import { BulkHasFailedForm, BulkSuccessForm, BackGroundPaper, CollectButtonBulk, TestButton } from './components';
 import React from 'react';
 import { render } from 'react-dom';
 import { CollectButton } from './components';
+import { CaptchaPaper } from './components/CaptchaPaper';
 
 export interface FloatingButtonProps {
 	info: Info;
@@ -277,4 +278,21 @@ export const floatingButtonBulk = (props: FloatingButtonBulkProps) => {
 		shop,
 		urlUnchangedPage ? { shopId: urlUnchangedPage.shopId, method: urlUnchangedPage.method } : undefined,
 	);
+};
+
+/** 테스트버튼 띄우는 함수, 클릭 될때 발생할 이벤트는 그때그때 전달 */
+export const testButton = ({ onClick }: { onClick: () => void }) => {
+	const wrapper = document.createElement('div');
+	render(<TestButton onClick={onClick} />, wrapper);
+	document.documentElement.appendChild(wrapper);
+};
+
+/** 티몰, 타오바오 captcha 감지시 알림 paper */
+export const captchaInsert = () => {
+	const oldPaper = document.getElementById('sfyPaper');
+	if (oldPaper) oldPaper.remove();
+
+	const paper = document.createElement('div');
+	render(<CaptchaPaper />, paper);
+	document.documentElement.appendChild(paper);
 };

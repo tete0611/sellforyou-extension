@@ -7,6 +7,18 @@
 	src: url('chrome-extension://__MSG_@@extension_id__/resources/NanumGothic-Regular.ttf');
 }
 
+.SELLFORYOU-TEST {
+	/* border-spacing: 0px; */
+	border-collapse: collapse;
+	box-shadow: 0px 0px 3px gray;
+	margin: 10px 0px 0px 10px;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: auto;
+	z-index: 2147483648;
+}
+
 .SELLFORYOU-FLOATING {
 	/* border-spacing: 0px; */
 	border-collapse: collapse;
