@@ -1,3 +1,4 @@
+import CryptoJS from 'crypto-js';
 import { alibaba, amazon, express, taobao, tmall, vvic } from './modules';
 import { sendRuntimeMessage } from '../Tools/ChromeAsync';
 import { getCookie } from '../../../common/function';
@@ -201,8 +202,8 @@ const main = async () => {
 	) {
 		console.log('티몰 상세페이지 진입');
 		const info = await initInfo(true);
-		const result = await new tmall().get(info.user);
-		floatingButton({ info: info, result: result });
+		const result = await new tmall().get(info.user, info.isBulkProcessing);
+		floatingButton({ info: info, result: result as any });
 
 		/** 티몰 리스트페이지 */
 	} else if (/tmall.com/.test(currentUrl)) {
