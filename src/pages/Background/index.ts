@@ -309,50 +309,47 @@ const addToInventory = async (sender: Sender, origin: any) => {
 	// 카테고리 사전설정 데이터 가져오기 (카테고리 수동설정)
 	if (!collect || !collect.categoryId) {
 		// 카테고리 사전설정값이 없는 경우 쿠팡 API를 통해 카테고리를 추천받음
+		// https://developers.coupangcorp.com/hc/ko/articles/360033509234-%EC%B9%B4%ED%85%8C%EA%B3%A0%EB%A6%AC-%EC%B6%94%EC%B2%9C
 
 		let accesskey = userJson.data.selectMyInfoByUser.userInfo.coupangAccessKey;
 		let secretkey = userJson.data.selectMyInfoByUser.userInfo.coupangSecretKey;
 
-		if (accesskey === '' && secretkey === '') {
-			accesskey = 'd3087930-fdd7-490e-aa06-da32f79cc9c2';
-			secretkey = '5d4e2bce5dd8337285b634100c6a198d1b31327a';
-		}
+		/** 쿠팡 연동 되어있을 경우 */
+		if (accesskey !== '' && secretkey !== '') {
+			// accesskey = 'd3087930-fdd7-490e-aa06-da32f79cc9c2';
+			// secretkey = '5d4e2bce5dd8337285b634100c6a198d1b31327a';
+			try {
+				let categoryJson = await coupangApiGateway({
+					accesskey: accesskey,
+					secretkey: secretkey,
+					path: `/v2/providers/openapi/apis/api/v1/categorization/predict`,
+					query: '',
+					method: 'POST',
+					data: {
+						productName: productName,
+					},
+				});
 
-		try {
-			let categoryJson = await coupangApiGateway({
-				accesskey: accesskey,
-				secretkey: secretkey,
-				path: `/v2/providers/openapi/apis/api/v1/categorization/predict`,
-				query: '',
-				method: 'POST',
-				data: {
-					productName: productName,
-				},
-			});
+				if (categoryJson?.error || categoryJson.code === 'ERROR') {
+					if (categoryJson.message.includes('Not allowed IP'))
+						return await finishCollect(
+							sender,
+							'failed',
+							'쿠팡 seller에 등록된 IP와 셀포유를 사용중인 PC의 IP가 같은지 확인바랍니다.',
+						);
+					else
+						return await finishCollect(
+							sender,
+							'failed',
+							'카테고리 자동설정 도중 오류가 발생하였습니다.\n1. 셀포유->오픈마켓연동의 "쿠팡"란에 입력된 정보.\n2. 쿠팡 윙에 발급된 "OPEN API 키"\n가 정상적인지 확인해주세요.\n이상이 없다면 관리자 문의 요망.',
+						);
+				}
 
-			if (categoryJson?.error || categoryJson.code === 'ERROR') {
-				if (categoryJson.message.includes('Not allowed IP'))
-					return await finishCollect(
-						sender,
-						'failed',
-						'쿠팡 seller에 등록된 IP와 셀포유를 사용중인 PC의 IP가 같은지 확인바랍니다.',
-					);
-				else
-					return await finishCollect(
-						sender,
-						'failed',
-						'쿠팡 카테고리 자동설정 도중 오류가 발생하였습니다.\n1. 셀포유->오픈마켓연동의 "쿠팡"란에 입력된 정보.\n2. 쿠팡 윙에 발급된 "OPEN API 키"\n가 정상적인지 확인해주세요.\n이상이 없다면 관리자 문의 요망.',
-					);
+				origin.item.cid = categoryJson.data.predictedCategoryId;
+			} catch (e) {
+				return await finishCollect(sender, 'failed', '카테고리 자동설정 도중 오류가 발생하였습니다.\n관리자 문의 요망');
 			}
-
-			origin.item.cid = categoryJson.data.predictedCategoryId;
-		} catch (e) {
-			return await finishCollect(
-				sender,
-				'failed',
-				'쿠팡 카테고리 자동설정 도중 오류가 발생하였습니다.\n관리자 문의 요망',
-			);
-		}
+		} else origin.item.cid = '';
 	}
 	// 카테고리 사전설정값이 있는 경우 해당 카테고리번호를 할당
 	else origin.item.nid = collect.categoryId;

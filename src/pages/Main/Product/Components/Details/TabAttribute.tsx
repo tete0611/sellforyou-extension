@@ -286,7 +286,7 @@ export const TabAttribute = observer((props: Props) => {
 																	)
 																}
 															>
-																{props.item.categoryInfoA077.activeSillDataA077.map((v) => (
+																{props.item.categoryInfoA077.activeSillDataA077?.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
@@ -388,7 +388,7 @@ export const TabAttribute = observer((props: Props) => {
 																	)
 																}
 															>
-																{props.item.categoryInfoB378.activeSillDataB378.map((v) => (
+																{props.item.categoryInfoB378.activeSillDataB378?.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
@@ -490,7 +490,7 @@ export const TabAttribute = observer((props: Props) => {
 																	)
 																}
 															>
-																{props.item.categoryInfoA112.activeSillDataA112.map((v) => (
+																{props.item.categoryInfoA112.activeSillDataA112?.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
@@ -592,7 +592,7 @@ export const TabAttribute = observer((props: Props) => {
 																	)
 																}
 															>
-																{props.item.categoryInfoA113.activeSillDataA113.map((v) => (
+																{props.item.categoryInfoA113.activeSillDataA113?.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
@@ -695,7 +695,7 @@ export const TabAttribute = observer((props: Props) => {
 																	)
 																}
 															>
-																{props.item.categoryInfoA006.activeSillDataA006.map((v) => (
+																{props.item.categoryInfoA006.activeSillDataA006?.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
@@ -797,7 +797,7 @@ export const TabAttribute = observer((props: Props) => {
 																	)
 																}
 															>
-																{props.item.categoryInfoA001.activeSillDataA001.map((v) => (
+																{props.item.categoryInfoA001.activeSillDataA001?.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
@@ -899,7 +899,7 @@ export const TabAttribute = observer((props: Props) => {
 																	)
 																}
 															>
-																{props.item.categoryInfoA027.activeSillDataA027.map((v) => (
+																{props.item.categoryInfoA027.activeSillDataA027?.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
@@ -1001,7 +1001,7 @@ export const TabAttribute = observer((props: Props) => {
 																	)
 																}
 															>
-																{props.item.categoryInfoB719.activeSillDataB719.map((v) => (
+																{props.item.categoryInfoB719.activeSillDataB719?.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
@@ -1103,7 +1103,7 @@ export const TabAttribute = observer((props: Props) => {
 																	)
 																}
 															>
-																{props.item.categoryInfoA524.activeSillDataA524.map((v) => (
+																{props.item.categoryInfoA524.activeSillDataA524?.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
@@ -1206,7 +1206,7 @@ export const TabAttribute = observer((props: Props) => {
 																	)
 																}
 															>
-																{props.item.categoryInfoA525.activeSillDataA525.map((v) => (
+																{props.item.categoryInfoA525.activeSillDataA525?.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
@@ -1308,7 +1308,7 @@ export const TabAttribute = observer((props: Props) => {
 																	)
 																}
 															>
-																{props.item.categoryInfoB956.activeSillDataB956.map((v) => (
+																{props.item.categoryInfoB956.activeSillDataB956?.map((v) => (
 																	<MenuItem value={v.code}>{v.name}</MenuItem>
 																))}
 															</ComboBox>
@@ -1421,7 +1421,7 @@ export const TabAttribute = observer((props: Props) => {
 							>
 								<Table stickyHeader>
 									<TableBody>
-										{props.item.attribute.map((v) => {
+										{props.item.attribute?.map((v) => {
 											return (
 												<TableRow>
 													<StyledTableCell width={'40%'}>

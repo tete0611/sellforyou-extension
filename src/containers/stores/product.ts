@@ -3582,7 +3582,13 @@ export class product {
 			siteCode: markets,
 		});
 
-		if (response.errors) return alert(response.errors[0].message);
+		if (response.errors) {
+			commonStore.setUploadable(true);
+			commonStore.setStopped(true);
+
+			alert(response.errors[0].message);
+			return;
+		}
 
 		const data = JSON.parse(response.data.getRegisterProductsDataByUser);
 
