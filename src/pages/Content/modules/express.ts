@@ -4,7 +4,7 @@ import { injectScript } from './common/utils';
 import { sleep, getImageSize } from '../../../../common/function';
 import { User } from '../../../type/schema';
 
-/** 하단까지 스크롤을 부드럽게 해주는 함수 , 기본값:0.5초 */
+/** 하단까지 스크롤을 부드럽게 해주는 함수 , 기본값:0.5초 (스크롤 내려야 상품뜨는것 때문) */
 const scrollToBottomSmooth = async (duration: number = 500) => {
 	const scrollElement = document.documentElement || document.body;
 	const start = scrollElement.scrollTop;
@@ -25,15 +25,14 @@ const scrollToBottomSmooth = async (duration: number = 500) => {
 
 // 알리익스프레스 상품정보 크롤링
 const scrape = async (items: any, user: User) => {
-	let result: any = form;
-
+	const result = form;
 	result.user = user;
 
 	// 페이지별 크롤링 방식 다름
 	if (items.pageType === 1) {
 		// 상품속성
 		if (items.specsModule)
-			items.specsModule.props.map((v: any) => {
+			items.specsModule.props.map((v) => {
 				result['item']['attr'].push(`${v.attrName}:${v.attrValue}`);
 			});
 
@@ -42,7 +41,7 @@ const scrape = async (items: any, user: User) => {
 			let shipping_list = items.shippingModule.generalFreightInfo.originalLayoutResultList;
 
 			for (let i in shipping_list) {
-				let shipping_data: any = {};
+				let shipping_data: { name: any; value: any; format: any; default: any } = {} as any;
 
 				shipping_data.name = shipping_list[i].bizData.company;
 
@@ -163,14 +162,6 @@ const scrape = async (items: any, user: User) => {
 		try {
 			for (let i in thumnails) {
 				try {
-					// let image: any = await getImageSize(/^https?:/.test(thumnails[i]) ? thumnails[i] : "http:" + thumnails[i]);
-					// if (image < 1000) {
-					//   console.log("썸네일 흰색 이미지 발견", thumnails[i]);
-					// } else {
-					//   result["item"]["item_imgs"].push({
-					//     url: /^https?:/.test(thumnails[i]) ? thumnails[i] : "http:" + thumnails[i],
-					//   });
-					// }
 					result['item']['item_imgs'].push({
 						url: /^https?:/.test(thumnails[i]) ? thumnails[i] : 'http:' + thumnails[i],
 					});
@@ -351,7 +342,7 @@ const scrape = async (items: any, user: User) => {
 
 		let desc_resp = await fetch(items.descriptionModule.descriptionUrl);
 		let desc_text = await desc_resp.text();
-		let desc_html: any = new DOMParser().parseFromString(desc_text, 'text/html');
+		let desc_html = new DOMParser().parseFromString(desc_text, 'text/html');
 		let desc_scripts = desc_html.querySelectorAll('script');
 
 		for (let i in desc_scripts) {
@@ -362,18 +353,16 @@ const scrape = async (items: any, user: User) => {
 			}
 		}
 
-		let desc: any = desc_html.querySelectorAll('html > body img');
-		let desc_imgs: any = [];
+		let desc = desc_html.querySelectorAll('html > body img') as NodeListOf<HTMLImageElement>;
+		let desc_imgs: string[] = [];
 
 		for (let i in desc) {
 			try {
 				if (desc[i].src) {
-					if (desc[i].src.includes('.gif')) desc[i].parentNode.removeChild(desc[i]);
+					if (desc[i].src.includes('.gif')) desc[i].parentNode?.removeChild(desc[i]);
 					else {
-						const image: any = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
-						if (image < 1000)
-							// console.log('흰색 이미지', desc[i]);
-							desc[i].parentNode.removeChild(desc[i]);
+						const image = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
+						if (typeof image === 'number' && image < 1000) desc[i].parentNode?.removeChild(desc[i]);
 						else {
 							desc[i].src = desc[i].src;
 							desc_imgs.push(desc[i].src);
@@ -385,7 +374,7 @@ const scrape = async (items: any, user: User) => {
 			}
 		}
 
-		let desc_href: any = desc_html.querySelectorAll('a');
+		let desc_href = desc_html.querySelectorAll('a');
 
 		for (let i in desc_href) {
 			try {
@@ -395,28 +384,30 @@ const scrape = async (items: any, user: User) => {
 			}
 		}
 
-		let desc_output = desc_html.querySelector('body').innerHTML;
-		let iterator = document.createNodeIterator(desc_html.querySelector('body'), NodeFilter.SHOW_TEXT);
+		let desc_output = desc_html.querySelector('body')?.innerHTML ?? '';
+		let iterator = document.createNodeIterator(desc_html.querySelector('body')!, NodeFilter.SHOW_TEXT);
 		let textnode;
 
 		while ((textnode = iterator.nextNode())) {
 			const texts = textnode.textContent
 				.split('\n')
-				.map((v: any) => v.trim())
-				.filter((v: any) => v);
+				.map((v) => v.trim())
+				.filter((v) => v);
 
-			texts.map((v: any) => result['item']['desc_text'].push(v));
+			texts.map((v) => result['item']['desc_text'].push(v));
 		}
 
-		result['item']['shopName'] = 'express'; //todo
+		const price = items.priceModule.discountPrice.hasOwnProperty('minActivityAmount')
+			? items.priceModule.discountPrice.minActivityAmount.value.toString()
+			: items.priceModule.discountPrice.minAmount.value.toString();
+		const pic_url = /^https?:/.test(thumnails[0]) ? thumnails[0] : 'http:' + thumnails[0];
+
+		result['item']['shopName'] = 'express';
 		result['item']['url'] = `https://ko.aliexpress.com/item/${items.commonModule.id}.html`;
 		result['item']['num_iid'] = items.commonModule.id.toString();
 		result['item']['title'] = items.commonModule.subject;
-		result['item']['price'] = items.priceModule.discountPrice.hasOwnProperty('minActivityAmount')
-			? items.priceModule.discountPrice.minActivityAmount.value.toString()
-			: items.priceModule.discountPrice.minAmount.value.toString();
-		result['item']['pic_url'] = /^https?:/.test(thumnails[0]) ? thumnails[0] : 'http:' + thumnails[0];
-		// result['item']['brand'] = "";
+		result['item']['price'] = price;
+		result['item']['pic_url'] = pic_url;
 		result['item']['desc'] = desc_output;
 		result['item']['desc_img'] = desc_imgs;
 		result['item']['tmall'] = false;
@@ -425,14 +416,6 @@ const scrape = async (items: any, user: User) => {
 		try {
 			for (let i in thumnails) {
 				try {
-					// let image: any = await getImageSize(/^https?:/.test(thumnails[i]) ? thumnails[i] : "http:" + thumnails[i]);
-					// if (image < 1000) {
-					//   console.log("썸네일 흰색 이미지 발견", thumnails[i]);
-					// } else {
-					//   result["item"]["item_imgs"].push({
-					//     url: /^https?:/.test(thumnails[i]) ? thumnails[i] : "http:" + thumnails[i],
-					//   });
-					// }
 					result['item']['item_imgs'].push({
 						url: /^https?:/.test(thumnails[i]) ? thumnails[i] : 'http:' + thumnails[i],
 					});
@@ -677,7 +660,6 @@ const scrape = async (items: any, user: User) => {
 			? items.priceModule.minActivityAmount.value.toString()
 			: items.priceModule.minAmount.value.toString();
 		result['item']['pic_url'] = /^https?:/.test(thumnails[0]) ? thumnails[0] : 'http:' + thumnails[0];
-		// result['item']['brand'] = "";
 		result['item']['desc'] = desc_output;
 		result['item']['desc_img'] = desc_imgs;
 		result['item']['tmall'] = false;
@@ -686,14 +668,6 @@ const scrape = async (items: any, user: User) => {
 		try {
 			for (let i in thumnails) {
 				try {
-					// let image: any = await getImageSize(/^https?:/.test(thumnails[i]) ? thumnails[i] : "http:" + thumnails[i]);
-					// if (image < 1000) {
-					//   console.log("썸네일 흰색 이미지 발견", thumnails[i]);
-					// } else {
-					//   result["item"]["item_imgs"].push({
-					//     url: /^https?:/.test(thumnails[i]) ? thumnails[i] : "http:" + thumnails[i],
-					//   });
-					// }
 					result['item']['item_imgs'].push({
 						url: /^https?:/.test(thumnails[i]) ? thumnails[i] : 'http:' + thumnails[i],
 					});
@@ -853,7 +827,7 @@ export class express {
 			let data = sessionStorage.getItem('sfy-express-item');
 			if (data) {
 				let originalData = JSON.parse(data);
-				console.log('sessonData', originalData);
+				// console.log('sessonData', originalData);
 
 				return await scrape(originalData, user);
 			}

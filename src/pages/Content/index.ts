@@ -220,7 +220,7 @@ const main = async () => {
 	} else if (/aliexpress.com\/item/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new express().get(info.user);
-		floatingButton({ info: info, result: result });
+		floatingButton({ info: info, result: result as any });
 
 		/** 알리 검색 페이지 */
 	} else if (
