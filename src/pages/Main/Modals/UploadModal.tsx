@@ -1941,7 +1941,7 @@ export const UploadModal = observer(() => {
 								mx: 0.5,
 							}}
 							onClick={async () => {
-								await setUploadable(false);
+								// setUploadable(false);
 								await uploadItems(common, true);
 							}}
 						>
@@ -1958,7 +1958,7 @@ export const UploadModal = observer(() => {
 								mx: 0.5,
 							}}
 							onClick={async () => {
-								await setUploadable(false);
+								// setUploadable(false);
 								await uploadItems(common, false);
 							}}
 						>

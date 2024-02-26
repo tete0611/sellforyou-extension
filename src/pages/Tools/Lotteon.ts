@@ -120,9 +120,7 @@ export async function deleteLotteon(productStore: product, commonStore: common, 
 
 // 롯데온 상품등록
 export async function uploadLotteon(productStore: product, commonStore: common, data: any) {
-	if (!data) {
-		return false;
-	}
+	if (!data) return false;
 
 	let shopName = data.DShopInfo.site_name;
 
@@ -133,7 +131,6 @@ export async function uploadLotteon(productStore: product, commonStore: common, 
 
 		let transId = commonStore.user.userInfo?.lotteonVendorId;
 		let apiKey = commonStore.user.userInfo?.lotteonApiKey;
-
 		let outbound = null;
 		let inbound = null;
 

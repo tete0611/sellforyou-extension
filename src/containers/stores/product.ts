@@ -3577,6 +3577,8 @@ export class product {
 
 		if (markets.length < 1) return alert('오픈마켓이 선택되지 않았습니다.');
 
+		commonStore.setUploadable(false);
+
 		const response = await gql(QUERIES.GET_REGISTER_PRODUCTS_DATA_BY_USER, {
 			productIds,
 			siteCode: markets,
@@ -3584,8 +3586,6 @@ export class product {
 
 		if (response.errors) {
 			commonStore.setUploadable(true);
-			commonStore.setStopped(true);
-
 			alert(response.errors[0].message);
 			return;
 		}
@@ -3608,69 +3608,69 @@ export class product {
 			uploadSmartStore(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === SMART_STORE),
+				data.job_json_array.find((v) => v.DShopInfo.site_code === SMART_STORE),
 			),
 			uploadCoupang(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === COUPANG),
+				data.job_json_array.find((v) => v.DShopInfo.site_code === COUPANG),
 			),
 			uploadStreet(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === STREET11_GLOBAL),
+				data.job_json_array.find((v) => v.DShopInfo.site_code === STREET11_GLOBAL),
 			),
 			uploadStreet(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === STREET11_NORMAL),
+				data.job_json_array.find((v) => v.DShopInfo.site_code === STREET11_NORMAL),
 			),
 			/** ESM2.0 */
 			uploadESMPlus2(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === AUCTION_2), //옥션2.0
+				data.job_json_array.find((v) => v.DShopInfo.site_code === AUCTION_2), //옥션2.0
 			),
 			uploadESMPlus2(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === G_MARKET_2), //지마켓2.0
+				data.job_json_array.find((v) => v.DShopInfo.site_code === G_MARKET_2), //지마켓2.0
 			),
 			/** ESM1.0 */
 			uploadESMPlus(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === G_MARKET_1),
+				data.job_json_array.find((v) => v.DShopInfo.site_code === G_MARKET_1),
 			),
 			uploadESMPlus(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === AUCTION_1),
+				data.job_json_array.find((v) => v.DShopInfo.site_code === AUCTION_1),
 			),
 			uploadInterpark(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === INTER_PARK),
+				data.job_json_array.find((v) => v.DShopInfo.site_code === INTER_PARK),
 			),
 			uploadWemakeprice(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === WE_MAKE_PRICE),
+				data.job_json_array.find((v) => v.DShopInfo.site_code === WE_MAKE_PRICE),
 			),
 			uploadLotteon(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === LOTTE_ON_GLOBAL),
+				data.job_json_array.find((v) => v.DShopInfo.site_code === LOTTE_ON_GLOBAL),
 			),
 			uploadLotteon(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === LOTTE_ON_NORMAL),
+				data.job_json_array.find((v) => v.DShopInfo.site_code === LOTTE_ON_NORMAL),
 			),
 			uploadTmon(
 				this,
 				commonStore,
-				data.job_json_array.find((v: any) => v.DShopInfo.site_code === TMON),
+				data.job_json_array.find((v) => v.DShopInfo.site_code === TMON),
 			),
 		]);
 
