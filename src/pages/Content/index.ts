@@ -207,6 +207,8 @@ const main = async () => {
 
 		/** 티몰 리스트페이지 */
 	} else if (/tmall.com/.test(currentUrl)) {
+		console.log('티몰 리스트 페이지 진입');
+		if (/err.tmall.com/.test(currentUrl)) return; // 에러페이지면 리턴
 		const info = await initInfo(false);
 		if (/list.tmall.com/.test(currentUrl)) {
 			await new tmall().bulkTypeOne(info.user);

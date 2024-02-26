@@ -301,10 +301,11 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 		const descJson = JSON.parse(descText ?? '');
 
 		// api로 상세이미지 불러올때 트래픽 tmall에서 감지되면 드래그 해줘야하기 때문에 , 사용자가 드래그할수있도록 해당 url도 띄여주어야함 그래야 수집됨
-		if (descJson.data.url !== undefined || !dataJson?.data?.item) {
+		if (descJson.data.url !== undefined) {
 			if (isBulkProcessing) {
 				captchaInsert();
 				window.open(descJson.data.url);
+				throw new Error('Captcha 보안확인 감지');
 			} else return { error: 'Captcha 완료후 새로고침 해주세요.' };
 		}
 

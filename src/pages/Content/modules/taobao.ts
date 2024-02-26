@@ -58,11 +58,13 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 
 		let descJson = JSON.parse(descText ?? '');
 
-		if (descJson.data.url !== undefined)
+		if (descJson.data.url !== undefined) {
 			if (isBulkProcessing) {
 				captchaInsert();
-				// window.open(descJson.data.url);
+				window.open(descJson.data.url);
+				throw new Error('Captcha 보안확인 감지');
 			} else return { error: 'Captcha 완료후 새로고침 해주세요.' };
+		}
 
 		let desc_html: Document;
 		let desc_output;
@@ -618,7 +620,7 @@ export class taobao {
 		let timeout = 0;
 
 		while (true) {
-			if (timeout === user.userInfo?.collectTimeout)
+			if (timeout === user.userInfo!.collectTimeout)
 				return {
 					error:
 						'상품정보가 정상적으로 로드되지 않았습니다.\n타오바오 로그인이 되어있는지 확인해주세요.\n타오바오 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
@@ -641,14 +643,14 @@ export class taobao {
 							desc: descText,
 						};
 					}
-
-					return await scrape(originalData, user, isBulkProcessing);
 				} catch (e) {
 					console.log(e);
-					timeout = user.userInfo?.collectTimeout!;
+					timeout = user.userInfo!.collectTimeout!;
 
 					continue;
 				}
+
+				return await scrape(originalData, user, isBulkProcessing);
 			}
 
 			timeout++;
