@@ -7,13 +7,14 @@ import { sleep, getImageSize, getCookie, onInsertDom } from '../../../../common/
 import { Buffer } from 'buffer';
 import { sendRuntimeMessage } from '../../Tools/ChromeAsync';
 import { User } from '../../../type/schema';
+import { captchaInsert } from '../function';
 
 const iconv = require('iconv-lite');
 
 /** 타오바오 상품정보 크롤링 */
-const scrape = async (items: any, user: User) => {
+const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 	let result = form;
-	result.user = user as any;
+	result.user = user;
 
 	/** 페이지별 크롤링 방식 다름 */
 	// 페이지 타입 : 2
@@ -34,10 +35,11 @@ const scrape = async (items: any, user: User) => {
 			data1,
 		)}`;
 
-		let dataResp = await fetch(dataUrl, { credentials: 'include' });
-		let dataJson = await dataResp.json();
-		let thumnails = dataJson.data.item?.images;
-		let filteredThumbnails = thumnails.filter((v) => v.includes('http://') || v.includes('https://'));
+		const dataResp = await fetch(dataUrl, { credentials: 'include' });
+		const dataJson = await dataResp.json();
+		const thumnails = dataJson.data.item?.images?.filter((v) => v.includes('http://') || v.includes('https://')) as
+			| string[]
+			| undefined;
 
 		const time2 = new Date().getTime();
 		const data2 = `{\"id\":\"${params.id}\",\"detail_v\":\"3.3.0\",\"preferWireless\":\"true\"}`; //여기가 변경되서 안되었던거임 preferWireless 추가됨
@@ -56,61 +58,86 @@ const scrape = async (items: any, user: User) => {
 
 		let descJson = JSON.parse(descText ?? '');
 
-		if (descJson.data.url !== undefined) window.open(descJson.data.url);
+		if (descJson.data.url !== undefined)
+			if (isBulkProcessing) {
+				captchaInsert();
+				// window.open(descJson.data.url);
+			} else return { error: 'Captcha 완료후 새로고침 해주세요.' };
 
-		let desc_html: any;
-		let desc_output: any;
-		let desc_imgs: any = [];
+		let desc_html: Document;
+		let desc_output;
+		let desc_imgs: string[] = [];
 
 		// api return type이 소싱처별로 2개씩 있음
 		if (descJson.data.components.componentData.desc_richtext_pc === undefined) {
-			let componentData: any = descJson.data.components.componentData;
-			let layout: any = descJson.data.components.layout;
+			let componentData: object | undefined = descJson.data.components.componentData;
+			let layout: { ID: string; key: string }[] | undefined = descJson.data.components.layout;
 
-			desc_output = '<p>';
+			if (!layout || !componentData) return { error: '상세이미지 파싱 에러' };
 
-			for (const v of layout) {
-				let url = componentData[v.ID]?.model?.picUrl;
-				if (url === undefined) continue;
-				if (url.includes('.gif')) continue;
-				if (!url.includes('http')) url = 'https:' + url;
-				const image = await getImageSize(url);
-				if (typeof image === 'number' && image <= 1000) continue;
-				desc_output += `<img align="absmiddle" src="${url}">`;
-				desc_imgs.push(url);
-			}
-			desc_output += '</p>';
+			const arr = Array(layout.length).fill('');
+			const desc_output_tmp = ['<p>', ...arr, '</p>'];
+			desc_imgs = [...arr];
+
+			// desc_output = '<p>';
+
+			await Promise.all(
+				layout.map(async (v, i) => {
+					let url = componentData?.[v.ID]?.model?.picUrl;
+					if (url === undefined) return null;
+					if (url.includes('.gif')) return null;
+					if (!url.includes('http')) url = 'https:' + url;
+					const image = await getImageSize(url);
+					if (typeof image === 'number' && image <= 1000) return null;
+					desc_output_tmp[i + 1] = `<img align="absmiddle" src="${url}">`;
+					desc_imgs[i] = url;
+				}),
+			);
+
+			/** for문 (구 방식) */
+			// for (const v of layout) {
+			// 	let url = componentData[v.ID]?.model?.picUrl;
+			// 	if (url === undefined) continue;
+			// 	if (url.includes('.gif')) continue;
+			// 	if (!url.includes('http')) url = 'https:' + url;
+			// 	const image = await getImageSize(url);
+			// 	if (typeof image === 'number' && image <= 1000) continue;
+			// 	desc_output += `<img align="absmiddle" src="${url}">`;
+			// 	desc_imgs.push(url);
+			// }
+
+			desc_imgs = desc_imgs.filter((v) => v !== '');
+			desc_output = desc_output_tmp.join('');
 			desc_html = new DOMParser().parseFromString(desc_output, 'text/html');
+
+			// 2번 타입)
 		} else {
-			// api return type이 소싱처별로 2개씩 있음
 			desc_html = new DOMParser().parseFromString(
-				descJson.data.components.componentData.desc_richtext_pc.model.text,
+				descJson.data.components?.componentData.desc_richtext_pc.model.text,
 				'text/html',
 			); //돔 생성
-			let desc: any = desc_html.querySelectorAll('img');
+			let desc = desc_html?.querySelectorAll('img');
+
 			for (let i in desc) {
 				try {
-					if (desc[i].getAttribute('data-src')) desc[i].src = desc[i].getAttribute('data-src');
+					if (desc[i].getAttribute('data-src')) desc[i].src = desc[i].getAttribute('data-src')!;
 					if (desc[i].src) {
-						if (desc[i].src.includes('.gif')) desc[i].parentNode.removeChild(desc[i]);
+						if (desc[i].src.includes('.gif')) desc[i].parentNode?.removeChild(desc[i]);
 						else {
-							const image: any = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
-							if (image <= 1000) {
-								// console.log('흰색 이미지', desc[i]);
-								desc[i].parentNode.removeChild(desc[i]);
+							const image = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
+							if (typeof image === 'number' && image <= 1000) {
+								desc[i].parentNode?.removeChild(desc[i]);
 							} else {
 								desc[i].src = desc[i].src;
 								desc_imgs.push(desc[i].src);
 							}
-							// desc[i].src = desc[i].src;
-							// desc_imgs.push(desc[i].src);
 						}
 					}
 				} catch (e) {
 					continue;
 				}
 			}
-			let desc_href: any = desc_html.querySelectorAll('a');
+			let desc_href = desc_html.querySelectorAll('a');
 
 			for (let i in desc_href) {
 				try {
@@ -120,14 +147,10 @@ const scrape = async (items: any, user: User) => {
 				}
 			}
 
-			//let desc_output = descJson.data.components.componentData.desc_richtext_pc.model.text; 돔에서 제거하고 그 제거한걸 안넣고 제거하기전의 text를 넣고있어서 안되었음 ;;뭐냐
-			// let test = desc_html.querySelector('html > body');
-			// console.log("test", test);
-
-			desc_output = desc_html.querySelector('html > body').innerHTML; //우선 해당 변수 사용안함 원래 desc에 들어가야함
+			desc_output = desc_html.querySelector('html > body')?.innerHTML; //우선 해당 변수 사용안함 원래 desc에 들어가야함
 		}
 		let shipping_fee = 0.0;
-		let iterator = document.createNodeIterator(desc_html.querySelector('body'), NodeFilter.SHOW_TEXT);
+		let iterator = document.createNodeIterator(desc_html.querySelector('body')!, NodeFilter.SHOW_TEXT);
 		let textnode;
 
 		while ((textnode = iterator.nextNode())) {
@@ -139,6 +162,8 @@ const scrape = async (items: any, user: User) => {
 			texts.map((v: any) => result['item']['desc_text'].push(v));
 		}
 
+		if (!thumnails || thumnails?.length < 1) return { error: `대표 이미지를 찾을 수 없습니다.` };
+
 		/** 최종 result 조합 */
 		result['item']['shopName'] = 'taobao';
 		result['item']['url'] = `https://item.taobao.com/item.htm?id=${params.id}`;
@@ -148,7 +173,7 @@ const scrape = async (items: any, user: User) => {
 			shipping_fee > 0
 				? (parseFloat(dataJson.data.componentsVO.priceVO.price.priceText) + shipping_fee).toString()
 				: dataJson.data.componentsVO.priceVO.price.priceText;
-		result['item']['pic_url'] = filteredThumbnails[0];
+		result['item']['pic_url'] = thumnails[0];
 		result['item']['desc'] = desc_output;
 		result['item']['desc_img'] = desc_imgs;
 		// result['item']['tmall'] = true;
@@ -161,11 +186,11 @@ const scrape = async (items: any, user: User) => {
 			console.log('알림: 동영상이 없는 상품입니다. (', e, ')');
 		}
 		try {
-			if (!filteredThumbnails.length) throw new Error('대표 이미지를 찾을 수 없습니다.');
-			for (let i in filteredThumbnails) {
+			if (!thumnails.length) throw new Error('대표 이미지를 찾을 수 없습니다.');
+			for (let i in thumnails) {
 				try {
 					result['item']['item_imgs'].push({
-						url: filteredThumbnails[i],
+						url: thumnails[i],
 					});
 				} catch (e) {
 					continue;
@@ -423,20 +448,6 @@ const scrape = async (items: any, user: User) => {
 		try {
 			for (let i in configs.idata.item.auctionImages) {
 				try {
-					// let image: any = await getImageSize(
-					//   /^https?:/.test(configs.idata.item.auctionImages[i]) ? configs.idata.item.auctionImages[i] : "http:" + configs.idata.item.auctionImages[i]
-					// );
-					// console.log("test", image);
-					// if (image < 1000) {
-					//   console.log(
-					//     "썸네일 흰색 이미지 발견",
-					//     /^https?:/.test(configs.idata.item.auctionImages[i]) ? configs.idata.item.auctionImages[i] : "http:" + configs.idata.item.auctionImages[i]
-					//   );
-					// } else {
-					//   result["item"]["item_imgs"].push({
-					//     url: /^https?:/.test(configs.idata.item.auctionImages[i]) ? configs.idata.item.auctionImages[i] : "http:" + configs.idata.item.auctionImages[i],
-					//   });
-					// }
 					result['item']['item_imgs'].push({
 						url: /^https?:/.test(configs.idata.item.auctionImages[i])
 							? configs.idata.item.auctionImages[i]
@@ -599,7 +610,7 @@ export class taobao {
 	}
 
 	// 수집하기 눌렀을 때
-	async get(user: User) {
+	async get(user: User, isBulkProcessing: boolean) {
 		sessionStorage.removeItem('sfy-taobao-item');
 
 		injectScript('taobao');
@@ -631,7 +642,7 @@ export class taobao {
 						};
 					}
 
-					return await scrape(originalData, user);
+					return await scrape(originalData, user, isBulkProcessing);
 				} catch (e) {
 					console.log(e);
 					timeout = user.userInfo?.collectTimeout!;
@@ -778,8 +789,8 @@ export class taobao {
 									console.log('Element with the same ID already exists.');
 								// 이미 존재하는게 있을경우에는 추가안함
 								else {
-									let input: any = document.createElement('input');
-									let picker: any = document.getElementById('sfyPicker');
+									const input = document.createElement('input');
+									const picker = document.getElementById('sfyPicker') as HTMLButtonElement;
 									input.id = products[i].getAttribute('href');
 									input.className = 'SELLFORYOU-CHECKBOX';
 									input.checked = picker?.value === 'false' ? false : true;

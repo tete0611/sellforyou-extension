@@ -162,7 +162,7 @@ const main = async () => {
 	if (/item.taobao.com\/item.htm/.test(currentUrl)) {
 		console.log('타오바오 단일상품 페이지 진입');
 		const info = await initInfo(true);
-		const result = await new taobao().get(info.user);
+		const result = await new taobao().get(info.user, info.isBulkProcessing);
 		floatingButton({ info: info, result: result as any });
 
 		/** 타오바오 리스트 페이지 */

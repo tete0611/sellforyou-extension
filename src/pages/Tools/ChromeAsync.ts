@@ -62,8 +62,9 @@ export const sendRuntimeMessage = <T>(obj: RuntimeMessage): Promise<T | null> =>
 
 					return;
 				}
-
-				console.log('runtime resolved', obj, response);
+				if (typeof response === 'string')
+					console.log('runtime resolved', obj, response.slice(0, 50)); // 콘솔 도배되서 50자 까지만 자름
+				else console.log('runtime resolved', obj, response);
 
 				resolve(response);
 			});
