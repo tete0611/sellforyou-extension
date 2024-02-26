@@ -284,7 +284,7 @@ export const LostAndFound = observer(() => {
 							container
 							spacing={1}
 							style={{
-								marginBottom: 30,
+								marginBottom: 10,
 							}}
 						>
 							{signInfo.infoType === 'USER_ID' ? null : (

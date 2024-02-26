@@ -2,6 +2,10 @@
 	font-family: 'NNSQUAREROUNDR';
 	src: url('chrome-extension://__MSG_@@extension_id__/resources/NanumSquareRoundR.ttf');
 }
+@font-face {
+	font-family: 'NanumGothicR';
+	src: url('chrome-extension://__MSG_@@extension_id__/resources/NanumGothic-Regular.ttf');
+}
 
 .SELLFORYOU-FLOATING {
 	/* border-spacing: 0px; */

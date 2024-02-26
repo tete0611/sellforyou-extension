@@ -174,37 +174,13 @@ export const Payments = observer(() => {
 	// 결제하기를 눌렀을 때 동작하는 함수
 	const payNow = async () => {
 		if (payments.payInfo.etc === 'false') {
-			if (payments.payInfo.accounts.every((v) => !v.checked)) {
-				alert('결제할 계정을 선택해주세요.');
+			if (payments.payInfo.accounts.every((v) => !v.checked)) return alert('결제할 계정을 선택해주세요.');
+		} else if (payments.priceInfo.original === 0) return alert('결제할 금액은 0원 이상으로 입력해주세요.');
 
-				return;
-			}
-		} else {
-			if (payments.priceInfo.original === 0) {
-				alert('결제할 금액은 0원 이상으로 입력해주세요.');
-
-				return;
-			}
-		}
-
-		if (!payments.payInfo.name) {
-			alert('입금자명(성명)을 입력해주세요.');
-
-			return;
-		}
-
-		if (payments.payInfo.type === 'CASH' && payments.payInfo.company === 'null') {
-			alert('사업자등록증을 업로드해주세요.');
-
-			return;
-		}
-
-		if (!payments.payInfo.serviceAgreed) {
-			alert('서비스 이용약관에 동의해주세요.');
-
-			return;
-		}
-
+		if (!payments.payInfo.name) return alert('입금자명(성명)을 입력해주세요.');
+		if (payments.payInfo.type === 'CASH' && payments.payInfo.company === 'null')
+			return alert('사업자등록증을 업로드해주세요.');
+		if (!payments.payInfo.serviceAgreed) return alert('서비스 이용약관에 동의해주세요.');
 		if (payments.priceInfo.total === 0) {
 			// 계정 이용기간 설정
 			await sendForm(true);
@@ -271,9 +247,7 @@ export const Payments = observer(() => {
 
 	// 계정에 이용기간 설정하는 함수
 	const confirmPay = async () => {
-		if (payments.payInfo.etc === 'true') {
-			return;
-		}
+		if (payments.payInfo.etc === 'true') return;
 
 		// 체크된 계정의 정보와 해당 계정의 이용기간 만료일을 기준으로 날짜를 연장하여 계산
 		const purchaseInputs = payments.payInfo.accounts
@@ -1037,15 +1011,17 @@ export const Payments = observer(() => {
 
 											<Grid item xs={6} md={6}>
 												<TextField
-													id='settings_marginRate'
 													size='small'
 													variant='outlined'
+													style={{ fontFamily: 'nanumGothicR !important' }}
 													sx={{
 														width: '100%',
+														fontFamily: 'nanumGothicR !important',
 													}}
 													inputProps={{
 														style: {
 															fontSize: 14,
+															fontFamily: 'nanumGothicR !important',
 														},
 													}}
 													onChange={(e) => {
@@ -1279,7 +1255,6 @@ export const Payments = observer(() => {
 													&nbsp;
 													<TextField
 														disabled={payments.payInfo.etc === 'true' || payments.payInfo.point > 0}
-														id='settings_marginRate'
 														size='small'
 														variant='outlined'
 														sx={{
@@ -1293,25 +1268,12 @@ export const Payments = observer(() => {
 														}}
 														defaultValue={payments.payInfo.point}
 														onBlur={(e) => {
-															const point = parseInt(e.target.value);
+															const point = Number(e.target.value);
 
-															if (isNaN(point)) {
-																alert('숫자만 입력 가능합니다.');
-
-																return;
-															}
-
-															if (point > common.user.credit) {
-																alert('보유적립금을 초과하여 입력할 수 없습니다.');
-
-																return;
-															}
-
-															if (point > payments.priceInfo.original - payments.priceInfo.discount) {
-																alert('이용가격을 초과하여 입력할 수 없습니다.');
-
-																return;
-															}
+															if (isNaN(point)) return alert('숫자만 입력 가능합니다.');
+															if (point > common.user.credit) return alert('보유적립금을 초과하여 입력할 수 없습니다.');
+															if (point > payments.priceInfo.original - payments.priceInfo.discount)
+																return alert('이용가격을 초과하여 입력할 수 없습니다.');
 
 															payments.setPayInfo({
 																...payments.payInfo,
@@ -1369,7 +1331,6 @@ export const Payments = observer(() => {
 											>
 												{payments.payInfo.etc === 'true' ? (
 													<TextField
-														id='settings_marginRate'
 														size='small'
 														variant='outlined'
 														sx={{
@@ -1382,13 +1343,9 @@ export const Payments = observer(() => {
 															},
 														}}
 														onChange={(e) => {
-															const point = parseInt(e.target.value);
+															const point = Number(e.target.value);
 
-															if (isNaN(point)) {
-																alert('숫자만 입력 가능합니다.');
-
-																return;
-															}
+															if (isNaN(point)) return alert('숫자만 입력 가능합니다.');
 
 															payments.setPriceInfo({
 																add: 0,
@@ -1397,11 +1354,6 @@ export const Payments = observer(() => {
 																original: point,
 																total: point,
 															});
-
-															// payments.setPayInfo({
-															//   ...payments.payInfo,
-															//   name: e.target.value,
-															// });
 														}}
 														value={payments.priceInfo.original}
 													/>

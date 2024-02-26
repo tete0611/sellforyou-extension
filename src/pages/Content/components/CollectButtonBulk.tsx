@@ -1,11 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
-import { renderToString } from 'react-dom/server';
 import { BulkSettingPaper } from './BulkSettingPaper';
-import { getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../../Tools/ChromeAsync';
-import { CollectInfo } from '../../../type/type';
 import { FloatingButtonBulkProps } from '../function';
-import { pageRefresh } from '../../../../common/function';
 import { render } from 'react-dom';
 
 export const CollectButtonBulk = ({ info, shop }: FloatingButtonBulkProps) => {

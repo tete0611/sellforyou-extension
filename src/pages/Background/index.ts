@@ -515,7 +515,6 @@ chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender, sendRespo
 		// 상품 수집 액션
 		case 'collect': {
 			addToInventory(sender as Sender, request.source).then(sendResponse);
-
 			return true;
 		}
 
@@ -528,49 +527,42 @@ chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender, sendRespo
 		// 엑셀 수집 액션
 		case 'collect-product-excel': {
 			addBulkInfo(request.source!, sender as Sender, true).then(sendResponse);
-
 			return true;
 		}
 
 		// 상품 수집 완료
 		case 'collect-finish': {
 			bulkNext(sender as Sender).then(sendResponse);
-
 			return true;
 		}
 
 		// 상품 수집 중지
 		case 'collect-stop': {
 			bulkStop(sender as Sender).then(sendResponse);
-
 			return true;
 		}
 
 		// 대량 수집 여부 확인
 		case 'is-bulk': {
 			isBulk(sender as Sender).then(sendResponse);
-
 			return true;
 		}
 
 		// 메시지를 보낸 탭 정보 확인
 		case 'tab-info': {
 			sendResponse(sender);
-
 			break;
 		}
 
 		// 열려있는 모든 탭 정보 확인
 		case 'tab-info-all': {
 			queryTabs({}).then(sendResponse);
-
 			return true;
 		}
 
 		// 유저 정보 전달
 		case 'user': {
 			getUserInfo().then(sendResponse);
-
 			return true;
 		}
 
@@ -586,7 +578,6 @@ chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender, sendRespo
 		// 티몰 상세페이지 데이터 요청
 		case 'fetch': {
 			tmallCORS(request.form).then(sendResponse);
-
 			return true;
 		}
 

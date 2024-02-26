@@ -2,12 +2,32 @@
 	font-family: 'NNSQUAREROUNDR';
 	src: url('/src/assets/fonts/NanumSquareRoundR.ttf');
 }
+@font-face {
+	font-family: 'NanumGothicR';
+	src: url('/src/assets/fonts/NanumGothic-Regular.ttf');
+}
 
 html * {
-	font-family: 'NNSQUAREROUNDR' !important;
+	font-family: 'NNSQUAREROUNDR';
 }
 
 body {
 	background: whitesmoke;
 	margin: 0px;
+}
+
+/* Mui 기본폰트 설정 죽이기 */
+.MuiTypography-root,
+.MuiButton-root,
+.MuiPaper-root,
+.MuiSelect-select,
+.MuiMenuItem-root,
+.MuiTable-root *,
+[class*='MuiSelect-root'] {
+	font-family: unset !important;
+}
+
+/* Mui input 중 텍스트인풋 */
+.MuiInputBase-formControl {
+	font-family: 'NanumGothicR' !important;
 }

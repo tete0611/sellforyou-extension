@@ -31,6 +31,7 @@ export const Input = (props: Partial<TextFieldProps> & { options?: any; readOnly
 		<TextField
 			size='small'
 			variant='outlined'
+			className='nanum-gothic'
 			sx={inputStyles(props)}
 			InputProps={{
 				readOnly: props.readOnly,

@@ -4,9 +4,13 @@
 }
 
 html * {
-	font-family: 'NNSQUAREROUNDR' !important;
+	font-family: 'NNSQUAREROUNDR';
 }
 
 body {
 	margin: 0px;
+}
+
+.MuiContainer-root * {
+	font-family: unset !important;
 }

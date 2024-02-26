@@ -2,13 +2,21 @@
 	font-family: 'NNSQUAREROUNDR';
 	src: url('/src/assets/fonts/NanumSquareRoundR.ttf');
 }
+@font-face {
+	font-family: 'nanumGothicR';
+	src: url('/src/assets/fonts/NanumGothic-Regular.ttf');
+}
 
 html * {
-	font-family: 'NNSQUAREROUNDR' !important;
+	font-family: 'NNSQUAREROUNDR';
 }
 
 body {
 	margin: 0px;
+}
+
+.MuiContainer-root * {
+	font-family: unset !important;
 }
 
 .uploadModal {
