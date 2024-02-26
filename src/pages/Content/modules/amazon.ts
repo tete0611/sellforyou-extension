@@ -27,7 +27,10 @@ const scrape = async (items: any, user: User, region: string) => {
 	const parseData = JSON.parse(sessionData);
 	const parseThumbnailData = JSON.parse(sessionThumbnailData);
 	const optionsLength = Object.keys(parseData.colorImages).length;
-	const thumbnailLength = document.querySelectorAll('.imageThumbnail').length;
+	const thumbnailLength =
+		(document.querySelectorAll('.imageThumbnail').length < 1
+			? document.querySelector('#thumbImages')?.querySelectorAll('[class*="thumbTypeimage"]').length
+			: document.querySelectorAll('.imageThumbnail').length) ?? 0;
 	let mainPrice = document.querySelector('span[class*="a-price"]')?.querySelector('.a-offscreen')?.innerHTML ?? ''; // 메인가격
 	if (region === 'de') mainPrice = mainPrice?.replace(',', '.');
 	mainPrice = mainPrice?.replace(/[^0-9.]/g, '');
@@ -193,13 +196,13 @@ const scrape = async (items: any, user: User, region: string) => {
 						matched1?.Value.content['apex_desktop'] ?? '',
 						'text/html',
 					);
-					const matched1Price = matched1Html.querySelector('.a-offscreen')?.innerHTML;
+					const matched1Price = matched1Html?.querySelector('.a-offscreen')?.innerHTML;
 
 					/** 가격타입2) twisterPlusWWDesktop  */
 					const matched2 = resp_parse.find((v) => v.FeatureName === 'twisterPlusWWDesktop');
 					const matched2Text = new DOMParser()
 						.parseFromString(matched2?.Value.content['twisterPlusWWDesktop'] ?? '', 'text/html')
-						.querySelector('[class*="twister-plus-buying-options-price-data"]')?.childNodes[0].textContent;
+						?.querySelector('[class*="twister-plus-buying-options-price-data"]')?.childNodes[0].textContent;
 					const matched2Json = matched2Text ? JSON.parse(matched2Text) : undefined;
 					const matched2Price = matched2Json?.desktop_buybox_group_1[0]?.displayPrice;
 
@@ -216,7 +219,7 @@ const scrape = async (items: any, user: User, region: string) => {
 				if (priceList[i] === '') {
 					const optionList = document.querySelector('#twisterContainer')?.querySelector('ul')?.querySelectorAll('li');
 					const optionHtml = optionList?.[i]
-						.querySelector('[class*="twisterSlotDiv"]')
+						?.querySelector('[class*="twisterSlotDiv"]')
 						?.children.item(0)
 						?.children.item(0)?.innerHTML;
 
@@ -522,27 +525,17 @@ const scrape = async (items: any, user: User, region: string) => {
 		if (price === '') return { error: '가격정보를 찾을 수 없습니다.' };
 		else result['item']['price'] = price;
 	}
-	// console.log("test", parseThumbnailData);
 	for (let i = 0; i < thumbnailLength; i++) {
 		try {
-			// if (parseThumbnailData.colorImages.initial[i].hiRes.split("png").length - 1 < 2) {
-			//   result["item"]["item_imgs"].push({
-			//     // url: parseThumbnailData.colorImages.initial[i].hiRes.replace(/[.]_[_][.]/g, ".US800_AC."),
-			//     url: parseThumbnailData.colorImages.initial[i].hiRes.replace(/[.]_[_][.]/g, "."),
-			//   });
-			// } else {
-			//   result["item"]["item_imgs"].push({
-			//     url: parseThumbnailData.colorImages.initial[i].hiRes,
-			//   });
-			// }
 			result['item']['item_imgs'].push({
-				// url: parseThumbnailData.colorImages.initial[i].hiRes.replace(/[.]_[_][.]/g, ".US800_AC."),
 				url: parseThumbnailData.colorImages.initial[i].hiRes.replace(/(._[\w\d]+_.)/g, '.'),
 			});
 		} catch (e) {
 			continue;
 		}
 	}
+
+	if (result['item']['item_imgs'].length === 0) return { error: '대표이미지를 찾을 수 없습니다.' };
 
 	try {
 		let video = parseData.videos[0].url;
