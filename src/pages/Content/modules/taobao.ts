@@ -118,30 +118,57 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 				descJson.data.components?.componentData.desc_richtext_pc.model.text,
 				'text/html',
 			); //돔 생성
-			let desc = desc_html?.querySelectorAll('img');
+			const desc = desc_html?.querySelectorAll('img');
+			desc_imgs = [...Array(desc.length).fill('')];
 
-			for (let i in desc) {
-				try {
-					if (desc[i].getAttribute('data-src')) desc[i].src = desc[i].getAttribute('data-src')!;
-					if (desc[i].src) {
-						if (desc[i].src.includes('.gif')) desc[i].parentNode?.removeChild(desc[i]);
-						else {
-							const image = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
-							if (typeof image === 'number' && image <= 1000) {
-								desc[i].parentNode?.removeChild(desc[i]);
-							} else {
-								desc[i].src = desc[i].src;
-								desc_imgs.push(desc[i].src);
+			/** 병렬처리 */
+			await Promise.all(
+				Array.from(desc).map(async (v, i) => {
+					try {
+						if (v.getAttribute('data-src')) desc[i].src = v.getAttribute('data-src')!;
+						if (v.src) {
+							if (v.src.includes('.gif')) desc[i].parentNode?.removeChild(v);
+							else {
+								const image = await getImageSize(v.src); //해당 이미지 사이즈가 100x100 이하 제거
+								if (typeof image === 'number' && image <= 1000) {
+									desc[i].parentNode?.removeChild(v);
+								} else {
+									desc[i].src = v.src;
+									desc_imgs[i] = v.src;
+								}
 							}
 						}
+					} catch (error) {
+						console.error(error);
 					}
-				} catch (e) {
-					continue;
-				}
-			}
-			let desc_href = desc_html.querySelectorAll('a');
+				}),
+			);
 
-			for (let i in desc_href) {
+			desc_imgs = desc_imgs.filter((v) => v !== '');
+
+			/** for문 사용 (구 방식) */
+			// for (let i in desc) {
+			// 	try {
+			// 		if (desc[i].getAttribute('data-src')) desc[i].src = desc[i].getAttribute('data-src')!;
+			// 		if (desc[i].src) {
+			// 			if (desc[i].src.includes('.gif')) desc[i].parentNode?.removeChild(desc[i]);
+			// 			else {
+			// 				const image = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
+			// 				if (typeof image === 'number' && image <= 1000) {
+			// 					desc[i].parentNode?.removeChild(desc[i]);
+			// 				} else {
+			// 					desc[i].src = desc[i].src;
+			// 					desc_imgs.push(desc[i].src);
+			// 				}
+			// 			}
+			// 		}
+			// 	} catch (e) {
+			// 		continue;
+			// 	}
+			// }
+			const desc_href = desc_html.querySelectorAll('a');
+
+			for (const i in desc_href) {
 				try {
 					desc_href[i].remove();
 				} catch (e) {
@@ -151,30 +178,32 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 
 			desc_output = desc_html.querySelector('html > body')?.innerHTML; //우선 해당 변수 사용안함 원래 desc에 들어가야함
 		}
-		let shipping_fee = 0.0;
-		let iterator = document.createNodeIterator(desc_html.querySelector('body')!, NodeFilter.SHOW_TEXT);
+		const shipping_fee = 0.0;
+		const iterator = document.createNodeIterator(desc_html.querySelector('body')!, NodeFilter.SHOW_TEXT);
 		let textnode;
 
 		while ((textnode = iterator.nextNode())) {
 			const texts = textnode.textContent
 				.split('\n')
-				.map((v: any) => v.trim())
-				.filter((v: any) => v);
+				.map((v) => v.trim())
+				.filter((v) => v);
 
-			texts.map((v: any) => result['item']['desc_text'].push(v));
+			texts.map((v) => result['item']['desc_text'].push(v));
 		}
 
 		if (!thumnails || thumnails?.length < 1) return { error: `대표 이미지를 찾을 수 없습니다.` };
+
+		const price =
+			shipping_fee > 0
+				? (parseFloat(dataJson.data.componentsVO.priceVO.price.priceText) + shipping_fee).toString()
+				: dataJson.data.componentsVO.priceVO.price.priceText;
 
 		/** 최종 result 조합 */
 		result['item']['shopName'] = 'taobao';
 		result['item']['url'] = `https://item.taobao.com/item.htm?id=${params.id}`;
 		result['item']['num_iid'] = params.id;
 		result['item']['title'] = dataJson.data.componentsVO.titleVO.title.title;
-		result['item']['price'] =
-			shipping_fee > 0
-				? (parseFloat(dataJson.data.componentsVO.priceVO.price.priceText) + shipping_fee).toString()
-				: dataJson.data.componentsVO.priceVO.price.priceText;
+		result['item']['price'] = price;
 		result['item']['pic_url'] = thumnails[0];
 		result['item']['desc'] = desc_output;
 		result['item']['desc_img'] = desc_imgs;
@@ -205,10 +234,10 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 		}
 
 		/** 옵션 조합 */
-		for (let i in dataJson.data.skuBase.props) {
-			for (let j in dataJson.data.skuBase.props[i].values) {
-				let prop_properties = dataJson.data.skuBase.props[i].pid + ':' + dataJson.data.skuBase.props[i].values[j].vid;
-				let prop_names = dataJson.data.skuBase.props[i].name + ':' + dataJson.data.skuBase.props[i].values[j].name;
+		for (const i in dataJson.data.skuBase.props) {
+			for (const j in dataJson.data.skuBase.props[i].values) {
+				const prop_properties = dataJson.data.skuBase.props[i].pid + ':' + dataJson.data.skuBase.props[i].values[j].vid;
+				const prop_names = dataJson.data.skuBase.props[i].name + ':' + dataJson.data.skuBase.props[i].values[j].name;
 
 				if (dataJson.data.skuBase.props[i].values[j].image)
 					result['item']['prop_imgs']['prop_img'].push({
@@ -224,8 +253,8 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 
 		/** 옵션 조합 */
 		try {
-			for (let i in dataJson.data.skuBase.skus) {
-				let properties = dataJson.data.skuBase.skus[i].propPath.split(';');
+			for (const i in dataJson.data.skuBase.skus) {
+				const properties = dataJson.data.skuBase.skus[i].propPath.split(';');
 				let properties_name = '';
 
 				for (let j = 0; j < properties.length; j++) {
@@ -235,13 +264,13 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 				}
 
 				if (result['item']['props_list'][properties[0]] !== undefined) {
-					let skuId = dataJson.data.skuBase.skus[i].skuId;
+					const skuId = dataJson.data.skuBase.skus[i].skuId;
 
 					if (dataJson.data.skuCore.sku2info.hasOwnProperty(skuId)) {
-						let quantity = dataJson.data.skuCore.sku2info[skuId].quantity;
+						const quantity = dataJson.data.skuCore.sku2info[skuId].quantity;
 
 						if (quantity !== '0') {
-							let promotion_price = dataJson.data.skuCore.sku2info[skuId].price.priceText;
+							const promotion_price = dataJson.data.skuCore.sku2info[skuId].price.priceText;
 
 							result['item']['skus']['sku'].push({
 								price: shipping_fee > 0 ? (parseFloat(promotion_price) + shipping_fee).toString() : promotion_price,
@@ -269,14 +298,14 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 		}
 		let min_price = parseFloat(result['item']['price']);
 
-		for (let i in result['item']['skus']['sku']) {
+		for (const i in result['item']['skus']['sku']) {
 			if (i === '0') {
 				min_price = parseFloat(result['item']['skus']['sku'][i]['price']);
 
 				continue;
 			}
 
-			let cur_price = parseFloat(result['item']['skus']['sku'][i]['price']);
+			const cur_price = parseFloat(result['item']['skus']['sku'][i]['price']);
 
 			if (min_price > cur_price) min_price = cur_price;
 		}
@@ -292,11 +321,11 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 		/** 페이지타입이 2가 아님 */
 	} else {
 		// 상품속성
-		let attributes: any = document.getElementsByClassName('attributes-list')[0].querySelectorAll('li');
+		const attributes = document.getElementsByClassName('attributes-list')[0].querySelectorAll('li');
 
-		for (let i in attributes) {
+		for (const i in attributes) {
 			try {
-				const text = attributes[i].textContent.trim();
+				const text = attributes[i].textContent?.trim();
 
 				if (!text) continue;
 
@@ -306,10 +335,10 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 			}
 		}
 
-		let details = items.price;
-		let configs = items.config;
-		let script_video = items.video;
-		let script_option = items.sku.valItemInfo.skuMap;
+		const details = items.price;
+		const configs = items.config;
+		const script_video = items.video;
+		const script_option = items.sku.valItemInfo.skuMap;
 		let price;
 
 		// 판매가
@@ -324,12 +353,12 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 		}
 
 		// 배송비
-		let shipping_info = details.deliveryFee
+		const shipping_info = details.deliveryFee
 			? details.deliveryFee.data.serviceInfo.hasOwnProperty('sku')
 				? details.deliveryFee.data.serviceInfo.sku.default[0].info
 				: details.deliveryFee.data.serviceInfo.list[0].info
 			: '0.0';
-		let shipping_fee = parseFloat(shipping_info.replace(/[^\.0-9]/g, ''));
+		const shipping_fee = parseFloat(shipping_info.replace(/[^\.0-9]/g, ''));
 
 		// 상품 기본정보
 		result['item']['shopName'] = 'taobao';
@@ -345,10 +374,10 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 		result['item']['shop_id'] = 'taobao';
 
 		// 상세페이지
-		let desc_html: any = new DOMParser().parseFromString(items.desc, 'text/html');
-		let desc: any = desc_html.querySelectorAll('html > body img');
-		let desc_imgs: any = [];
-		let descTable = desc_html.querySelectorAll('html > body table');
+		const desc_html = new DOMParser().parseFromString(items.desc, 'text/html');
+		const desc = desc_html.querySelectorAll('html > body img') as NodeListOf<HTMLImageElement>;
+		const desc_imgs: string[] = [];
+		const descTable = desc_html.querySelectorAll('html > body table') as NodeListOf<HTMLTableElement>;
 		let descText = '';
 
 		// 상세페이지 <table> 하위요소 캡쳐
@@ -367,16 +396,16 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 		}
 
 		if (descText) {
-			let test = document.createElement('div');
+			const test = document.createElement('div');
 			test.id = 'capture';
 			test.innerHTML = descText;
 			test.style.display = 'inline-block';
 			document.body.appendChild(test);
-			let canvas = await html2canvas(test, {
+			const canvas = await html2canvas(test, {
 				useCORS: true,
 				width: 750,
 			});
-			let canvas_output = canvas.toDataURL('image/png');
+			const canvas_output = canvas.toDataURL('image/png');
 
 			test.remove();
 
@@ -384,17 +413,17 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 		}
 
 		//html domparse는 이렇게 배열처럼 할수있음 .
-		for (let i in desc) {
+		for (const i in desc) {
 			try {
-				if (desc[i].getAttribute('data-ks-lazyload')) desc[i].src = desc[i].getAttribute('data-ks-lazyload');
-				if (desc[i].getAttribute('data-src')) desc[i].src = desc[i].getAttribute('data-src');
+				if (desc[i].getAttribute('data-ks-lazyload')) desc[i].src = desc[i].getAttribute('data-ks-lazyload')!;
+				if (desc[i].getAttribute('data-src')) desc[i].src = desc[i].getAttribute('data-src')!;
 				if (desc[i].src) {
-					if (desc[i].src.includes('.gif')) desc[i].parentNode.removeChild(desc[i]);
+					if (desc[i].src.includes('.gif')) desc[i].parentNode?.removeChild(desc[i]);
 					else {
-						const image: any = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
-						if (image < 1000)
+						const image = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
+						if (typeof image === 'number' && image < 1000)
 							// console.log('흰색 이미지', desc[i]);
-							desc[i].parentNode.removeChild(desc[i]);
+							desc[i].parentNode?.removeChild(desc[i]);
 						else {
 							desc[i].src = desc[i].src;
 							desc_imgs.push(desc[i].src);
@@ -406,9 +435,9 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 			}
 		}
 
-		let desc_href: any = desc_html.querySelectorAll('a');
+		const desc_href = desc_html.querySelectorAll('a');
 
-		for (let i in desc_href) {
+		for (const i in desc_href) {
 			try {
 				desc_href[i].remove();
 			} catch (e) {
@@ -416,19 +445,19 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 			}
 		}
 
-		let desc_output = desc_html.querySelector('html > body').innerHTML;
+		const desc_output = desc_html.querySelector('html > body')?.innerHTML ?? '';
 
 		// 상세페이지 텍스트 추출
-		let iterator = document.createNodeIterator(desc_html.querySelector('html > body'), NodeFilter.SHOW_TEXT);
+		const iterator = document.createNodeIterator(desc_html.querySelector('html > body')!, NodeFilter.SHOW_TEXT);
 		let textnode;
 
 		while ((textnode = iterator.nextNode())) {
 			const texts = textnode.textContent
 				.split('\n')
-				.map((v: any) => v.trim())
-				.filter((v: any) => v);
+				.map((v) => v.trim())
+				.filter((v) => v);
 
-			texts.map((v: any) => result['item']['desc_text'].push(v));
+			texts.map((v) => result['item']['desc_text'].push(v));
 		}
 
 		result['item']['desc'] = desc_output;
@@ -448,7 +477,7 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 
 		// 썸네일이미지
 		try {
-			for (let i in configs.idata.item.auctionImages) {
+			for (const i in configs.idata.item.auctionImages) {
 				try {
 					result['item']['item_imgs'].push({
 						url: /^https?:/.test(configs.idata.item.auctionImages[i])
@@ -466,29 +495,29 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 		}
 
 		// 옵션정보
-		let options = document.querySelectorAll('#J_isku > div ul');
+		const options = document.querySelectorAll('#J_isku > div ul');
 
-		for (let i in options) {
+		for (const i in options) {
 			try {
-				let id = options[i].querySelectorAll('li');
-				let name = options[i].getAttribute('data-property');
+				const id = options[i].querySelectorAll('li');
+				const name = options[i].getAttribute('data-property');
 
-				for (let j in id) {
+				for (const j in id) {
 					try {
-						let img: any = id[j].querySelector('a');
-						let num: any = id[j].getAttribute('data-value');
-						let val = img.textContent;
-						let url = img.style.backgroundImage.length
-							? img.style.backgroundImage.match(/(\/\/.*)"/)[1].replace(/_\d{2}x\d{2}.[a-zA-Z]{3}/, '')
+						const img = id[j].querySelector('a');
+						const num = id[j].getAttribute('data-value')!;
+						const val = img?.textContent;
+						const url = img?.style.backgroundImage.length
+							? img.style.backgroundImage.match(/(\/\/.*)"/)?.[1].replace(/_\d{2}x\d{2}.[a-zA-Z]{3}/, '')
 							: '';
 
-						if (url !== '')
+						if (url !== '' && url)
 							result['item']['prop_imgs']['prop_img'].push({
 								properties: num,
 								url: /^https?:/.test(url) ? url : 'http:' + url,
 							});
 						if (val !== null) {
-							let value = val.trim() ?? items.sku.valItemInfo.propertyMemoMap[num];
+							let value = val?.trim() ?? items.sku.valItemInfo.propertyMemoMap[num];
 
 							result['item']['props_list'][num] = name + ':' + value;
 						}
@@ -513,8 +542,8 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 		 * }
 		 */
 		try {
-			for (let i in script_option) {
-				let properties = i.split(';');
+			for (const i in script_option) {
+				const properties = i.split(';');
 				let properties_id = '';
 				let properties_name = '';
 
@@ -531,10 +560,10 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 
 				if (result['item']['props_list'][properties[1]] !== undefined) {
 					if (details.dynStock.sku.hasOwnProperty(i)) {
-						let quantity = details.dynStock.sku[i].stock.toString();
+						const quantity = details.dynStock.sku[i].stock.toString();
 
 						if (quantity !== '0') {
-							let promotion_price = details.promotion.promoData[i]
+							const promotion_price = details.promotion.promoData[i]
 								? details.promotion.promoData[i][0].price
 								: details.originalPrice[i].price;
 
@@ -567,16 +596,16 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 
 		try {
 			if (Object.keys(script_option).length > 0) {
-				let priceList = result['item']['skus']['sku'].map((v: any) => {
+				const priceList = result['item']['skus']['sku'].map((v) => {
 					return v.price;
 				});
 
 				min_price = Math.min(...priceList);
 
-				for (let i in result['item']['props_list']) {
+				for (const i in result['item']['props_list']) {
 					let matched = false;
 
-					for (let j in result['item']['skus']['sku']) {
+					for (const j in result['item']['skus']['sku']) {
 						if (result['item']['skus']['sku'][j]['properties'].includes(i)) {
 							matched = true;
 
@@ -626,7 +655,7 @@ export class taobao {
 						'상품정보가 정상적으로 로드되지 않았습니다.\n타오바오 로그인이 되어있는지 확인해주세요.\n타오바오 접속상태가 원활하지 않습니다.\n잠시 후 다시시도해주세요.',
 				};
 
-			let data = sessionStorage.getItem('sfy-taobao-item');
+			const data = sessionStorage.getItem('sfy-taobao-item');
 
 			if (data) {
 				let originalData = JSON.parse(data);
@@ -634,9 +663,9 @@ export class taobao {
 				try {
 					// 상세페이지 파싱
 					if (originalData.pageType !== 2) {
-						let descResp = await fetch(originalData.descUrl);
-						let descBuffer = await descResp.arrayBuffer();
-						let descText = iconv.decode(Buffer.from(descBuffer), 'gbk').toString();
+						const descResp = await fetch(originalData.descUrl);
+						const descBuffer = await descResp.arrayBuffer();
+						const descText = iconv.decode(Buffer.from(descBuffer), 'gbk').toString();
 
 						originalData = {
 							...originalData,
