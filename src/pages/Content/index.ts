@@ -381,10 +381,10 @@ const main = async () => {
 	} else if (/.temu.com\/kr-en\/.*opt_level/.test(currentUrl)) {
 		// alert('테무 리스트 페이지 진입');
 	} else if (/mobile.yangkeduo.com\/index/.test(currentUrl)) {
-		console.log(`핀둬둬 메인 페이지 진입`);
-		const info = await initInfo(false);
-		await new pinduoduo().bulkTypeOne(info.user);
-		floatingButtonBulk({ info, shop: 'pinduoduo' });
+		// console.log(`핀둬둬 메인 페이지 진입`);
+		// const info = await initInfo(false);
+		// await new pinduoduo().bulkTypeOne(info.user);
+		// floatingButtonBulk({ info, shop: 'pinduoduo' });
 	}
 };
 
