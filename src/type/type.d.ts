@@ -16,7 +16,8 @@ export type Shop =
 	| 'taobao2'
 	| 'tmall1'
 	| 'tmall2'
-	| 'vvic';
+	| 'vvic'
+	| 'pinduoduo';
 
 /** 상품 */
 export type Product = {

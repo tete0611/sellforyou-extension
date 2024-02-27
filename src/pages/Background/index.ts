@@ -578,6 +578,18 @@ chrome.runtime.onMessage.addListener((request: RuntimeMessage, sender, sendRespo
 			return true;
 		}
 
+		/** 셀포유로 console.log 보내서 테스트 (소싱처에서 console.clear()메서드 등 발생으로 인한 확인 불가능시) */
+		case 'console': {
+			const response = request.source;
+			let tmp = '';
+			if (typeof response === 'object') {
+				tmp = JSON.stringify(response);
+				console.log({ tmp });
+			} else console.log({ response });
+			sendResponse();
+			return true;
+		}
+
 		default:
 			break;
 	}

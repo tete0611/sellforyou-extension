@@ -1,5 +1,5 @@
 import CryptoJS from 'crypto-js';
-import { alibaba, amazon, express, taobao, tmall, vvic } from './modules';
+import { alibaba, amazon, express, pinduoduo, taobao, tmall, vvic } from './modules';
 import { sendRuntimeMessage } from '../Tools/ChromeAsync';
 import { getCookie } from '../../../common/function';
 import { getTaobaoData } from '../Tools/Taobao';
@@ -145,10 +145,6 @@ const main = async () => {
 			case 'order-vvic': {
 				break;
 			}
-			/** 셀포유로 console.log 보내서 테스트 (소싱처에서 console.clear()메서드 등 발생으로 인한 확인 불가능시) */
-			case 'console': {
-				console.log(request.source);
-			}
 		}
 	});
 
@@ -287,7 +283,7 @@ const main = async () => {
 		floatingButtonBulk({ info, shop: 'vvic' });
 
 		/** vvic 상점 페이지 */
-	} else if (/www.vvic.com\/shop\/(\d+)/.test(currentUrl)) {
+	} else if (/www.vvic.com\/shop\/(list\/)*(\d+)/.test(currentUrl)) {
 		console.log('vvic 상점 페이지 진입');
 		const info = await initInfo(false);
 		await new vvic().bulkTypeOne(info.user, 3);
@@ -384,6 +380,11 @@ const main = async () => {
 		/** 테무 리스트 페이지 */
 	} else if (/.temu.com\/kr-en\/.*opt_level/.test(currentUrl)) {
 		// alert('테무 리스트 페이지 진입');
+	} else if (/mobile.yangkeduo.com\/index/.test(currentUrl)) {
+		console.log(`핀둬둬 메인 페이지 진입`);
+		const info = await initInfo(false);
+		await new pinduoduo().bulkTypeOne(info.user);
+		floatingButtonBulk({ info, shop: 'pinduoduo' });
 	}
 };
 
