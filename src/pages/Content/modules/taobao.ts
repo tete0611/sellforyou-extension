@@ -13,7 +13,7 @@ const iconv = require('iconv-lite');
 
 /** 타오바오 상품정보 크롤링 */
 const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
-	let result = form;
+	const result = form;
 	result.user = user;
 
 	/** 페이지별 크롤링 방식 다름 */
@@ -51,12 +51,12 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 			data2,
 		)}`;
 
-		let descText = await sendRuntimeMessage<string>({
+		const descText = await sendRuntimeMessage<string>({
 			action: 'fetch',
 			form: { url: descUrl },
 		});
 
-		let descJson = JSON.parse(descText ?? '');
+		const descJson = JSON.parse(descText ?? '');
 
 		if (descJson.data.url !== undefined) {
 			if (isBulkProcessing) {
@@ -72,8 +72,8 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 
 		// api return type이 소싱처별로 2개씩 있음
 		if (descJson.data.components.componentData.desc_richtext_pc === undefined) {
-			let componentData: object | undefined = descJson.data.components.componentData;
-			let layout: { ID: string; key: string }[] | undefined = descJson.data.components.layout;
+			const componentData: object | undefined = descJson.data.components.componentData;
+			const layout: { ID: string; key: string }[] | undefined = descJson.data.components.layout;
 
 			if (!layout || !componentData) return { error: '상세이미지 파싱 에러' };
 
