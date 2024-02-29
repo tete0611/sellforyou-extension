@@ -315,34 +315,38 @@ export const BulkSettingPaper = ({ state, info, shop }: Props) => {
 						개인분류를 설정하시려면 개인분류 설정란을 체크해주세요.(공백은 제거됩니다.)
 					</td>
 				</tr>
-				<tr>
-					<td colSpan={3} style={{ border: '1px solid black', width: '50%', padding: 10 }}>
-						<label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: 18 }}>
-							<input
-								onChange={() => setSfyGoldMedalEnabled((p) => !p)}
-								checked={sfyGoldMedalEnabled}
-								id='sfyGoldMedalEnabled'
-								type='checkbox'
-								style={{ cursor: 'pointer', width: 20, height: 20, marginRight: 8 }}
-							/>
-							금메달 상품만 수집하기 (타오바오)
-						</label>
-					</td>
-				</tr>
-				<tr>
-					<td colSpan={3} style={{ border: '1px solid black', width: '50%', padding: 10 }}>
-						<label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: 18 }}>
-							<input
-								onChange={() => setSfyStandardShippingEnabled((p) => !p)}
-								checked={sfyStandardShippingEnabled}
-								id='sfyStandardShippingEnabled'
-								type='checkbox'
-								style={{ cursor: 'pointer', width: 20, height: 20, marginRight: 8 }}
-							/>
-							스탠다드 쉬핑 상품만 수집하기 (알리익스프레스)
-						</label>
-					</td>
-				</tr>
+				{(shop === 'taobao1' || shop === 'taobao2' || shop === 'tmall1' || shop === 'tmall2') && (
+					<tr>
+						<td colSpan={3} style={{ border: '1px solid black', width: '50%', padding: 10 }}>
+							<label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: 18 }}>
+								<input
+									onChange={() => setSfyGoldMedalEnabled((p) => !p)}
+									checked={sfyGoldMedalEnabled}
+									id='sfyGoldMedalEnabled'
+									type='checkbox'
+									style={{ cursor: 'pointer', width: 20, height: 20, marginRight: 8 }}
+								/>
+								금메달 상품만 수집하기 (타오바오)
+							</label>
+						</td>
+					</tr>
+				)}
+				{shop === 'express' && (
+					<tr>
+						<td colSpan={3} style={{ border: '1px solid black', width: '50%', padding: 10 }}>
+							<label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: 18 }}>
+								<input
+									onChange={() => setSfyStandardShippingEnabled((p) => !p)}
+									checked={sfyStandardShippingEnabled}
+									id='sfyStandardShippingEnabled'
+									type='checkbox'
+									style={{ cursor: 'pointer', width: 20, height: 20, marginRight: 8 }}
+								/>
+								스탠다드 쉬핑 상품만 수집하기 (알리익스프레스)
+							</label>
+						</td>
+					</tr>
+				)}
 				<tr>
 					<td colSpan={3} style={{ color: 'red', paddingTop: 5, paddingBottom: 5 }}></td>
 				</tr>
