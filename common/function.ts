@@ -754,6 +754,7 @@ export const onInsertDom = ({
 		id: normalizeUrl(element.href),
 		style: user.userInfo?.collectCheckPosition === 'L' ? 'left: 0px !important' : 'right: 0px !important',
 	});
+	input.addEventListener('click', (e) => e.stopPropagation()); // 이벤트버블링 ,캡쳐링 방지
 	const sfyBox = element.querySelector('.SELLFORYOU-CHECKBOX');
 
 	// 이미 있으면 id 값만 업데이트
