@@ -48,6 +48,12 @@ export const injectScript = async (type: string) => {
 			break;
 		}
 
+		case 'temu': {
+			script.src = chrome.runtime.getURL('/resources/temu.js');
+
+			break;
+		}
+
 		default:
 			break;
 	}

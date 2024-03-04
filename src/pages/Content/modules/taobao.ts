@@ -600,7 +600,7 @@ const scrape = async (items: any, user: User, isBulkProcessing: boolean) => {
 					return v.price;
 				});
 
-				min_price = Math.min(...priceList);
+				min_price = Math.min(...(priceList as any));
 
 				for (const i in result['item']['props_list']) {
 					let matched = false;

@@ -43,7 +43,7 @@ export const form: OriginalData = {
 		prop_imgs: {
 			prop_img: [],
 		},
-		props_imgs: {},
+		props_imgs: {} as any,
 		property_alias: '',
 		props: [],
 		total_sold: '',

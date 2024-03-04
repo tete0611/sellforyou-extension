@@ -5,7 +5,7 @@ import { ProductWhereInput } from './schema';
 /** T와 U에서 겹치는 속성은 Pass, 그렇지 않으면 타입추가되어 반환 */
 type Overwrite<T, U> = { [P in Exclude<keyof T, keyof U>]: T[P] } & U;
 
-/** 오픈마켓종류 정의 */
+/** 소싱처 종류 정의 */
 export type Shop =
 	| 'alibaba'
 	| 'amazon'
@@ -17,7 +17,8 @@ export type Shop =
 	| 'tmall1'
 	| 'tmall2'
 	| 'vvic'
-	| 'pinduoduo';
+	| 'pinduoduo'
+	| 'temu';
 
 /** 상품 */
 export type Product = {
@@ -518,12 +519,22 @@ export type OriginalData = {
 		video: string;
 		sample_id: string;
 		props_name: string;
-		prop_imgs: any;
-		props_imgs: any;
+		prop_imgs: { prop_img: { properties: string; url: string }[] };
+		props_imgs: { prop_img: { properties: string; url: string }[] };
 		property_alias: string;
-		props: any[];
+		props: { name: string; value: string }[];
 		total_sold: string;
-		skus: any;
+		skus: {
+			sku: {
+				price: string;
+				total_price: number;
+				original_price: string;
+				properties: string;
+				properties_name: string;
+				quantity: string;
+				sku_id: string;
+			}[];
+		};
 		seller_id: string;
 		sales: number;
 		shop_id: string;

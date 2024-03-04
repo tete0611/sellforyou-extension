@@ -1,7 +1,7 @@
 import CryptoJS from 'crypto-js';
-import { alibaba, amazon, express, pinduoduo, taobao, tmall, vvic } from './modules';
+import { alibaba, amazon, express, pinduoduo, taobao, temu, tmall, vvic } from './modules';
 import { sendRuntimeMessage } from '../Tools/ChromeAsync';
-import { getCookie } from '../../../common/function';
+import { getCookie, onInsertDom } from '../../../common/function';
 import { getTaobaoData } from '../Tools/Taobao';
 import {
 	deleteA077Products,
@@ -21,6 +21,7 @@ import {
 	initInfo,
 	resultDetails,
 	skip,
+	testButton,
 } from './function';
 import { STYLE_SHEET, UPLOAD_PAPER } from './components';
 
@@ -154,6 +155,10 @@ const main = async () => {
 	 * 3. 판매자 페이지에서 대량수집
 	 */
 	const currentUrl = window.location.href;
+
+	////////////////////////////////////////////////////
+	//////////////////// 타 오 바 오 ////////////////////
+	///////////////////////////////////////////////////
 	/** 타오바오 단일상품 페이지 */
 	if (/item.taobao.com\/item.htm/.test(currentUrl)) {
 		console.log('타오바오 단일상품 페이지 진입');
@@ -190,6 +195,9 @@ const main = async () => {
 	} else if (/guang.taobao.com/.test(currentUrl)) {
 		skip();
 
+		///////////////////////////////////////////////
+		//////////////////// 티 몰 ////////////////////
+		//////////////////////////////////////////////
 		/** 티몰 상세페이지 */
 	} else if (
 		/detail.tmall.com/.test(currentUrl) ||
@@ -213,38 +221,45 @@ const main = async () => {
 			await new tmall().bulkTypeTwo(info.user);
 			floatingButtonBulk({ info: info, shop: 'tmall2' });
 		}
-
-		/** 알리 단일 페이지 */
-	} else if (/aliexpress.com\/item/.test(currentUrl)) {
-		const info = await initInfo(true);
-		const result = await new express().get(info.user);
-		floatingButton({ info: info, result: result as any });
-
-		/** 알리 검색 페이지 */
-	} else if (
-		/aliexpress.com\/af/.test(currentUrl) ||
-		/aliexpress.com\/af\/category/.test(currentUrl) ||
-		/aliexpress.com\/af\/wholesale/.test(currentUrl) ||
-		/aliexpress.com\/w\/wholesale/.test(currentUrl) ||
-		/aliexpress.com\/category/.test(currentUrl) ||
-		/aliexpress.com\/premium/.test(currentUrl) ||
-		/aliexpress.com\/wholesale/.test(currentUrl)
-	) {
-		console.log('알리 검색 페이지 진입');
-		const info = await initInfo(false);
-		await new express().bulkTypeOne(info.user);
-		await new express().bulkTypeTwo(info.user);
-		floatingButtonBulk({ info: info, shop: 'express' });
-
-		/** 알리 상점 페이지 */
-	} else if (/aliexpress.com\/store/.test(currentUrl)) {
-		console.log('알리 상점 페이지 진입');
-		const info = await initInfo(false);
-		await new express().bulkTypeThree(info.user);
-		floatingButtonBulk({ info: info, shop: 'express' });
-
-		/** 1688 단일상품 페이지 */
-	} else if (/detail.1688.com/.test(currentUrl)) {
+	}
+	//////////////////////////////////////////////////////
+	//////////////////// 알리익스프레스 ////////////////////
+	/////////////////////////////////////////////////////
+	// 알리 단일 페이지
+	else if (currentUrl.includes('aliexpress.com')) {
+		if (/aliexpress.com\/item/.test(currentUrl)) {
+			console.log(`알리 단일상품 페이지 진입`);
+			const info = await initInfo(true);
+			const result = await new express().get(info.user);
+			floatingButton({ info: info, result: result as any });
+			// 알리 검색 페이지
+		} else if (
+			/aliexpress.com\/af/.test(currentUrl) ||
+			/aliexpress.com\/af\/category/.test(currentUrl) ||
+			/aliexpress.com\/af\/wholesale/.test(currentUrl) ||
+			/aliexpress.com\/w\/wholesale/.test(currentUrl) ||
+			/aliexpress.com\/category/.test(currentUrl) ||
+			/aliexpress.com\/premium/.test(currentUrl) ||
+			/aliexpress.com\/wholesale/.test(currentUrl)
+		) {
+			console.log('알리 검색 페이지 진입');
+			const info = await initInfo(false);
+			await new express().bulkTypeOne(info.user);
+			await new express().bulkTypeTwo(info.user);
+			floatingButtonBulk({ info: info, shop: 'express' });
+			// 알리 상점 페이지
+		} else if (/aliexpress.com\/store/.test(currentUrl)) {
+			console.log('알리 상점 페이지 진입');
+			const info = await initInfo(false);
+			await new express().bulkTypeThree(info.user);
+			floatingButtonBulk({ info: info, shop: 'express' });
+		}
+	}
+	/////////////////////////////////////////////////
+	//////////////////// 1 6 8 8 ////////////////////
+	/////////////////////////////////////////////////
+	/** 1688 단일상품 페이지 */
+	else if (/detail.1688.com/.test(currentUrl)) {
 		console.log('1688 단일상품 페이지');
 		const info = await initInfo(true);
 		const result = await new alibaba().get(info.user);
@@ -268,9 +283,12 @@ const main = async () => {
 		const info = await initInfo(false);
 		await new alibaba().bulkTypeOne(info.user);
 		floatingButtonBulk({ info, shop: 'alibaba' });
-
-		/** vvic 단일상품 페이지 */
-	} else if (/www.vvic.com\/item/.test(currentUrl)) {
+	}
+	/////////////////////////////////////////////////
+	//////////////////// V V I C ////////////////////
+	/////////////////////////////////////////////////
+	/** vvic 단일상품 페이지 */
+	else if (/www.vvic.com\/item/.test(currentUrl)) {
 		const info = await initInfo(true);
 		const result = await new vvic().get(info.user);
 		floatingButton({ info, result });
@@ -302,6 +320,9 @@ const main = async () => {
 		// const shopId = parseInt(currentUrl.match(/\/list\/(\d+)/)?.[1] ?? '0');
 		floatingButtonBulk({ info, shop: 'vvic' });
 
+		/////////////////////////////////////////////////
+		//////////////////// 아 마 존 ////////////////////
+		/////////////////////////////////////////////////
 		/** 아마존 페이지 1 */
 	} else if (/www.amazon.com\/.+\/dp\//.test(currentUrl) || /www.amazon.com\/dp/.test(currentUrl)) {
 		console.log(`amazon page type 1 entered`);
@@ -376,15 +397,60 @@ const main = async () => {
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.de');
 		floatingButtonBulk({ info, shop: 'amazon2' });
+	}
 
-		/** 테무 리스트 페이지 */
-	} else if (/.temu.com\/kr-en\/.*opt_level/.test(currentUrl)) {
-		// alert('테무 리스트 페이지 진입');
-	} else if (/mobile.yangkeduo.com\/index/.test(currentUrl)) {
-		// console.log(`핀둬둬 메인 페이지 진입`);
-		// const info = await initInfo(false);
-		// await new pinduoduo().bulkTypeOne(info.user);
-		// floatingButtonBulk({ info, shop: 'pinduoduo' });
+	/////////////////////////////////////////////////
+	//////////////////// T E M U ////////////////////
+	/////////////////////////////////////////////////
+	else if (currentUrl.includes('www.temu.com')) {
+		// 테무 단일상품 페이지
+		if (/temu.com\/kr\/.+.html/.test(currentUrl)) {
+			console.log(`테무 상품페이지 진입`);
+			const info = await initInfo(true);
+			const result = await new temu().get(info.user);
+			floatingButton({ info, result: result as any });
+		}
+		// 테무 리스트 페이지
+		else if (/.temu.com\/kr-en\/.*opt_level/.test(currentUrl)) {
+			// alert('테무 리스트 페이지 진입');
+		} else if (/.temu.com\/search_result/.test(currentUrl)) {
+			console.log(`테무 검색 페이지 진입`);
+			const info = await initInfo(false);
+			await new temu().bulkTypeOne(info.user);
+			floatingButtonBulk({ info, shop: 'temu' });
+			testButton({
+				onClick: () => {
+					const container = document.querySelector('.js-search-goodsList');
+					const products =
+						(container?.querySelectorAll('._3GizL2ou') as NodeListOf<HTMLDivElement> | undefined) ??
+						(container?.firstChild?.childNodes as NodeListOf<HTMLDivElement> | undefined);
+					console.log({ products });
+					const checkBox = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
+					if (products) {
+						if (checkBox.length < 1) {
+							const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
+							products.forEach((v) => {
+								const anchor = v.querySelector('a');
+
+								onInsertDom({ element: anchor, picker: picker, user: info.user });
+							});
+						} else
+							for (let i = 0; i < checkBox.length; i++) {
+								checkBox[i].remove();
+							}
+					}
+				},
+			});
+		}
+	}
+	/////////////////////////////////////////////////
+	//////////////////// 핀 둬 둬 ////////////////////
+	/////////////////////////////////////////////////
+	else if (/mobile.yangkeduo.com\/index/.test(currentUrl)) {
+		console.log(`핀둬둬 메인 페이지 진입`);
+		const info = await initInfo(false);
+		await new pinduoduo().bulkTypeOne(info.user);
+		floatingButtonBulk({ info, shop: 'pinduoduo' });
 	}
 };
 
