@@ -918,5 +918,33 @@ export const formatToEachShop = () => {
 					return false;
 			}
 		},
+		openMarketIconPath: ({ shopCode }: { shopCode: string }) => {
+			switch (shopCode) {
+				case 'A077':
+					return '/resources/icon-smartstore.png';
+				case 'B378':
+					return '/resources/icon-coupang.png';
+				case 'A112':
+					return '/resources/icon-street-global.png';
+				case 'A113':
+					return '/resources/icon-street-normal.png';
+				case 'A006':
+					return '/resources/icon-gmarket.png';
+				case 'A001':
+					return '/resources/icon-auction.png';
+				case 'A027':
+					return '/resources/icon-interpark.png';
+				case 'B719':
+					return '/resources/icon-wemakeprice.png';
+				case 'A524':
+					return '/resources/icon-lotteon-global.png';
+				case 'A525':
+					return '/resources/icon-lotteon-normal.png';
+				case 'B956':
+					return '/resources/icon-tmon.png';
+				default:
+					return null;
+			}
+		},
 	};
 };

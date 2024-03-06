@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { AppContext } from '../../../../containers/AppContext';
 import { styled, Box, Chip, Grid, IconButton, TableCell, TableRow, Typography, Checkbox } from '@mui/material';
 import { Input, MyButton } from '../../Common/UI';
-import { getStoreUrl } from '../../../../../common/function';
+import { formatToEachShop, getStoreUrl } from '../../../../../common/function';
 
 const StyledTableCell = styled(TableCell)({
 	textAlign: 'center',
@@ -13,9 +13,10 @@ const StyledTableCell = styled(TableCell)({
 	fontSize: 13,
 });
 
-export const OrderSummary = observer((props: any) => {
+export const OrderSummary = observer((props) => {
 	const { common, order } = React.useContext(AppContext);
-
+	const shopIconPath = formatToEachShop().iconPath({ shopName: props.item.product.activeTaobaoProduct.shopName });
+	const openMarketIconPath = formatToEachShop().openMarketIconPath({ shopCode: props.item.marketCode });
 	return (
 		<>
 			<TableRow hover>
@@ -67,29 +68,7 @@ export const OrderSummary = observer((props: any) => {
 												window.open(url);
 											}}
 										>
-											{props.item.marketCode === 'A077' ? (
-												<img src='/resources/icon-smartstore.png' />
-											) : props.item.marketCode === 'B378' ? (
-												<img src='/resources/icon-coupang.png' />
-											) : props.item.marketCode === 'A112' ? (
-												<img src='/resources/icon-street-global.png' />
-											) : props.item.marketCode === 'A113' ? (
-												<img src='/resources/icon-street-normal.png' />
-											) : props.item.marketCode === 'A006' ? (
-												<img src='/resources/icon-gmarket.png' />
-											) : props.item.marketCode === 'A001' ? (
-												<img src='/resources/icon-auction.png' />
-											) : props.item.marketCode === 'A027' ? (
-												<img src='/resources/icon-interpark.png' />
-											) : props.item.marketCode === 'B719' ? (
-												<img src='/resources/icon-wemakeprice.png' />
-											) : props.item.marketCode === 'A524' ? (
-												<img src='/resources/icon-lotteon-global.png' />
-											) : props.item.marketCode === 'A525' ? (
-												<img src='/resources/icon-lotteon-normal.png' />
-											) : props.item.marketCode === 'B956' ? (
-												<img src='/resources/icon-tmon.png' />
-											) : null}
+											{openMarketIconPath ? <img width={16} height={16} src={openMarketIconPath} /> : null}
 										</IconButton>
 
 										<Typography
@@ -130,17 +109,7 @@ export const OrderSummary = observer((props: any) => {
 												window.open(props.item.product.activeTaobaoProduct.url);
 											}}
 										>
-											{props.item.product.activeTaobaoProduct.shopName === 'taobao' ? (
-												<img src='/resources/icon-taobao.png' />
-											) : props.item.product.activeTaobaoProduct.shopName === 'tmall' ? (
-												<img src='/resources/icon-tmall.png' />
-											) : props.item.product.activeTaobaoProduct.shopName === 'express' ? (
-												<img src='/resources/icon-express.png' />
-											) : props.item.product.activeTaobaoProduct.shopName === 'alibaba' ? (
-												<img src='/resources/icon-1688.png' />
-											) : props.item.product.activeTaobaoProduct.shopName === 'vvic' ? (
-												<img src='/resources/icon-vvic.png' />
-											) : null}
+											{shopIconPath ? <img width={16} height={16} src={shopIconPath} /> : null}
 										</IconButton>
 									) : (
 										<Box
