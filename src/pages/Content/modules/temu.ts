@@ -13,11 +13,16 @@ const scrape = async (items: any, user: User) => {
 		const itemImgs: { url: string }[] = items.goodsData.gallery
 			.map((v) => v)
 			.filter((v) => v.id > 0)
-			?.map((v) => normalizeUrl(v.url));
+			?.map((v) => ({ url: normalizeUrl(v.url) }));
+
+		const productUrl =
+			items.seoData.ogInfo['og:url'].length <= 150
+				? normalizeUrl(items.seoData.ogInfo['og:url'])
+				: `https://www.temu.com/kr/g-${items.goodsData.goodsId}.html`;
 
 		result['item']['shopName'] = 'temu';
 		result['item']['title'] = items.goodsData.goodsName;
-		result['item']['url'] = normalizeUrl(items.seoData.ogInfo['og:url']);
+		result['item']['url'] = productUrl;
 		result['item']['original_price'] = items.seoData.ogInfo['product:price:amount'];
 		result['item']['price'] = items.seoData.ogInfo['product:price:amount'];
 		result['item']['pic_url'] = normalizeUrl(items.goodsData.hdThumbUrl);
@@ -25,9 +30,20 @@ const scrape = async (items: any, user: User) => {
 		result['item']['desc_img'] = items.descData.map((v) => normalizeUrl(v.url));
 		result['item']['shop_id'] = 'temu';
 		result['item']['item_imgs'] = itemImgs;
-	} catch (error) {
-		console.error(error);
+	} catch (e) {
+		console.error(e);
 		return { error: '상품정보에 문제가 있습니다.' };
+	}
+	/** 추가속성정보 */
+	try {
+		for (const v of items.goodsData.goodsProperty) {
+			const name = v.key;
+			const value = v.values.join(', ');
+
+			result['item']['attr'].push(`${name}:${value}`);
+		}
+	} catch (e) {
+		console.log(`추가속성정보가 없거나 에러가 있습니다.`);
 	}
 
 	/** 옵션정보 생성 */
@@ -113,6 +129,43 @@ const scrape = async (items: any, user: User) => {
 		desc_imgs = desc_imgs.filter((v) => v !== '');
 		desc_output = desc_output_tmp.join('');
 		desc_html = new DOMParser().parseFromString(desc_output, 'text/html');
+		console.log({ desc_html });
+
+		const desc_href = desc_html.querySelectorAll('a');
+
+		for (const i in desc_href) {
+			try {
+				desc_href[i].remove();
+			} catch (e) {
+				continue;
+			}
+		}
+
+		/** 상세설명 텍스트 */
+		try {
+			for (const v of items.descTextData.floorList) {
+				const text: string | undefined = v?.items?.[0]?.text;
+				if (text) result['item']['desc_text'].push(text);
+			}
+		} catch (e) {
+			console.log('상세설명 텍스트가 없거나, 오류가있는 상품 입니다.', e);
+		}
+		// try {
+		// 	const iterator = document.createNodeIterator(desc_html.querySelector('body')!, NodeFilter.SHOW_TEXT);
+		// 	console.log({ iterator });
+		// 	let textnode: Node | null;
+		// 	console.log(iterator.nextNode());
+		// 	while ((textnode = iterator.nextNode())) {
+		// 		const texts = textnode.textContent
+		// 			?.split('\n')
+		// 			.map((v) => v.trim())
+		// 			.filter((v) => v);
+
+		// 		texts?.map((v) => result['item']['desc_text'].push(v));
+		// 	}
+		// } catch (error) {
+		// 	//
+		// }
 
 		result['item']['desc_img'] = desc_imgs;
 		result['item']['desc'] = desc_output;

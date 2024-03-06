@@ -18,6 +18,7 @@ import {
 import { Image, Input, MyButton, Search } from '../../Common/UI';
 import { Item } from '../../../../type/type';
 import { SHOPCODE } from '../../../../type/variable';
+import { formatToEachShop } from '../../../../../common/function';
 
 // 커스텀 테이블 컬럼 스타일
 const StyledTableCell = styled(TableCell)({
@@ -38,6 +39,7 @@ export const ErroredSummary = observer((props: Props) => {
 	// MobX 스토리지 로드
 	const { common, product } = React.useContext(AppContext);
 	const { SMART_STORE } = SHOPCODE;
+	const iconPath = formatToEachShop().iconPath({ shopName: props.item.activeTaobaoProduct.shopName });
 
 	// 상품에 변화가 생기면
 	const loading = (
@@ -204,19 +206,7 @@ export const ErroredSummary = observer((props: Props) => {
 								>
 									<Tooltip title='소싱처링크'>
 										<IconButton size='small' onClick={() => window.open(props.item.activeTaobaoProduct.url)}>
-											{props.item.activeTaobaoProduct.shopName === 'taobao' ? (
-												<img src='/resources/icon-taobao.png' />
-											) : props.item.activeTaobaoProduct.shopName === 'tmall' ? (
-												<img src='/resources/icon-tmall.png' />
-											) : props.item.activeTaobaoProduct.shopName === 'express' ? (
-												<img src='/resources/icon-express.png' />
-											) : props.item.activeTaobaoProduct.shopName === 'alibaba' ? (
-												<img src='/resources/icon-1688.png' />
-											) : props.item.activeTaobaoProduct.shopName === 'vvic' ? (
-												<img src='/resources/icon-vvic.png' />
-											) : props.item.activeTaobaoProduct.shopName.includes('amazon') ? (
-												<img src='/resources/icon-amazon.png' />
-											) : null}
+											{iconPath ? <img width={16} height={16} src={iconPath} /> : null}
 										</IconButton>
 									</Tooltip>
 

@@ -1421,6 +1421,7 @@ export const TabAttribute = observer((props: Props) => {
 							>
 								<Table stickyHeader>
 									<TableBody>
+										{/* @ts-ignore 서버에서 받아오는 값은 string이지만 getProduct에서 배열로 변경 */}
 										{props.item.attribute?.map((v) => {
 											return (
 												<TableRow>

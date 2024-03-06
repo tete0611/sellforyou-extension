@@ -43,6 +43,7 @@ const main = async () => {
 					skuData: window.rawData.store.sku,
 					seoData: window.rawData.store.seoData,
 					descData: window.rawData.store.productDetailFlatList,
+					descTextData: window.rawData.store.productDetail,
 					controlData: controlData,
 				};
 

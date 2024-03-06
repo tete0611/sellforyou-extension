@@ -850,6 +850,7 @@ export const SearchFilterModal = observer(() => {
 													<MenuItem value='express'>알리익스프레스</MenuItem>
 													<MenuItem value='alibaba'>1688</MenuItem>
 													<MenuItem value='vvic'>VVIC</MenuItem>
+													<MenuItem value='temu'>테무</MenuItem>
 												</Select>
 
 												<Box>▶</Box>

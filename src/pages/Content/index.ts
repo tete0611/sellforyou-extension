@@ -404,7 +404,7 @@ const main = async () => {
 	/////////////////////////////////////////////////
 	else if (currentUrl.includes('www.temu.com')) {
 		// 테무 단일상품 페이지
-		if (/temu.com\/kr\/.+.html/.test(currentUrl)) {
+		if (/temu.com(\/.)*\/.+.html/.test(currentUrl)) {
 			console.log(`테무 상품페이지 진입`);
 			const info = await initInfo(true);
 			const result = await new temu().get(info.user);

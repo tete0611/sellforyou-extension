@@ -18,7 +18,8 @@ import {
 	Paper,
 } from '@mui/material';
 import { ComboBox, Image, Input, Title } from '../../../Common/UI';
-import { Item } from '../../../../../type/type';
+import { Item, Shop } from '../../../../../type/type';
+import { formatToEachShop } from '../../../../../../common/function';
 
 interface Props {
 	item: Item;
@@ -278,13 +279,7 @@ export const TabPrice = observer((props: Props) => {
 								}}
 							>
 								{v.priceCny.toLocaleString('ko-KR')}
-								{props.item.activeTaobaoProduct.shopName === 'express'
-									? '원'
-									: props.item.activeTaobaoProduct.shopName === 'amazon-us'
-									? '$'
-									: props.item.activeTaobaoProduct.shopName === 'amazon-de'
-									? '€'
-									: '¥'}
+								{formatToEachShop().cny({ shopName: props.item.activeTaobaoProduct.shopName as Shop })}
 							</TableCell>
 
 							{/* 배대지배송비 */}
@@ -631,13 +626,7 @@ export const TabPrice = observer((props: Props) => {
 								}}
 							>
 								{props.item.activeTaobaoProduct.price.toLocaleString('ko-KR')}
-								{props.item.activeTaobaoProduct.shopName === 'express'
-									? '원'
-									: props.item.activeTaobaoProduct.shopName === 'amazon-us'
-									? '$'
-									: props.item.activeTaobaoProduct.shopName === 'amazon-de'
-									? '€'
-									: '¥'}
+								{formatToEachShop().cny({ shopName: props.item.activeTaobaoProduct.shopName as Shop })}
 							</TableCell>
 
 							{/* 환율 인풋 */}
@@ -654,7 +643,7 @@ export const TabPrice = observer((props: Props) => {
 									options={{
 										textAlign: 'right',
 									}}
-									disabled={props.item.activeTaobaoProduct.shopName === 'express'}
+									disabled={formatToEachShop().cnyRateDisabled({ shopName: props.item.activeTaobaoProduct.shopName })}
 									value={props.item.cnyRate}
 									onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
 										e.target.value

@@ -214,6 +214,10 @@ const addToInventory = async (sender: Sender, origin: any) => {
 			break;
 		}
 
+		case 'temu': {
+			break;
+		}
+
 		case 'amazon-us': {
 			textdict = await papagoTranslation(textdict, 'en', 'ko', null);
 			break;
@@ -378,6 +382,8 @@ const addToInventory = async (sender: Sender, origin: any) => {
 	}
 
 	result.data[0].attr = JSON.stringify(result.data[0].attr);
+
+	console.log({ origin });
 
 	// 최종 가공 데이터를 백엔드에 보내서 DB에 추가하도록 요청
 	const response = await gql(
