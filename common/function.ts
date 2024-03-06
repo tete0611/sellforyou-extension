@@ -860,3 +860,63 @@ export const pageRefresh = async (shop: Shop | null, page: number) => {
 
 	window.location.href = url.replaceAll('#', '');
 };
+
+/** 소싱처별 각종 값 변환 함수 */
+export const formatToEachShop = () => {
+	return {
+		cny: ({ shopName }: { shopName: string }) => {
+			switch (shopName) {
+				case 'express':
+					return '원';
+
+				case 'temu':
+					return '원';
+
+				case 'amazon-de':
+					return '€';
+
+				case 'amazon-us':
+					return '$';
+
+				default:
+					return '¥';
+			}
+		},
+		cnyRate: () => {},
+		iconPath: ({ shopName }: { shopName: string }) => {
+			switch (shopName) {
+				case 'taobao':
+					return '/resources/icon-taobao.png';
+
+				case 'tmall':
+					return '/resources/icon-tmall.png';
+
+				case 'express':
+					return '/resources/icon-express.png';
+
+				case 'alibaba':
+					return '/resources/icon-1688.png';
+
+				case 'vvic':
+					return '/resources/icon-vvic.png';
+
+				case 'temu':
+					return '/resources/icon-temu.png';
+
+				default:
+					if (shopName.includes('amazon')) return '/resources/icon-amazon.png';
+					else return null;
+			}
+		},
+		cnyRateDisabled: ({ shopName }: { shopName: string }) => {
+			switch (shopName) {
+				case 'express':
+					return true;
+				case 'temu':
+					return true;
+				default:
+					return false;
+			}
+		},
+	};
+};

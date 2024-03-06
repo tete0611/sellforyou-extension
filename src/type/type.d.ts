@@ -11,6 +11,8 @@ export type Shop =
 	| 'amazon'
 	| 'amazon1'
 	| 'amazon2'
+	| 'amazon-us'
+	| 'amazon-de'
 	| 'express'
 	| 'taobao1'
 	| 'taobao2'
@@ -219,7 +221,14 @@ type Item = {
 	marginRate: number;
 	marginUnitType: string;
 	productOption: any;
-	activeTaobaoProduct: any;
+	activeTaobaoProduct: {
+		name: string;
+		originalData: string;
+		price: number;
+		shopName: string;
+		url: string;
+		videoUrl: null | string;
+	};
 	productOptionName: {
 		productOptionValue: {
 			id: number;
@@ -261,7 +270,7 @@ type Item = {
 	searchTagError: any;
 	imageCheckList: any;
 	myKeyward: string;
-	attribute: any;
+	attribute: string;
 	manuFacturer: string;
 	brandName: string;
 	modelName: string;
@@ -489,7 +498,7 @@ export type OriginalData = {
 		venderId: string;
 		title: string;
 		options: any[];
-		attr: any[];
+		attr: string[];
 		requireDetailData: any[];
 		detailImage: string[];
 		desc_short: string;
