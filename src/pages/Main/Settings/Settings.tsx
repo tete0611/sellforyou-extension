@@ -130,6 +130,18 @@ const Settings = observer(() => {
 	const { darkTheme, loaded, user, testUserInfo, setUserInfo, deliveryPolicy } = common;
 	const { getDeliveryInfo, deliveryList, deliveryData, initDeliveryInfo } = delivery;
 
+	const EMPTY_BOX = (
+		<div
+			style={{
+				width: 126,
+				height: 126,
+				marginBottom: 2,
+				border: '1px solid rgba(0, 0, 0, 0.12)',
+				borderRadius: 4,
+			}}
+		/>
+	);
+
 	// const [deleteCategoryInfoByAdmin] = useMutation<
 	// 	{ deleteCategoryInfoByAdmin: Mutation['deleteCategoryInfoByAdmin'] },
 	// 	MutationDeleteCategoryInfoByAdminArgs
@@ -1464,16 +1476,20 @@ const Settings = observer(() => {
 														display: 'flex',
 													}}
 												>
-													<a target='_blank' href={user.userInfo?.fixImageTop ?? ''}>
-														<img
-															src={user.userInfo?.fixImageTop ?? ''}
-															width={126}
-															height={126}
-															style={{
-																objectFit: 'contain',
-															}}
-														/>
-													</a>
+													{user.userInfo.fixImageTop ? (
+														<a target='_blank' href={user.userInfo.fixImageTop}>
+															<img
+																src={user.userInfo.fixImageTop}
+																width={126}
+																height={126}
+																style={{
+																	objectFit: 'contain',
+																}}
+															/>
+														</a>
+													) : (
+														EMPTY_BOX
+													)}
 												</Box>
 
 												<Paper
@@ -1507,7 +1523,6 @@ const Settings = observer(() => {
 															<InsertPhotoIcon />
 														</IconButton>
 													</label>
-
 													<IconButton
 														size='small'
 														component='span'
@@ -1526,19 +1541,20 @@ const Settings = observer(() => {
 													>
 														<LinkIcon />
 													</IconButton>
+													{user.userInfo.fixImageTop && (
+														<IconButton
+															size='small'
+															color='error'
+															component='span'
+															onClick={async () => {
+																await testUserInfo({ fixImageTop: null });
 
-													<IconButton
-														size='small'
-														color='error'
-														component='span'
-														onClick={async () => {
-															await testUserInfo({ fixImageTop: null });
-
-															setUserInfo({ ...user.userInfo, fixImageTop: null });
-														}}
-													>
-														<DeleteIcon />
-													</IconButton>
+																setUserInfo({ ...user.userInfo, fixImageTop: null });
+															}}
+														>
+															<DeleteIcon />
+														</IconButton>
+													)}
 												</Paper>
 											</Grid>
 										</Grid>
@@ -1585,16 +1601,20 @@ const Settings = observer(() => {
 														display: 'flex',
 													}}
 												>
-													<a target='_blank' href={user.userInfo?.fixImageSubTop ?? ''}>
-														<img
-															src={user.userInfo?.fixImageSubTop ?? ''}
-															width={126}
-															height={126}
-															style={{
-																objectFit: 'contain',
-															}}
-														/>
-													</a>
+													{user.userInfo.fixImageSubTop ? (
+														<a target='_blank' href={user.userInfo?.fixImageSubTop}>
+															<img
+																src={user.userInfo?.fixImageSubTop}
+																width={126}
+																height={126}
+																style={{
+																	objectFit: 'contain',
+																}}
+															/>
+														</a>
+													) : (
+														EMPTY_BOX
+													)}
 												</Box>
 
 												<Paper
@@ -1647,19 +1667,20 @@ const Settings = observer(() => {
 													>
 														<LinkIcon />
 													</IconButton>
+													{user.userInfo.fixImageSubTop && (
+														<IconButton
+															size='small'
+															color='error'
+															component='span'
+															onClick={async () => {
+																await testUserInfo({ fixImageSubTop: null });
 
-													<IconButton
-														size='small'
-														color='error'
-														component='span'
-														onClick={async () => {
-															await testUserInfo({ fixImageSubTop: null });
-
-															setUserInfo({ ...user.userInfo, fixImageSubTop: null });
-														}}
-													>
-														<DeleteIcon />
-													</IconButton>
+																setUserInfo({ ...user.userInfo, fixImageSubTop: null });
+															}}
+														>
+															<DeleteIcon />
+														</IconButton>
+													)}
 												</Paper>
 											</Grid>
 										</Grid>
@@ -1706,16 +1727,20 @@ const Settings = observer(() => {
 														display: 'flex',
 													}}
 												>
-													<a target='_blank' href={user.userInfo?.fixImageBottom ?? ''}>
-														<img
-															src={user.userInfo?.fixImageBottom ?? ''}
-															width={126}
-															height={126}
-															style={{
-																objectFit: 'contain',
-															}}
-														/>
-													</a>
+													{user.userInfo.fixImageBottom ? (
+														<a target='_blank' href={user.userInfo?.fixImageBottom}>
+															<img
+																src={user.userInfo?.fixImageBottom}
+																width={126}
+																height={126}
+																style={{
+																	objectFit: 'contain',
+																}}
+															/>
+														</a>
+													) : (
+														EMPTY_BOX
+													)}
 												</Box>
 
 												<Paper
@@ -1769,18 +1794,20 @@ const Settings = observer(() => {
 														<LinkIcon />
 													</IconButton>
 
-													<IconButton
-														size='small'
-														color='error'
-														component='span'
-														onClick={async () => {
-															await testUserInfo({ fixImageBottom: null });
+													{user.userInfo.fixImageBottom && (
+														<IconButton
+															size='small'
+															color='error'
+															component='span'
+															onClick={async () => {
+																await testUserInfo({ fixImageBottom: null });
 
-															setUserInfo({ ...user.userInfo, fixImageBottom: null });
-														}}
-													>
-														<DeleteIcon />
-													</IconButton>
+																setUserInfo({ ...user.userInfo, fixImageBottom: null });
+															}}
+														>
+															<DeleteIcon />
+														</IconButton>
+													)}
 												</Paper>
 											</Grid>
 										</Grid>
@@ -1827,16 +1854,20 @@ const Settings = observer(() => {
 														display: 'flex',
 													}}
 												>
-													<a target='_blank' href={user.userInfo?.fixImageSubBottom ?? ''}>
-														<img
-															src={user.userInfo?.fixImageSubBottom ?? ''}
-															width={126}
-															height={126}
-															style={{
-																objectFit: 'contain',
-															}}
-														/>
-													</a>
+													{user.userInfo.fixImageSubBottom ? (
+														<a target='_blank' href={user.userInfo?.fixImageSubBottom}>
+															<img
+																src={user.userInfo?.fixImageSubBottom}
+																width={126}
+																height={126}
+																style={{
+																	objectFit: 'contain',
+																}}
+															/>
+														</a>
+													) : (
+														EMPTY_BOX
+													)}
 												</Box>
 
 												<Paper
@@ -1890,18 +1921,20 @@ const Settings = observer(() => {
 														<LinkIcon />
 													</IconButton>
 
-													<IconButton
-														size='small'
-														color='error'
-														component='span'
-														onClick={async () => {
-															await testUserInfo({ fixImageSubBottom: null });
+													{user.userInfo.fixImageSubBottom && (
+														<IconButton
+															size='small'
+															color='error'
+															component='span'
+															onClick={async () => {
+																await testUserInfo({ fixImageSubBottom: null });
 
-															setUserInfo({ ...user.userInfo, fixImageSubBottom: null });
-														}}
-													>
-														<DeleteIcon />
-													</IconButton>
+																setUserInfo({ ...user.userInfo, fixImageSubBottom: null });
+															}}
+														>
+															<DeleteIcon />
+														</IconButton>
+													)}
 												</Paper>
 											</Grid>
 										</Grid>
