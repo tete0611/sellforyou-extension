@@ -1,5 +1,6 @@
 import { getImageSize, normalizeUrl, onInsertDom, sleep } from '../../../../common/function';
 import { User } from '../../../type/schema';
+import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
 
@@ -181,10 +182,9 @@ const scrape = async (items: any, user: User) => {
 
 export class temu {
 	constructor() {
-		// 추후 필요시 구현
-		// checkLogin('pinduoduo').then((auth)=> {
-		//   if(!auth) return null;
-		// })
+		checkLogin('temu').then((auth) => {
+			if (!auth) return null;
+		});
 	}
 
 	/** 수집하기 버튼 클릭 시 */

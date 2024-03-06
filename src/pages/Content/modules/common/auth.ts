@@ -117,6 +117,13 @@ async function checkLogin(type: string) {
 			}
 		}
 
+		case 'temu': {
+			if (getCookie('language') !== 'ko' || getCookie('region') !== '185') {
+				alert('[셀포유]\n테무 상단에서 "국가/지역: 한국" , "언어: 한국어" 설정 후 재시도 바랍니다');
+				return false;
+			} else return true;
+		}
+
 		default:
 			break;
 	}

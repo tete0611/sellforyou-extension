@@ -189,6 +189,7 @@ export class analysis {
 					URL_ALIEXPRESS: `https://ko.aliexpress.com/wholesale?SearchText=${encodeURI(keyword.relKeyword)}`,
 					URL_1688: `https://s.1688.com/selloffer/offer_search.htm?keywords=${GBK.encode(translate_list[index])}`,
 					URL_VVIC: `https://www.vvic.com/gz/search/index.html?q=${encodeURI(translate_list[index])}`,
+					URL_TEMU: `https://www.temu.com/search_result.html?search_key=${encodeURI(keyword.relKeyword)}`,
 				};
 			}),
 		);

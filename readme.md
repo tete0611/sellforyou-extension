@@ -28,3 +28,4 @@
 8. <SearchFilterModal/>에 소싱처 추가
 9. "Shop" 소싱처 타입에 타입 추가
 10. formatToEachShop 함수에 소싱처 추가
+11. checkLogin 점검 (소싱처 구조에 따라)
