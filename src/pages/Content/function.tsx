@@ -2,7 +2,14 @@ import { bulkCollectUsingApi, pageRefresh, sleep } from '../../../common/functio
 import { User } from '../../type/schema';
 import { BulkInfo, CollectInfo, Info, Sender, Shop, Source } from '../../type/type';
 import { getLocalStorage, sendRuntimeMessage, setLocalStorage } from '../Tools/ChromeAsync';
-import { BulkHasFailedForm, BulkSuccessForm, BackGroundPaper, CollectButtonBulk, TestButton } from './components';
+import {
+	BulkHasFailedForm,
+	BulkSuccessForm,
+	BackGroundPaper,
+	CollectButtonBulk,
+	TestButton,
+	CreateCheckBoxButton,
+} from './components';
 import React from 'react';
 import { render } from 'react-dom';
 import { CollectButton } from './components';
@@ -16,6 +23,7 @@ export interface FloatingButtonBulkProps {
 	info: Info;
 	shop: Shop | null;
 	urlUnchangedPage?: { shopId: number; method: 'api' | 'element' };
+	disableCustomizationBulk?: boolean;
 }
 
 export const bulkCollect = async (useChecked: boolean, useMedal: boolean) => {
@@ -295,4 +303,11 @@ export const captchaInsert = () => {
 	const paper = document.createElement('div');
 	render(<CaptchaPaper />, paper);
 	document.documentElement.appendChild(paper);
+};
+
+/** 체크박스 수동삽입 버튼 띄우는 함수 */
+export const createCheckBoxButton = ({ onClick }: { onClick: () => void }) => {
+	const wrapper = document.createElement('div');
+	render(<CreateCheckBoxButton onClick={onClick} />, wrapper);
+	document.documentElement.appendChild(wrapper);
 };

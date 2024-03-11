@@ -7,6 +7,32 @@
 	src: url('chrome-extension://__MSG_@@extension_id__/resources/NanumGothic-Regular.ttf');
 }
 
+.SELLFORYOU-FLOATING-CIRCLE {
+	font-family: 'NNSQUAREROUNDR' !important;
+	border-collapse: collapse;
+	box-shadow: 0px 0px 3px skyblue;
+	/* margin: 10px 0px 0px 10px; */
+	position: fixed;
+	right: 100px;
+	top: 10px;
+	width: 80px;
+	height: 80px;
+	z-index: 2147483648;
+	border-radius: 9999px;
+	background: white;
+	font-size: 12px;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.SELLFORYOU-FLOATING-CIRCLE:hover {
+	background: #d1e8ff;
+	-webkit-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+
 .SELLFORYOU-TEST {
 	/* border-spacing: 0px; */
 	border-collapse: collapse;
