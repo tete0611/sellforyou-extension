@@ -4,7 +4,7 @@ import { BulkSettingPaper } from './BulkSettingPaper';
 import { FloatingButtonBulkProps } from '../function';
 import { render } from 'react-dom';
 
-export const CollectButtonBulk = ({ info, shop }: FloatingButtonBulkProps) => {
+export const CollectButtonBulk = ({ info, shop, disableCustomizationBulk }: FloatingButtonBulkProps) => {
 	const [collectMouseEnter, setCollectMouseEnter] = useState(false);
 	const [checkMouseEnter, setCheckMouseEnter] = useState(false);
 	const [configMouseEnter, setConfigMouseEnter] = useState(false);
@@ -90,7 +90,7 @@ export const CollectButtonBulk = ({ info, shop }: FloatingButtonBulkProps) => {
 					</button>
 				</td>
 			</tr>
-			{shop !== 'amazon2' && (
+			{!disableCustomizationBulk && (
 				<tr>
 					<td className='SELLFORYOU-CELL'>
 						<button

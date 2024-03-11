@@ -1,7 +1,7 @@
 import CryptoJS from 'crypto-js';
 import { alibaba, amazon, express, pinduoduo, taobao, temu, tmall, vvic } from './modules';
 import { sendRuntimeMessage } from '../Tools/ChromeAsync';
-import { getCookie, onInsertDom } from '../../../common/function';
+import { getCookie } from '../../../common/function';
 import { getTaobaoData } from '../Tools/Taobao';
 import {
 	deleteA077Products,
@@ -360,7 +360,7 @@ const main = async () => {
 		console.log(`amazon store page entered`);
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.com');
-		floatingButtonBulk({ info, shop: 'amazon2' });
+		floatingButtonBulk({ info, shop: 'amazon2', disableCustomizationBulk: true });
 
 		/** 아마존 페이지 */
 	} else if (
@@ -378,7 +378,7 @@ const main = async () => {
 		console.log(`amazon page type 6 entered`);
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.co.jp');
-		floatingButtonBulk({ info, shop: 'amazon2' });
+		floatingButtonBulk({ info, shop: 'amazon2', disableCustomizationBulk: true });
 
 		/** 아마존 페이지 */
 	} else if (
@@ -396,7 +396,7 @@ const main = async () => {
 		console.log(`amazon page type 8 entered`);
 		const info = await initInfo(false);
 		await new amazon().bulkTypeTwo(info.user, 'amazon.de');
-		floatingButtonBulk({ info, shop: 'amazon2' });
+		floatingButtonBulk({ info, shop: 'amazon2', disableCustomizationBulk: true });
 	}
 
 	/////////////////////////////////////////////////
@@ -404,45 +404,79 @@ const main = async () => {
 	/////////////////////////////////////////////////
 	else if (currentUrl.includes('www.temu.com')) {
 		// 테무 단일상품 페이지
-		if (/temu.com(\/.)*\/.+.html/.test(currentUrl)) {
+		// .html 앞에 g-6자리 이상의 숫자가 붙어있는 url만 단일상품취급
+		if (/temu.com(\/.)*\/.+g-\d{6,}\.html/.test(currentUrl)) {
 			console.log(`테무 상품페이지 진입`);
 			const info = await initInfo(true);
 			const result = await new temu().get(info.user);
 			floatingButton({ info, result: result as any });
 		}
-		// 테무 리스트 페이지
-		else if (/.temu.com\/kr-en\/.*opt_level/.test(currentUrl)) {
-			// alert('테무 리스트 페이지 진입');
-		} else if (/.temu.com\/search_result/.test(currentUrl)) {
-			console.log(`테무 검색 페이지 진입`);
-			const info = await initInfo(false);
-			await new temu().bulkTypeOne(info.user);
-			floatingButtonBulk({ info, shop: 'temu' });
-			testButton({
-				onClick: () => {
-					const container = document.querySelector('.js-search-goodsList');
-					const products =
-						(container?.querySelectorAll('._3GizL2ou') as NodeListOf<HTMLDivElement> | undefined) ??
-						(container?.firstChild?.childNodes as NodeListOf<HTMLDivElement> | undefined);
-					console.log({ products });
-					const checkBox = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
-					if (products) {
-						if (checkBox.length < 1) {
-							const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
-							products.forEach((v) => {
-								const anchor = v.querySelector('a');
 
-								onInsertDom({ element: anchor, picker: picker, user: info.user });
-							});
-						} else
-							for (let i = 0; i < checkBox.length; i++) {
-								checkBox[i].remove();
-							}
-					}
-				},
-			});
+		// 테무 리스트(카테고리) 페이지
+		else if (/.temu.com(\/.+)*\/.*opt_level/.test(currentUrl)) {
+			console.log('테무 리스트 페이지 진입');
+			const info = await initInfo(false);
+			new temu().bulkTypeOne(info.user, 'category');
+			floatingButtonBulk({ info, shop: 'temu', disableCustomizationBulk: true });
+		}
+
+		// 테무 검색 페이지
+		else if (/.temu.com\/search_result/.test(currentUrl)) {
+			console.log(`테무 검색 페이지`);
+			const info = await initInfo(false);
+			new temu().bulkTypeOne(info.user, 'search_result');
+			floatingButtonBulk({ info, shop: 'temu', disableCustomizationBulk: true });
+		}
+
+		// 테무 상점 페이지
+		else if (/temu.com(\/.+)*\/.+m-\d{6,}\.html/.test(currentUrl)) {
+			console.log(`테무 상점 페이지`);
+			const info = await initInfo(false);
+			new temu().bulkTypeOne(info.user, 'mall');
+			floatingButtonBulk({ info, shop: 'temu', disableCustomizationBulk: true });
+		}
+
+		// 테무 베스트셀러
+		else if (/temu.com(\/.+)*\/channel\/best-sellers.html/.test(currentUrl)) {
+			console.log('테무 베스트셀러 페이지');
+			const info = await initInfo(false);
+			new temu().bulkTypeOne(info.user, 'best_sellers');
+			floatingButtonBulk({ info, shop: 'temu', disableCustomizationBulk: true });
+		}
+
+		// 테무 별점 5점
+		else if (/temu.com(\/.+)*\/channel\/full-star.html/.test(currentUrl)) {
+			console.log('테무 별점5점 페이지');
+			const info = await initInfo(false);
+			new temu().bulkTypeOne(info.user, '5-Star Rated');
+			floatingButtonBulk({ info, shop: 'temu', disableCustomizationBulk: true });
+		}
+
+		// 테무 SALE 페이지
+		else if (/temu.com(\/.+)*\/attendance\/(.+).html/.test(currentUrl)) {
+			console.log('테무 🌱 SALE');
+			const info = await initInfo(false);
+			new temu().bulkTypeOne(info.user, 'newSale');
+			floatingButtonBulk({ info, shop: 'temu', disableCustomizationBulk: true });
+		}
+
+		// 테무 SALE 페이지 더보기
+		else if (/temu.com(\/.+)*\/star-subject-more(\/.+)*.html/.test(currentUrl)) {
+			console.log('테무 🌱 SALE More');
+			const info = await initInfo(false);
+			new temu().bulkTypeOne(info.user, 'newSale-more');
+			floatingButtonBulk({ info, shop: 'temu', disableCustomizationBulk: true });
+		}
+
+		// 테무 신상품 페이지
+		else if (/temu.com(\/.+)*\/channel\/new-in.html/.test(currentUrl)) {
+			console.log('테무 신상품 페이지');
+			const info = await initInfo(false);
+			new temu().bulkTypeOne(info.user, 'new_in');
+			floatingButtonBulk({ info, shop: 'temu', disableCustomizationBulk: true });
 		}
 	}
+
 	/////////////////////////////////////////////////
 	//////////////////// 핀 둬 둬 ////////////////////
 	/////////////////////////////////////////////////

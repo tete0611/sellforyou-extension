@@ -1,5 +1,6 @@
-import { getImageSize, normalizeUrl, onInsertDom, sleep } from '../../../../common/function';
+import { getImageSize, normalizeUrl, sleep } from '../../../../common/function';
 import { User } from '../../../type/schema';
+import { Nullable } from '../../../type/type';
 import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
@@ -9,6 +10,10 @@ const scrape = async (items: any, user: User) => {
 	const result = form;
 	result.user = user;
 
+	// const urlParams = new URLSearchParams(window.location.href);
+	// urlParams.forEach((value, key) => {
+	// 	console.log(`${key} : ${value}`);
+	// });
 	/** 기본정보 생성 */
 	try {
 		const itemImgs: { url: string }[] = items.goodsData.gallery
@@ -33,7 +38,7 @@ const scrape = async (items: any, user: User) => {
 		result['item']['item_imgs'] = itemImgs;
 	} catch (e) {
 		console.error(e);
-		return { error: '상품정보에 문제가 있습니다.' };
+		return { error: '업데이트 준비 중인 상품입니다.\n다른 상품을 수집해 주세요.' };
 	}
 	/** 추가속성정보 */
 	try {
@@ -96,7 +101,7 @@ const scrape = async (items: any, user: User) => {
 		}
 	} catch (e) {
 		console.log(`옵션정보에 문제가 있습니다.`, e);
-		return { error: '옵션정보에 문제가 있습니다.' };
+		return { error: '업데이트 준비 중인 상품입니다.\n다른 상품을 수집해 주세요.' };
 	}
 
 	/** 동영상 생성 */
@@ -130,7 +135,6 @@ const scrape = async (items: any, user: User) => {
 		desc_imgs = desc_imgs.filter((v) => v !== '');
 		desc_output = desc_output_tmp.join('');
 		desc_html = new DOMParser().parseFromString(desc_output, 'text/html');
-		console.log({ desc_html });
 
 		const desc_href = desc_html.querySelectorAll('a');
 
@@ -172,10 +176,8 @@ const scrape = async (items: any, user: User) => {
 		result['item']['desc'] = desc_output;
 	} catch (e) {
 		console.log(`상세설명에 문제가 있습니다.`, e);
-		return { error: '상세설명에 문제가 있습니다.' };
+		return { error: '업데이트 준비 중인 상품입니다.\n다른 상품을 수집해 주세요.' };
 	}
-
-	console.log({ result });
 
 	return result;
 };
@@ -204,7 +206,6 @@ export class temu {
 			const data = sessionStorage.getItem('sfy-temu-item');
 			if (data) {
 				const originalData = JSON.parse(data);
-				console.log({ originalData });
 
 				return await scrape(originalData, user);
 			}
@@ -215,29 +216,257 @@ export class temu {
 		}
 	}
 
-	async bulkTypeOne(user: User) {
-		window.addEventListener('DOMContentLoaded', () => {
-			'모두로드댐';
+	/** SELLFORYOU-CHECKBOX 삽입 함수
+	 * 테무에서는 추가로 체크박스에 파라미터를 넣어주어야 보안확인이 안뜨기때문 따로 제작
+	 **/
+	onInsertDomAtTemu({
+		element,
+		picker,
+		user,
+		paramString,
+	}: {
+		element: Nullable<HTMLAnchorElement>;
+		picker: HTMLButtonElement | null;
+		user: User;
+		paramString: string;
+	}) {
+		if (!element) return;
+		if (!element.href || element.href === '') return;
+
+		const input = Object.assign(document.createElement('input'), {
+			className: 'SELLFORYOU-CHECKBOX',
+			checked: picker?.value !== 'false',
+			type: 'checkbox',
+			id: normalizeUrl(element.href) + `?` + paramString,
+			style: user.userInfo?.collectCheckPosition === 'L' ? 'left: 0px !important' : 'right: 0px !important',
 		});
+		input.addEventListener('click', (e) => e.stopPropagation()); // 이벤트버블링 ,캡쳐링 방지
+		const sfyBox = element.querySelector('.SELLFORYOU-CHECKBOX');
 
-		while (true) {
-			const container = document.querySelector('.js-search-goodsList');
-			const products =
-				(container?.querySelectorAll('._3GizL2ou') as NodeListOf<HTMLDivElement> | undefined) ??
-				(container?.firstChild?.childNodes as NodeListOf<HTMLDivElement> | undefined);
+		// 이미 있으면 id 값만 업데이트
+		if (sfyBox) sfyBox.id = input.id;
+		else {
+			element.style.position = 'relative';
+			element.appendChild(input);
+		}
+	}
 
-			if (products) {
-				const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
-				products.forEach((v) => {
-					const anchor = v.querySelector('a');
+	async bulkTypeOne(user: User, shopType: string) {
+		const urlParams = new URLSearchParams(window.location.href);
+		const _x_sessn_id = urlParams.get('_x_sessn_id')
+			? `&_x_sessn_id=${urlParams.get('_x_sessn_id')}`
+			: sessionStorage.getItem('x-session-id')
+			? `&_x_sessn_id=${sessionStorage.getItem('x-session-id')}`
+			: '';
+		const search_tmp = document.querySelector('#searchInput') as HTMLInputElement | undefined;
+		const search_key = search_tmp?.value ? `&search_key=${search_tmp?.value}` : '';
+		const _x_chnl_src = urlParams.get('_x_chnl_src') ? `&_x_chnl_src=${urlParams.get('_x_chnl_src')}` : '';
+		const refer_page_el_sn = urlParams.get('refer_page_el_sn')
+			? `&refer_page_el_sn=${urlParams.get('refer_page_el_sn')}`
+			: '';
+		const refer_page_id = urlParams.get('refer_page_id') ? `&refer_page_id=${urlParams.get('refer_page_id')}` : '';
+		const refer_page_sn = urlParams.get('refer_page_sn') ? `&refer_page_sn=${urlParams.get('refer_page_sn')}` : '';
+		let count = 0;
 
-					onInsertDom({ element: anchor, picker: picker, user: user });
-				});
+		switch (shopType) {
+			case 'search_result':
+			case 'mall':
+			case '5-Star Rated':
+			case 'best_sellers':
+			case 'new_in':
+			case 'category': {
+				const refer_page_name = `&refer_page_name=${shopType}`;
+				const PRODUCT_DIV_CLASSNAME = '._3GizL2ou'; // 확인결과 현재 테무 대부분 페이지 상품 div 클래스명은 다음과 같아서 변수로 선언
+
+				while (true) {
+					const products = document.querySelectorAll(PRODUCT_DIV_CLASSNAME) as NodeListOf<HTMLDivElement> | undefined;
+					// 테무는 체크박스가 삽입되었다가 사라지는 이슈가 있어서 toolBar라는 컴포넌트가 로드된 후 삽입시 체크박스가 안없어짐
+					const toolBar = document.querySelector('#mainToolbar') as HTMLDivElement | undefined;
+
+					if (products && products.length > 0 && toolBar) {
+						const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
+
+						products.forEach((v) => {
+							const gallery_url = v.querySelector('img')?.src.replace(/\.jpg.*/, '.jpg');
+							const top_gallery_url = gallery_url ? `top_gallery_url=${encodeURIComponent(gallery_url)}` : '';
+
+							this.onInsertDomAtTemu({
+								element: v.querySelector('a'),
+								picker: picker,
+								user: user,
+								paramString:
+									top_gallery_url +
+									_x_sessn_id +
+									search_key +
+									refer_page_name +
+									_x_chnl_src +
+									refer_page_el_sn +
+									refer_page_id +
+									refer_page_sn,
+							});
+						});
+
+						/** 옵저버 등록 */
+						const observer = new MutationObserver((e) => {
+							const productsParentBox = e.find((v: any) => v.target.className.includes('_2hynzFts'));
+							if (productsParentBox) {
+								const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
+								const target = productsParentBox.target as HTMLElement;
+								const products = target.querySelectorAll(PRODUCT_DIV_CLASSNAME) as
+									| NodeListOf<HTMLDivElement>
+									| undefined;
+								products?.forEach((v) => {
+									const gallery_url = v.querySelector('img')?.src.replace(/\.jpg.*/, '.jpg');
+									const top_gallery_url = gallery_url ? `top_gallery_url=${encodeURIComponent(gallery_url)}` : '';
+
+									this.onInsertDomAtTemu({
+										element: v.querySelector('a'),
+										picker: picker,
+										user: user,
+										paramString:
+											top_gallery_url +
+											_x_sessn_id +
+											search_key +
+											refer_page_name +
+											_x_chnl_src +
+											refer_page_el_sn +
+											refer_page_id +
+											refer_page_sn,
+									});
+								});
+							}
+						});
+						observer.observe(products[0].parentElement!, { childList: true, subtree: true });
+
+						break;
+					}
+
+					await sleep(500);
+					if (count >= 20) break;
+
+					count++;
+				}
 
 				break;
 			}
 
-			await sleep(500);
+			case 'newSale': {
+				while (true) {
+					const products = document.querySelectorAll('.cardWrap-E76kQ') as NodeListOf<HTMLDivElement> | undefined;
+					const toolBar = document.querySelector('#mainToolbar') as HTMLDivElement | undefined;
+
+					if (products && toolBar && products.length > 0) {
+						const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
+						products.forEach((v) => {
+							const gallery_url = v.querySelector('img')?.src.replace(/\.jpg.*/, '.jpg');
+							const top_gallery_url = gallery_url ? `?top_gallery_url=${encodeURIComponent(gallery_url)}` : '';
+							const anchor = v.querySelector('a');
+
+							this.onInsertDomAtTemu({
+								element: anchor,
+								picker: picker,
+								user: user,
+								paramString:
+									top_gallery_url + refer_page_sn + refer_page_id + _x_sessn_id + refer_page_el_sn + _x_chnl_src,
+							});
+						});
+
+						break;
+					}
+
+					await sleep(500);
+					if (count >= 20) break;
+
+					count++;
+				}
+
+				break;
+			}
+
+			case 'newSale-more': {
+				const refer_page_name = `&refer_page_name=star-subject-more`;
+				let insertSuccess = 0;
+
+				while (true) {
+					const gridBoxs = document.querySelectorAll('[class*="autoFitList-2hynz"]') as
+						| NodeListOf<HTMLDivElement>
+						| undefined;
+					const toolBar = document.querySelector('#mainToolbar') as HTMLDivElement | undefined;
+
+					if (gridBoxs && gridBoxs?.length > 0) {
+						for (const gridBox of gridBoxs) {
+							const products = gridBox.querySelectorAll('.cardWrap-3GizL') as NodeListOf<HTMLDivElement> | undefined;
+
+							if (products && toolBar && products.length > 0) {
+								const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
+								products.forEach((v) => {
+									const gallery_url = v.querySelector('img')?.src.replace(/\.jpg.*/, '.jpg');
+									const top_gallery_url = gallery_url ? `?top_gallery_url=${encodeURIComponent(gallery_url)}` : '';
+									const anchor = v.querySelector('a');
+
+									this.onInsertDomAtTemu({
+										element: anchor,
+										picker: picker,
+										user: user,
+										paramString:
+											top_gallery_url +
+											refer_page_sn +
+											refer_page_id +
+											_x_sessn_id +
+											refer_page_el_sn +
+											_x_chnl_src +
+											refer_page_name,
+									});
+								});
+
+								insertSuccess += 1;
+							}
+
+							/** 옵저버 등록 */
+							const observer = new MutationObserver((e) => {
+								const productsParentBox = e.find((v: any) => v.target.className.includes('autoFitList-2hynz'));
+								if (productsParentBox) {
+									const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
+									const target = productsParentBox.target as HTMLElement;
+									const products = target.querySelectorAll('.cardWrap-3GizL') as NodeListOf<HTMLDivElement> | undefined;
+									products?.forEach((v) => {
+										const gallery_url = v.querySelector('img')?.src.replace(/\.jpg.*/, '.jpg');
+										const top_gallery_url = gallery_url ? `top_gallery_url=${encodeURIComponent(gallery_url)}` : '';
+
+										this.onInsertDomAtTemu({
+											element: v.querySelector('a'),
+											picker: picker,
+											user: user,
+											paramString:
+												top_gallery_url +
+												_x_sessn_id +
+												search_key +
+												refer_page_name +
+												_x_chnl_src +
+												refer_page_el_sn +
+												refer_page_id +
+												refer_page_sn,
+										});
+									});
+								}
+							});
+							observer.observe(gridBox, { subtree: true, childList: true });
+						}
+					}
+
+					if (gridBoxs?.length && gridBoxs.length <= insertSuccess && gridBoxs.length > 0) break;
+					await sleep(500);
+					if (count >= 20) break;
+
+					count++;
+				}
+
+				break;
+			}
+
+			default: {
+				break;
+			}
 		}
 	}
 }

@@ -440,8 +440,21 @@ export const BulkSettingPaper = ({ state, info, shop }: Props) => {
 							id='sfyStart'
 							style={{ width: '100%', height: 40, fontWeight: 600 }}
 							onClick={() => {
-								if (state === 'currentPage') onStartBulk();
-								else if (state === 'customization') onConfigBulkStart();
+								if (state === 'currentPage') {
+									let flag = false;
+									const list = document.getElementsByClassName(
+										'SELLFORYOU-CHECKBOX',
+									) as HTMLCollectionOf<HTMLInputElement> | null;
+									if (list)
+										for (const box of list)
+											if (box.checked) {
+												flag = true;
+												break;
+											}
+
+									if (flag) onStartBulk();
+									else return alert('체크된 상품이 없습니다.');
+								} else if (state === 'customization') onConfigBulkStart();
 							}}
 						>
 							대량수집 시작하기
