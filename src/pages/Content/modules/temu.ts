@@ -338,6 +338,44 @@ export class temu {
 						});
 						observer.observe(products[0].parentElement!, { childList: true, subtree: true });
 
+						/** 카테고리 페이지만 추가로 옵저버 등록 */
+						if (shopType === 'category') {
+							const container = document.querySelector('.contentContainer');
+							const observer_2 = new MutationObserver((e) => {
+								const picked_e = e.find((v: any) => {
+									try {
+										return v.target?.querySelectorAll(PRODUCT_DIV_CLASSNAME)?.length > 0;
+									} catch (error) {
+										//
+									}
+								});
+								const pickedContainer = picked_e?.target as HTMLDivElement | undefined;
+								const products = pickedContainer?.querySelectorAll(PRODUCT_DIV_CLASSNAME) as
+									| NodeListOf<HTMLDivElement>
+									| undefined;
+								products?.forEach((v) => {
+									const gallery_url = v.querySelector('img')?.src.replace(/\.jpg.*/, '.jpg');
+									const top_gallery_url = gallery_url ? `top_gallery_url=${encodeURIComponent(gallery_url)}` : '';
+
+									this.onInsertDomAtTemu({
+										element: v.querySelector('a'),
+										picker: picker,
+										user: user,
+										paramString:
+											top_gallery_url +
+											_x_sessn_id +
+											search_key +
+											refer_page_name +
+											_x_chnl_src +
+											refer_page_el_sn +
+											refer_page_id +
+											refer_page_sn,
+									});
+								});
+							});
+							if (container) observer_2.observe(container, { childList: true, subtree: true });
+						}
+
 						break;
 					}
 
