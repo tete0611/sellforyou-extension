@@ -480,7 +480,21 @@ export const Summary = observer((props: Props) => {
 									}}
 								>
 									<Tooltip title='소싱처링크'>
-										<IconButton size='small' onClick={() => window.open(props.item.activeTaobaoProduct.url)}>
+										<IconButton
+											size='small'
+											onClick={() => {
+												if (props.item.activeTaobaoProduct.shopName === 'temu') {
+													// 테무는 보안감지를 피하기 위해 더미 파라미터를 넣어줌
+													const refer_page_name = `&refer_page_name=search_result`;
+													const refer_page_id = `&refer_page_id=${'10005_1710217424193_1tg3e43ppf'}`;
+													const refer_page_sn = `&refer_page_sn=${'10005'}`;
+
+													window.open(
+														props.item.activeTaobaoProduct.url + '?' + refer_page_name + refer_page_id + refer_page_sn,
+													);
+												} else window.open(props.item.activeTaobaoProduct.url);
+											}}
+										>
 											{iconPath ? <img width={16} height={16} src={iconPath} /> : null}
 										</IconButton>
 									</Tooltip>

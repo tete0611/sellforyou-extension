@@ -405,7 +405,7 @@ const main = async () => {
 	else if (currentUrl.includes('www.temu.com')) {
 		// 테무 단일상품 페이지
 		// .html 앞에 g-6자리 이상의 숫자가 붙어있는 url만 단일상품취급
-		if (/temu.com(\/.)*\/.+g-\d{6,}\.html/.test(currentUrl)) {
+		if (/temu.com(\/.)*\/.+g-\d{6,}\.html/.test(currentUrl) || /temu.com(\/.)*\/goods.html/.test(currentUrl)) {
 			console.log(`테무 상품페이지 진입`);
 			const info = await initInfo(true);
 			const result = await new temu().get(info.user);
