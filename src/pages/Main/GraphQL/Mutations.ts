@@ -2,14 +2,14 @@ import { gql } from '@apollo/client';
 
 const MUTATIONS = {
 	/** 로그인 */
-	SIGN_IN_USER_BY_EVERYONE: `
-        mutation ($id: String!, $pw: String!) {
-            signInUserByEveryone(userType: EMAIL, email: $id, password: $pw) {
-                accessToken
-                refreshToken
-            }
-        }
-    `,
+	SignInUserByEveryone: gql`
+		mutation ($email: String!, $password: String!, $userType: UserSocialType!) {
+			signInUserByEveryone(userType: $userType, email: $email, password: $password) {
+				accessToken
+				refreshToken
+			}
+		}
+	`,
 	/** 로그아웃 */
 	SIGN_OUT_USER_BY_EVERYONE: `
         mutation {

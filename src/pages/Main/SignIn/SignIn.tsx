@@ -1,6 +1,5 @@
 import React from 'react';
 import MUTATIONS from '../GraphQL/Mutations';
-import gql from '../GraphQL/Requests';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { getLocalStorage, queryWindow, setLocalStorage } from '../../Tools/ChromeAsync';
 import { Box, Button, Checkbox, Container, FormControlLabel, Link, TextField, Typography } from '@mui/material';
@@ -8,6 +7,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Frame, SignPaper } from '../Common/UI';
 import { AppInfo } from '../../../type/type';
 import QUERIES from '../GraphQL/Queries';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { Mutation, MutationSignInUserByEveryoneArgs, Query, UserSocialType } from '../../../type/schema';
+import { onApolloError } from '../../../../common/function';
 
 // 로그인 뷰
 export const SignIn = () => {
@@ -26,6 +28,17 @@ export const SignIn = () => {
 
 	// 회원정보 상태관리
 	const [appInfo, setAppInfo] = React.useState<AppInfo>(initAppInfo);
+
+	/** 로그인 뮤테이션 */
+	const [signInUserByEveryone] = useMutation<
+		{ signInUserByEveryone: Mutation['signInUserByEveryone'] },
+		MutationSignInUserByEveryoneArgs
+	>(MUTATIONS.SignInUserByEveryone);
+
+	/** 파파고 키 받아오기 */
+	const [selectPapagoApiKeyByEveryone] = useLazyQuery<{
+		selectPapagoApiKeyByEveryone: Query['selectPapagoApiKeyByEveryone'];
+	}>(QUERIES.SelectPapagoApiKeyByEveryone);
 
 	// 컴포넌트 초기화
 	React.useEffect(() => {
@@ -46,7 +59,8 @@ export const SignIn = () => {
 
 	// 엔터 키를 누르면 로그인 동작 수행
 	const keyHandler = (e) => e.key === 'Enter' && signIn(appInfo);
-	// 열려있는 셀포유 탭 새로고침 (로그인 정보가 변경되었으므로 갱신 필요)
+
+	/** 열려있는 셀포유 탭 새로고침 (로그인 정보가 변경되었으므로 갱신 필요) */
 	const initTabs = async () => {
 		const windows = await queryWindow({ populate: true });
 
@@ -63,27 +77,26 @@ export const SignIn = () => {
 	};
 
 	// 로그인 버튼을 클릭했을 때
-	const signIn = async (info: any) => {
+	const signIn = async (info: AppInfo) => {
 		setAppInfo({ ...appInfo, loading: true });
 
-		// 백엔드 사용자 인증 여부 확인
-		const response = await gql(
-			MUTATIONS.SIGN_IN_USER_BY_EVERYONE,
-			{
-				id: info.id,
-				pw: info.password,
-			},
-			false,
-		);
+		const response = await signInUserByEveryone({
+			variables: { email: info.id, password: info.password, userType: UserSocialType.Email },
+			onError: onApolloError,
+		});
+		const accessToken = response.data?.signInUserByEveryone.accessToken;
+		const refreshToken = response.data?.signInUserByEveryone.refreshToken;
 
-		if (response.errors) {
-			alert(response.errors[0].message);
-			setAppInfo({ ...appInfo, loading: false });
-			return;
-		}
+		if (response.errors || !accessToken || !refreshToken) return setAppInfo({ ...appInfo, loading: false });
+
 		// 파파고 API 키 받아오기
-		const ppgKey = await gql(QUERIES.SELECT_PAPAGO_API_KEY_BY_EVERYONE, {}, false);
-		const resultKey = ppgKey.data.selectPapagoApiKeyByEveryone as string;
+		const ppgKey = (
+			await selectPapagoApiKeyByEveryone({
+				onError: () => {
+					alert('Papago API 키 요청에러\n관리자 문의 바람');
+				},
+			})
+		).data?.selectPapagoApiKeyByEveryone;
 
 		// 회원정보 설정 후 PC 저장
 		setAppInfo((state) => {
@@ -93,20 +106,21 @@ export const SignIn = () => {
 				password: info.password,
 				autoFill: info.autoFill,
 				autoLogin: info.autoLogin,
-				accessToken: response.data.signInUserByEveryone.accessToken,
-				refreshToken: response.data.signInUserByEveryone.refreshToken,
+				accessToken: accessToken,
+				refreshToken: refreshToken,
 				loading: false,
 			};
 
-			setLocalStorage({ appInfo: result, ppgKey: resultKey || '' }).then(initTabs);
+			setLocalStorage({ appInfo: result, ppgKey: ppgKey || '' }).then(initTabs);
 
 			return result;
 		});
 	};
 
-	// 회원가입 페이지 이동
+	/** 회원가입 페이지 이동 */
 	const signUp = () => (window.location.href = '/signup.html');
-	// 다크모드 지원 설정
+
+	/** 다크모드 지원 설정 */
 	const theme = React.useMemo(
 		() =>
 			createTheme({

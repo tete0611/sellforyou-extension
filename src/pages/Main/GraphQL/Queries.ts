@@ -1,3 +1,5 @@
+import { gql } from '@apollo/client';
+
 const QUERIES = {
 	SELECT_MY_INFO_BY_USER: `
         query {
@@ -813,10 +815,11 @@ const QUERIES = {
             )
         }
     `,
-	SELECT_PAPAGO_API_KEY_BY_EVERYONE: `
-    query {
-        selectPapagoApiKeyByEveryone
-  }`,
+	SelectPapagoApiKeyByEveryone: gql`
+		query {
+			selectPapagoApiKeyByEveryone
+		}
+	`,
 };
 
 export default QUERIES;
