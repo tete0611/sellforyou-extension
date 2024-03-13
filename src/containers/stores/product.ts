@@ -978,7 +978,7 @@ export class product {
 					const thumbBlob = await thumbResp.blob();
 					const thumbData = await readFileDataURL(thumbBlob);
 
-					let descHtml: any = null;
+					let descHtml: Document | null = null;
 
 					if (v.description.includes('description.html')) {
 						let descResp = await fetch(
@@ -997,12 +997,16 @@ export class product {
 						const imageList = descHtml.querySelectorAll('img');
 
 						for (let i in imageList) {
-							if (imageList[i].src) {
-								if (imageList[i].src.includes('.gif')) imageList[i].parentNode.removeChild(imageList[i]);
-								else {
-									imageList[i].src = imageList[i].src;
-									v.descriptionImages.push(imageList[i].src);
+							try {
+								if (imageList[i].src) {
+									if (imageList[i].src.includes('.gif')) imageList[i].parentNode?.removeChild(imageList[i]);
+									else {
+										imageList[i].src = imageList[i].src;
+										v.descriptionImages.push(imageList[i].src);
+									}
 								}
+							} catch (error) {
+								continue;
 							}
 						}
 					}
