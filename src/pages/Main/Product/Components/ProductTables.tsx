@@ -215,21 +215,23 @@ export const ProductTables = observer(() => {
 															p: 0,
 														}}
 														onClick={async () => {
+															if (!product.itemInfo.items.some((v) => v.checked))
+																return alert('체크된 상품이 없습니다.');
 															const regExp = /[^가-힣a-zA-Z0-9 ]+/g;
-															product.itemInfo.items.map((v: any, i: number) => {
-																if (!v.checked) return null;
 
-																const name1 = v.name.replace(regExp, ' ');
-																const name2 = byteSlice(name1, 100);
+															product.itemInfo.items
+																.filter((v) => v.checked)
+																.map((v, i) => {
+																	const name1 = v.name.replace(regExp, ' ');
+																	const name2 = byteSlice(name1, 100);
+																	const nameList = name2.split(' ');
+																	const nameListFixed = [...new Set(nameList)];
+																	const name3 = nameListFixed.join(' ');
+																	const name4 = name3.replaceAll('  ', ' ');
 
-																const nameList = name2.split(' ');
-																const nameListFixed = [...new Set(nameList)];
-
-																const name3 = nameListFixed.join(' ');
-																const name4 = name3.replaceAll('  ', ' ');
-																product.setProductName(name4, i);
-																product.updateProductName(i);
-															});
+																	product.setProductName(name4, i);
+																	product.updateProductName(i);
+																});
 														}}
 													>
 														<AutoFixHighIcon fontSize='small' />

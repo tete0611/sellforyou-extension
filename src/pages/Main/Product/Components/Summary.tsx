@@ -235,10 +235,8 @@ export const Summary = observer((props: Props) => {
 											const regExp = /[^가-힣a-zA-Z0-9 ]+/g;
 											const name1 = props.item.name.replace(regExp, ' ');
 											const name2 = byteSlice(name1, 100);
-
 											const nameList = name2.split(' ');
 											const nameListFixed = [...new Set(nameList)];
-
 											const name3 = nameListFixed.join(' ');
 											const name4 = name3.replaceAll('  ', ' ');
 
