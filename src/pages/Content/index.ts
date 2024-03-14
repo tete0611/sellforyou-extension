@@ -225,36 +225,53 @@ const main = async () => {
 	//////////////////////////////////////////////////////
 	//////////////////// 알리익스프레스 ////////////////////
 	/////////////////////////////////////////////////////
-	// 알리 단일 페이지
 	else if (currentUrl.includes('aliexpress.com')) {
+		// 알리 단일 페이지
 		if (/aliexpress.com\/item/.test(currentUrl)) {
 			console.log(`알리 단일상품 페이지 진입`);
 			const info = await initInfo(true);
 			const result = await new express().get(info.user);
 			floatingButton({ info: info, result: result as any });
-			// 알리 검색 페이지
-		} else if (
+		}
+
+		// 알리 카테고리 페이지
+		else if (/aliexpress.com\/p\/calp-plus/.test(currentUrl)) {
+			console.log(`알리 카테고리 페이지`);
+			const info = await initInfo(false);
+			await new express().bulkTypeFour(info.user);
+			floatingButtonBulk({ info: info, shop: 'express', disableCustomizationBulk: true });
+		}
+
+		// 알리 검색 페이지
+		else if (
 			/aliexpress.com\/af/.test(currentUrl) ||
 			/aliexpress.com\/af\/category/.test(currentUrl) ||
-			/aliexpress.com\/af\/wholesale/.test(currentUrl) ||
-			/aliexpress.com\/w\/wholesale/.test(currentUrl) ||
+			/aliexpress.com(\/.*)*\/wholesale/.test(currentUrl) ||
 			/aliexpress.com\/category/.test(currentUrl) ||
-			/aliexpress.com\/premium/.test(currentUrl) ||
-			/aliexpress.com\/wholesale/.test(currentUrl)
+			/aliexpress.com\/premium/.test(currentUrl)
 		) {
 			console.log('알리 검색 페이지 진입');
 			const info = await initInfo(false);
-			await new express().bulkTypeOne(info.user);
 			await new express().bulkTypeTwo(info.user);
-			floatingButtonBulk({ info: info, shop: 'express' });
-			// 알리 상점 페이지
-		} else if (/aliexpress.com\/store/.test(currentUrl)) {
+			floatingButtonBulk({ info: info, shop: 'express', urlUnchangedPage: { method: 'api', shopId: 0 } });
+		}
+
+		// 알리 상점 페이지
+		else if (/aliexpress.com\/store/.test(currentUrl)) {
 			console.log('알리 상점 페이지 진입');
 			const info = await initInfo(false);
 			await new express().bulkTypeThree(info.user);
-			floatingButtonBulk({ info: info, shop: 'express' });
+			floatingButtonBulk({ info: info, shop: 'express', disableCustomizationBulk: true });
+		}
+
+		// 알리 상단헤더 각종 페이지
+		else if (/aliexpress.com\/gcp\//.test(currentUrl)) {
+			// console.log(`알리 상단헤더 각종 페이지`);
+			// const info = await initInfo(false);
+			// floatingButtonBulk({ info: info, shop: 'express' });
 		}
 	}
+
 	/////////////////////////////////////////////////
 	//////////////////// 1 6 8 8 ////////////////////
 	/////////////////////////////////////////////////

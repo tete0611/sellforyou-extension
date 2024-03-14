@@ -739,10 +739,12 @@ export const onInsertDom = ({
 	element, // 삽입하고자 하는 element
 	picker, // 상품일괄 선택/해제 박스
 	user, // User 객체
+	insertBefore,
 }: {
 	element: Nullable<HTMLAnchorElement>;
 	picker: HTMLButtonElement | null;
 	user: User;
+	insertBefore?: boolean;
 }) => {
 	if (!element) return;
 	if (!element.href || element.href === '') return;
@@ -755,13 +757,15 @@ export const onInsertDom = ({
 		style: user.userInfo?.collectCheckPosition === 'L' ? 'left: 0px !important' : 'right: 0px !important',
 	});
 	input.addEventListener('click', (e) => e.stopPropagation()); // 이벤트버블링 ,캡쳐링 방지
-	const sfyBox = element.querySelector('.SELLFORYOU-CHECKBOX');
+	const sfyBox = !insertBefore
+		? element.querySelector('.SELLFORYOU-CHECKBOX')
+		: element.parentNode?.querySelector('.SELLFORYOU-CHECKBOX');
 
 	// 이미 있으면 id 값만 업데이트
 	if (sfyBox) sfyBox.id = input.id;
 	else {
 		element.style.position = 'relative';
-		element.appendChild(input);
+		!insertBefore ? element.appendChild(input) : element.parentNode?.insertBefore(input, element);
 	}
 };
 
@@ -797,7 +801,7 @@ export const bulkCollectUsingApi = async (shop: string | null, shopId: number, c
 				},
 			);
 			if (resp.status !== 200) {
-				alert('상품수집 api Error\n채널톡에 문의 바랍니다.');
+				alert('상품대량수집 API Error\n채널톡에 문의 바랍니다.');
 				return [];
 			}
 			const json = await resp.json();
@@ -809,9 +813,80 @@ export const bulkCollectUsingApi = async (shop: string | null, shopId: number, c
 
 			break;
 		}
-		case 'taobao1': {
+		case 'express': {
+			const currentUrl = window.location.href;
+			const inputElement = document.querySelector('input#search-words') as HTMLInputElement | null;
+			// const searchText = decodeURIComponent(currentUrl.match(/wholesale-(.*?)\.html/)?.[1] ?? '');
+			const searchText = inputElement?.value;
+			const urlParams = new URLSearchParams(currentUrl);
+			const body = {
+				data: { g: 'y', origin: 'y', page: currentPage, SearchText: searchText },
+				dependency: [],
+				eventName: 'onChange',
+				pageVersion: 'ff8ad60b0a0d1fbfc9e484ea303a7f44',
+				target: 'root',
+			};
+			urlParams.forEach((value, key) => {
+				if (key.includes('http')) return; // 파라미터 아닌것 필터링
+				else body.data[key] = value;
+			});
+
+			if (!body.data.SearchText) {
+				alert('[셀포유 대량수집 에러]\n페이지에 문제가 있습니다.\n관리자 문의 요망');
+				return [];
+			}
+
+			const resp = await fetch('https://ko.aliexpress.com/fn/search-pc/index', {
+				headers: {
+					accept: '*/*',
+					'accept-language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+					'bx-v': '2.5.10',
+					'content-type': 'application/json;charset=UTF-8',
+					'sec-ch-ua': '"Chromium";v="122", "Not(A:Brand";v="24", "Google Chrome";v="122"',
+					'sec-ch-ua-mobile': '?0',
+					'sec-ch-ua-platform': '"Windows"',
+					'sec-fetch-dest': 'empty',
+					'sec-fetch-mode': 'cors',
+					'sec-fetch-site': 'same-origin',
+				},
+				referrer: `${encodeURIComponent(window.location.href)}`,
+				referrerPolicy: 'strict-origin-when-cross-origin',
+				body: JSON.stringify(body),
+				method: 'POST',
+				mode: 'cors',
+				credentials: 'include',
+			});
+
+			if (resp.status !== 200) {
+				alert('상품대량수집 API Error\n채널톡에 문의 바랍니다.');
+				return [];
+			}
+
+			const json = await resp.json();
+
+			try {
+				urls = json?.data.result.mods.itemList.content.map((v) => {
+					try {
+						return {
+							url: `https://ko.aliexpress.com/item/${v.productId}.html`,
+							productName: '',
+							productTags: '',
+						};
+					} catch (error) {
+						return '';
+					}
+				});
+			} catch (error) {
+				console.error(error);
+				alert('상품대량수집 API Error\n채널톡에 문의 바랍니다.');
+				return [];
+			}
+
+			break;
 		}
 	}
+
+	console.log({ urls });
 	return urls;
 };
 

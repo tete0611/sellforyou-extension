@@ -1,7 +1,7 @@
 import { checkLogin } from './common/auth';
 import { form } from './common/data';
 import { injectScript } from './common/utils';
-import { sleep, getImageSize } from '../../../../common/function';
+import { sleep, getImageSize, onInsertDom } from '../../../../common/function';
 import { User } from '../../../type/schema';
 
 /** 하단까지 스크롤을 부드럽게 해주는 함수 , 기본값:0.5초 (스크롤 내려야 상품뜨는것 때문) */
@@ -105,9 +105,7 @@ const scrape = async (items: any, user: User) => {
 					if (desc[i].src.includes('.gif')) desc[i].parentNode.removeChild(desc[i]);
 					else {
 						const image: any = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
-						if (image < 1000)
-							// console.log('흰색 이미지', desc[i]);
-							desc[i].parentNode.removeChild(desc[i]);
+						if (image < 1000) desc[i].parentNode.removeChild(desc[i]);
 						else {
 							desc[i].src = desc[i].src;
 							desc_imgs.push(desc[i].src);
@@ -615,9 +613,7 @@ const scrape = async (items: any, user: User) => {
 					if (desc[i].src.includes('.gif')) desc[i].parentNode.removeChild(desc[i]);
 					else {
 						const image: any = await getImageSize(desc[i].src); //해당 이미지 사이즈가 100x100 이하 제거
-						if (image < 1000)
-							// console.log('흰색 이미지', desc[i]);
-							desc[i].parentNode.removeChild(desc[i]);
+						if (image < 1000) desc[i].parentNode.removeChild(desc[i]);
 						else {
 							desc[i].src = desc[i].src;
 							desc_imgs.push(desc[i].src);
@@ -838,101 +834,63 @@ export class express {
 		}
 	}
 
-	/** 대량수집 페이지별 체크표시 */
-	async bulkTypeOne(user) {
-		/** 페이지네이션 버튼을 클릭하면 동작함 (refresh시 동작안함) */
-		while (true) {
-			const cardList = document.querySelector('#card-list');
-			if (cardList) {
-				const observer = new MutationObserver((e) => {
-					for (const mutation of e) {
-						const target = mutation.target as Element;
-
-						try {
-							if (
-								mutation.type === 'attributes' &&
-								mutation.attributeName === 'href' &&
-								target.className.includes('search-card-item')
-							) {
-								const href = target.getAttribute('href');
-								if (!href) continue;
-								const existInput = target.parentNode?.querySelector('input');
-								let picker: any = document.getElementById('sfyPicker');
-
-								/** 이미 체크박스가 존재하면 */
-								if (existInput) {
-									existInput.id = href;
-									existInput.checked = picker?.value === 'false' ? false : true;
-									/** 그렇지 않으면 */
-								} else {
-									let input = document.createElement('input');
-									input.id = href;
-									input.className = 'SELLFORYOU-CHECKBOX';
-									input.checked = picker?.value === 'false' ? false : true;
-									input.type = 'checkbox';
-									if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
-									else input.setAttribute('style', 'right: 0px !important');
-									//@ts-ignore
-									target.style.position = 'relative';
-									target.parentNode?.insertBefore(input, target);
-								}
-							}
-						} catch (e) {
-							return 0;
-						}
-					}
-				});
-				observer.observe(cardList, { childList: true, subtree: true, attributes: true, attributeFilter: ['href'] });
-
-				break;
-			}
-
-			await sleep(500);
-		}
-	}
 	/** aliexpress.com\/w\/wholesale 페이지 체크박스용 */
 	async bulkTypeTwo(user) {
 		let timeout = 0;
 
-		/** refresh 또는 url이동으로 동작함 */
+		/** 가끔 옵저버로도 캐치안되는 상품이 있어서 추가로 이벤트 부착 */
+		window.addEventListener('scrollend', () => {
+			const picker = document.getElementById('sfyPicker') as HTMLButtonElement;
+			const products = document?.querySelectorAll('a[class*="multi--container"]') as
+				| NodeListOf<HTMLAnchorElement>
+				| undefined;
+			const sfyBox = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
+			if (products && products.length !== sfyBox.length)
+				products.forEach((v) => {
+					if (v.href.includes('item')) onInsertDom({ element: v, picker: picker, user: user, insertBefore: true });
+				});
+		});
+
 		while (true) {
 			if (timeout === 10) return 0;
 
-			scrollToBottomSmooth();
-
-			let count = 0;
 			const root = document.getElementById('root');
-			const products: any = root?.querySelectorAll('a[class*="multi--container"]');
+			const grid = root?.querySelector('#card-list') as HTMLDivElement | undefined;
+			const products = root?.querySelectorAll('a[class*="multi--container"]') as
+				| NodeListOf<HTMLAnchorElement>
+				| undefined;
 
-			if (root && products && products.length >= 60)
-				for (let i in products) {
-					try {
-						const productLink = products[i].getAttribute('href');
-						if (!productLink?.includes('item') || !products[i].querySelector('img')) continue;
+			if (products && products.length >= 1) {
+				await sleep(1000);
+				const picker = document.getElementById('sfyPicker') as HTMLButtonElement;
 
-						let input: any = document.createElement('input');
-						let picker: any = document.getElementById('sfyPicker');
+				/** 초기상품 체크박스 삽입 */
+				products.forEach((v) => {
+					if (v.href.includes('item')) onInsertDom({ element: v, picker: picker, user: user, insertBefore: true });
+				});
 
-						input.id = /^https?:/.test(products[i].getAttribute('href')!)
-							? products[i].getAttribute('href')
-							: 'https:' + products[i].getAttribute('href');
-						input.className = 'SELLFORYOU-CHECKBOX';
-						input.checked = picker?.value === 'false' ? false : true;
-						input.type = 'checkbox';
+				/** 옵저버 부착 */
+				const observer = new MutationObserver((e) => {
+					const picker = document.getElementById('sfyPicker') as HTMLButtonElement;
 
-						if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
-						else input.setAttribute('style', 'right: 0px !important');
+					e.forEach((v) => {
+						const target = v.target as HTMLDivElement;
+						if (target.className.includes('multi--imagesGallery--')) {
+							const anchor = target.parentElement as HTMLAnchorElement;
+							if (anchor?.href.includes('item'))
+								onInsertDom({
+									element: anchor,
+									picker: picker,
+									user: user,
+									insertBefore: true,
+								});
+						}
+					});
+				});
+				if (grid) observer.observe(grid, { childList: true, subtree: true });
 
-						products[i].style.position = 'relative';
-						products[i].appendChild(input);
-
-						count++;
-					} catch (e) {
-						continue;
-					}
-				}
-
-			if (count > 0) return count;
+				break;
+			}
 
 			await sleep(1000 * 1);
 
@@ -941,62 +899,77 @@ export class express {
 	}
 
 	async bulkTypeThree(user) {
-		const insertSFYBOX = (dom: ChildNode | null) => {
-			let localCount = 0;
+		window.addEventListener('scrollend', () => {
+			const products = document.querySelectorAll('[ae_object_type="product"]') as NodeListOf<HTMLAnchorElement>;
+			const picker = document.getElementById('sfyPicker') as HTMLButtonElement;
+			const sfyBox = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
 
-			if (dom) {
-				const items_div = dom.childNodes as NodeListOf<Element>;
-				for (let i of items_div) {
-					try {
-						const a = i.querySelector('a');
-						if (!a) continue;
+			if (products.length > sfyBox.length)
+				products.forEach((v) => onInsertDom({ element: v, picker: picker, user: user }));
+		});
 
-						let input: any = document.createElement('input');
-						let picker: any = document.getElementById('sfyPicker');
-
-						input.id = /^https?:/.test(a.getAttribute('href')!)
-							? a.getAttribute('href')
-							: 'https:' + a.getAttribute('href');
-						input.className = 'SELLFORYOU-CHECKBOX';
-						input.checked = picker?.value === 'false' ? false : true;
-						input.type = 'checkbox';
-
-						if (user.userInfo.collectCheckPosition === 'L') input.setAttribute('style', 'left: 0px !important');
-						else input.setAttribute('style', 'right: 0px !important');
-
-						a.style.position = 'relative';
-						i.insertBefore(input, a);
-						localCount++;
-					} catch (e) {
-						continue;
-					}
-				}
-			}
-
-			return localCount;
-		};
 		let timeout = 0;
-		let count = 0;
 
 		while (true) {
-			let grid_container = document.querySelector('[style*="grid"]');
-			let observeBox = document.getElementById('right');
-			let observer: MutationObserver | null = null;
+			if (timeout > 10) break;
 
-			if (grid_container && observeBox) {
-				observer = new MutationObserver((e) => {
-					count = insertSFYBOX(e[1]?.target.childNodes?.[2]);
-				});
-				observer.observe(observeBox, { childList: true, subtree: true });
-				count = insertSFYBOX(grid_container);
+			const products = document.querySelectorAll('[ae_object_type="product"]') as NodeListOf<HTMLAnchorElement>;
+
+			if (products.length > 0) {
+				const picker = document.getElementById('sfyPicker') as HTMLButtonElement;
+				products.forEach((v) => onInsertDom({ element: v, picker: picker, user: user }));
+
 				break;
 			}
 
-			if (timeout === 10) return 0;
-			await sleep(1000 * 1);
-
-			timeout++;
+			await sleep(500);
+			timeout += 0.5;
 		}
-		return count;
+	}
+
+	async bulkTypeFour(user) {
+		let timeout = 0;
+
+		while (true) {
+			if (timeout > 10) break;
+
+			const products = document.querySelectorAll('._2FypS');
+			const picker = document.getElementById('sfyPicker') as HTMLButtonElement;
+			const productsParentBox = document.querySelector('[data-spm="prodcutlist"]');
+			if (products && products.length > 0) {
+				products.forEach((v) => onInsertDom({ element: v.querySelector('a'), picker: picker, user: user }));
+
+				const observer = new MutationObserver((e) => {
+					const picker = document.getElementById('sfyPicker') as HTMLButtonElement;
+
+					e.forEach((v) => {
+						const target = v.target as HTMLDivElement;
+						if (target.className.includes('_2bIiW _2xJR2')) {
+							const anchor = target.parentElement as HTMLAnchorElement;
+							onInsertDom({ element: anchor, picker: picker, user: user });
+						}
+					});
+				});
+				if (productsParentBox) observer.observe(productsParentBox, { childList: true, subtree: true });
+
+				/** 인기상품-무료배송 클릭용 */
+				const container = document.querySelector('.cateWaterFall--categoryFallContainer--6lamXph');
+				const observer2 = new MutationObserver((e) => {
+					e.forEach((v) => {
+						const target = v.target as HTMLDivElement;
+						if (target.className.includes('_2bIiW _2xJR2')) {
+							const anchor = target.parentElement as HTMLAnchorElement;
+							onInsertDom({ element: anchor, picker: picker, user: user });
+						}
+					});
+				});
+				if (container) observer2.observe(container, { childList: true, subtree: true });
+				break;
+			}
+
+			await sleep(500);
+
+			timeout += 0.5;
+		}
 	}
 }
