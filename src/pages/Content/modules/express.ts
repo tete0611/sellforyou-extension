@@ -972,4 +972,33 @@ export class express {
 			timeout += 0.5;
 		}
 	}
+
+	async bulkTypeFive(user: User) {
+		let timeout = 0;
+
+		window.addEventListener('scrollend', () => {
+			const checkBoxes = document.getElementsByClassName('SELLFORYOU-CHECKBOX');
+			const anchors = document.querySelectorAll('a.productContainer') as NodeListOf<HTMLAnchorElement>;
+			const picker = document.getElementById('sfyPicker') as HTMLButtonElement;
+
+			if (checkBoxes.length < anchors.length) {
+				anchors.forEach((anchor) => onInsertDom({ element: anchor, picker: picker, user: user }));
+			}
+		});
+
+		while (true) {
+			if (timeout >= 10) break;
+
+			const anchors = document.querySelectorAll('a.productContainer') as NodeListOf<HTMLAnchorElement>;
+			if (anchors.length > 0) {
+				const picker = document.getElementById('sfyPicker') as HTMLButtonElement;
+				anchors.forEach((anchor) => onInsertDom({ element: anchor, picker: picker, user: user }));
+
+				break;
+			}
+
+			await sleep(500);
+			timeout += 0.5;
+		}
+	}
 }

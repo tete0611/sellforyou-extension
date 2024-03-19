@@ -266,9 +266,10 @@ const main = async () => {
 
 		// 알리 상단헤더 각종 페이지
 		else if (/aliexpress.com\/gcp\//.test(currentUrl)) {
-			// console.log(`알리 상단헤더 각종 페이지`);
-			// const info = await initInfo(false);
-			// floatingButtonBulk({ info: info, shop: 'express' });
+			console.log(`알리 상단헤더 각종 페이지`);
+			const info = await initInfo(false);
+			await new express().bulkTypeFive(info.user);
+			floatingButtonBulk({ info: info, shop: 'express', disableCustomizationBulk: true });
 		}
 	}
 
