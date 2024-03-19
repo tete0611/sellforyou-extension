@@ -32,6 +32,11 @@ body {
 	font-family: 'NanumGothicR' !important;
 }
 
+.option-multiline > .MuiInputBase-multiline {
+	padding: 6px !important;
+	line-height: 19px !important;
+}
+
 .uploadModal {
 	left: 50%;
 	padding: 20px;

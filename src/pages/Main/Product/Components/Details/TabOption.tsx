@@ -181,7 +181,7 @@ export const TabOption = observer((props: Props) => {
 
 				<Box
 					sx={{
-						width: 1205,
+						width: '100%',
 						height: 388,
 						overflowY: 'auto',
 						alignItems: 'center',
@@ -189,17 +189,18 @@ export const TabOption = observer((props: Props) => {
 						p: 0.5,
 					}}
 				>
-					{props.item.productOptionName.map((v: any, nameIndex: number) => {
+					{props.item.productOptionName.map((v, nameIndex) => {
 						const propsList = JSON.parse(props.item.activeTaobaoProduct.originalData).propsList;
-
 						const originalWord =
 							propsList[`${v.taobaoPid}:${v.productOptionValue[0].taobaoVid}`]?.split(':')[0] ??
 							propsList[`${v.taobaoPid}:${/\d+/g}:${v.productOptionValue[0].taobaoVid}`]?.split(':')[0];
+						const paperWidth =
+							props.item.productOptionName.length <= 3 ? '30%' : `${100 / props.item.productOptionName.length - 2}%`;
 						return (
 							<Paper
 								sx={{
 									m: '2px',
-									width: 391,
+									width: paperWidth,
 									height: 362,
 									flex: '0 0 auto',
 									overflowY: 'auto',
@@ -274,11 +275,9 @@ export const TabOption = observer((props: Props) => {
 															<IconButton
 																size='small'
 																onClick={async () => {
-																	let name = prompt('변경할 옵션유형이름을 입력해주세요.', v.name);
+																	const name = prompt('변경할 옵션유형이름을 입력해주세요.', v.name);
 
-																	if (!name) {
-																		return;
-																	}
+																	if (!name) return;
 
 																	product.setProductOptionName({ ...v, name }, props.index, nameIndex);
 																	await product.updateProductOptionName(common, { ...v, name }, props.index);
@@ -310,7 +309,7 @@ export const TabOption = observer((props: Props) => {
 																width: 30,
 															}}
 														>
-															X{v.productOptionValue.filter((v: any) => v.isActive).length}
+															X{v.productOptionValue.filter((v) => v.isActive).length}
 														</Typography>
 													</Box>
 
@@ -333,7 +332,7 @@ export const TabOption = observer((props: Props) => {
 																}}
 																onClick={async () => {
 																	await product.setProductOptionValue(
-																		v.productOptionValue.map((v: any, index: number) => {
+																		v.productOptionValue.map((v, index: number) => {
 																			return { ...v, name: (index + 10).toString(36).toUpperCase() };
 																		}),
 																		props.index,
@@ -345,7 +344,7 @@ export const TabOption = observer((props: Props) => {
 																		common,
 																		props.index,
 																		nameIndex,
-																		v.productOptionValue.map((v: any) => v.id),
+																		v.productOptionValue.map((v) => v.id),
 																	);
 																}}
 															>
@@ -367,7 +366,7 @@ export const TabOption = observer((props: Props) => {
 																}}
 																onClick={async () => {
 																	await product.setProductOptionValue(
-																		v.productOptionValue.map((v: any, index: number) => {
+																		v.productOptionValue.map((v, index: number) => {
 																			return { ...v, name: `${index + 1}` };
 																		}),
 																		props.index,
@@ -379,7 +378,7 @@ export const TabOption = observer((props: Props) => {
 																		common,
 																		props.index,
 																		nameIndex,
-																		v.productOptionValue.map((v: any) => v.id),
+																		v.productOptionValue.map((v) => v.id),
 																	);
 																}}
 															>
@@ -403,8 +402,8 @@ export const TabOption = observer((props: Props) => {
 																	const regExp = /[^가-힣a-zA-Z0-9 ]+/g;
 
 																	await product.setProductOptionValue(
-																		v.productOptionValue.map((v: any) => {
-																			return { ...v, name: v.name.replace(regExp, ' ') };
+																		v.productOptionValue.map((v) => {
+																			return { ...v, name: v.name?.replace(regExp, ' ') };
 																		}),
 																		props.index,
 																		nameIndex,
@@ -415,7 +414,7 @@ export const TabOption = observer((props: Props) => {
 																		common,
 																		props.index,
 																		nameIndex,
-																		v.productOptionValue.map((v: any) => v.id),
+																		v.productOptionValue.map((v) => v.id),
 																	);
 																}}
 															>
@@ -437,7 +436,7 @@ export const TabOption = observer((props: Props) => {
 																}}
 																onClick={async () => {
 																	await product.setProductOptionValue(
-																		v.productOptionValue.map((v: any) => {
+																		v.productOptionValue.map((v) => {
 																			return { ...v, name: v.originalName };
 																		}),
 																		props.index,
@@ -449,7 +448,7 @@ export const TabOption = observer((props: Props) => {
 																		common,
 																		props.index,
 																		nameIndex,
-																		v.productOptionValue.map((v: any) => v.id),
+																		v.productOptionValue.map((v) => v.id),
 																	);
 																}}
 															>
@@ -482,7 +481,7 @@ export const TabOption = observer((props: Props) => {
 											>
 												<Switch
 													size='small'
-													checked={v.isActive}
+													checked={v.isActive ?? false}
 													onChange={async (e) => {
 														product.setProductOptionName(
 															{
@@ -527,7 +526,7 @@ export const TabOption = observer((props: Props) => {
 									</TableHead>
 									{/* 옵션목록 > 옵션값 */}
 									<TableBody>
-										{v.productOptionValue.map((w: any, valueIndex: number) => (
+										{v.productOptionValue.map((w, valueIndex) => (
 											<>
 												<TableRow>
 													<TableCell
@@ -570,22 +569,23 @@ export const TabOption = observer((props: Props) => {
 														}}
 													>
 														<Input
+															className='option-multiline'
+															multiline={true}
 															color={props.item.edited.option ? 'warning' : 'info'}
 															id={`product_row_optionType_${props.index}_${nameIndex}_${valueIndex}`}
 															value={w.name}
-															onChange={(e: any) => {
+															onChange={(e) => {
 																product.setProductOptionValue(
 																	{
 																		...w,
-
-																		name: e.target.value,
+																		name: e.target.value.substring(0, 200),
 																	},
 																	props.index,
 																	nameIndex,
 																	valueIndex,
 																);
 															}}
-															onBlur={async (e: any) => {
+															onBlur={async (e) => {
 																await product.updateProductOptionValue(common, props.index, nameIndex, [w.id]);
 															}}
 														/>
@@ -614,7 +614,7 @@ export const TabOption = observer((props: Props) => {
 																	fontSize: '10px',
 																}}
 															>
-																{w.name.length} 자
+																{w.name?.length} 자
 															</Typography>
 
 															<Typography

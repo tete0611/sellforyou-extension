@@ -1,6 +1,6 @@
 import { ITextOptions, TextOptions } from 'fabric/fabric-impl';
 import { SHOPCODE } from './variable';
-import { ProductWhereInput } from './schema';
+import { ProductOptionName, ProductWhereInput } from './schema';
 
 /** T와 U에서 겹치는 속성은 Pass, 그렇지 않으면 타입추가되어 반환 */
 type Overwrite<T, U> = { [P in Exclude<keyof T, keyof U>]: T[P] } & U;
@@ -229,13 +229,7 @@ type Item = {
 		url: string;
 		videoUrl: null | string;
 	};
-	productOptionName: {
-		productOptionValue: {
-			id: number;
-			image: string | null | undefined;
-			name?: string;
-		}[];
-	}[];
+	productOptionName: ProductOptionName[];
 	localShippingFee: number;
 	shippingFee: number;
 	refundShippingFee: number;
