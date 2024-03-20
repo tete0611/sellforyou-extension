@@ -21,7 +21,6 @@ import {
 	initInfo,
 	resultDetails,
 	skip,
-	testButton,
 } from './function';
 import { STYLE_SHEET, UPLOAD_PAPER } from './components';
 

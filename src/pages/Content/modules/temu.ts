@@ -276,9 +276,11 @@ export class temu {
 			case 'new_in':
 			case 'category': {
 				const refer_page_name = `&refer_page_name=${shopType}`;
-				const PRODUCT_DIV_CLASSNAME = '._3GizL2ou'; // 확인결과 현재 테무 대부분 페이지 상품 div 클래스명은 다음과 같아서 변수로 선언
+				const PRODUCT_DIV_CLASSNAME = '[data-tooltip*="goodContainer"]'; // 확인결과 현재 테무 대부분 페이지 상품 div 클래스명은 다음과 같아서 변수로 선언
 
 				while (true) {
+					if (count >= 10) break;
+
 					const products = document.querySelectorAll(PRODUCT_DIV_CLASSNAME) as NodeListOf<HTMLDivElement> | undefined;
 					// 테무는 체크박스가 삽입되었다가 사라지는 이슈가 있어서 toolBar라는 컴포넌트가 로드된 후 삽입시 체크박스가 안없어짐
 					const toolBar = document.querySelector('#mainToolbar') as HTMLDivElement | undefined;
@@ -307,20 +309,21 @@ export class temu {
 						});
 
 						/** 옵저버 등록 */
+						const productsParentBox = document.querySelector(
+							shopType === 'search_result' ? '.js-search-goodsList' : '.js-goods-list',
+						)?.firstChild;
 						const observer = new MutationObserver((e) => {
-							const productsParentBox = e.find((v: any) => v.target.className.includes('_2hynzFts'));
+							const productsParentBox = e.find((v: any) => v.target.className.includes('autoFitList'));
 							if (productsParentBox) {
 								const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
 								const target = productsParentBox.target as HTMLElement;
-								const products = target.querySelectorAll(PRODUCT_DIV_CLASSNAME) as
-									| NodeListOf<HTMLDivElement>
-									| undefined;
-								products?.forEach((v) => {
-									const gallery_url = v.querySelector('img')?.src.replace(/\.jpg.*/, '.jpg');
+								const anchors = target.querySelectorAll('a');
+								anchors?.forEach((anchor) => {
+									const gallery_url = anchor.querySelector('img')?.src.replace(/\.jpg.*/, '.jpg');
 									const top_gallery_url = gallery_url ? `top_gallery_url=${encodeURIComponent(gallery_url)}` : '';
 
 									this.onInsertDomAtTemu({
-										element: v.querySelector('a'),
+										element: anchor,
 										picker: picker,
 										user: user,
 										paramString:
@@ -336,10 +339,10 @@ export class temu {
 								});
 							}
 						});
-						observer.observe(products[0].parentElement!, { childList: true, subtree: true });
+						if (productsParentBox) observer.observe(productsParentBox, { childList: true, subtree: true });
 
-						/** 카테고리 페이지만 추가로 옵저버 등록 */
-						if (shopType === 'category') {
+						/** 필터 추가시 동작하는 옵저버 등록 */
+						if (shopType === 'category' || shopType === 'search_result') {
 							const container = document.querySelector('.contentContainer');
 							const observer_2 = new MutationObserver((e) => {
 								const picked_e = e.find((v: any) => {
@@ -380,9 +383,8 @@ export class temu {
 					}
 
 					await sleep(500);
-					if (count >= 20) break;
 
-					count++;
+					count += 0.5;
 				}
 
 				break;
@@ -422,25 +424,29 @@ export class temu {
 			}
 
 			case 'newSale-more': {
+				const PRODUCT_DIV_CLASSNAME = '[data-tooltip*="goodContainer"]'; // 확인결과 현재 테무 대부분 페이지 상품 div 클래스명은 다음과 같아서 변수로 선언
 				const refer_page_name = `&refer_page_name=star-subject-more`;
 				let insertSuccess = 0;
 
 				while (true) {
-					const gridBoxs = document.querySelectorAll('[class*="autoFitList-2hynz"]') as
-						| NodeListOf<HTMLDivElement>
-						| undefined;
+					if (count >= 10) break;
+
 					const toolBar = document.querySelector('#mainToolbar') as HTMLDivElement | undefined;
+					const gridBoxs = document.querySelectorAll('[class*="-goods-list"]') as NodeListOf<HTMLDivElement>;
 
-					if (gridBoxs && gridBoxs?.length > 0) {
+					// gridBoxes : "추천 ITEM" , "관심 품목 둘러보기"를 의미
+					if (gridBoxs.length > 0 && toolBar) {
+						//각 그리드를 순회
 						for (const gridBox of gridBoxs) {
-							const products = gridBox.querySelectorAll('.cardWrap-3GizL') as NodeListOf<HTMLDivElement> | undefined;
+							const products = gridBox.querySelectorAll(PRODUCT_DIV_CLASSNAME) as NodeListOf<HTMLDivElement>;
 
-							if (products && toolBar && products.length > 0) {
+							if (products.length > 0) {
 								const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
-								products.forEach((v) => {
-									const gallery_url = v.querySelector('img')?.src.replace(/\.jpg.*/, '.jpg');
+
+								products.forEach((product) => {
+									const anchor = product.querySelector('a') as HTMLAnchorElement | undefined;
+									const gallery_url = product.querySelector('img')?.src.replace(/\.jpg.*/, '.jpg');
 									const top_gallery_url = gallery_url ? `?top_gallery_url=${encodeURIComponent(gallery_url)}` : '';
-									const anchor = v.querySelector('a');
 
 									this.onInsertDomAtTemu({
 										element: anchor,
@@ -457,17 +463,18 @@ export class temu {
 									});
 								});
 
-								insertSuccess += 1;
+								insertSuccess += 1; // 삽입성공 카운트 증가
 							}
 
-							/** 옵저버 등록 */
+							// 옵저버 등록
 							const observer = new MutationObserver((e) => {
-								const productsParentBox = e.find((v: any) => v.target.className.includes('autoFitList-2hynz'));
+								const productsParentBox = e.find((v: any) => v.target.className.includes('autoFitList'));
 								if (productsParentBox) {
 									const picker = document.getElementById('sfyPicker') as HTMLButtonElement | null;
 									const target = productsParentBox.target as HTMLElement;
-									const products = target.querySelectorAll('.cardWrap-3GizL') as NodeListOf<HTMLDivElement> | undefined;
-									products?.forEach((v) => {
+									const products = target.querySelectorAll(PRODUCT_DIV_CLASSNAME) as NodeListOf<HTMLDivElement>;
+
+									products.forEach((v) => {
 										const gallery_url = v.querySelector('img')?.src.replace(/\.jpg.*/, '.jpg');
 										const top_gallery_url = gallery_url ? `top_gallery_url=${encodeURIComponent(gallery_url)}` : '';
 
@@ -488,15 +495,14 @@ export class temu {
 									});
 								}
 							});
-							observer.observe(gridBox, { subtree: true, childList: true });
+							observer.observe(gridBox.firstChild!, { childList: true, subtree: true });
 						}
 					}
 
-					if (gridBoxs?.length && gridBoxs.length <= insertSuccess && gridBoxs.length > 0) break;
+					if (gridBoxs.length > 0 && gridBoxs.length <= insertSuccess) break;
 					await sleep(500);
-					if (count >= 20) break;
 
-					count++;
+					count += 0.5;
 				}
 
 				break;
