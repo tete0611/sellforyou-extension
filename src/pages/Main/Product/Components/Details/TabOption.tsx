@@ -564,7 +564,7 @@ export const TabOption = observer((props: Props) => {
 														style={{
 															borderBottom: 'unset',
 															fontSize: 13,
-															padding: 0,
+															padding: '3px 0px 3px 0px',
 															textAlign: 'center',
 														}}
 													>
@@ -640,8 +640,8 @@ export const TabOption = observer((props: Props) => {
 															<Image
 																src={w.image}
 																alt={w.name}
-																width={30}
-																height={30}
+																width={32}
+																height={32}
 																style={{
 																	objectFit: 'contain',
 																}}
